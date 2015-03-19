@@ -38,6 +38,7 @@ import org.meveo.admin.exception.IncorrectChargeInstanceException;
 import org.meveo.admin.exception.IncorrectChargeTemplateException;
 import org.meveo.admin.util.ResourceBundle;
 import org.meveo.cache.WalletCacheContainerProvider;
+import org.meveo.commons.utils.NumberUtils;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.model.BaseEntity;
@@ -1239,10 +1240,14 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
 							RoundingMode.HALF_UP);
 					remainingAmountToCharge = remainingAmountToCharge.subtract(balance);
 					BigDecimal newOpAmountWithTax = balance;
-					BigDecimal newOpAmountTax = op.getAmountTax().multiply(newOverOldCoeff);
-					BigDecimal newOpAmountWithoutTax = newOpAmountWithTax.subtract(newOpAmountTax);
+					BigDecimal newOpAmountWithoutTax = op.getAmountWithoutTax().multiply(newOverOldCoeff);
+					if (provider.getRounding() != null && provider.getRounding() > 0) {
+						newOpAmountWithoutTax = NumberUtils.round(newOpAmountWithoutTax, provider.getRounding());
+						newOpAmountWithTax = NumberUtils.round(newOpAmountWithTax, provider.getRounding());
+					}
+					BigDecimal newOpAmountTax = newOpAmountWithTax.subtract(newOpAmountWithoutTax);
 					BigDecimal newOpQuantity = op.getQuantity().multiply(newOverOldCoeff);
-
+					
 					BigDecimal opAmountWithTax = remainingAmountToCharge;
 					BigDecimal opAmountTax = op.getAmountTax().subtract(newOpAmountTax);
 					BigDecimal opAmountWithoutTax = opAmountWithTax.subtract(opAmountTax);
