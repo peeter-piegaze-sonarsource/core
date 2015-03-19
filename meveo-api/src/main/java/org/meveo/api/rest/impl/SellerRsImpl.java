@@ -10,9 +10,11 @@ import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.SellerDto;
 import org.meveo.api.dto.response.GetSellerResponse;
+import org.meveo.api.dto.response.ListSellerResponseDto;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.logging.LoggingInterceptor;
 import org.meveo.api.rest.SellerRs;
+import org.slf4j.Logger;
 
 /**
  * @author Edward P. Legaspi
@@ -20,6 +22,9 @@ import org.meveo.api.rest.SellerRs;
 @RequestScoped
 @Interceptors({ LoggingInterceptor.class })
 public class SellerRsImpl extends BaseRs implements SellerRs {
+
+	@Inject
+	private Logger log;
 
 	@Inject
 	private SellerApi sellerApi;
@@ -40,6 +45,7 @@ public class SellerRsImpl extends BaseRs implements SellerRs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -59,6 +65,7 @@ public class SellerRsImpl extends BaseRs implements SellerRs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -67,19 +74,18 @@ public class SellerRsImpl extends BaseRs implements SellerRs {
 		GetSellerResponse result = new GetSellerResponse();
 
 		try {
-			result.setSeller(sellerApi.find(sellerCode, getCurrentUser()
-					.getProvider()));
+			result.setSeller(sellerApi.find(sellerCode, getCurrentUser().getProvider()));
 		} catch (MeveoApiException e) {
 			result.getActionStatus().setErrorCode(e.getErrorCode());
 			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
 			result.getActionStatus().setMessage(e.getMessage());
 		} catch (Exception e) {
-			result.getActionStatus().setErrorCode(
-					MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
 			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -99,6 +105,23 @@ public class SellerRsImpl extends BaseRs implements SellerRs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListSellerResponseDto list() {
+		ListSellerResponseDto result = new ListSellerResponseDto();
+
+		try {
+			result.setSellers(sellerApi.list(getCurrentUser().getProvider()));
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 

@@ -454,7 +454,7 @@ CREATE SEQUENCE ADM_COUNTRY_SEQ start with 238 increment by 1;
 
 /*------INSERTS OF TABLE CRM PROVIDER----*/
 
-INSERT INTO CRM_PROVIDER (id, version, disabled, created, updated, code, description, multicountry_flag, multicurrency_flag, multilanguage_flag, payment_methods, logo, invoice_prefix, current_invoice_nb, rating_rounding, bank_code, branch_code, account_number, hash_key, iban, bic, account_owner, bank_name, bank_id, issuer_number, issuer_name, entreprise, automatic_invoicing, display_free_tx_in_invoice, nne, address_1, address_2, address_3, address_zipcode, address_city, address_country, address_state, amount_validation, level_duplication, email, country_id, provider_id, currency_id, updater_id,creator_id,language_id) VALUES (1, 1, false, now(), NULL, 'DEMO', NULL, true, true, true, NULL, NULL, NULL, NULL, NULL, 'SGMB', '12345', '33333333333', '11', '11', '11', 'owner', 'SGMB', '11', '1111', 'DEMO', false, false, true, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, false, NULL, 1, NULL, 1, NULL,NULL, 1);
+INSERT INTO CRM_PROVIDER (id, version, disabled, created, updated, code, description, multicountry_flag, multicurrency_flag, multilanguage_flag, payment_methods, logo, invoice_prefix, current_invoice_nb, rating_rounding, bank_code, branch_code, account_number, hash_key, iban, bic, account_owner, bank_name, bank_id, issuer_number, issuer_name, entreprise, automatic_invoicing, display_free_tx_in_invoice, nne, address_1, address_2, address_3, address_zipcode, address_city, address_country, address_state, amount_validation, level_duplication, email, country_id, provider_id, currency_id, updater_id,creator_id,language_id, PREPAID_RESRV_DELAY_MS) VALUES (1, 1, false, now(), NULL, 'DEMO', NULL, true, true, true, NULL, NULL, NULL, NULL, NULL, 'SGMB', '12345', '33333333333', '11', '11', '11', 'owner', 'SGMB', '11', '1111', 'DEMO', false, false, true, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, false, NULL, 1, NULL, 1, NULL,NULL, 1, 60000);
 
 DROP SEQUENCE IF EXISTS CRM_PROVIDER_SEQ;
 CREATE SEQUENCE CRM_PROVIDER_SEQ start with 2 increment by 1;
@@ -932,8 +932,8 @@ DROP SEQUENCE IF EXISTS CAT_DAY_IN_YEAR_SEQ;
 CREATE SEQUENCE CAT_DAY_IN_YEAR_SEQ start with 1132 increment by 1;
 
 --Customer Category
-INSERT INTO CRM_CUSTOMER_CATEGORY (id, disabled, version, created, code, description, provider_id, creator_id) VALUES (1, false, 0, now(), 'PROSPECT', 'Prospect', 1, 1);
-INSERT INTO CRM_CUSTOMER_CATEGORY (id, disabled, version, created, code, description, provider_id, creator_id) VALUES (2, false, 0, now(), 'CLIENT', 'Client', 1, 1);
+INSERT INTO CRM_CUSTOMER_CATEGORY (id, disabled, version, created, code, description, provider_id, creator_id, exonerated_from_taxes) VALUES (1, false, 0, now(), 'PROSPECT', 'Prospect', 1, 1, false);
+INSERT INTO CRM_CUSTOMER_CATEGORY (id, disabled, version, created, code, description, provider_id, creator_id, exonerated_from_taxes) VALUES (2, false, 0, now(), 'CLIENT', 'Client', 1, 1, false);
 
 DROP SEQUENCE IF EXISTS CRM_CUSTOMER_CATEGORY_SEQ;
 CREATE SEQUENCE CRM_CUSTOMER_CATEGORY_SEQ start with 3 increment by 1;
@@ -966,7 +966,7 @@ DROP SEQUENCE IF EXISTS billing_trading_country_SEQ;
 CREATE SEQUENCE billing_trading_country_SEQ start with 3 increment by 1;
 
 --Counter Calendar
-insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, name, description) values ('YEARLY',1, 0, false, now(), 1, 1, 'CAL_COUNTER', 'Counter Calendar');
+insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, code, description) values ('YEARLY',1, 0, false, now(), 1, 1, 'CAL_COUNTER', 'Counter Calendar');
 insert into cat_calendar_days (calendar_id, day_id) values (1, 1);
 insert into cat_calendar_days (calendar_id, day_id) values (1, 101);
 insert into cat_calendar_days (calendar_id, day_id) values (1, 201);
@@ -981,7 +981,7 @@ insert into cat_calendar_days (calendar_id, day_id) values (1, 1001);
 insert into cat_calendar_days (calendar_id, day_id) values (1, 1101);
 
 --Billing Calendar
-insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, name, description) values ('YEARLY',2, 0, false, now(), 1, 1, 'CAL_INV_MONTHLY', 'Billing Calendar');
+insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, code, description) values ('YEARLY',2, 0, false, now(), 1, 1, 'CAL_INV_MONTHLY', 'Billing Calendar');
 insert into cat_calendar_days (calendar_id, day_id) values (2, 1);
 insert into cat_calendar_days (calendar_id, day_id) values (2, 101);
 insert into cat_calendar_days (calendar_id, day_id) values (2, 201);
@@ -996,7 +996,7 @@ insert into cat_calendar_days (calendar_id, day_id) values (2, 1001);
 insert into cat_calendar_days (calendar_id, day_id) values (2, 1101);
 
 --Charge Imputation
-insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, name, description) values ('YEARLY',3, 0, false, now(), 1, 1, 'CAL_VAL_MONTHLY', 'Charge Imputation Calendar');
+insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, code, description) values ('YEARLY',3, 0, false, now(), 1, 1, 'CAL_VAL_MONTHLY', 'Charge Imputation Calendar');
 insert into cat_calendar_days (calendar_id, day_id) values (3, 1);
 insert into cat_calendar_days (calendar_id, day_id) values (3, 101);
 insert into cat_calendar_days (calendar_id, day_id) values (3, 201);
@@ -1011,7 +1011,7 @@ insert into cat_calendar_days (calendar_id, day_id) values (3, 1001);
 insert into cat_calendar_days (calendar_id, day_id) values (3, 1101);
 
 --Monthly Counter Calendar
-insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, name, description) values ('YEARLY',4, 0, false, now(), 1, 1, 'MONTHLY', 'Monthly Calendar');
+insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, code, description) values ('YEARLY',4, 0, false, now(), 1, 1, 'MONTHLY', 'Monthly Calendar');
 insert into cat_calendar_days (calendar_id, day_id) values (4, 1);
 insert into cat_calendar_days (calendar_id, day_id) values (4, 101);
 insert into cat_calendar_days (calendar_id, day_id) values (4, 201);
@@ -1026,7 +1026,7 @@ insert into cat_calendar_days (calendar_id, day_id) values (4, 1001);
 insert into cat_calendar_days (calendar_id, day_id) values (4, 1101);
 
 --Billing Calendar
-insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, name, description) values ('YEARLY',5, 0, false, now(), 1, 1, 'BILLING', 'Billing Calendar');
+insert into cat_calendar (cal_type,id, version, disabled, created, provider_id, creator_id, code, description) values ('YEARLY',5, 0, false, now(), 1, 1, 'BILLING', 'Billing Calendar');
 insert into cat_calendar_days (calendar_id, day_id) values (5, 1);
 insert into cat_calendar_days (calendar_id, day_id) values (5, 101);
 insert into cat_calendar_days (calendar_id, day_id) values (5, 201);
@@ -1144,7 +1144,7 @@ CREATE SEQUENCE CAT_CHARGE_TEMPLATE_SEQ start with 5 increment by 1;
 
 insert into CAT_RECURRING_CHARGE_TEMPL (id, CALENDAR_ID, APPLY_IN_ADVANCE, subscription_prorata, termination_prorata) values (1, 3, false, false, false);
 insert into CAT_ONE_SHOT_CHARGE_TEMPL (id, type, immediate_invoicing) values (2, 'SUBSCRIPTION', false);
-insert into CAT_USAGE_CHARGE_TEMPLATE (id, UNITY_NB_DECIMAL) values (3, 2);
+insert into CAT_USAGE_CHARGE_TEMPLATE (id, UNITY_NB_DECIMAL, UNITY_MULTIPLICATOR) values (3, 2, 1);
 insert into CAT_ONE_SHOT_CHARGE_TEMPL (id, type, immediate_invoicing) values (4, 'SUBSCRIPTION', false);
 
 insert into CAT_SERVICE_TEMPLATE (id, version, disabled, created, code, description, provider_id) values (1, 0, false, now(), 'SERV1', 'SERV1', 1);
@@ -1163,18 +1163,18 @@ CREATE SEQUENCE CAT_OFFER_TEMPLATE_SEQ start with 2 increment by 1;
 
 insert into CAT_OFFER_SERV_TEMPLATES (offer_template_id, service_template_id) values (1, 1);
 
-insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX) values (1, 0, false, now(), 1, 1, 'REC1', 5, 10);
-insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX) values (2, 0, false, now(), 1, 1, 'SUB1', 15, 20);
-insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX) values (3, 0, false, now(), 1, 1, 'USAGE1', 25, 30);
-insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX) values (4, 0, false, now(), 1, 1, 'SUB2', 15, 20);
+insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX, code, description) values (1, 0, false, now(), 1, 1, 'REC1', 5, 10, 'PP1', 'PP1');
+insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX, code, description) values (2, 0, false, now(), 1, 1, 'SUB1', 15, 20, 'PP2', 'PP2');
+insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX, code, description) values (3, 0, false, now(), 1, 1, 'USAGE1', 25, 30, 'PP3', 'PP3');
+insert into CAT_PRICE_PLAN_MATRIX (id, version, disabled, created, provider_id, PRIORITY, EVENT_CODE, AMOUNT_WITHOUT_TAX, AMOUNT_WITH_TAX, code, description) values (4, 0, false, now(), 1, 1, 'SUB2', 15, 20, 'PP4', 'PP4');
 
 DROP SEQUENCE IF EXISTS CAT_PRICE_PLAN_MATRIX_SEQ;
 CREATE SEQUENCE CAT_PRICE_PLAN_MATRIX_SEQ start with 5 increment by 1;
 
-insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname) values (1, 0, false, now(), 1, 'CUST1', 'CUST1', 'DEMO');
-insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname) values (2, 0, false, now(), 1, 'CA1', 'CA1', 'DEMO');
-insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname) values (3, 0, false, now(), 1, 'BA1', 'BA1', 'DEMO');
-insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname) values (4, 0, false, now(), 1, 'UA1', 'UA1', 'DEMO');
+insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname, DEFAULT_LEVEL) values (1, 0, false, now(), 1, 'CUST1', 'CUST1', 'DEMO', TRUE);
+insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname, DEFAULT_LEVEL) values (2, 0, false, now(), 1, 'CA1', 'CA1', 'DEMO', TRUE);
+insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname, DEFAULT_LEVEL) values (3, 0, false, now(), 1, 'BA1', 'BA1', 'DEMO', TRUE);
+insert into account_entity (id, version, disabled, created, provider_id, code, description, lastname, DEFAULT_LEVEL) values (4, 0, false, now(), 1, 'UA1', 'UA1', 'DEMO', TRUE);
 
 DROP SEQUENCE IF EXISTS ACCOUNT_ENTITY_SEQ;
 CREATE SEQUENCE ACCOUNT_ENTITY_SEQ start with 5 increment by 1;
@@ -1186,9 +1186,11 @@ insert into BILLING_USER_ACCOUNT (id, BILLING_ACCOUNT_ID) values (4, 3);
 
 insert into cat_wallet_template (id, version, disabled, created, code, description, FAST_RATING_LEVEL, wallet_type, provider_id, CONSUMPTION_ALERT_SET) values (1, 0, false, now(), 'POSTPAID_WALLET', 'Post Paid Wallet', 1, 'POSTPAID', 1, true);
 insert into cat_wallet_template (id, version, disabled, created, code, description, FAST_RATING_LEVEL, wallet_type, provider_id, CONSUMPTION_ALERT_SET) values (2, 0, false, now(), 'PREPAID_WALLET', 'Prepaid Wallet', 1, 'PREPAID', 1, true);
+insert into CAT_WALLET_TEMPLATE (id, version, disabled, created, code, description, consumption_alert_set, fast_rating_level, wallet_type, provider_id, creator_id) values (3, 0, false, now(), 'SOAP_WALLET10', 'SOAP_WALLET10', true, 1, 'PREPAID', 1, 1);
+insert into CAT_WALLET_TEMPLATE (id, version, disabled, created, code, description, consumption_alert_set, fast_rating_level, wallet_type, provider_id, creator_id) values (4, 0, false, now(), 'SOAP_WALLET20', 'SOAP_WALLET20', true, 1, 'PREPAID', 1, 1);
 
 DROP SEQUENCE IF EXISTS CAT_WALLET_TEMPLATE_SEQ;
-CREATE SEQUENCE CAT_WALLET_TEMPLATE_SEQ start with 3 increment by 1;
+CREATE SEQUENCE CAT_WALLET_TEMPLATE_SEQ start with 5 increment by 1;
 
 insert into CAT_SERV_REC_CHARGE_TEMPLATE (id, version, provider_id, charge_template_id, service_template_id) values (1, 0, 1, 1, 1);
 insert into CAT_SERV_SUB_CHARGE_TEMPLATE (id, version, provider_id, charge_template_id, service_template_id) values (1, 0, 1, 2, 1);
@@ -1216,3 +1218,13 @@ DROP SEQUENCE IF EXISTS BILLING_WALLET_SEQ;
 CREATE SEQUENCE BILLING_WALLET_SEQ start with 2 increment by 1;
 
 update BILLING_USER_ACCOUNT set wallet_id=1 where id=4;
+
+/* Custom Fields */
+insert into CRM_CUSTOM_FIELD_TMPL (id, version, disabled, created, code, description, account_type, field_type, value_required, provider_id, creator_id) values (1, 0, false, now(), 'SOAP_CUST10', 'SOAP_CUST10', 'CUST', 'STRING', false, 1, 1);
+insert into CRM_CUSTOM_FIELD_TMPL (id, version, disabled, created, code, description, account_type, field_type, value_required, provider_id, creator_id) values (2, 0, false, now(), 'SOAP_CA10', 'SOAP_CA10', 'CA', 'DATE', false, 1, 1);
+insert into CRM_CUSTOM_FIELD_TMPL (id, version, disabled, created, code, description, account_type, field_type, value_required, provider_id, creator_id) values (3, 0, false, now(), 'SOAP_BA10', 'SOAP_BA10', 'BA', 'LONG', false, 1, 1);
+insert into CRM_CUSTOM_FIELD_TMPL (id, version, disabled, created, code, description, account_type, field_type, value_required, provider_id, creator_id) values (4, 0, false, now(), 'SOAP_UA10', 'SOAP_UA10', 'UA', 'DOUBLE', false, 1, 1);
+insert into CRM_CUSTOM_FIELD_TMPL (id, version, disabled, created, code, description, account_type, field_type, value_required, provider_id, creator_id) values (5, 0, false, now(), 'SOAP_SUB10', 'SOAP_SUB10', 'SUB', 'STRING', false, 1, 1);
+
+DROP SEQUENCE IF EXISTS CRM_CUSTOM_FLD_TMP_SEQ;
+CREATE SEQUENCE CRM_CUSTOM_FLD_TMP_SEQ start with 6 increment by 1;

@@ -35,17 +35,22 @@ import org.meveo.api.dto.response.GetBillingCycleResponse;
 import org.meveo.api.dto.response.GetCalendarResponse;
 import org.meveo.api.dto.response.GetCountryResponse;
 import org.meveo.api.dto.response.GetCurrencyResponse;
+import org.meveo.api.dto.response.GetCustomerConfigurationResponseDto;
 import org.meveo.api.dto.response.GetInvoiceCategoryResponse;
 import org.meveo.api.dto.response.GetInvoiceSubCategoryCountryResponse;
 import org.meveo.api.dto.response.GetInvoiceSubCategoryResponse;
+import org.meveo.api.dto.response.GetInvoicingConfigurationResponseDto;
 import org.meveo.api.dto.response.GetLanguageResponse;
 import org.meveo.api.dto.response.GetProviderResponse;
 import org.meveo.api.dto.response.GetSellerResponse;
 import org.meveo.api.dto.response.GetTaxResponse;
+import org.meveo.api.dto.response.GetTradingConfigurationResponseDto;
 import org.meveo.api.dto.response.GetUserResponse;
+import org.meveo.api.dto.response.ListSellerResponseDto;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.logging.LoggingInterceptor;
 import org.meveo.api.ws.SettingsWs;
+import org.slf4j.Logger;
 
 /**
  * @author Edward P. Legaspi
@@ -53,6 +58,9 @@ import org.meveo.api.ws.SettingsWs;
 @WebService(serviceName = "SettingsWs", endpointInterface = "org.meveo.api.ws.SettingsWs")
 @Interceptors({ LoggingInterceptor.class })
 public class SettingsWsImpl extends BaseWs implements SettingsWs {
+
+	@Inject
+	private Logger log;
 
 	@Inject
 	private CountryApi countryApi;
@@ -106,6 +114,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -126,6 +135,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -145,6 +155,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -164,6 +175,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -183,6 +195,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -202,6 +215,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -221,6 +235,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -240,6 +255,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -259,6 +275,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -278,6 +295,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -297,6 +315,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -316,6 +335,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -335,6 +355,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -354,6 +375,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -375,6 +397,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -394,6 +417,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -413,6 +437,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -432,6 +457,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -452,6 +478,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -471,6 +498,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -490,6 +518,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -509,6 +538,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -528,6 +558,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -547,6 +578,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -566,6 +598,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -585,6 +618,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -604,6 +638,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -623,6 +658,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -642,6 +678,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -661,6 +698,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -680,6 +718,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -699,6 +738,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -718,6 +758,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -737,6 +778,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -756,6 +798,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -775,6 +818,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -794,6 +838,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -813,6 +858,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -832,6 +878,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -851,6 +898,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -870,6 +918,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -890,6 +939,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -909,6 +959,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -928,6 +979,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -947,6 +999,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -967,6 +1020,7 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -986,6 +1040,83 @@ public class SettingsWsImpl extends BaseWs implements SettingsWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListSellerResponseDto listSeller() {
+		ListSellerResponseDto result = new ListSellerResponseDto();
+
+		try {
+			result.setSellers(sellerApi.list(getCurrentUser().getProvider()));
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public GetTradingConfigurationResponseDto getTradingConfiguration() {
+		GetTradingConfigurationResponseDto result = new GetTradingConfigurationResponseDto();
+
+		try {
+			result = providerApi.getTradingConfiguration(getCurrentUser());
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public GetInvoicingConfigurationResponseDto getInvoicingConfiguration() {
+		GetInvoicingConfigurationResponseDto result = new GetInvoicingConfigurationResponseDto();
+
+		try {
+			result = providerApi.getInvoicingConfiguration(getCurrentUser());
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public GetCustomerConfigurationResponseDto getCustomerConfiguration() {
+		GetCustomerConfigurationResponseDto result = new GetCustomerConfigurationResponseDto();
+
+		try {
+			result = providerApi.getCustomerConfigurationResponse(getCurrentUser());
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 

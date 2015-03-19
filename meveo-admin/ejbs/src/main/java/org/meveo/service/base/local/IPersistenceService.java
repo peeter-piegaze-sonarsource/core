@@ -113,7 +113,7 @@ public interface IPersistenceService<E extends IEntity> {
 	 * 
 	 * @throws BusinessException
 	 */
-	public void update(E e);
+	public E update(E e);
 
 	/**
 	 * Update an entity.
@@ -125,7 +125,7 @@ public interface IPersistenceService<E extends IEntity> {
 	 * 
 	 * @throws BusinessException
 	 */
-	public void update(E e, User updater);
+	public E update(E e, User updater);
 
 	/**
 	 * Delete an entity.
@@ -147,6 +147,36 @@ public interface IPersistenceService<E extends IEntity> {
 	 */
 	public void disable(Long id);
 
+   /**
+     * Disable an entity.
+     * 
+     * @param id
+     *            Entity to be disabled.
+     * 
+     * @throws BusinessException
+     */
+    public E disable(E e);
+    
+    /**
+     * Enable an entity.
+     * 
+     * @param id
+     *            Entity id which has to be enabled.
+     * 
+     * @throws BusinessException
+     */
+    public void enable(Long id);
+
+   /**
+     * Enable an entity.
+     * 
+     * @param id
+     *            Entity to be enabled.
+     * 
+     * @throws BusinessException
+     */
+    public E enable(E e);
+    
 	/**
 	 * Delete an entity.
 	 * 
@@ -182,6 +212,13 @@ public interface IPersistenceService<E extends IEntity> {
 	 */
 	public List<E> list();// ? extends E
 
+    /**
+     * Load and return the complete list of active entities from database.
+     * 
+     * @return List of entities.
+     */	
+	public List<E> listActive();
+	
 	/**
 	 * Load and return the list of the entities from database according to
 	 * sorting and paging information in {@link PaginationConfiguration} object.
@@ -220,5 +257,4 @@ public interface IPersistenceService<E extends IEntity> {
 	public void refresh(BaseEntity entity);
 
 	public EntityManager getEntityManager();
-
 }

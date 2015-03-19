@@ -14,6 +14,10 @@ import javax.persistence.UniqueConstraint;
 import org.meveo.model.AccountEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.billing.Subscription;
+import org.meveo.model.catalog.ChargeTemplate;
+import org.meveo.model.catalog.OfferTemplate;
+import org.meveo.model.catalog.ServiceTemplate;
+import org.meveo.model.mediation.Access;
 
 @Entity
 @Table(name = "CRM_CUSTOM_FIELD_INST", uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "SUBSCRIPTION_ID",
@@ -30,6 +34,22 @@ public class CustomFieldInstance extends BusinessEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SUBSCRIPTION_ID")
 	private Subscription subscription;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CHARGE_TEMPLATE_ID")
+	private ChargeTemplate chargeTemplate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "SERVICE_TEMPLATE_ID")
+	private ServiceTemplate serviceTemplate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "OFFER_TEMPLATE_ID")
+	private OfferTemplate offerTemplate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ACCESS_ID")
+	private Access access;
 
 	@Column(name = "STRING_VALUE")
 	private String stringValue;
@@ -91,6 +111,14 @@ public class CustomFieldInstance extends BusinessEntity {
 		this.subscription = subscription;
 	}
 
+	public Access getAccess() {
+		return access;
+	}
+
+	public void setAccess(Access access) {
+		this.access = access;
+	}
+
 	public String toJson() {
 		String result = code + ":";
 
@@ -107,6 +135,38 @@ public class CustomFieldInstance extends BusinessEntity {
 		}
 
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "CustomFieldInstance [account=" + account + ", subscription=" + subscription + ", chargeTemplate="
+				+ chargeTemplate + ", serviceTemplate=" + serviceTemplate + ", offerTemplate=" + offerTemplate
+				+ ", access=" + access + ", stringValue=" + stringValue + ", dateValue=" + dateValue + ", longValue="
+				+ longValue + ", doubleValue=" + doubleValue + "]";
+	}
+
+	public ChargeTemplate getChargeTemplate() {
+		return chargeTemplate;
+	}
+
+	public void setChargeTemplate(ChargeTemplate chargeTemplate) {
+		this.chargeTemplate = chargeTemplate;
+	}
+
+	public ServiceTemplate getServiceTemplate() {
+		return serviceTemplate;
+	}
+
+	public void setServiceTemplate(ServiceTemplate serviceTemplate) {
+		this.serviceTemplate = serviceTemplate;
+	}
+
+	public OfferTemplate getOfferTemplate() {
+		return offerTemplate;
+	}
+
+	public void setOfferTemplate(OfferTemplate offerTemplate) {
+		this.offerTemplate = offerTemplate;
 	}
 
 }

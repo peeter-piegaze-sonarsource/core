@@ -26,6 +26,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,6 +42,7 @@ import org.meveo.model.billing.Subscription;
 @Entity
 @Table(name = "RATING_EDR")
 @SequenceGenerator(name = "ID_GENERATOR", sequenceName = "RATING_EDR_SEQ")
+@NamedQueries({ @NamedQuery(name = "EDR.getEdrsForCache", query = "select CONCAT(p.id,'_',e.originBatch,'_',e.originRecord) from EDR e join e.provider p where e.status= org.meveo.model.rating.EDRStatusEnum.OPEN ORDER BY e.eventDate DESC") })
 public class EDR extends BaseEntity {
 
 	private static final long serialVersionUID = 1278336655583933747L;
@@ -209,6 +212,18 @@ public class EDR extends BaseEntity {
 				+ ", parameter3=" + parameter3 + ", parameter4=" + parameter4
 				+ ", status=" + status + ", rejectReason=" + rejectReason
 				+ ", created=" + created + ", lastUpdate=" + lastUpdate + "]";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EDR other = (EDR) obj;
+		return this.toString().equals(other.toString());
 	}
 
 }

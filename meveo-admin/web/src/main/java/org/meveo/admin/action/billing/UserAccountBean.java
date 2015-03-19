@@ -17,6 +17,7 @@
 package org.meveo.admin.action.billing;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -33,9 +33,12 @@ import javax.inject.Named;
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.meveo.admin.action.AccountBean;
 import org.meveo.admin.action.BaseBean;
+import org.meveo.admin.action.CustomFieldEnabledBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.DuplicateDefaultAccountException;
+import org.meveo.cache.WalletCacheContainerProvider;
 import org.meveo.model.billing.BillingAccount;
+import org.meveo.model.billing.CounterInstance;
 import org.meveo.model.billing.OperationTypeEnum;
 import org.meveo.model.billing.RatedTransaction;
 import org.meveo.model.billing.UserAccount;
@@ -43,12 +46,15 @@ import org.meveo.model.billing.WalletInstance;
 import org.meveo.model.billing.WalletOperation;
 import org.meveo.model.billing.WalletOperationStatusEnum;
 import org.meveo.model.crm.AccountLevelEnum;
+import org.meveo.model.crm.Provider;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.billing.impl.BillingAccountService;
 import org.meveo.service.billing.impl.RatedTransactionService;
 import org.meveo.service.billing.impl.UserAccountService;
 import org.meveo.service.billing.impl.WalletOperationService;
+import org.meveo.service.billing.impl.WalletReservationService;
+import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Faces;
 import org.primefaces.model.LazyDataModel;
 
@@ -59,7 +65,8 @@ import org.primefaces.model.LazyDataModel;
  * custom JSF components.
  */
 @Named
-@ConversationScoped
+@ViewScoped
+@CustomFieldEnabledBean(accountLevel=AccountLevelEnum.UA)
 public class UserAccountBean extends AccountBean<UserAccount> {
 
 	private static final long serialVersionUID = 1L;
@@ -77,6 +84,9 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 	WalletOperationService walletOperationService;
 
 	@Inject
+	WalletReservationService walletReservationService;
+
+	@Inject
 	private UserAccountService userAccountService;
 
 	@Inject
@@ -84,6 +94,11 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 
 	@Inject
 	private BillingAccountService billingAccountService;
+	
+	@Inject
+	private WalletCacheContainerProvider walletCacheContainerProvider;
+	   
+	private CounterInstance selectedCounterInstance;
 
 	private Long billingAccountId;
 	private WalletOperation reloadOperation;
@@ -127,9 +142,7 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 				entity.setDefaultLevel(true);
 			}
 		}
-
-		initCustomFields(AccountLevelEnum.UA);
-
+		selectedCounterInstance=entity.getCounters()!=null && entity.getCounters().size()>0?entity.getCounters().values().iterator().next():null;
 		return entity;
 	}
 
@@ -147,10 +160,8 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 					throw new DuplicateDefaultAccountException();
 				}
 			}
-
+			
 			super.saveOrUpdate(killConversation);
-
-			saveCustomFields();
 
 			return "/pages/billing/userAccounts/userAccountDetail.xhtml?edit=false&userAccountId=" + entity.getId()
 					+ "&faces-redirect=true&includeViewParams=true";
@@ -350,8 +361,9 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 	}
 
 	public String getBalance(WalletInstance wallet) {
-		String result = "-";
-		BigDecimal balance = walletOperationService.getCacheBalance(wallet.getId());
+
+		String result = null;
+		BigDecimal balance = walletCacheContainerProvider.getBalance(wallet.getId());
 		if (balance != null) {
 			result = balance.toPlainString();
 		}
@@ -359,10 +371,76 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 	}
 
 	public String getReservedBalance(WalletInstance wallet) {
-		String result = "-";
-		BigDecimal balance = walletOperationService.getReservedCacheBalance(wallet.getId());
+		String result = null;
+		BigDecimal balance = walletCacheContainerProvider.getReservedBalance(wallet.getId());
 		if (balance != null) {
 			result = balance.toPlainString();
+		}
+		return result;
+	}
+
+	public String getOpenBalanceWithoutTax(Provider provider, String sellerCode, String userAccountCode,
+			Date startDate, Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getOpenBalanceWithoutTax(provider, sellerCode, userAccountCode,
+				startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		}
+		return result;
+	}
+
+	public String getOpenBalanceWithTax(Provider provider, String sellerCode, String userAccountCode, Date startDate,
+			Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getOpenBalanceWithTax(provider, sellerCode, userAccountCode,
+				startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		}
+		return result;
+	}
+
+	public String getReservedBalanceWithoutTax(Provider provider, String sellerCode, String userAccountCode,
+			Date startDate, Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getReservedBalanceWithoutTax(provider, sellerCode,
+				userAccountCode, startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		}
+		return result;
+	}
+
+	public String getReservedBalanceWithTax(Provider provider, String sellerCode, String userAccountCode,
+			Date startDate, Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getReservedBalanceWithTax(provider, sellerCode, userAccountCode,
+				startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		}
+		return result;
+	}
+
+	public String getCurrentBalanceWithoutTax(Provider provider, String sellerCode, String userAccountCode,
+			Date startDate, Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getCurrentBalanceWithoutTax(provider, sellerCode,
+				userAccountCode, startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
+		}
+		return result;
+	}
+
+	public String getCurrentBalanceWithTax(Provider provider, String sellerCode, String userAccountCode,
+			Date startDate, Date endDate) throws BusinessException {
+		String result = null;
+		BigDecimal balance = walletReservationService.getCurrentBalanceWithTax(provider, sellerCode, userAccountCode,
+				startDate, endDate);
+		if (balance != null) {
+			result = balance.setScale(2, RoundingMode.HALF_UP).toPlainString();
 		}
 		return result;
 	}
@@ -380,4 +458,16 @@ public class UserAccountBean extends AccountBean<UserAccount> {
 		return filterLockedOptions;
 	}
 
+
+	 public CounterInstance getSelectedCounterInstance() {
+		   if(entity==null){
+		    initEntity();
+		   }
+		  return selectedCounterInstance;
+		 }
+
+	public void setSelectedCounterInstance(CounterInstance selectedCounterInstance) {
+		this.selectedCounterInstance = selectedCounterInstance;
+	}
+	 
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -15,6 +14,7 @@ import org.meveocrm.model.dwh.MeasurableQuantity;
 import org.meveocrm.model.dwh.MeasuredValue;
 import org.meveocrm.services.dwh.LineChartService;
 import org.meveocrm.services.dwh.MeasuredValueService;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
@@ -24,7 +24,7 @@ import org.primefaces.model.chart.ChartSeries;
  * 
  */
 @Named
-@ConversationScoped
+@ViewScoped
 public class LineChartBean extends ChartEntityBean<LineChart> {
 
 	private static final long serialVersionUID = -5171375359771241684L;
@@ -36,6 +36,8 @@ public class LineChartBean extends ChartEntityBean<LineChart> {
 	MeasuredValueService mvService;
 
 	private LineChartEntityModel chartEntityModel;
+
+	private List<LineChartEntityModel> lineChartEntityModels = new ArrayList<LineChartEntityModel>();
 
 	public LineChartBean() {
 		super(LineChart.class);
@@ -52,7 +54,7 @@ public class LineChartBean extends ChartEntityBean<LineChart> {
 		return "charts";
 	}
 
-	public List<LineChartEntityModel> getChartModelList() {
+	public void initChartModelList() {
 
 		Calendar fromDate = Calendar.getInstance();
 		fromDate.set(Calendar.DAY_OF_MONTH, 1);
@@ -60,7 +62,6 @@ public class LineChartBean extends ChartEntityBean<LineChart> {
 		toDate.setTime(fromDate.getTime());
 		toDate.add(Calendar.MONTH, 1);
 
-		List<LineChartEntityModel> chartModelList = new ArrayList<LineChartEntityModel>();
 		List<LineChart> lineChartList = lineChartService.list();
 
 		for (LineChart lineChart : lineChartList) {
@@ -87,14 +88,20 @@ public class LineChartBean extends ChartEntityBean<LineChart> {
 			}
 
 			LineChartEntityModel chartEntityModel = new LineChartEntityModel();
+			boolean isAdmin = lineChart.getAuditable().getCreator()
+					.hasRole("administrateur");
+			boolean equalUser = lineChart.getAuditable().getCreator().getId() == getCurrentUser()
+					.getId();
+			boolean sameRoleWithChart = lineChart.getRole() != null ? getCurrentUser()
+					.hasRole(lineChart.getRole().getDescription()) : false;
+			lineChart.setVisible(isAdmin || equalUser || sameRoleWithChart);
 			chartEntityModel.setLineChart(lineChart);
 			chartEntityModel.setModel(chartModel);
 
-			chartModelList.add(chartEntityModel);
+			lineChartEntityModels.add(chartEntityModel);
 
 		}
 
-		return chartModelList;
 	}
 
 	public LineChartEntityModel getChartEntityModel() {
@@ -137,4 +144,52 @@ public class LineChartBean extends ChartEntityBean<LineChart> {
 		}
 		return chartEntityModel;
 	}
+
+	public void setModel(Integer index) {
+
+		LineChartEntityModel curr = lineChartEntityModels.get(index);
+		MeasurableQuantity mq = curr.getLineChart().getMeasurableQuantity();
+		if (!curr.getMinDate().before(curr.getMaxDate())) {
+			curr.setMaxDate(curr.getMinDate());
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(curr.getMaxDate());
+		cal.add(Calendar.DATE, 1);
+		List<MeasuredValue> mvs = mvService.getByDateAndPeriod(null,
+				curr.getMinDate(), cal.getTime(), null, mq);
+
+		CartesianChartModel chartModel = new CartesianChartModel();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+		ChartSeries mvSeries = new ChartSeries();
+
+		mvSeries.setLabel(sdf.format(curr.getMinDate()));
+
+		if (mvs.size() > 0) {
+			for (MeasuredValue measuredValue : mvs) {
+				mvSeries.set(sdf.format(measuredValue.getDate()),
+						measuredValue.getValue());
+			}
+			chartModel.addSeries(mvSeries);
+		} else {
+			log.info("No measured values found for : " + mq.getCode());
+		}
+
+		curr.setLineChart(curr.getLineChart());
+		curr.setModel(chartModel);
+
+	}
+
+	public List<LineChartEntityModel> getLineChartEntityModels() {
+		if (lineChartEntityModels.size() <= 0) {
+			initChartModelList();
+		}
+		return lineChartEntityModels;
+	}
+
+	public void setLineChartEntityModels(
+			List<LineChartEntityModel> lineChartEntityModels) {
+		this.lineChartEntityModels = lineChartEntityModels;
+	}
+
 }

@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.billing.CdrListDto;
+import org.meveo.api.dto.billing.PrepaidReservationDto;
+import org.meveo.api.dto.response.billing.CdrReservationResponseDto;
 import org.meveo.api.rest.IBaseRs;
 import org.meveo.api.rest.security.RSSecured;
 
@@ -20,10 +22,20 @@ public interface MediationRs extends IBaseRs {
 	@POST
 	@Path("/registerCdrList")
 	ActionStatus registerCdrList(CdrListDto postData);
-	
 
 	@POST
 	@Path("/chargeCdr")
 	ActionStatus chargeCdr(String cdr);
 
+	@POST
+	@Path("/reserveCdr")
+	CdrReservationResponseDto reserveCdr(String cdr);
+
+	@POST
+	@Path("/confirmReservation")
+	ActionStatus confirmReservation(PrepaidReservationDto reservationDto);
+
+	@POST
+	@Path("/cancelReservation")
+	ActionStatus cancelReservation(PrepaidReservationDto reservationDto);
 }

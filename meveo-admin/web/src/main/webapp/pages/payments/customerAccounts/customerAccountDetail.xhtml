@@ -68,8 +68,7 @@
 								formId="formCustomerAccount"
 								label="#{messages['customerAccount.form']}"
 								backingBean="#{customerAccountBean}" showFormButtons="false"
-								useCustomIdParam="true" killConversationOnSave="false"
-								killConversationOnBack="false">
+								useCustomIdParam="true">
 								<p:panel>
 									<p:tabView id="childTab">
 										<p:tab id="accountTab"
@@ -184,10 +183,11 @@
 											<hftl:panelGroup columns="2">
 												<hf:formField
 													label="#{messages['customerAccount.paymentMethod']}"
-													field="paymentMethod" childField="label" isMessage="true"/>
+													field="paymentMethod" childField="label" isMessage="true" />
 												<hf:formField
 													label="#{messages['customerAccount.creditCategory']}"
-													field="creditCategory" childField="label" isMessage="true" required="true"  />
+													field="creditCategory" childField="label" isMessage="true"
+													required="true" />
 											</hftl:panelGroup>
 
 											<hftl:panelGroup columns="1">
@@ -272,7 +272,6 @@
 									<hf:formButtons columns="5"
 										backingBean="#{customerAccountBean}"
 										edit="#{customerAccountBean.edit}" ajaxSubmit="false"
-										killConversationOnSave="false" killConversationOnBack="false"
 										useCustomIdParam="true">
 										<p:commandButton
 											rendered="#{customerAccountBean.isActiveAccount() and !customerAccountBean.edit}"
@@ -338,13 +337,16 @@
 										<f:param name="cid"
 											value="#{javax.enterprise.context.conversation.id}" />
 									</p:button>
+
 								</p:panelGrid>
 							</h:form>
 
 							<hftl:dataList backingBean="#{accountOperationBean}"
 								dataModel="#{accountOperationBean.getAccountOperations(customerAccountBean.entity)}"
 								label="#{messages['accountOperation.title']}" disabled="true"
-								checkMany="true">
+								checkMany="false">
+								<p:column selectionMode="multiple" style="width:2%" />
+								<p:ajax event="rowSelectCheckbox" update="@form" />
 
 								<p:column style="width:8%">
 									<f:facet name="header">
@@ -401,11 +403,14 @@
 									label="#{messages['accountOperation.matchingStatus']}"
 									field="matchingStatus" childField="label" isMessage="true" />
 
+								<hftl:column
+									label="#{messages['accountOperation.excludedFromDunning']}"
+									field="excludedFromDunning" isMessage="true" />
+
 								<hftl:actionsColumn
 									editView="#{accountOperationBean.displayOperation(entity.getId())}" />
-
 								<ui:define name="add-on-buttons">
-									<p:panelGrid columns="2" styleClass="form-panel-actions">
+									<p:panelGrid columns="4" styleClass="form-panel-actions">
 										<p:commandButton
 											action="#{accountOperationBean.matching(customerAccountBean.entity.id)}"
 											value="#{messages['customerAccount.buttonLettrage']}"
@@ -414,6 +419,17 @@
 											action="#{accountOperationBean.consultMatching(customerAccountBean.entity.id)}"
 											value="#{messages['customerAccount.buttonConsultMatching']}"
 											rendered="#{customerAccountBean.isActiveAccount()}" />
+
+										<p:commandButton
+											action="#{accountOperationBean.dunningInclusionExclusion(customerAccountBean.entity.id,true)}"
+											value="#{messages['customerAccount.excludeFromDunning']}"
+											rendered="#{customerAccountBean.isActiveAccount()}"
+											disabled="#{accountOperationBean.isSelectedOperationExcluded()}" />
+										<p:commandButton
+											action="#{accountOperationBean.dunningInclusionExclusion(customerAccountBean.entity.id,false)}"
+											value="#{messages['customerAccount.includeToDunning']}"
+											rendered="#{customerAccountBean.isActiveAccount()}"
+											disabled="#{accountOperationBean.isSelectedOperationIncluded()}" />
 									</p:panelGrid>
 								</ui:define>
 							</hftl:dataList>
@@ -421,7 +437,6 @@
 							<h:form>
 								<hf:formButtons columns="3" backingBean="#{customerAccountBean}"
 									edit="#{customerAccountBean.edit}" ajaxSubmit="false"
-									killConversationOnSave="false" killConversationOnBack="false"
 									useCustomIdParam="true">
 								</hf:formButtons>
 							</h:form>

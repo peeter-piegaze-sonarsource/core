@@ -19,19 +19,21 @@ package org.meveo.admin.action.catalog;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.meveo.admin.action.StatelessBaseBean;
+import org.meveo.admin.action.BaseBean;
+import org.meveo.admin.exception.BusinessException;
+import org.meveo.cache.RatingCacheContainerProvider;
 import org.meveo.model.catalog.TriggeredEDRTemplate;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.catalog.impl.TriggeredEDRTemplateService;
+import org.omnifaces.cdi.ViewScoped;
 
 @Named
-@ConversationScoped
-public class TriggeredEDRTemplateBean extends StatelessBaseBean<TriggeredEDRTemplate> {
+@ViewScoped
+public class TriggeredEDRTemplateBean extends BaseBean<TriggeredEDRTemplate> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,22 +44,16 @@ public class TriggeredEDRTemplateBean extends StatelessBaseBean<TriggeredEDRTemp
 	@Inject
 	private TriggeredEDRTemplateService triggeredEdrService;
 
+	@Inject
+    private RatingCacheContainerProvider ratingCacheContainerProvider;
+
+	
 	/**
 	 * Constructor. Invokes super constructor and provides class type of this
 	 * bean for {@link BaseBean}.
 	 */
 	public TriggeredEDRTemplateBean() {
 		super(TriggeredEDRTemplate.class);
-	}
-
-	/**
-	 * Override default list view name. (By default its class name starting
-	 * lower case + 's').
-	 * 
-	 * @see org.meveo.admin.action.BaseBean#getDefaultViewName()
-	 */
-	protected String getDefaultViewName() {
-		return "triggeredEdrTemplates";
 	}
 
 	/**
@@ -88,4 +84,17 @@ public class TriggeredEDRTemplateBean extends StatelessBaseBean<TriggeredEDRTemp
 		return Arrays.asList("provider");
 	}
 
+	@Override
+	public String saveOrUpdate(boolean killConversation) throws BusinessException {
+		String result = super.saveOrUpdate(killConversation);
+		ratingCacheContainerProvider.updateUsageChargeTemplateInCache(entity);
+		return result;
+	}
+
+	@Override
+	protected String saveOrUpdate(TriggeredEDRTemplate entity) throws BusinessException {
+		String result = super.saveOrUpdate(entity);
+		ratingCacheContainerProvider.updateUsageChargeTemplateInCache(entity);
+		return result;
+	}
 }

@@ -19,12 +19,17 @@ package org.meveo.service.billing.impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.cache.RatingCacheContainerProvider;
+import org.meveo.cache.WalletCacheContainerProvider;
 import org.meveo.model.Auditable;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.billing.Reservation;
@@ -64,8 +69,14 @@ public class ReservationService extends PersistenceService<Reservation> {
 
 	@Inject
 	private WalletService walletService;
+    
+	@Inject
+    private WalletCacheContainerProvider walletCacheContainerProvider;
+    	
+    @Inject
+    private RatingCacheContainerProvider ratingCacheContainerProvider;
 
-	//FIXME: rethink this service in term of prepaid wallets
+	// FIXME: rethink this service in term of prepaid wallets
 	public Long createReservation(Provider provider, String sellerCode, String offerCode, String userAccountCode,
 			Date subscriptionDate, Date expiryDate, BigDecimal creditLimit, String param1, String param2,
 			String param3, boolean amountWithTax) throws BusinessException {
@@ -266,6 +277,45 @@ public class ReservationService extends PersistenceService<Reservation> {
 
 		// #3 Set to CANCELLED the status of reservation.
 		reservation.setStatus(ReservationStatus.CANCELLED);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public void cancelPrepaidReservationInNewTransaction(Reservation reservation) throws BusinessException {
+		cancelPrepaidReservation(reservation);
+	}
+
+	public void cancelPrepaidReservation(Reservation reservation) throws BusinessException {
+		// set to OPEN all reserved operation, this is different from postpaid
+		// reservation process
+		@SuppressWarnings("unchecked")
+		List<WalletReservation> ops = getEntityManager().createNamedQuery("WalletReservation.listByReservationId")
+				.setParameter("reservationId", reservation.getId()).getResultList();
+		for (WalletReservation op : ops) {
+			op.getAuditable().setUpdated(new Date());
+			op.setStatus(WalletOperationStatusEnum.CANCELED);
+			walletCacheContainerProvider.updateBalanceCache(op);
+		}
+
+		// restore all counters values
+		if (reservation.getCounterPeriodValues().size() > 0) {
+		    ratingCacheContainerProvider.restoreCounters(reservation.getCounterPeriodValues());
+		}
+
+		reservation.setStatus(ReservationStatus.CANCELLED);
+	}
+
+	public void confirmPrepaidReservation(Reservation reservation) throws BusinessException {
+		// set to OPEN all reserved operation, this is different from postpaid
+		// reservation process
+		@SuppressWarnings("unchecked")
+		List<WalletReservation> ops = getEntityManager().createNamedQuery("WalletReservation.listByReservationId")
+				.setParameter("reservationId", reservation.getId()).getResultList();
+		for (WalletReservation op : ops) {
+			op.getAuditable().setUpdated(new Date());
+			op.setStatus(WalletOperationStatusEnum.OPEN);
+			walletCacheContainerProvider.updateBalanceCache(op);
+		}
+		reservation.setStatus(ReservationStatus.CONFIRMED);
 	}
 
 	public BigDecimal confirmReservation(Long reservationId, Provider provider, String sellerCode, String offerCode,

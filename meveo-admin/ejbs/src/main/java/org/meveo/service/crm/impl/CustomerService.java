@@ -154,4 +154,27 @@ public class CustomerService extends PersistenceService<Customer> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Customer> listBySellerCode(Provider provider, String code) {
+		QueryBuilder qb = new QueryBuilder(Customer.class, "c");
+		qb.addCriterion("seller.code", "=", code, true);
+		qb.addCriterionEntity("provider", provider);
+		try {
+			return (List<Customer>) qb.getQuery(getEntityManager()).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Seller> listSellersWithCustomers(Provider provider) {
+		try {
+			return (List<Seller>) getEntityManager().createQuery("SELECT DISTINCT c.seller "
+					+ "FROM Customer c WHERE c.provider=:provider ")
+					.setParameter("provider", provider).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 }

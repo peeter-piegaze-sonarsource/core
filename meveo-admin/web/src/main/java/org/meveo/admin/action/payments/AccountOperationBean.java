@@ -21,13 +21,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.international.status.builder.BundleKey;
-import org.meveo.admin.action.StatelessBaseBean;
+import org.meveo.admin.action.BaseBean;
+import org.meveo.admin.exception.BusinessEntityException;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.NoAllOperationUnmatchedException;
 import org.meveo.model.IEntity;
@@ -37,6 +37,7 @@ import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.payments.AutomatedPayment;
 import org.meveo.model.payments.CustomerAccount;
 import org.meveo.model.payments.MatchingAmount;
+import org.meveo.model.payments.MatchingCode;
 import org.meveo.model.payments.MatchingStatusEnum;
 import org.meveo.model.payments.OtherCreditAndCharge;
 import org.meveo.model.payments.RecordedInvoice;
@@ -44,6 +45,7 @@ import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.payments.impl.AccountOperationService;
 import org.meveo.service.payments.impl.MatchingCodeService;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -53,8 +55,8 @@ import org.primefaces.model.LazyDataModel;
  * Manaty custom JSF components.
  */
 @Named
-@ConversationScoped
-public class AccountOperationBean extends StatelessBaseBean<AccountOperation> {
+@ViewScoped
+public class AccountOperationBean extends BaseBean<AccountOperation> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -226,6 +228,75 @@ public class AccountOperationBean extends StatelessBaseBean<AccountOperation> {
 	 * @return the URL of the matching code page containing the selected
 	 *         operation
 	 */
+
+	private void dunningInclusionExclusionPartial(AccountOperation accountOperation,Boolean exclude){
+		for(MatchingAmount  matchingAmount : accountOperation.getMatchingAmounts()){
+			   MatchingCode matchingCode = matchingAmount.getMatchingCode();
+				   for(MatchingAmount  ma : matchingCode.getMatchingAmounts()){
+			           AccountOperation accountop=ma.getAccountOperation();
+			           accountop.setExcludedFromDunning(exclude);
+			           accountOperationService.update(accountop); }   
+			   }
+	}
+	public String dunningInclusionExclusion(long customerAccountId, Boolean exclude) {
+		try {
+			if (getSelectedEntities() == null
+					|| getSelectedEntities().isEmpty()) {
+				throw new BusinessEntityException("consultMatching.noOperationSelected");
+			} 
+			else{
+				log.info(" excludedFromDunning operationIds "
+						+ getSelectedEntities().size());
+				for (IEntity operation : getSelectedEntities()) {
+					   AccountOperation accountOperation = (AccountOperation) operation;
+					   if(!accountOperation.getExcludedFromDunning().equals(exclude)){
+					   if (accountOperation instanceof RecordedInvoice) { 
+						 accountOperation.setExcludedFromDunning(exclude);
+					    accountOperationService.update(accountOperation);
+					      }
+					   else {
+						throw new BusinessEntityException("excludedFromDunning.selectOperations.notInvoice");
+						}
+					   if(accountOperation.getMatchingStatus()==MatchingStatusEnum.P){
+						     dunningInclusionExclusionPartial(accountOperation,exclude) ;
+						     }}
+			         }
+			}
+			messages.info(new BundleKey("messages",
+					exclude ? "accountOperation.excludFromDunning"
+							: "accountOperation.includFromDunning"));
+		} catch (BusinessEntityException e) {
+			messages.error(new BundleKey("messages", e.getMessage()));
+		}
+
+		return "/pages/payments/customerAccounts/customerAccountDetail.xhtml?objectId="
+				+ customerAccountId + "&edit=false&tab=ops&faces-redirect=true";
+	}
+	
+	public boolean isSelectedOperationIncluded(){
+		boolean included=true;
+		if(getSelectedEntities()!=null){
+			for (IEntity operation : getSelectedEntities()) {
+		     AccountOperation accountOperation = (AccountOperation) operation;
+		     if(accountOperation.getExcludedFromDunning()){
+		    	 included=false;
+		    	 break;
+		    	 }}}
+		return included;
+	  }
+	
+	public boolean isSelectedOperationExcluded(){
+		boolean excluded=true;
+		if(getSelectedEntities()!=null){
+			for (IEntity operation : getSelectedEntities()) {
+		     AccountOperation accountOperation = (AccountOperation) operation;
+		     if(!accountOperation.getExcludedFromDunning()){
+		    	 excluded=false;
+		    	 break;
+		     }}}
+		return excluded;
+	  }
+	
 
 	public String consultMatching(long customerAccountId) {
 		List<Long> operationIds = new ArrayList<Long>();

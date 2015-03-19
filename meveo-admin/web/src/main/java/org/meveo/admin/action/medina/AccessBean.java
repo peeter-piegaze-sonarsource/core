@@ -20,26 +20,35 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.jboss.solder.servlet.http.RequestParam;
-import org.meveo.admin.action.StatelessBaseBean;
+import org.meveo.admin.action.BaseBean;
+import org.meveo.admin.action.CustomFieldEnabledBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.billing.Subscription;
+import org.meveo.model.crm.AccountLevelEnum;
 import org.meveo.model.mediation.Access;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.billing.impl.SubscriptionService;
 import org.meveo.service.medina.impl.AccessService;
 import org.meveo.service.medina.impl.CDRParsingService;
+import org.omnifaces.cdi.ViewScoped;
 
+/**
+ * Standard backing bean for {@link Access} (extends {@link BaseBean} that
+ * provides almost all common methods to handle entities filtering/sorting in
+ * datatable, their create, edit, view, delete operations). It works with Manaty
+ * custom JSF components.
+ */
 @Named
-@ConversationScoped
-public class AccessBean extends StatelessBaseBean<Access> {
+@ViewScoped
+@CustomFieldEnabledBean(accountLevel=AccountLevelEnum.ACC)
+public class AccessBean extends BaseBean<Access> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,7 +63,7 @@ public class AccessBean extends StatelessBaseBean<Access> {
 
 	@EJB
 	private CDRParsingService cdrParsingService;
-	
+
 	@Inject
 	@RequestParam
 	private Instance<Long> subscriptionId;
@@ -71,16 +80,16 @@ public class AccessBean extends StatelessBaseBean<Access> {
 
 	@Override
 	public Access initEntity() {
-		Access access = super.initEntity();
+		super.initEntity();
 
+		log.debug("AccesBean initEntity id={}", entity.getId());
 		if (subscriptionId.get() != null) {
-			Subscription subscription = subscriptionService
-					.findById(subscriptionId.get());
+			Subscription subscription = subscriptionService.findById(subscriptionId.get());
 			entity.setStartDate(subscription.getSubscriptionDate());
 			entity.setSubscription(subscription);
 		}
 
-		return access;
+		return entity;
 	}
 
 	/**
@@ -96,11 +105,6 @@ public class AccessBean extends StatelessBaseBean<Access> {
 		return "access";
 	}
 
-	@Override
-	public String getEditViewName() {
-		return "accessDetail";
-	}
-
 	public Subscription getSelectedSubscription() {
 		return selectedSubscription;
 	}
@@ -111,8 +115,7 @@ public class AccessBean extends StatelessBaseBean<Access> {
 
 	public String saveOrUpdate() throws BusinessException {
 		if (subscriptionId.get() != null) {
-			Subscription subscription = subscriptionService
-					.findById(subscriptionId.get());
+			Subscription subscription = subscriptionService.findById(subscriptionId.get());
 			entity.setSubscription(subscription);
 		}
 
@@ -121,11 +124,9 @@ public class AccessBean extends StatelessBaseBean<Access> {
 		return "";
 	}
 
-	public String saveOrUpdate(boolean killConversation)
-			throws BusinessException {
+	public String saveOrUpdate(boolean killConversation) throws BusinessException {
 		String result = "";
-		Subscription subscription = subscriptionService.findById(entity
-				.getSubscription().getId());
+		Subscription subscription = subscriptionService.findById(entity.getSubscription().getId());
 		entity.setSubscription(subscription);
 
 		if (entity.isTransient()) {
@@ -142,11 +143,12 @@ public class AccessBean extends StatelessBaseBean<Access> {
 		entity = new Access();
 
 		if (subscriptionId.get() != null) {
-			Subscription subscription = subscriptionService
-					.findById(subscriptionId.get());
+			Subscription subscription = subscriptionService.findById(subscriptionId.get());
 			entity.setStartDate(subscription.getSubscriptionDate());
 			entity.setSubscription(subscription);
 		}
+
+		initCustomFields();
 	}
 
 	@Override
@@ -158,5 +160,4 @@ public class AccessBean extends StatelessBaseBean<Access> {
 	protected List<String> getFormFieldsToFetch() {
 		return Arrays.asList("provider");
 	}
-
 }

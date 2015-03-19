@@ -20,6 +20,7 @@ import org.meveo.service.admin.impl.SellerService;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.catalog.impl.CalendarService;
 
+
 @Stateless
 public class WalletReservationService extends PersistenceService<WalletReservation> {
 
@@ -178,7 +179,7 @@ public class WalletReservationService extends PersistenceService<WalletReservati
 		Date startDate = null;
 		Date endDate = null;
 
-		Calendar cal = calendarService.findByName(paramBean.getProperty("default.calendar.monthly", "MONTHLY"),
+		Calendar cal = calendarService.findByCode(paramBean.getProperty("default.calendar.monthly", "MONTHLY"),
 				provider);
 		cal.setInitDate(subscriptionDate);
 		startDate = cal.previousCalendarDate(subscriptionDate);

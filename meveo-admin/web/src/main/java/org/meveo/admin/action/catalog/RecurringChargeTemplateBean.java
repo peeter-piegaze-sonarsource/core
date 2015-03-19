@@ -20,22 +20,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.meveo.admin.action.BaseBean;
-import org.meveo.admin.action.StatelessBaseBean;
+import org.meveo.admin.action.CustomFieldEnabledBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.catalog.RecurringChargeTemplate;
 import org.meveo.model.catalog.TriggeredEDRTemplate;
+import org.meveo.model.crm.AccountLevelEnum;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.catalog.impl.OneShotChargeTemplateService;
 import org.meveo.service.catalog.impl.RecurringChargeTemplateService;
 import org.meveo.service.catalog.impl.TriggeredEDRTemplateService;
 import org.meveo.service.catalog.impl.UsageChargeTemplateService;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.DualListModel;
 
@@ -46,9 +47,10 @@ import org.primefaces.model.DualListModel;
  * It works with Manaty custom JSF components.
  */
 @Named
-@ConversationScoped
+@ViewScoped
+@CustomFieldEnabledBean(accountLevel = AccountLevelEnum.CHARGE)
 public class RecurringChargeTemplateBean extends
-		StatelessBaseBean<RecurringChargeTemplate> {
+		BaseBean<RecurringChargeTemplate> {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Injected @{link RecurringChargeTemplate} service. Extends
@@ -67,8 +69,6 @@ public class RecurringChargeTemplateBean extends
 	private TriggeredEDRTemplateService triggeredEDRTemplateService;
 
 	private DualListModel<TriggeredEDRTemplate> edrTemplates;
-
-	private String descriptionFr;
 
 	/**
 	 * Constructor. Invokes super constructor and provides class type of this
@@ -129,14 +129,6 @@ public class RecurringChargeTemplateBean extends
 	 */
 	protected List<String> getFormFieldsToFetch() {
 		return Arrays.asList("provider", "calendar");
-	}
-
-	public String getDescriptionFr() {
-		return descriptionFr;
-	}
-
-	public void setDescriptionFr(String descriptionFr) {
-		this.descriptionFr = descriptionFr;
 	}
 
 	@Override

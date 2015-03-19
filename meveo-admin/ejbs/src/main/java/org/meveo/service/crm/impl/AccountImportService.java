@@ -41,13 +41,13 @@ import org.slf4j.Logger;
 public class AccountImportService {
 
 	@Inject
-	private Logger log;
+	private CustomFieldTemplateService customFieldTemplateService;
 
 	@Inject
 	private CustomFieldInstanceService customFieldInstanceService;
 
 	@Inject
-	private CustomFieldTemplateService customFieldTemplateService;
+	private Logger log;
 
 	@Inject
 	private WalletService walletService;
@@ -119,7 +119,11 @@ public class AccountImportService {
 		billingAccount.setStatus(AccountStatusEnum.ACTIVE);
 		billingAccount.setStatusDate(new Date());
 		billingAccount.setDescription(billAccount.getDescription());
-		billingAccount.setPaymentMethod(PaymentMethodEnum.valueOf(billAccount.getPaymentMethod()));
+		try {
+			billingAccount.setPaymentMethod(PaymentMethodEnum.valueOf(billAccount.getPaymentMethod()));
+		} catch (NullPointerException | IllegalArgumentException e) {
+			log.warn("paymentMethod={}", e.getMessage());
+		}
 
 		if (billAccount.getBankCoordinates() != null
 				&& ("DIRECTDEBIT".equalsIgnoreCase(billAccount.getPaymentMethod()) || "TIP"
@@ -304,6 +308,7 @@ public class AccountImportService {
 			for (CustomField customField : billingAccountDto.getCustomFields().getCustomField()) {
 				CustomFieldInstance cfi = customFieldInstanceService.findByCodeAndAccount(customField.getCode(),
 						billingAccount);
+
 				if (cfi == null) {
 					if (customFieldTemplateService.findByCodeAndAccountLevel(customField.getCode(),
 							AccountLevelEnum.BA, provider) == null) {

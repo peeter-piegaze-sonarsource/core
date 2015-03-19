@@ -9,16 +9,6 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:event type="preRenderView"
-				listener="#{emailNotificationBean.preRenderView}" />
-			<f:viewParam name="objectId"
-				value="#{emailNotificationBean.objectId}" />
-
-		</f:metadata>
-	</ui:define>
-
 	<ui:define name="navigation">
 		<ui:include src="/layout/navigation.xhtml" />
 	</ui:define>
@@ -40,7 +30,7 @@
 
 		<hf:formPanel id="emailNotificationForm"
 			label="#{messages['menu.emailNotification']}"
-			backingBean="#{emailNotificationBean}" columns="2">
+			backingBean="#{emailNotificationBean}" columns="2" showEnableDisableButton="true">
 			<hf:formField label="#{messages['entity.code']}" field="code"
 				required="true" maxLength="60" />
 			<p:separator></p:separator>
@@ -53,7 +43,7 @@
 			<hf:formField label="#{messages['entity.notification.elFilter']}"
 				field="elFilter" textArea="true" maxlength="1000" />
 			<hf:formField label="#{messages['enableEntity.disabled']}"
-				field="disabled" isMessage="true" />
+				field="disabled" isMessage="true" showOnlyOnConsult="true"/>
 			<hf:formField label="#{messages['entity.notification.elAction']}"
 				field="elAction" textArea="true" maxlength="2000" />
 			<hf:formField

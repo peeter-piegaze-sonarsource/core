@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.inject.Instance;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -33,11 +32,14 @@ import javax.persistence.DiscriminatorValue;
 
 import org.jboss.solder.servlet.http.RequestParam;
 import org.meveo.admin.action.BaseBean;
-import org.meveo.admin.action.StatelessBaseBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.ResourceBundle;
 import org.meveo.model.catalog.Calendar;
 import org.meveo.model.catalog.CalendarDaily;
+import org.meveo.model.catalog.CalendarDateInterval;
+import org.meveo.model.catalog.CalendarInterval;
+import org.meveo.model.catalog.CalendarInterval.CalendarIntervalTypeEnum;
+import org.meveo.model.catalog.CalendarJoin;
 import org.meveo.model.catalog.CalendarPeriod;
 import org.meveo.model.catalog.CalendarYearly;
 import org.meveo.model.catalog.DayInYear;
@@ -47,11 +49,12 @@ import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.catalog.impl.CalendarService;
 import org.meveo.service.catalog.impl.DayInYearService;
 import org.meveo.service.catalog.impl.HourInDayService;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.model.DualListModel;
 
 @Named
-@ConversationScoped
-public class CalendarBean extends StatelessBaseBean<Calendar> {
+@ViewScoped
+public class CalendarBean extends BaseBean<Calendar> {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,8 +70,6 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
     @Inject
     private HourInDayService hourInDayService;
 
-    private DualListModel<HourInDay> hourInDayListModel;
-
     @Inject
     @RequestParam()
     private Instance<String> classType;
@@ -77,6 +78,9 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
     private ResourceBundle resourceMessages;
 
     private String timeToAdd;
+
+    private Integer weekdayIntervalFrom;
+    private Integer weekdayIntervalTo;
 
     /**
      * Constructor. Invokes super constructor and provides class type of this bean for {@link BaseBean}.
@@ -123,13 +127,29 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
         this.timeToAdd = timeToAdd;
     }
 
+    public Integer getWeekdayIntervalFrom() {
+        return weekdayIntervalFrom;
+    }
+
+    public void setWeekdayIntervalFrom(Integer weekdayIntervalFrom) {
+        this.weekdayIntervalFrom = weekdayIntervalFrom;
+    }
+
+    public Integer getWeekdayIntervalTo() {
+        return weekdayIntervalTo;
+    }
+
+    public void setWeekdayIntervalTo(Integer weekdayIntervalTo) {
+        this.weekdayIntervalTo = weekdayIntervalTo;
+    }
+
     public void setDayInYearModel(DualListModel<DayInYear> perks) {
         ((CalendarYearly) getEntity()).setDays((List<DayInYear>) perks.getTarget());
     }
 
     @Override
     protected String getDefaultSort() {
-        return "name";
+        return "code";
     }
 
     @Override
@@ -143,6 +163,8 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
         values.put("DAILY", resourceMessages.getString("calendar.calendarType.DAILY"));
         values.put("YEARLY", resourceMessages.getString("calendar.calendarType.YEARLY"));
         values.put("PERIOD", resourceMessages.getString("calendar.calendarType.PERIOD"));
+        values.put("INTERVAL", resourceMessages.getString("calendar.calendarType.INTERVAL"));
+        values.put("JOIN", resourceMessages.getString("calendar.calendarType.JOIN"));
 
         return values;
     }
@@ -150,8 +172,11 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
     public Map<String, String> getPeriodTypes() {
         Map<String, String> values = new HashMap<String, String>();
 
-        values.put(Integer.toString(java.util.Calendar.DAY_OF_MONTH), resourceMessages.getString("calendar.periodUnit.5"));
         values.put(Integer.toString(java.util.Calendar.MONTH), resourceMessages.getString("calendar.periodUnit.2"));
+        values.put(Integer.toString(java.util.Calendar.DAY_OF_MONTH), resourceMessages.getString("calendar.periodUnit.5"));
+        values.put(Integer.toString(java.util.Calendar.HOUR_OF_DAY), resourceMessages.getString("calendar.periodUnit.11"));
+        values.put(Integer.toString(java.util.Calendar.MINUTE), resourceMessages.getString("calendar.periodUnit.12"));
+        values.put(Integer.toString(java.util.Calendar.SECOND), resourceMessages.getString("calendar.periodUnit.13"));
 
         return values;
     }
@@ -161,7 +186,7 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
 
         String newType = (String) ((EditableValueHolder) event.getComponent()).getValue();
 
-        Class[] classes = { CalendarYearly.class, CalendarDaily.class, CalendarPeriod.class };
+        Class[] classes = { CalendarYearly.class, CalendarDaily.class, CalendarPeriod.class, CalendarInterval.class, CalendarJoin.class };
         for (Class clazz : classes) {
 
             if (newType.equalsIgnoreCase(((DiscriminatorValue) clazz.getAnnotation(DiscriminatorValue.class)).value())) {
@@ -176,6 +201,16 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
                 }
                 return;
             }
+        }
+    }
+
+    public void changeIntervalType(AjaxBehaviorEvent event) {
+
+        CalendarIntervalTypeEnum newType = (CalendarIntervalTypeEnum) ((EditableValueHolder) event.getComponent()).getValue();
+
+        ((CalendarInterval) entity).setIntervalType(newType);
+        if (((CalendarInterval) entity).getIntervals() != null) {
+            ((CalendarInterval) entity).getIntervals().clear();
         }
     }
 
@@ -210,5 +245,72 @@ public class CalendarBean extends StatelessBaseBean<Calendar> {
 
     public void removeTime(HourInDay hourInDay) {
         ((CalendarDaily) entity).getHours().remove(hourInDay);
+    }
+
+    public void addInterval() throws BusinessException {
+
+        CalendarDateInterval intervalToAdd = null;
+
+        // Process hour interval expressed as hh:mm - hh:mm
+        if (((CalendarInterval) entity).getIntervalType() == CalendarIntervalTypeEnum.HOUR) {
+            if (timeToAdd == null) {
+                return;
+            }
+            String[] hourMins = timeToAdd.split(" - ");
+
+            if (hourMins[0].compareTo("23:59") > 0 || hourMins[1].compareTo("23:59") > 0) {
+                return;
+            }
+
+            hourMins[0] = hourMins[0].replace(":", "");
+            hourMins[1] = hourMins[1].replace(":", "");
+            intervalToAdd = new CalendarDateInterval((CalendarInterval) entity, Integer.parseInt(hourMins[0]), Integer.parseInt(hourMins[1]));
+
+            // Process hour interval expressed as mm/dd - mm/dd
+        } else if (((CalendarInterval) entity).getIntervalType() == CalendarIntervalTypeEnum.DAY) {
+            if (timeToAdd == null) {
+                return;
+            }
+
+            String[] monthDays = timeToAdd.split(" - ");
+            if (monthDays[0].compareTo("12/31") > 0 || monthDays[0].compareTo("01/01") < 0 || monthDays[1].compareTo("12/31") > 0 || monthDays[1].compareTo("01/01") < 0) {
+                return;
+            }
+
+            monthDays[0] = monthDays[0].replace("/", "");
+            monthDays[1] = monthDays[1].replace("/", "");
+            intervalToAdd = new CalendarDateInterval((CalendarInterval) entity, Integer.parseInt(monthDays[0]), Integer.parseInt(monthDays[1]));
+
+            // Process weekday interval
+        } else if (((CalendarInterval) entity).getIntervalType() == CalendarIntervalTypeEnum.WDAY) {
+            if (weekdayIntervalFrom == null || weekdayIntervalTo == null) {
+                return;
+            }
+
+            intervalToAdd = new CalendarDateInterval((CalendarInterval) entity, weekdayIntervalFrom, weekdayIntervalTo);
+
+        }
+
+        timeToAdd = null;
+        weekdayIntervalFrom = null;
+        weekdayIntervalTo = null;
+
+        // Check if not duplicate
+        if (((CalendarInterval) entity).getIntervals() != null && ((CalendarInterval) entity).getIntervals().contains(intervalToAdd)) {
+            return;
+        }
+        if (((CalendarInterval) entity).getIntervals() == null) {
+            ((CalendarInterval) entity).setIntervals(new ArrayList<CalendarDateInterval>());
+        }
+        ((CalendarInterval) entity).getIntervals().add(intervalToAdd);
+        Collections.sort(((CalendarInterval) entity).getIntervals());
+    }
+
+    public void removeInterval(CalendarDateInterval interval) {
+        ((CalendarInterval) entity).getIntervals().remove(interval);
+    }
+
+    public List<CalendarIntervalTypeEnum> getCalendarIntervalTypeEnumValues() {
+        return Arrays.asList(CalendarIntervalTypeEnum.values());
     }
 }

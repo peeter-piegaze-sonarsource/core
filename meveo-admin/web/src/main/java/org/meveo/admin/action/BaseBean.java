@@ -41,19 +41,25 @@ import org.meveo.admin.action.admin.CurrentProvider;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.model.AccountEntity;
+import org.meveo.model.AuditableEntity;
 import org.meveo.model.BaseEntity;
 import org.meveo.model.BusinessEntity;
+import org.meveo.model.ICustomFieldEntity;
 import org.meveo.model.IEntity;
 import org.meveo.model.MultilanguageEntity;
 import org.meveo.model.admin.User;
 import org.meveo.model.billing.CatMessages;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.billing.TradingLanguage;
+import org.meveo.model.catalog.ChargeTemplate;
+import org.meveo.model.catalog.OfferTemplate;
+import org.meveo.model.catalog.ServiceTemplate;
 import org.meveo.model.crm.AccountLevelEnum;
 import org.meveo.model.crm.CustomFieldInstance;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.CustomFieldTypeEnum;
 import org.meveo.model.crm.Provider;
+import org.meveo.model.mediation.Access;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.catalog.impl.CatMessagesService;
@@ -243,6 +249,8 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 			}
 		}
 
+		initCustomFields();
+
 		return entity;
 	}
 
@@ -308,6 +316,8 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 
 	public String saveOrUpdate(boolean killConversation) throws BusinessException {
 		String outcome = null;
+
+		updateCustomFieldsInEntity();
 
 		if (!isMultilanguageEntity()) {
 			outcome = saveOrUpdate(entity);
@@ -617,11 +627,30 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 	}
 
 	/**
-	 * Delete Entity using it's ID. Add error message to {@link statusMessages}
+	 * Disable current entity. Add error message to {@link statusMessages} if
+	 * unsuccessful.
+	 * 
+	 * @param id
+	 *            Entity id to disable
+	 */
+	public void disable() {
+		try {
+			log.info(String.format("Disabling entity %s with id = %s", clazz.getName(), entity.getId()));
+			entity = getPersistenceService().disable(entity);
+			messages.info(new BundleKey("messages", "disabled.successful"));
+
+		} catch (Exception t) {
+			log.info("unexpected exception when disabling!", t);
+			messages.error(new BundleKey("messages", "error.unexpected"));
+		}
+	}
+
+	/**
+	 * Disable Entity using it's ID. Add error message to {@link statusMessages}
 	 * if unsuccessful.
 	 * 
 	 * @param id
-	 *            Entity id to delete
+	 *            Entity id to disable
 	 */
 	public void disable(Long id) {
 		try {
@@ -630,13 +659,46 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 			messages.info(new BundleKey("messages", "disabled.successful"));
 
 		} catch (Throwable t) {
-			if (t.getCause() instanceof EntityExistsException) {
-				log.info("delete was unsuccessful because entity is used in the system", t);
-				messages.error(new BundleKey("messages", "error.delete.entityUsed"));
-			} else {
-				log.info("unexpected exception when deleting!", t);
-				messages.error(new BundleKey("messages", "error.delete.unexpected"));
-			}
+			log.info("unexpected exception when disabling!", t);
+			messages.error(new BundleKey("messages", "error.unexpected"));
+		}
+	}
+
+	/**
+	 * Enable current entity. Add error message to {@link statusMessages} if
+	 * unsuccessful.
+	 * 
+	 * @param id
+	 *            Entity id to enable
+	 */
+	public void enable() {
+		try {
+			log.info(String.format("Enabling entity %s with id = %s", clazz.getName(), entity.getId()));
+			entity = getPersistenceService().enable(entity);
+			messages.info(new BundleKey("messages", "enabled.successful"));
+
+		} catch (Exception t) {
+			log.info("unexpected exception when enabling!", t);
+			messages.error(new BundleKey("messages", "error.unexpected"));
+		}
+	}
+
+	/**
+	 * Enable Entity using it's ID. Add error message to {@link statusMessages}
+	 * if unsuccessful.
+	 * 
+	 * @param id
+	 *            Entity id to enable
+	 */
+	public void enable(Long id) {
+		try {
+			log.info(String.format("Enabling entity %s with id = %s", clazz.getName(), id));
+			getPersistenceService().enable(id);
+			messages.info(new BundleKey("messages", "enabled.successful"));
+
+		} catch (Throwable t) {
+			log.info("unexpected exception when enabling!", t);
+			messages.error(new BundleKey("messages", "error.unexpected"));
 		}
 	}
 
@@ -818,6 +880,14 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 		return backView.get();
 	}
 
+	public String getBackViewSave() {
+		return backViewSave;
+	}
+
+	public void setBackViewSave(String backViewSave) {
+		this.backViewSave = backViewSave;
+	}
+
 	/**
 	 * Remove a value from a map type field attribute used to gather field
 	 * values in GUI
@@ -891,11 +961,22 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 		}
 	}
 
-	protected void initCustomFields(AccountLevelEnum accountLevel) {
+	/**
+	 * Load available custom fields (templates) and their values
+	 */
+	protected void initCustomFields() {
+
+		if (!this.getClass().isAnnotationPresent(CustomFieldEnabledBean.class)) {
+			return;
+		}
+
+		AccountLevelEnum accountLevel = this.getClass().getAnnotation(CustomFieldEnabledBean.class).accountLevel();
 		customFieldTemplates = customFieldTemplateService.findByAccountLevel(accountLevel, getCurrentProvider());
-		if (customFieldTemplates != null && customFieldTemplates.size() > 0 && !getEntity().isTransient()) {
+
+		if (customFieldTemplates != null && customFieldTemplates.size() > 0) {
 			for (CustomFieldTemplate cf : customFieldTemplates) {
-				CustomFieldInstance cfi = customFieldInstanceService.findByCodeAndAccount(cf.getCode(), getEntity());
+
+				CustomFieldInstance cfi = ((ICustomFieldEntity) entity).getCustomFields().get(cf.getCode());
 				if (cfi != null) {
 					if (cf.getFieldType() == CustomFieldTypeEnum.DATE) {
 						cf.setDateValue(cfi.getDateValue());
@@ -907,16 +988,91 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 							|| cf.getFieldType() == CustomFieldTypeEnum.LIST) {
 						cf.setStringValue(cfi.getStringValue());
 					}
+					// Clear existing transient values
+				} else {
+					if (cf.getFieldType() == CustomFieldTypeEnum.DATE) {
+						cf.setDateValue(null);
+					} else if (cf.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+						cf.setDoubleValue(null);
+					} else if (cf.getFieldType() == CustomFieldTypeEnum.LONG) {
+						cf.setLongValue(null);
+					} else if (cf.getFieldType() == CustomFieldTypeEnum.STRING
+							|| cf.getFieldType() == CustomFieldTypeEnum.LIST) {
+						cf.setStringValue(null);
+					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * Save non-empty custom field values. Remove existing custom value
-	 * instances if value changes to null
-	 */
-	protected void saveCustomFields() {
+	private void updateCustomFieldsInEntity() {
+
+		if (!this.getClass().isAnnotationPresent(CustomFieldEnabledBean.class) || customFieldTemplates == null
+				|| customFieldTemplates.isEmpty()) {
+			return;
+		}
+
+		for (CustomFieldTemplate cf : customFieldTemplates) {
+
+			CustomFieldInstance cfi = ((ICustomFieldEntity) entity).getCustomFields().get(cf.getCode());
+			// Not saving empty values
+			if (cfi != null && cf.isValueEmpty()) {
+				((ICustomFieldEntity) entity).getCustomFields().remove(cf.getCode());
+
+				// Update existing value
+			} else if (cfi != null) {
+				if (cf.getFieldType() == CustomFieldTypeEnum.DATE) {
+					cfi.setDateValue(cf.getDateValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+					cfi.setDoubleValue(cf.getDoubleValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.LONG) {
+					cfi.setLongValue(cf.getLongValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.STRING
+						|| cf.getFieldType() == CustomFieldTypeEnum.LIST) {
+					cfi.setStringValue(cf.getStringValue());
+				}
+				cfi.updateAudit(getCurrentUser());
+
+				// Create a new value
+			} else if (!cf.isValueEmpty()) {
+
+				cfi = new CustomFieldInstance();
+				cfi.setCode(cf.getCode());
+				((AuditableEntity) cfi).updateAudit(getCurrentUser());
+				((BaseEntity) cfi).setProvider(getCurrentProvider());
+
+				IEntity entity = getEntity();
+				if (entity instanceof AccountEntity) {
+					cfi.setAccount((AccountEntity) getEntity());
+				} else if (entity instanceof Subscription) {
+					cfi.setSubscription((Subscription) entity);
+				} else if (entity instanceof Access) {
+					cfi.setAccess((Access) entity);
+				} else if (entity instanceof ChargeTemplate) {
+					cfi.setChargeTemplate((ChargeTemplate) entity);
+				} else if (entity instanceof ServiceTemplate) {
+					cfi.setServiceTemplate((ServiceTemplate) entity);
+				} else if (entity instanceof OfferTemplate) {
+					cfi.setOfferTemplate((OfferTemplate) entity);
+				}
+
+				if (cf.getFieldType() == CustomFieldTypeEnum.DATE) {
+					cfi.setDateValue(cf.getDateValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+					cfi.setDoubleValue(cf.getDoubleValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.LONG) {
+					cfi.setLongValue(cf.getLongValue());
+				} else if (cf.getFieldType() == CustomFieldTypeEnum.STRING
+						|| cf.getFieldType() == CustomFieldTypeEnum.LIST) {
+					cfi.setStringValue(cf.getStringValue());
+				}
+
+				((ICustomFieldEntity) entity).getCustomFields().put(cfi.getCode(), cfi);
+			}
+		}
+	}
+
+	protected void setAndSaveCustomFields() {
 		if (customFieldTemplates != null && customFieldTemplates.size() > 0) {
 			for (CustomFieldTemplate cf : customFieldTemplates) {
 				CustomFieldInstance cfi = customFieldInstanceService.findByCodeAndAccount(cf.getCode(), getEntity());
@@ -938,7 +1094,6 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 					}
 
 				} else if (!cf.isValueEmpty()) {
-
 					// create
 					cfi = new CustomFieldInstance();
 					cfi.setCode(cf.getCode());
@@ -947,6 +1102,8 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 						cfi.setAccount((AccountEntity) getEntity());
 					} else if (entity instanceof Subscription) {
 						cfi.setSubscription((Subscription) entity);
+					} else if (entity instanceof Access) {
+						cfi.setAccess((Access) entity);
 					}
 
 					if (cf.getFieldType() == CustomFieldTypeEnum.DATE) {
@@ -961,6 +1118,17 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
 					}
 
 					customFieldInstanceService.create(cfi, getCurrentUser(), getCurrentProvider());
+				}
+			}
+		}
+	}
+
+	protected void deleteCustomFields() {
+		if (customFieldTemplates != null && customFieldTemplates.size() > 0) {
+			for (CustomFieldTemplate cf : customFieldTemplates) {
+				CustomFieldInstance cfi = customFieldInstanceService.findByCodeAndAccount(cf.getCode(), getEntity());
+				if (cfi != null) {
+					customFieldInstanceService.remove(cfi);
 				}
 			}
 		}

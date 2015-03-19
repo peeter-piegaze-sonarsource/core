@@ -2,16 +2,15 @@ package org.meveo.service.billing.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.el.ArrayELResolver;
 import javax.el.BeanELResolver;
 import javax.el.CompositeELResolver;
@@ -29,6 +28,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.exception.UnrolledbackBusinessException;
+import org.meveo.cache.RatingCacheContainerProvider;
 import org.meveo.commons.utils.NumberUtils;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.BaseEntity;
@@ -43,7 +44,9 @@ import org.meveo.model.billing.UsageChargeInstance;
 import org.meveo.model.billing.UserAccount;
 import org.meveo.model.billing.WalletOperation;
 import org.meveo.model.billing.WalletOperationStatusEnum;
+import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.LevelEnum;
+import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.catalog.PricePlanMatrix;
 import org.meveo.model.catalog.RecurringChargeTemplate;
 import org.meveo.model.catalog.TriggeredEDRTemplate;
@@ -55,7 +58,6 @@ import org.meveo.service.base.SimpleELResolver;
 import org.meveo.service.base.SimpleFunctionMapper;
 import org.meveo.service.base.SimpleVariableMapper;
 import org.meveo.service.catalog.impl.CatMessagesService;
-import org.meveo.util.MeveoCacheContainerProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,16 +78,13 @@ public class RatingService {
 	@EJB
 	private SubscriptionService subscriptionService;
 	
+	@EJB
+	private RatedTransactionService ratedTransactionService;
 
-	private static boolean isPricePlanDirty;
-
-	private static final BigDecimal HUNDRED = new BigDecimal("100");
-
+	@Inject
+	private RatingCacheContainerProvider ratingCacheContainerProvider;
 	
-
-	public static void setPricePlanDirty() {
-		isPricePlanDirty = true;
-	}
+	private static final BigDecimal HUNDRED = new BigDecimal("100");
 
 	/*
 	 * public int getSharedQuantity(LevelEnum level, Provider provider, String
@@ -215,7 +214,7 @@ public class RatingService {
 		result.setOfferCode(offerCode);
 		result.setStatus(WalletOperationStatusEnum.OPEN);
 		result.setSeller(chargeInstance.getSeller());
-		//TODO:check that setting the principal wallet at this stage is correct
+		// TODO:check that setting the principal wallet at this stage is correct
 		result.setWallet(chargeInstance.getSubscription().getUserAccount().getWallet());
 
 		BigDecimal unitPriceWithoutTax = amountWithoutTax;
@@ -340,20 +339,11 @@ public class RatingService {
 		String providerCode = provider.getCode();
 
 		if (unitPriceWithoutTax == null) {
-			if (MeveoCacheContainerProvider.getAllPricePlan().isEmpty()) {
-				loadPricePlan(em);
-			} else if (isPricePlanDirty) {
-				reloadPricePlan();
-			}
-			if (!MeveoCacheContainerProvider.getAllPricePlan().containsKey(providerCode)) {
-				throw new RuntimeException("No price plan for provider " + providerCode);
-			}
-			if (!MeveoCacheContainerProvider.getAllPricePlan().get(providerCode).containsKey(bareWalletOperation.getCode())) {
-				throw new RuntimeException("No price plan for provider " + providerCode + " and charge code "
-						+ bareWalletOperation.getCode());
-			}
-			ratePrice = ratePrice(MeveoCacheContainerProvider.getAllPricePlan().get(providerCode).get(bareWalletOperation.getCode()),
-					bareWalletOperation, countryId, tcurrency,
+            List<PricePlanMatrix> chargePricePlans = ratingCacheContainerProvider.getPricePlansByChargeCode(provider.getId(), bareWalletOperation.getCode());
+            if (chargePricePlans == null || chargePricePlans.isEmpty()) {
+                throw new RuntimeException("No price plan for provider " + providerCode + " and charge code " + bareWalletOperation.getCode());
+            }
+			ratePrice = ratePrice(chargePricePlans,bareWalletOperation, countryId, tcurrency,
 					bareWalletOperation.getSeller() != null ? bareWalletOperation.getSeller().getId() : null);
 			if (ratePrice == null || ratePrice.getAmountWithoutTax() == null) {
 				throw new BusinessException("Invalid price plan for provider " + providerCode + " and charge code "
@@ -425,7 +415,6 @@ public class RatingService {
 		bareWalletOperation.setAmountTax(amountTax);
 	}
 
-
 	private PricePlanMatrix ratePrice(List<PricePlanMatrix> listPricePlan, WalletOperation bareOperation,
 			Long countryId, TradingCurrency tcurrency, Long sellerId) throws BusinessException {
 		// FIXME: the price plan properties could be null !
@@ -442,9 +431,10 @@ public class RatingService {
 			boolean countryAreEqual = pricePlan.getTradingCountry() == null
 					|| pricePlan.getTradingCountry().getId().equals(countryId);
 			if (!countryAreEqual) {
-				log.debug("The country of the billing account " + countryId + " is not the same as pricePlan country"
-						+ pricePlan.getTradingCountry().getId() + " ("
-						+ pricePlan.getTradingCountry().getCountry().getCountryCode() + ")");
+				log.debug(
+						"The countryId={} of the billing account is not the same as pricePlan with countryId={} and code={}",
+						countryId, pricePlan.getTradingCountry().getId(),
+								pricePlan.getTradingCountry().getCountry().getCountryCode() );
 				continue;
 			}
 			boolean currencyAreEqual = pricePlan.getTradingCurrency() == null
@@ -484,9 +474,8 @@ public class RatingService {
 			// pricePlan.getMinSubscriptionAgeInMonth() + ")=" +
 			// subscriptionMinAgeOK);
 			if (!subscriptionMinAgeOK) {
-				log.debug("The subscription age " + subscriptionAge
-						+ "is less than the priceplan subscription age min :"
-						+ pricePlan.getMinSubscriptionAgeInMonth());
+				log.debug("The subscription age={} is less than the priceplan subscription age min={}",
+						subscriptionAge, pricePlan.getMinSubscriptionAgeInMonth());
 				continue;
 			}
 			boolean subscriptionMaxAgeOK = pricePlan.getMaxSubscriptionAgeInMonth() == null
@@ -502,7 +491,7 @@ public class RatingService {
 
 			boolean applicationDateInPricePlanPeriod = (pricePlan.getStartRatingDate() == null
 					|| bareOperation.getOperationDate().after(pricePlan.getStartRatingDate()) || bareOperation
-					.getOperationDate().equals(pricePlan.getStartRatingDate()))
+                .getOperationDate().equals(pricePlan.getStartRatingDate()))
 					&& (pricePlan.getEndRatingDate() == null || bareOperation.getOperationDate().before(
 							pricePlan.getEndRatingDate()));
 			log.debug("applicationDateInPricePlanPeriod(" + pricePlan.getStartRatingDate() + " - "
@@ -568,78 +557,77 @@ public class RatingService {
 			}
 			boolean quantityMinOk = pricePlan.getMinQuantity() == null
 					|| pricePlan.getMinQuantity().compareTo(bareOperation.getQuantity()) <= 0;
-			if (quantityMinOk) {
-				log.debug("quantityMinOkInPricePlan");
-				bareOperation.setPriceplan(pricePlan);
-				return pricePlan;
+			if (!quantityMinOk) {
+			    log.debug("the quantity " + bareOperation.getQuantity() + " is less than " + pricePlan.getMinQuantity());
+	            continue;
 			} else {
-				log.debug("the quantity " + bareOperation.getQuantity() + " is less than " + pricePlan.getMinQuantity());
-			}
+			    log.debug("quantityMinOkInPricePlan");
+			} 
+
+            boolean validityCalendarOK = pricePlan.getValidityCalendar() == null || pricePlan.getValidityCalendar().previousCalendarDate(bareOperation.getOperationDate()) != null;
+            if (validityCalendarOK) {
+                log.debug("validityCalendarOkInPricePlan calendar " + pricePlan.getValidityCalendar() + " operation date " + bareOperation.getOperationDate());
+                bareOperation.setPriceplan(pricePlan);
+                return pricePlan;
+            } else if (pricePlan.getValidityCalendar() != null ){
+                log.debug("the operation date " + bareOperation.getOperationDate() + " does not match pricePlan validity calendar " + pricePlan.getValidityCalendar().getCode()
+                        + "period range ");
+            }
 		}
 		return null;
 	}
 
-	// synchronized to avoid different threads to reload the priceplan
-	// concurrently
-	protected synchronized void reloadPricePlan() {
-		if (isPricePlanDirty) {
-			log.info("Reload priceplan");
-			loadPricePlan();
-			isPricePlanDirty = false;
-		}
-	}
-
-	protected void loadPricePlan() {
-		loadPricePlan(entityManager);
-	}
-
-	// FIXME : call this method when priceplan is edited (or more precisely add
-	// a button to reload the priceplan)
-	@SuppressWarnings("unchecked")
-	protected void loadPricePlan(EntityManager em) {
-		List<PricePlanMatrix> allPricePlans = (List<PricePlanMatrix>) em.createQuery(
-				"from PricePlanMatrix where disabled=false order by priority ASC").getResultList();
-		if (allPricePlans != null & allPricePlans.size() > 0) {
-			for (PricePlanMatrix pricePlan : allPricePlans) {
-				if (!MeveoCacheContainerProvider.getAllPricePlan().containsKey(pricePlan.getProvider().getCode())) {
-					MeveoCacheContainerProvider.getAllPricePlan().put(pricePlan.getProvider().getCode(), new HashMap<String, List<PricePlanMatrix>>());
+	//rerate
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public void reRate(WalletOperation operationToRerate,
+			boolean useSamePricePlan) throws BusinessException {
+		try {
+			ratedTransactionService
+					.reratedByWalletOperationId(operationToRerate.getId());
+			WalletOperation operation = operationToRerate.getUnratedClone();
+			operationToRerate.setReratedWalletOperation(operation);
+			operationToRerate.setStatus(WalletOperationStatusEnum.RERATED);
+			if (useSamePricePlan) {
+				if (operation.getPriceplan() != null) {
+					operation.setUnitAmountWithoutTax(operation.getPriceplan()
+							.getAmountWithoutTax());
+					operation.setUnitAmountWithTax(operation.getPriceplan()
+							.getAmountWithTax());
+					if (operation.getUnitAmountTax() != null
+							&& operation.getUnitAmountWithTax() != null) {
+						operation.setUnitAmountTax(operation
+								.getUnitAmountWithTax().subtract(
+										operation.getUnitAmountWithoutTax()));
+					}
 				}
-				HashMap<String, List<PricePlanMatrix>> providerPricePlans = MeveoCacheContainerProvider.getAllPricePlan().get(pricePlan.getProvider()
-						.getCode());
-				if (!providerPricePlans.containsKey(pricePlan.getEventCode())) {
-					providerPricePlans.put(pricePlan.getEventCode(), new ArrayList<PricePlanMatrix>());
+				operation.setAmountWithoutTax(operation
+						.getUnitAmountWithoutTax().multiply(
+								operation.getQuantity()));
+				if (operation.getUnitAmountWithTax() != null) {
+					operation
+							.setAmountWithTax(operation.getUnitAmountWithTax());
 				}
-				if (pricePlan.getCriteria1Value() != null && pricePlan.getCriteria1Value().length() == 0) {
-					pricePlan.setCriteria1Value(null);
+				operation.setAmountTax(operation.getAmountWithTax().subtract(
+						operation.getAmountWithoutTax()));
+			} else {
+				try {
+					rateBareWalletOperation(entityManager, operation, null,
+							null, operation.getPriceplan().getTradingCountry()==null?null:
+								operation.getPriceplan().getTradingCountry().getId(), operation.getPriceplan()
+									.getTradingCurrency(),
+							operation.getProvider());
+				} catch (BusinessException e) {
+					e.printStackTrace();
 				}
-				if (pricePlan.getCriteria2Value() != null && pricePlan.getCriteria2Value().length() == 0) {
-					pricePlan.setCriteria2Value(null);
-				}
-				if (pricePlan.getCriteria3Value() != null && pricePlan.getCriteria3Value().length() == 0) {
-					pricePlan.setCriteria3Value(null);
-				}
-				if (pricePlan.getCriteriaEL() != null && pricePlan.getCriteriaEL().length() == 0) {
-					pricePlan.setCriteriaEL(null);
-				}
-
-				// Lazy loading workaround
-				if (pricePlan.getOfferTemplate() != null) {
-					pricePlan.getOfferTemplate().getCode();
-				}
-
-				log.info("Add pricePlan for provider=" + pricePlan.getProvider().getCode() + "; chargeCode="
-						+ pricePlan.getEventCode() + "; priceplan=" + pricePlan + "; criteria1="
-						+ pricePlan.getCriteria1Value() + "; criteria2=" + pricePlan.getCriteria2Value()
-						+ "; criteria3=" + pricePlan.getCriteria3Value() + "; criteriaEL=" + pricePlan.getCriteriaEL());
-				List<PricePlanMatrix> chargePriceList = providerPricePlans.get(pricePlan.getEventCode());
-				chargePriceList.add(pricePlan);
-				Collections.sort(chargePriceList);
 			}
+			entityManager.persist(operation);
+		} catch (UnrolledbackBusinessException e) {
+			log.info(e.getMessage());
+			operationToRerate.setStatus(WalletOperationStatusEnum.TREATED);
+			;
 		}
-
-		log.info("loadPricePlan allPricePlan.size()=" + MeveoCacheContainerProvider.getAllPricePlan() != null ? MeveoCacheContainerProvider.getAllPricePlan().size() + "" : null);
 	}
-
+	
 	private boolean matchExpression(String expression, WalletOperation bareOperation, UserAccount ua)
 			throws BusinessException {
 		Boolean result = true;
@@ -648,6 +636,16 @@ public class RatingService {
 		}
 		Map<Object, Object> userMap = new HashMap<Object, Object>();
 		userMap.put("op", bareOperation);
+		if(expression.indexOf("charge") >= 0){
+			ChargeTemplate charge=bareOperation.getChargeInstance().getChargeTemplate();
+			userMap.put("charge",charge);
+			charge.getCustomFields();
+		}
+		if(expression.indexOf("offer") >= 0){
+			OfferTemplate offer=bareOperation.getChargeInstance().getSubscription().getOffer();
+			offer.getCustomFields();
+			userMap.put("offer",offer);
+		}
 		if (expression.indexOf("ua.") >= 0) {
 			userMap.put("ua", ua);
 		}
@@ -677,7 +675,16 @@ public class RatingService {
 		}
 		Map<Object, Object> userMap = new HashMap<Object, Object>();
 		userMap.put("op", walletOperation);
-
+		if(expression.indexOf("charge") >= 0){
+			ChargeTemplate charge=walletOperation.getChargeInstance().getChargeTemplate();
+			userMap.put("charge",charge);
+			charge.getCustomFields();
+		}
+		if(expression.indexOf("offer") >= 0){
+			OfferTemplate offer=walletOperation.getChargeInstance().getSubscription().getOffer();
+			offer.getCustomFields();
+			userMap.put("offer",offer);
+		}
 		if (expression.indexOf("ua.") >= 0) {
 			userMap.put("ua", ua);
 		}
@@ -708,6 +715,21 @@ public class RatingService {
 		}
 		Map<Object, Object> userMap = new HashMap<Object, Object>();
 		userMap.put("op", walletOperation);
+		if(expression.indexOf("charge") >= 0){
+			ChargeTemplate charge=walletOperation.getChargeInstance().getChargeTemplate();
+			userMap.put("charge",charge);
+			charge.getCustomFields();
+		}
+		if(expression.indexOf("offer") >= 0){
+			OfferTemplate offer=walletOperation.getChargeInstance().getSubscription().getOffer();
+			offer.getCustomFields();
+			userMap.put("offer",offer);
+		}
+		/*if(expression.indexOf("service") >= 0){
+			ServiceTemplate service=walletOperation.getServiceInstance();
+			offer.getCustomFields();
+			userMap.put("offer",offer);
+		}*/
 		if (expression.indexOf("ua.") >= 0) {
 			userMap.put("ua", ua);
 		}

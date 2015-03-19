@@ -25,13 +25,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.meveo.admin.action.BaseBean;
-import org.meveo.admin.action.StatefulBaseBean;
+import org.meveo.admin.action.CustomFieldEnabledBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.pagination.EntityListDataModelPF;
 import org.meveo.model.billing.InstanceStatusEnum;
@@ -61,11 +60,19 @@ import org.meveo.service.billing.impl.UserAccountService;
 import org.meveo.service.billing.impl.WalletOperationService;
 import org.meveo.service.catalog.impl.ServiceChargeTemplateSubscriptionService;
 import org.meveo.service.medina.impl.AccessService;
+import org.omnifaces.cdi.ViewScoped;
 import org.slf4j.Logger;
 
+/**
+ * Standard backing bean for {@link Subscription} (extends {@link BaseBean} that
+ * provides almost all common methods to handle entities filtering/sorting in
+ * datatable, their create, edit, view, delete operations). It works with Manaty
+ * custom JSF components.
+ */
 @Named
-@ConversationScoped
-public class SubscriptionBean extends StatefulBaseBean<Subscription> {
+@ViewScoped
+@CustomFieldEnabledBean(accountLevel=AccountLevelEnum.SUB)
+public class SubscriptionBean extends BaseBean<Subscription> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -176,8 +183,6 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 			serviceInstances.addAll(entity.getServiceInstances());
 		}
 
-		initCustomFields(AccountLevelEnum.SUB);
-
 		log.debug("serviceInstances=" + serviceInstances.getSize());
 		log.debug("servicetemplates=" + serviceTemplates.getSize());
 
@@ -193,6 +198,10 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 		if (entity.getOffer() != null) {
 			List<ServiceInstance> serviceInstances = entity.getServiceInstances();
 			for (ServiceTemplate serviceTemplate : entity.getOffer().getServiceTemplates()) {
+			    if (serviceTemplate.isDisabled()){
+			        continue;
+			    }
+			    
 				boolean alreadyInstanciated = false;
 
 				for (ServiceInstance serviceInstance : serviceInstances) {
@@ -225,12 +234,9 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 
 				return null;
 			}
-
 		}
 
 		super.saveOrUpdate(killConversation);
-
-		saveCustomFields();
 
 		return "/pages/billing/subscriptions/subscriptionDetail?edit=false&subscriptionId=" + entity.getId()
 				+ "&faces-redirect=true&includeViewParams=true";
@@ -238,8 +244,9 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 
 	@Override
 	protected String saveOrUpdate(Subscription entity) throws BusinessException {
+
 		if (entity.isTransient()) {
-			log.debug("SubscriptionBean save, # of service templates:{}", entity.getOffer().getServiceTemplates()
+			log.debug("SubscriptionBean save, # of service templates={}", entity.getOffer().getServiceTemplates()
 					.size());
 			subscriptionService.create(entity);
 			serviceTemplates.addAll(entity.getOffer().getServiceTemplates());
@@ -249,8 +256,6 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 			subscriptionService.update(entity);
 			messages.info(new BundleKey("messages", "update.successful"));
 		}
-
-		saveCustomFields();
 
 		return back();
 	}
@@ -480,9 +485,11 @@ public class SubscriptionBean extends StatefulBaseBean<Subscription> {
 				serviceInstances.add(serviceInstance);
 				serviceTemplates.remove(serviceTemplate);
 			}
+
 			if (!isChecked) {
 				messages.warn(new BundleKey("messages", "instanciation.selectService"));
 			} else {
+				subscriptionService.refresh(entity);
 				messages.info(new BundleKey("messages", "instanciation.instanciateSuccessful"));
 			}
 		} catch (BusinessException e1) {

@@ -16,7 +16,10 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.codec.binary.Base64;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.IEntity;
@@ -25,7 +28,10 @@ import org.meveo.model.notification.WebHook;
 import org.meveo.model.notification.WebHookMethodEnum;
 import org.meveo.service.billing.impl.RatingService;
 import org.meveo.util.MeveoJpaForJobs;
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
 import org.slf4j.Logger;
+import org.w3c.dom.Document;
 
 @Stateless
 public class WebHookNotifier {
@@ -66,9 +72,6 @@ public class WebHookNotifier {
 
 		try {
 			String url = webHook.getHost().startsWith("http") ? webHook.getHost() : "http://" + webHook.getHost();
-			if(!StringUtils.isBlank(webHook.getUsername())){
-				url = "http://" +webHook.getUsername()+":"+webHook.getPassword()+"@"+url.substring(7);
-			}
 			if (webHook.getPort() > 0) {
 				url += ":" + webHook.getPort();
 			}
@@ -94,6 +97,11 @@ public class WebHookNotifier {
             HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 
             Map<String, String> headers = evaluateMap(webHook.getHeaders(), e);
+            if(!StringUtils.isBlank(webHook.getUsername()) && !headers.containsKey("Authorization")){
+     			byte[] bytes = Base64.encodeBase64((webHook.getUsername() + ":" + webHook.getPassword()).getBytes());
+     			headers.put("Authorization", "Basic "+new String(bytes));
+			}
+           
 			for (String key : headers.keySet()) {
 		        conn.setRequestProperty(key, headers.get(key));
 			}
@@ -140,6 +148,34 @@ public class WebHookNotifier {
 					e2.printStackTrace();
 				}
 			} else {
+				HashMap<Object, Object> userMap = new HashMap<Object, Object>();
+				userMap.put("event", e);
+				userMap.put("response",result);
+				if(webHook.getElAction()!=null && webHook.getElAction().indexOf("jsObj.")>=0){
+					JSONObject json;
+					try {
+						json = new JSONObject(result);
+						userMap.put("jsObj",json);
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
+				} else if(webHook.getElAction()!=null && webHook.getElAction().indexOf("xmlDoc.")>=0){
+					try {
+						DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+						DocumentBuilder builder = dbf.newDocumentBuilder();
+						Document doc = builder.parse(result);
+						userMap.put("xmlDoc",doc);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				try {
+					RatingService.evaluateExpression(webHook.getElAction(), userMap, String.class);
+				} catch(Exception e1){
+					e1.printStackTrace();
+				}
+				
 				notificationHistoryService.create(webHook, e, result, NotificationHistoryStatusEnum.SENT);
 				log.debug("webhook answer : " + result);
 			}
@@ -160,6 +196,21 @@ public class WebHookNotifier {
 				log.debug("webhook history error : " + e2.getMessage());
 				e2.printStackTrace();
 			}
+		}
+	}
+	
+	public static void main(String[] args){
+		String test="{  \"sid\": \"CLb2f57233976448368708c754b3c1efb7\",  \"date_created\": \"Sat, 21 Feb 2015 18:37:49 +0000\","
+				+ "  \"date_updated\": \"Sat, 21 Feb 2015 18:37:49 +0000\",  \"account_sid\": \"ACae6e420f425248d6a26948c17a9e2acf\","
+				+ "  \"api_version\": \"2012-04-24\",  \"friendly_name\": \"RC_A1\",  \"login\": \"RC_A1\","
+				+ "  \"password\": \"toto\",  \"status\": \"1\",  \"voice_method\": \"POST\",  \"voice_fallback_method\": \"POST\","
+				+ "  \"uri\": \"/restcomm/2012-04-24/Accounts/ACae6e420f425248d6a26948c17a9e2acf/Clients/CLb2f57233976448368708c754b3c1efb7.json\"}";
+		try {
+			JSONObject json = new JSONObject(test);
+			System.out.println(json.getString("sid"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

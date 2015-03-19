@@ -8,7 +8,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:event type="preRenderView"
-				listener="#{oneShotChargeTemplateBean.preRenderView}" />
+				listener="#{oneShotChargeTemplateListBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
 	<ui:define name="navigation">
@@ -22,7 +22,7 @@
 	<ui:define name="body">
 
 		<hf:searchPanel label="#{messages['oneShotChargeTemplate.search']}"
-			backingBean="#{oneShotChargeTemplateBean}">
+			backingBean="#{oneShotChargeTemplateListBean}">
 			<hf:searchField label="#{messages['chargeTemplate.code']}"
 				field="code" />
 			<hf:searchField label="#{messages['chargeTemplate.description']}"
@@ -30,14 +30,13 @@
 			<!-- <hf:searchField label="#{messages['chargeTemplate.amountEditable']}" field="amountEditable" /> -->
 			<hf:searchField label="#{messages['chargeTemplate.type']}"
 				field="oneShotChargeTemplateType" childField="label" />
-			<hf:searchField label="#{messages['enableEntity.disabled']}"
-				field="disabled" isMessage="true" />
+			<hf:searchField label="#{messages['enableEntity.disabled']}" field="disabled" />
 
 		</hf:searchPanel>
 
 		<hftl:dataList label="#{messages['oneShotChargeTemplate.title']}"
-			checkMany="false" noClose="false"
-			backingBean="#{oneShotChargeTemplateBean}">
+			checkMany="false" noClose="false" sortBy="code"
+			backingBean="#{oneShotChargeTemplateListBean}">
 			<hftl:column label="#{messages['chargeTemplate.code']}" field="code" />
 			<hftl:column label="#{messages['chargeTemplate.description']}"
 				field="description" />

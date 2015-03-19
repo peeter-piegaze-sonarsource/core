@@ -40,6 +40,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.meveo.model.BusinessEntity;
+import org.meveo.model.ICustomFieldEntity;
 import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.crm.CustomFieldInstance;
 import org.meveo.model.mediation.Access;
@@ -50,7 +51,7 @@ import org.meveo.model.mediation.Access;
 @Entity
 @Table(name = "BILLING_SUBSCRIPTION", uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "PROVIDER_ID" }))
 @SequenceGenerator(name = "ID_GENERATOR", sequenceName = "BILLING_SUBSCRIPTION_SEQ")
-public class Subscription extends BusinessEntity {
+public class Subscription extends BusinessEntity implements ICustomFieldEntity{
 
 	private static final long serialVersionUID = 1L;
 
@@ -98,10 +99,10 @@ public class Subscription extends BusinessEntity {
 	@Column(name = "DEFAULT_LEVEL")
 	private Boolean defaultLevel = true;
 
-	@OneToMany(mappedBy = "subscription", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "subscription", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@MapKeyColumn(name = "code")
 	private Map<String, CustomFieldInstance> customFields = new HashMap<String, CustomFieldInstance>();
-	
+
 	public Date getEndAgrementDate() {
 		return endAgrementDate;
 	}
@@ -197,6 +198,72 @@ public class Subscription extends BusinessEntity {
 
 	public void setCustomFields(Map<String, CustomFieldInstance> customFields) {
 		this.customFields = customFields;
+	}
+
+	public String getStringCustomValue(String code) {
+		String result = null;
+		if (customFields.containsKey(code)) {
+			result = customFields.get(code).getStringValue();
+		}
+
+		return result;
+	}
+	
+	public String getInheritedCustomStringValue(String code){
+	String result=null; 
+	if (getCustomFields().containsKey(code)&& getCustomFields().get(code).getStringValue()!=null) {
+		result=getCustomFields().get(code).getStringValue();
+	}else if(userAccount!=null){
+		result=userAccount.getInheritedCustomStringValue(code);
+	}
+	return result;
+	}
+	
+	public Long getInheritedCustomLongValue(String code){
+		Long result=null; 
+		if (getCustomFields().containsKey(code)&& getCustomFields().get(code).getLongValue()!=null) {
+			result=getCustomFields().get(code).getLongValue();
+		}else if(userAccount!=null){
+			result=userAccount.getInheritedCustomLongValue(code);
+		}
+		return result;
+		}
+	
+	public Date getInheritedCustomDateValue(String code){
+		Date result=null; 
+		if (getCustomFields().containsKey(code)&& getCustomFields().get(code).getDateValue()!=null) {
+			result=getCustomFields().get(code).getDateValue();
+		}else if(userAccount!=null){
+			result=userAccount.getInheritedCustomDateValue(code);
+		}
+		return result;
+		}
+	
+
+	public Double getInheritedCustomDoubleValue(String code){
+		Double result=null; 
+		if (getCustomFields().containsKey(code)&& getCustomFields().get(code).getDoubleValue()!=null) {
+			result=getCustomFields().get(code).getDoubleValue();
+		}else if(userAccount!=null){
+            result=userAccount.getInheritedCustomDoubleValue(code);
+    }
+		return result;
+		}
+	
+	public String getICsv(String code){
+		return getInheritedCustomStringValue(code);
+	}
+	
+	public Long getIClv(String code){
+		return getInheritedCustomLongValue(code);
+	}
+	
+	public Date getICdav(String code){
+		return getInheritedCustomDateValue(code);
+	}
+	
+	public Double getICdov(String code){
+		return getInheritedCustomDoubleValue(code);
 	}
 
 }

@@ -4,19 +4,23 @@ import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.jws.WebService;
 
-import org.meveo.api.InvoiceApi;
 import org.meveo.api.MeveoApiErrorCode;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.invoice.InvoiceDto;
 import org.meveo.api.dto.response.CustomerInvoicesResponse;
 import org.meveo.api.dto.response.InvoiceCreationResponse;
 import org.meveo.api.exception.MeveoApiException;
+import org.meveo.api.invoice.InvoiceApi;
 import org.meveo.api.logging.LoggingInterceptor;
 import org.meveo.api.ws.InvoiceWs;
+import org.slf4j.Logger;
 
 @WebService(serviceName = "InvoiceWs", endpointInterface = "org.meveo.api.ws.InvoiceWs")
 @Interceptors({ LoggingInterceptor.class })
 public class InvoiceWsImpl extends BaseWs implements InvoiceWs {
+
+	@Inject
+	private Logger log;
 
 	@Inject
 	private InvoiceApi invoiceApi;
@@ -38,6 +42,7 @@ public class InvoiceWsImpl extends BaseWs implements InvoiceWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -56,6 +61,7 @@ public class InvoiceWsImpl extends BaseWs implements InvoiceWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 

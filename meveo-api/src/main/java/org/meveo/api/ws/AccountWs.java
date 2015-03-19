@@ -12,13 +12,19 @@ import org.meveo.api.dto.account.CustomerAccountDto;
 import org.meveo.api.dto.account.CustomerDto;
 import org.meveo.api.dto.account.CustomerHierarchyDto;
 import org.meveo.api.dto.account.UserAccountDto;
+import org.meveo.api.dto.payment.AccountOperationDto;
+import org.meveo.api.dto.payment.DunningInclusionExclusionDto;
 import org.meveo.api.dto.response.CustomerListResponse;
 import org.meveo.api.dto.response.account.GetAccessResponse;
 import org.meveo.api.dto.response.account.GetBillingAccountResponse;
 import org.meveo.api.dto.response.account.GetCustomerAccountResponse;
 import org.meveo.api.dto.response.account.GetCustomerResponse;
-import org.meveo.api.dto.response.account.GetListAccessResponse;
 import org.meveo.api.dto.response.account.GetUserAccountResponse;
+import org.meveo.api.dto.response.account.ListAccessResponseDto;
+import org.meveo.api.dto.response.account.ListBillingAccountResponseDto;
+import org.meveo.api.dto.response.account.ListCustomerAccountResponseDto;
+import org.meveo.api.dto.response.account.ListCustomerResponseDto;
+import org.meveo.api.dto.response.account.ListUserAccountResponseDto;
 
 /**
  * @author Edward P. Legaspi
@@ -102,6 +108,26 @@ public interface AccountWs extends IBaseWs {
 	ActionStatus customerHierarchyUpdate(@WebParam(name = "customerHierarchy") CustomerHierarchyDto postData);
 
 	@WebMethod
-	GetListAccessResponse listAccess(@WebParam(name = "subscriptionCode") String subscriptionCode);
+	ListAccessResponseDto listAccess(@WebParam(name = "subscriptionCode") String subscriptionCode);
+
+	@WebMethod
+	ListCustomerResponseDto listCustomerWithFilter(@WebParam(name = "customer") CustomerDto postData);
+
+	@WebMethod
+	ListCustomerAccountResponseDto listByCustomer(@WebParam(name = "customerCode") String customerCode);
+
+	@WebMethod
+	ListBillingAccountResponseDto listByCustomerAccount(
+			@WebParam(name = "customerAccountCode") String customerAccountCode);
+
+	@WebMethod
+	ListUserAccountResponseDto listByBillingAccount(@WebParam(name = "billingAccountCode") String billingAccountCode);
+
+	@WebMethod
+	ActionStatus createAccountOperation(@WebParam(name = "accountOperation") AccountOperationDto postData);
+	
+	@WebMethod
+	ActionStatus dunningInclusionExclusion(@WebParam(name = "dunningInclusionExclusion") DunningInclusionExclusionDto dunningDto);
+	
 
 }

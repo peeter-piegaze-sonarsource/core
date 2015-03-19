@@ -42,7 +42,7 @@ public class CounterTemplateDto implements Serializable {
 		type = e.getCounterType().getId();
 		level = e.getLevel();
 		disabled = e.isDisabled();
-		calendar = e.getCalendar().getName();
+		calendar = e.getCalendar().getCode();
 	}
 
 	public String getCode() {
@@ -103,9 +103,8 @@ public class CounterTemplateDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CounterDto [code=" + code + ", description=" + description
-				+ ", unity=" + unity + ", type=" + type + ", level=" + level
-				+ ", disabled=" + disabled + ", calendar=" + calendar + "]";
+		return "CounterTemplateDto [code=" + code + ", description=" + description + ", unity=" + unity + ", type="
+				+ type + ", level=" + level + ", disabled=" + disabled + ", calendar=" + calendar + "]";
 	}
 
 }

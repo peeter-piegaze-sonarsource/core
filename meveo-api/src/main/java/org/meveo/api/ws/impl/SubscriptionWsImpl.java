@@ -13,9 +13,11 @@ import org.meveo.api.dto.account.ApplyOneShotChargeInstanceDto;
 import org.meveo.api.dto.billing.SubscriptionDto;
 import org.meveo.api.dto.billing.TerminateSubscriptionDto;
 import org.meveo.api.dto.billing.TerminateSubscriptionServicesDto;
+import org.meveo.api.dto.response.billing.ListSubscriptionResponseDto;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.logging.LoggingInterceptor;
 import org.meveo.api.ws.SubscriptionWs;
+import org.slf4j.Logger;
 
 /**
  * @author Edward P. Legaspi
@@ -23,6 +25,9 @@ import org.meveo.api.ws.SubscriptionWs;
 @WebService(serviceName = "SubscriptionWs", endpointInterface = "org.meveo.api.ws.SubscriptionWs")
 @Interceptors({ LoggingInterceptor.class })
 public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
+
+	@Inject
+	private Logger log;
 
 	@Inject
 	private SubscriptionApi subscriptionApi;
@@ -43,6 +48,7 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -62,6 +68,7 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -81,6 +88,7 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -100,6 +108,7 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -119,6 +128,7 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -138,6 +148,27 @@ public class SubscriptionWsImpl extends BaseWs implements SubscriptionWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListSubscriptionResponseDto listSubscriptionByUserAccount(String userAccountCode) {
+		ListSubscriptionResponseDto result = new ListSubscriptionResponseDto();
+
+		try {
+			result.setSubscriptions(subscriptionApi.listByUserAccount(userAccountCode, getCurrentUser().getProvider()));
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 

@@ -44,6 +44,10 @@ public class CounterInstance extends BusinessEntity {
 	@JoinColumn(name = "USER_ACCOUNT_ID")
 	private UserAccount userAccount;
 
+	@ManyToOne
+	@JoinColumn(name = "BILLING_ACCOUNT_ID")
+	private BillingAccount billingAccount;
+
 	@OneToMany(mappedBy = "counterInstance", fetch = FetchType.LAZY)
 	private List<CounterPeriod> counterPeriods = new ArrayList<CounterPeriod>();
 
@@ -77,5 +81,15 @@ public class CounterInstance extends BusinessEntity {
 	public void setCounterPeriods(List<CounterPeriod> counterPeriods) {
 		this.counterPeriods = counterPeriods;
 	}
+
+	public BillingAccount getBillingAccount() {
+		return billingAccount;
+	}
+
+	public void setBillingAccount(BillingAccount billingAccount) {
+		this.billingAccount = billingAccount;
+	}
+
+	
 
 }

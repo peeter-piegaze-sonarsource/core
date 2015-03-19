@@ -21,14 +21,18 @@ import org.meveo.api.dto.response.GetBillingCycleResponse;
 import org.meveo.api.dto.response.GetCalendarResponse;
 import org.meveo.api.dto.response.GetCountryResponse;
 import org.meveo.api.dto.response.GetCurrencyResponse;
+import org.meveo.api.dto.response.GetCustomerConfigurationResponseDto;
 import org.meveo.api.dto.response.GetInvoiceCategoryResponse;
 import org.meveo.api.dto.response.GetInvoiceSubCategoryCountryResponse;
 import org.meveo.api.dto.response.GetInvoiceSubCategoryResponse;
+import org.meveo.api.dto.response.GetInvoicingConfigurationResponseDto;
 import org.meveo.api.dto.response.GetLanguageResponse;
 import org.meveo.api.dto.response.GetProviderResponse;
 import org.meveo.api.dto.response.GetSellerResponse;
 import org.meveo.api.dto.response.GetTaxResponse;
+import org.meveo.api.dto.response.GetTradingConfigurationResponseDto;
 import org.meveo.api.dto.response.GetUserResponse;
+import org.meveo.api.dto.response.ListSellerResponseDto;
 
 /**
  * @author Edward P. Legaspi
@@ -128,6 +132,15 @@ public interface SettingsWs extends IBaseWs {
 	public ActionStatus updateProvider(@WebParam(name = "provider") ProviderDto postData);
 
 	@WebMethod
+	GetTradingConfigurationResponseDto getTradingConfiguration();
+
+	@WebMethod
+	GetInvoicingConfigurationResponseDto getInvoicingConfiguration();
+
+	@WebMethod
+	GetCustomerConfigurationResponseDto getCustomerConfiguration();
+
+	@WebMethod
 	public ActionStatus createSeller(@WebParam(name = "seller") SellerDto postData);
 
 	@WebMethod
@@ -138,6 +151,9 @@ public interface SettingsWs extends IBaseWs {
 
 	@WebMethod
 	public ActionStatus removeSeller(@WebParam(name = "sellerCode") String sellerCode);
+
+	@WebMethod
+	public ListSellerResponseDto listSeller();
 
 	@WebMethod
 	public ActionStatus createTax(@WebParam(name = "tax") TaxDto postData);

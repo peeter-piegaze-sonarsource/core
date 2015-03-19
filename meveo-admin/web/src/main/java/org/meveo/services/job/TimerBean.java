@@ -32,22 +32,24 @@ import javax.inject.Named;
 import org.jboss.seam.international.status.Messages;
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.jboss.solder.servlet.http.RequestParam;
-import org.meveo.admin.action.StatelessBaseBean;
+import org.meveo.admin.action.BaseBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.pagination.PaginationConfiguration;
-import org.meveo.model.jobs.JobExecutionResult;
+import org.meveo.model.jobs.JobCategoryEnum;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.TimerEntity;
 import org.meveo.service.base.local.IPersistenceService;
+import org.meveo.service.job.Job;
 import org.meveo.service.job.JobExecutionService;
 import org.meveo.service.job.TimerEntityService;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
 @Named
-@ConversationScoped
-public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
+@ViewScoped
+public class TimerBean extends BaseBean<JobExecutionResultImpl> {
 
 	private static final long serialVersionUID = 5578930292531038376L;
 
@@ -82,8 +84,7 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 
 		if (timerEntity == null) {
 			if (timerId.get() != null) {
-				timerEntity = timerEntityService.findById(timerId.get(),
-						Arrays.asList("provider"));
+				timerEntity = timerEntityService.findById(timerId.get(), Arrays.asList("provider"));
 				filters.put("jobName", timerEntity.getJobName());
 			} else {
 				log.debug("create new timerEntity");
@@ -97,7 +98,6 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 
 	public String create() throws BusinessException {
 		log.debug("createTimer on job={}", timerEntity.getJobName());
-
 		if (timerEntity.getJobName() == null) {
 			messages.error("Veuillez selectionner un job");
 		} else if (!getJobNames().contains(timerEntity.getJobName())) {
@@ -121,8 +121,7 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 			timerEntityService.update(timerEntity);
 			messages.info(new BundleKey("messages", "update.successful"));
 		} catch (Exception e) {
-			messages.error(new BundleKey("messages",
-					"error.user.usernameAlreadyExists"));
+			messages.error(new BundleKey("messages", "error.user.usernameAlreadyExists"));
 			return null;
 		}
 
@@ -144,22 +143,20 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 
 	public String executeTimer() {
 		try {
-			JobExecutionResult result = timerEntityService
-					.manualExecute(timerEntity);
-			messages.info(new BundleKey("messages", "info.entity.executed"),
-					timerEntity.getJobName());
+			timerEntityService.manualExecute(timerEntity);
+			messages.info(new BundleKey("messages", "info.entity.executed"), timerEntity.getJobName());
 
-			if (result.getErrors() != null) {
-				for (String error : result.getErrors()) {
-					messages.error("error:" + error);
-				}
-			}
-
-			if (result.getWarnings() != null) {
-				for (String warning : result.getWarnings()) {
-					messages.warn("warn:" + warning);
-				}
-			}
+			// if (result.getErrors() != null) {
+			// for (String error : result.getErrors()) {
+			// messages.error("error:" + error);
+			// }
+			// }
+			//
+			// if (result.getWarnings() != null) {
+			// for (String warning : result.getWarnings()) {
+			// messages.warn("warn:" + warning);
+			// }
+			// }
 		} catch (Exception e) {
 			messages.error(new BundleKey("messages", "error.execution"));
 			return null;
@@ -171,12 +168,14 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 	/*
 	 * to be used in picklist to select a job
 	 */
-	public Set<String> getJobNames() {
-		return TimerEntityService.jobEntries.keySet();
-	}
 
-	public List<TimerEntity> getTimerEntityList() {
-		return timerEntityService.find(null);
+	public Set<String> getJobNames() {
+		HashMap<String, Job> jobs = new HashMap<String, Job>();
+		if (timerEntity.getJobCategoryEnum() != null) {
+			jobs = TimerEntityService.jobEntries.get(timerEntity.getJobCategoryEnum());
+			return jobs.keySet();
+		}
+		return null;
 	}
 
 	@Override
@@ -189,6 +188,10 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 		return "timer";
 	}
 
+	public List<TimerEntity> getTimerEntityList() {
+		return timerEntityService.find(null);
+	}
+
 	@Override
 	public LazyDataModel<JobExecutionResultImpl> getLazyDataModel() {
 		if (jobResultsDataModel == null) {
@@ -199,9 +202,8 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 				private Integer rowIndex;
 
 				@Override
-				public List<JobExecutionResultImpl> load(int first,
-						int pageSize, String sortField, SortOrder sortOrder,
-						Map<String, String> loadingFilters) {
+				public List<JobExecutionResultImpl> load(int first, int pageSize, String sortField,
+						SortOrder sortOrder, Map<String, String> loadingFilters) {
 					Map<String, Object> copyOfFilters = new HashMap<String, Object>();
 					copyOfFilters.putAll(filters);
 
@@ -210,18 +212,14 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 						sortOrder = SortOrder.DESCENDING;
 					}
 
-					setRowCount((int) jobExecutionService.count(timerEntity
-							.getJobName(), new PaginationConfiguration(first,
-							pageSize, copyOfFilters, getListFieldsToFetch(),
-							sortField, sortOrder)));
+					setRowCount((int) jobExecutionService.count(timerEntity.getJobName(), new PaginationConfiguration(
+							first, pageSize, copyOfFilters, getListFieldsToFetch(), sortField, sortOrder)));
 
 					if (getRowCount() > 0) {
 						copyOfFilters = new HashMap<String, Object>();
 						copyOfFilters.putAll(filters);
-						return jobExecutionService.find(timerEntity
-								.getJobName(), new PaginationConfiguration(
-								first, pageSize, copyOfFilters,
-								getListFieldsToFetch(), sortField, sortOrder));
+						return jobExecutionService.find(timerEntity.getJobName(), new PaginationConfiguration(first,
+								pageSize, copyOfFilters, getListFieldsToFetch(), sortField, sortOrder));
 					} else {
 						return null; // no need to load then
 					}
@@ -229,8 +227,7 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 
 				@Override
 				public JobExecutionResultImpl getRowData(String rowKey) {
-					return getPersistenceService().findById(
-							Long.valueOf(rowKey));
+					return getPersistenceService().findById(Long.valueOf(rowKey));
 				}
 
 				@Override
@@ -250,8 +247,7 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 				@SuppressWarnings("unchecked")
 				@Override
 				public JobExecutionResultImpl getRowData() {
-					return ((List<JobExecutionResultImpl>) getWrappedData())
-							.get(rowIndex);
+					return ((List<JobExecutionResultImpl>) getWrappedData()).get(rowIndex);
 				}
 
 				@SuppressWarnings({ "unchecked" })
@@ -261,9 +257,7 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 						return false;
 					}
 
-					return rowIndex >= 0
-							&& rowIndex < ((List<JobExecutionResultImpl>) getWrappedData())
-									.size();
+					return rowIndex >= 0 && rowIndex < ((List<JobExecutionResultImpl>) getWrappedData()).size();
 				}
 
 				@Override
@@ -287,6 +281,10 @@ public class TimerBean extends StatelessBaseBean<JobExecutionResultImpl> {
 		}
 
 		return jobResultsDataModel;
+	}
+
+	public List<JobCategoryEnum> getJobCategoryEnumValues() {
+		return Arrays.asList(JobCategoryEnum.values());
 	}
 
 }

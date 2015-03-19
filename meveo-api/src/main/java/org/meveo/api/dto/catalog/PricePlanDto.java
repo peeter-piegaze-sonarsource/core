@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,7 +21,8 @@ public class PricePlanDto implements Serializable {
 
 	private static final long serialVersionUID = -9089693491690592072L;
 
-	private Long id;
+	@XmlAttribute(required = true)
+	private String code;
 
 	@XmlElement(required = true)
 	private String eventCode;
@@ -49,19 +51,28 @@ public class PricePlanDto implements Serializable {
 	private String criteria2;
 	private String criteria3;
 
+	private String validityCalendarCode;
+	
 	public PricePlanDto() {
 
 	}
 
 	public PricePlanDto(PricePlanMatrix e) {
-		id = e.getId();
 		eventCode = e.getEventCode();
-		seller = e.getSeller().getCode();
-		country = e.getTradingCountry().getCountryCode();
-		currency = e.getTradingCurrency().getCurrencyCode();
+		if (e.getSeller() != null) {
+			seller = e.getSeller().getCode();
+		}
+		if (e.getTradingCountry() != null) {
+			country = e.getTradingCountry().getCountryCode();
+		}
+		if (e.getTradingCurrency() != null) {
+			currency = e.getTradingCurrency().getCurrencyCode();
+		}
+		if (e.getOfferTemplate() != null) {
+			offerTemplate = e.getOfferTemplate().getCode();
+		}
 		minQuantity = e.getMinQuantity();
 		maxQuantity = e.getMaxQuantity();
-		offerTemplate = e.getOfferTemplate().getCode();
 		startSubscriptionDate = e.getStartRatingDate();
 		endSubscriptionDate = e.getEndSubscriptionDate();
 		startRatingDate = e.getStartRatingDate();
@@ -74,6 +85,9 @@ public class PricePlanDto implements Serializable {
 		criteria1 = e.getCriteria1Value();
 		criteria2 = e.getCriteria2Value();
 		criteria3 = e.getCriteria3Value();
+        if (e.getValidityCalendar() != null) {
+            validityCalendarCode = e.getValidityCalendar().getCode();
+        }
 	}
 
 	public String getEventCode() {
@@ -230,8 +244,8 @@ public class PricePlanDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PricePlanDto [id=" + id + ", eventCode=" + eventCode + ", seller=" + seller + ", country=" + country
-				+ ", currency=" + currency + ", minQuantity=" + minQuantity + ", maxQuantity=" + maxQuantity
+		return "PricePlanDto [code=" + code + ", eventCode=" + eventCode + ", seller=" + seller + ", country="
+				+ country + ", currency=" + currency + ", minQuantity=" + minQuantity + ", maxQuantity=" + maxQuantity
 				+ ", offerTemplate=" + offerTemplate + ", startSubscriptionDate=" + startSubscriptionDate
 				+ ", endSubscriptionDate=" + endSubscriptionDate + ", startRatingDate=" + startRatingDate
 				+ ", endRatingDate=" + endRatingDate + ", minSubscriptionAgeInMonth=" + minSubscriptionAgeInMonth
@@ -240,12 +254,20 @@ public class PricePlanDto implements Serializable {
 				+ ", criteria2=" + criteria2 + ", criteria3=" + criteria3 + "]";
 	}
 
-	public Long getId() {
-		return id;
+	public String getCode() {
+		return code;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCode(String code) {
+		this.code = code;
 	}
+
+    public String getValidityCalendarCode() {
+        return validityCalendarCode;
+    }
+
+    public void setValidityCalendarCode(String validityCalendarCode) {
+        this.validityCalendarCode = validityCalendarCode;
+    }
 
 }

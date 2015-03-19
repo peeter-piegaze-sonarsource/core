@@ -9,12 +9,12 @@ import org.meveo.model.jaxb.account.BillingAccount;
 import org.meveo.model.jaxb.account.BillingAccounts;
 import org.meveo.model.jaxb.account.UserAccount;
 import org.meveo.model.jaxb.account.UserAccounts;
-import org.meveo.model.jaxb.customer.Address;
+import org.meveo.model.jaxb.account.Address;
 import org.meveo.model.jaxb.customer.Customer;
 import org.meveo.model.jaxb.customer.CustomerAccount;
 import org.meveo.model.jaxb.customer.CustomerAccounts;
 import org.meveo.model.jaxb.customer.Customers;
-import org.meveo.model.jaxb.customer.Name;
+import org.meveo.model.jaxb.account.Name;
 import org.meveo.model.jaxb.customer.Seller;
 import org.meveo.model.jaxb.customer.Sellers;
 import org.meveo.model.jaxb.subscription.Access;
@@ -36,9 +36,9 @@ public class GenerateImportXml {
 	 * @param args
 	 */
 	/************************** configuration properties ***********************************/
-	private static int count = 2;
+	private static int count = 5;
 	private static int startIndex = 1;
-	private static int BC_NUMBER = 2;
+	private static int BC_NUMBER = 1;
 	private static String billingCyclePrefix = "CYC_INV_MT";
 
 	private static String customersFile = "/tmp/CUSTOMER.xml";

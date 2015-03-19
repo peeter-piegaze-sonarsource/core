@@ -19,12 +19,12 @@ package org.meveo.service.billing.impl;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.cache.RatingCacheContainerProvider;
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.admin.User;
@@ -42,14 +42,14 @@ import org.meveo.service.base.BusinessService;
 @Stateless
 public class UsageChargeInstanceService extends BusinessService<UsageChargeInstance> {
 
-	@EJB
-	UsageRatingService usageRatingService;
-
 	@Inject
 	private WalletService walletService;
 
 	@Inject
 	private CounterInstanceService counterInstanceService;
+
+	@Inject
+	private RatingCacheContainerProvider ratingCacheContainerProvider;
 
 	public UsageChargeInstance usageChargeInstanciation(Subscription subscription, ServiceInstance serviceInstance,
 			ServiceChargeTemplateUsage serviceUsageChargeTemplate, Date startDate, Seller seller, User creator)
@@ -61,8 +61,8 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 	public UsageChargeInstance usageChargeInstanciation(EntityManager em, Subscription subscription,
 			ServiceInstance serviceInstance, ServiceChargeTemplateUsage serviceUsageChargeTemplate, Date startDate,
 			Seller seller, User creator) throws BusinessException {
-		log.debug("instanciate usageCharge for code {} and subscription {}",
-				serviceUsageChargeTemplate.getChargeTemplate().getCode(),subscription.getCode());
+		log.debug("instanciate usageCharge for code {} and subscription {}", serviceUsageChargeTemplate
+				.getChargeTemplate().getCode(), subscription.getCode());
 		UsageChargeInstance usageChargeInstance = new UsageChargeInstance();
 		usageChargeInstance.setSubscription(subscription);
 		usageChargeInstance.setChargeTemplate(serviceUsageChargeTemplate.getChargeTemplate());
@@ -77,25 +77,25 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 		usageChargeInstance.setCurrency(subscription.getUserAccount().getBillingAccount().getCustomerAccount()
 				.getTradingCurrency());
 		List<WalletTemplate> walletTemplates = serviceUsageChargeTemplate.getWalletTemplates();
-		log.debug("usage charge wallet templates {}, by default we set it to postpaid",walletTemplates);
+		log.debug("usage charge wallet templates {}, by default we set it to postpaid", walletTemplates);
 		usageChargeInstance.setPrepaid(false);
 		if (walletTemplates != null && walletTemplates.size() > 0) {
-			log.debug("usage charge has {} wallet templates",walletTemplates.size());
+			log.debug("usage charge has {} wallet templates", walletTemplates.size());
 			for (WalletTemplate walletTemplate : walletTemplates) {
-				log.debug("wallet template {}",walletTemplate.getCode());
-				if(walletTemplate.getWalletType()==BillingWalletTypeEnum.PREPAID){
+				log.debug("wallet template {}", walletTemplate.getCode());
+				if (walletTemplate.getWalletType() == BillingWalletTypeEnum.PREPAID) {
 					log.debug("it is a prepaid wallet so we set the charge itself has being prepaid");
 					usageChargeInstance.setPrepaid(true);
 				}
-				WalletInstance walletInstance =walletService.getWalletInstance(serviceInstance.getSubscription().getUserAccount(),
-						walletTemplate, serviceInstance.getAuditable().getCreator(),
-						serviceInstance.getProvider());
-				log.debug("we add the waleltInstance {} to the charge instance {}",walletInstance.getId(),
+				WalletInstance walletInstance = walletService.getWalletInstance(serviceInstance.getSubscription()
+						.getUserAccount(), walletTemplate, serviceInstance.getAuditable().getCreator(), serviceInstance
+						.getProvider());
+				log.debug("we add the waleltInstance {} to the charge instance {}", walletInstance.getId(),
 						usageChargeInstance.getId());
 				usageChargeInstance.getWalletInstances().add(walletInstance);
 			}
 		} else {
-			log.debug("add postpaid walletInstance {}",serviceInstance.getSubscription().getUserAccount().getWallet());
+			log.debug("add postpaid walletInstance {}", serviceInstance.getSubscription().getUserAccount().getWallet());
 			usageChargeInstance.getWalletInstances()
 					.add(serviceInstance.getSubscription().getUserAccount().getWallet());
 		}
@@ -120,7 +120,7 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 		usageChargeInstance.setStatus(InstanceStatusEnum.ACTIVE);
 		setProvider(currentUser.getProvider());
 		update(usageChargeInstance, currentUser);
-		usageRatingService.updateCache(usageChargeInstance);
+		ratingCacheContainerProvider.updateUsageChargeInstanceInCache(usageChargeInstance);
 	}
 
 	public void terminateUsageChargeInstance(UsageChargeInstance usageChargeInstance, Date terminationDate) {
@@ -136,14 +136,14 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 			Date terminationDate, User currentUser) {
 		usageChargeInstance.setTerminationDate(terminationDate);
 		usageChargeInstance.setStatus(InstanceStatusEnum.TERMINATED);
-		usageRatingService.updateCache(usageChargeInstance);
+		ratingCacheContainerProvider.updateUsageChargeInstanceInCache(usageChargeInstance);
 		update(usageChargeInstance, currentUser);
 	}
 
 	public void suspendUsageChargeInstance(UsageChargeInstance usageChargeInstance, Date suspensionDate) {
 		usageChargeInstance.setTerminationDate(suspensionDate);
 		usageChargeInstance.setStatus(InstanceStatusEnum.SUSPENDED);
-		usageRatingService.updateCache(usageChargeInstance);
+		ratingCacheContainerProvider.updateUsageChargeInstanceInCache(usageChargeInstance);
 		update(usageChargeInstance);
 	}
 
@@ -151,7 +151,7 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 		usageChargeInstance.setChargeDate(reactivationDate);
 		usageChargeInstance.setTerminationDate(null);
 		usageChargeInstance.setStatus(InstanceStatusEnum.ACTIVE);
-		usageRatingService.updateCache(usageChargeInstance);
+		ratingCacheContainerProvider.updateUsageChargeInstanceInCache(usageChargeInstance);
 		update(usageChargeInstance);
 	}
 
@@ -162,4 +162,24 @@ public class UsageChargeInstanceService extends BusinessService<UsageChargeInsta
 		return qb.getQuery(getEntityManager()).getResultList();
 	}
 
+	/**
+	 * Get a list of prepaid and active usage charge instances to populate a
+	 * cache
+	 * 
+	 * @return A list of prepaid and active usage charge instances
+	 */
+	public List<UsageChargeInstance> getPrepaidUsageChargeInstancesForCache() {
+		return getEntityManager().createNamedQuery("UsageChargeInstance.listPrepaidActive", UsageChargeInstance.class)
+				.getResultList();
+	}
+
+	/**
+	 * Get a list of all active usage charge instances to populate a cache
+	 * 
+	 * @return A list of prepaid and active usage charge instances
+	 */
+	public List<UsageChargeInstance> getAllUsageChargeInstancesForCache() {
+		return getEntityManager().createNamedQuery("UsageChargeInstance.listActive", UsageChargeInstance.class)
+				.getResultList();
+	}
 }

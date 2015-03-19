@@ -2,11 +2,16 @@ package org.meveo.model.billing;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -16,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.meveo.model.AuditableEntity;
+import org.meveo.model.rating.EDR;
 
 @Entity
 @Table(name = "BILLING_RESERVATION")
@@ -51,12 +57,22 @@ public class Reservation extends AuditableEntity {
 	@JoinColumn(name = "WALLET_ID")
 	private WalletInstance wallet;
 	
+	@Column(name = "QUANTITY", precision = NB_PRECISION, scale = NB_DECIMALS)
+	private BigDecimal quantity;
+	
 	@Column(name = "AMOUNT_WITHOUT_TAX", precision = NB_PRECISION, scale = NB_DECIMALS)
-	private BigDecimal amountWithoutTax;
+	private BigDecimal amountWithoutTax = BigDecimal.ZERO;
 
 	@Column(name = "AMOUNT_WITH_TAX", precision = NB_PRECISION, scale = NB_DECIMALS)
-	private BigDecimal amountWithTax;
+	private BigDecimal amountWithTax = BigDecimal.ZERO;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "BILLING_RESRV_COUNTID")
+	private Map<Long,BigDecimal> counterPeriodValues = new HashMap<Long, BigDecimal>(); 
+
+    @Column(name="ORIGIN_EDR")
+    private EDR originEdr;
+    
 	public String getInputMessage() {
 		return inputMessage;
 	}
@@ -105,6 +121,14 @@ public class Reservation extends AuditableEntity {
 		this.wallet = wallet;
 	}
 
+	public BigDecimal getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
+	}
+
 	public BigDecimal getAmountWithoutTax() {
 		return amountWithoutTax;
 	}
@@ -128,5 +152,22 @@ public class Reservation extends AuditableEntity {
 	public void setReservationDate(Date reservationDate) {
 		this.reservationDate = reservationDate;
 	}
+
+	public Map<Long, BigDecimal> getCounterPeriodValues() {
+		return counterPeriodValues;
+	}
+
+	public void setCounterPeriodValues(Map<Long, BigDecimal> counterPeriodValues) {
+		this.counterPeriodValues = counterPeriodValues;
+	}
+
+	public EDR getOriginEdr() {
+		return originEdr;
+	}
+
+	public void setOriginEdr(EDR originEdr) {
+		this.originEdr = originEdr;
+	}
+
 
 }

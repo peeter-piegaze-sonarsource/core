@@ -5,7 +5,7 @@
 	<groupId>org.manaty</groupId>
 	<artifactId>meveo</artifactId>
 	<packaging>pom</packaging>
-	<version>4.0</version>
+	<version>4.0.1</version>
 	<name>MEVEO Parent Project</name>
 	<url>http://libsmeveocore.manaty.net/sites/${project.artifactId}</url>
 
@@ -32,6 +32,8 @@
 		<version.jboss.bom>1.0.7.Final</version.jboss.bom>
 		<version.shrinkwrap.resolvers>2.1.1</version.shrinkwrap.resolvers>
 		<version.resteasy>3.0.10.Final</version.resteasy>
+
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
 	</properties>
 
 	<scm>
@@ -171,6 +173,11 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.10.1</version>
@@ -233,7 +240,7 @@
 			</activation>
 			<properties>
 				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
-				<dbtype>postgres</dbtype>
+				<dbtype>generic</dbtype>
 			</properties>
 		</profile>
 
@@ -247,7 +254,7 @@
 			</activation>
 			<properties>
 				<hibernate.hbm2ddl.auto>create-drop</hibernate.hbm2ddl.auto>
-				<dbtype>postgres</dbtype>
+				<dbtype>generic</dbtype>
 			</properties>
 		</profile>
 
@@ -261,7 +268,7 @@
 			</activation>
 			<properties>
 				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
-				<dbtype>postgres</dbtype>
+				<dbtype>generic</dbtype>
 			</properties>
 
 			<!-- We add the JBoss repository as we need the JBoss AS connectors for 

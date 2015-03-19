@@ -43,6 +43,7 @@ import org.meveo.model.crm.Provider;
 @Table(name = "BILLING_RATED_TRANSACTION")
 @SequenceGenerator(name = "ID_GENERATOR", sequenceName = "BILLING_RATED_TRANSACTION_SEQ")
 @NamedQueries({
+		@NamedQuery(name = "RatedTransaction.listByWalletOperationId", query = "SELECT r FROM RatedTransaction r where r.walletOperationId=:walletOperationId"),
 		@NamedQuery(name = "RatedTransaction.listInvoiced", query = "SELECT r FROM RatedTransaction r where r.wallet=:wallet and invoice is not null order by usageDate desc "),
 		@NamedQuery(name = "RatedTransaction.countNotInvoinced", query = "SELECT count(r) FROM RatedTransaction r WHERE r.billingAccount=:billingAccount"
 				+ " AND r.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN"
@@ -80,7 +81,17 @@ import org.meveo.model.crm.Provider;
 		@NamedQuery(name = "RatedTransaction.updateInvoicedDisplayFree", query = "UPDATE RatedTransaction r "
 				+ "SET r.billingRun=:billingRun,r.invoice=:invoice,r.status=org.meveo.model.billing.RatedTransactionStatusEnum.BILLED "
 				+ "where r.invoice is null" + " and r.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN "
-				+ " and r.doNotTriggerInvoicing=false" + " and r.billingAccount=:billingAccount") })
+				+ " and r.doNotTriggerInvoicing=false" + " and r.billingAccount=:billingAccount"),
+				
+	 @NamedQuery(name = "RatedTransaction.getRatedTransactionsBilled",  
+				  query = "SELECT r.walletOperationId FROM RatedTransaction r "
+				  + " WHERE r.status=org.meveo.model.billing.RatedTransactionStatusEnum.BILLED"
+				  + " AND r.walletOperationId IN :walletIdList"),
+				
+	@NamedQuery(name = "RatedTransaction.setStatusToCanceled", 
+		           query = "UPDATE RatedTransaction rt set rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.CANCELED"
+		         + " where rt.walletOperationId IN :notBilledWalletIdList")
+		})
 public class RatedTransaction extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

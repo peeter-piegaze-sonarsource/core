@@ -16,13 +16,16 @@
  */
 package org.meveo.service.billing.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import org.meveo.cache.WalletCacheContainerProvider;
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.model.admin.User;
 import org.meveo.model.billing.UserAccount;
@@ -38,6 +41,15 @@ import org.meveo.service.base.PersistenceService;
 @Stateless
 public class WalletService extends PersistenceService<WalletInstance> {
 
+	@Inject
+	private WalletCacheContainerProvider walletCacheContainerProvider;
+
+	@Override
+	public void create(WalletInstance walletInstance, User creator, Provider provider) {
+		super.create(walletInstance, creator, provider);
+		walletCacheContainerProvider.updateBalanceCache(walletInstance);
+	}
+
 	public WalletInstance findByUserAccount(UserAccount userAccount) {
 		return findByUserAccount(getEntityManager(), userAccount);
 	}
@@ -46,7 +58,6 @@ public class WalletService extends PersistenceService<WalletInstance> {
 		QueryBuilder qb = new QueryBuilder(WalletInstance.class, "w");
 		try {
 			qb.addCriterionEntity("userAccount", userAccount);
-
 			return (WalletInstance) qb.getQuery(em).getSingleResult();
 		} catch (NoResultException e) {
 			log.warn(e.getMessage());
@@ -63,8 +74,8 @@ public class WalletService extends PersistenceService<WalletInstance> {
 				WalletInstance wallet = new WalletInstance();
 				wallet.setCode(walletCode);
 				wallet.setWalletTemplate(walletTemplate);
-				create(wallet, creator, provider);
 				wallet.setUserAccount(userAccount);
+				create(wallet, creator, provider);
 				log.debug("add prepaid wallet {} to useraccount {}", walletCode, userAccount.getCode());
 				userAccount.getPrepaidWallets().put(walletCode, wallet);
 				getEntityManager().merge(userAccount);
@@ -82,4 +93,37 @@ public class WalletService extends PersistenceService<WalletInstance> {
 				.setParameter("matchingDate", date).getResultList();
 	}
 
+	/**
+	 * Get a list of prepaid and active wallet ids to populate a cache
+	 * 
+	 * @return A list of prepaid and active wallet ids
+	 */
+	public List<Long> getWalletsIdsForCache() {
+		return getEntityManager().createNamedQuery("WalletInstance.listPrepaidActiveWalletIds", Long.class)
+				.getResultList();
+	}
+
+	/**
+	 * Get balance amount for a give wallet instance
+	 * 
+	 * @param walletInstanceId
+	 *            Wallet instance id
+	 * @return Wallet balance amount
+	 */
+	public BigDecimal getWalletBalance(Long walletInstanceId) {
+		return getEntityManager().createNamedQuery("WalletOperation.getBalance", BigDecimal.class)
+				.setParameter("walletId", walletInstanceId).getSingleResult();
+	}
+
+	/**
+	 * Get reserved balance amount for a give wallet instance
+	 * 
+	 * @param walletInstanceId
+	 *            Wallet instance id
+	 * @return Wallet's reserved balance amount
+	 */
+	public BigDecimal getWalletReservedBalance(Long walletInstanceId) {
+		return getEntityManager().createNamedQuery("WalletOperation.getReservedBalance", BigDecimal.class)
+				.setParameter("walletId", walletInstanceId).getSingleResult();
+	}
 }

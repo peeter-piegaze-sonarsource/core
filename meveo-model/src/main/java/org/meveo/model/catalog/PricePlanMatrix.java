@@ -24,23 +24,29 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import org.meveo.model.AuditableEntity;
+import org.meveo.model.BusinessEntity;
+import org.meveo.model.MultilanguageEntity;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.billing.TradingCountry;
 import org.meveo.model.billing.TradingCurrency;
 
 @Entity
-@Table(name = "CAT_PRICE_PLAN_MATRIX")
+@MultilanguageEntity
+@Table(name = "CAT_PRICE_PLAN_MATRIX", uniqueConstraints = @UniqueConstraint(columnNames = { "CODE", "PROVIDER_ID" }))
 @SequenceGenerator(name = "ID_GENERATOR", sequenceName = "CAT_PRICE_PLAN_MATRIX_SEQ")
-public class PricePlanMatrix extends AuditableEntity implements Comparable<PricePlanMatrix> {
-	private static final long serialVersionUID = 1L;
+@NamedQueries({ @NamedQuery(name = "PricePlanMatrix.getPricePlansForCache", query = "SELECT ppm from PricePlanMatrix ppm left join ppm.offerTemplate ot left join ppm.validityCalendar vc where ppm.disabled=false order by ppm.priority ASC") })
+public class PricePlanMatrix extends BusinessEntity implements Comparable<PricePlanMatrix> {
+    private static final long serialVersionUID = 1L;
 
 	@Column(name = "EVENT_CODE", length = 100, nullable = false)
 	@Size(min = 1, max = 100)
@@ -114,6 +120,10 @@ public class PricePlanMatrix extends AuditableEntity implements Comparable<Price
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SELLER_ID")
 	private Seller seller;
+	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VALID_CAL_ID")
+    private Calendar validityCalendar;
 
 	public String getEventCode() {
 		return eventCode;
@@ -275,13 +285,21 @@ public class PricePlanMatrix extends AuditableEntity implements Comparable<Price
 		this.seller = seller;
 	}
 
-	public String toString() {
+	public Calendar getValidityCalendar() {
+        return validityCalendar;
+    }
+
+    public void setValidityCalendar(Calendar validityCalendar) {
+        this.validityCalendar = validityCalendar;
+    }
+
+    public String toString() {
 		return eventCode + "," + startSubscriptionDate + "," + endSubscriptionDate + ","
 				+ startRatingDate + "," + endRatingDate + "," + minSubscriptionAgeInMonth + ","
 				+ maxSubscriptionAgeInMonth + "," + criteria1Value + "," + criteria2Value + ","
 				+ criteria3Value + "," + amountWithoutTax + "," + amountWithTax + ","
 				+ tradingCurrency + "," + "," + tradingCountry + "," + "," + priority + "," + ","
-				+ seller;
+				+ seller+", "+ validityCalendar;
 	}
 
 	@Override
@@ -374,6 +392,13 @@ public class PricePlanMatrix extends AuditableEntity implements Comparable<Price
 		if (priority != other.priority) {
 			return false;
 		}
+        if (validityCalendar == null) {
+            if (other.validityCalendar != null) {
+                return false;
+            }
+        } else if (validityCalendar.getId() != other.getValidityCalendar().getId()) {
+            return false;
+        }
 		return true;
 	}
 

@@ -19,6 +19,7 @@ package org.meveo.model.billing;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -33,6 +34,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,6 +45,7 @@ import javax.validation.constraints.Size;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.admin.Currency;
 import org.meveo.model.admin.Seller;
+import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.catalog.PricePlanMatrix;
 
 @Entity
@@ -52,30 +55,24 @@ import org.meveo.model.catalog.PricePlanMatrix;
 @DiscriminatorColumn(name = "OPERATION_TYPE", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("W")
 @NamedQueries({
-	@NamedQuery(name = "WalletOperation.getBalance", 
-			query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet.id=:walletId and "
-					+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"),
-	@NamedQuery(name = "WalletOperation.getMaxOpenId", 
-			query = "SELECT max(o.id) FROM WalletOperation o WHERE o.wallet=:wallet and "
-					+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"),
-	@NamedQuery(name = "WalletOperation.getBalanceNoTaxUntilId", 
-			query = "SELECT sum(o.amountWithoutTax)*-1 FROM WalletOperation o WHERE o.wallet=:wallet and "
-					+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"
-					+ " AND o.id<=:maxId"),
-	@NamedQuery(name = "WalletOperation.getBalanceWithTaxUntilId", 
-					query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet=:wallet and "
-							+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"
-							+ " AND o.id<=:maxId"),
-	@NamedQuery(name = "WalletOperation.setTreatedStatusUntilId", 
-					query = "UPDATE WalletOperation o SET o.status= org.meveo.model.billing.WalletOperationStatusEnum.TREATED "
-							+ " WHERE o.wallet=:wallet and "
-							+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"
-							+ " AND o.id<=:maxId"),
-	@NamedQuery(name = "WalletOperation.getReservedBalance", 
-			query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet.id=:walletId and "
-					+ "(o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN or "
-					+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.RESERVED) ")
-})
+		@NamedQuery(name = "WalletOperation.getBalance", query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet.id=:walletId and "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"),
+		@NamedQuery(name = "WalletOperation.getMaxOpenId", query = "SELECT max(o.id) FROM WalletOperation o WHERE o.wallet=:wallet and "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"),
+		@NamedQuery(name = "WalletOperation.getBalanceNoTaxUntilId", query = "SELECT sum(o.amountWithoutTax)*-1 FROM WalletOperation o WHERE o.wallet=:wallet and "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN" + " AND o.id<=:maxId"),
+		@NamedQuery(name = "WalletOperation.getBalanceWithTaxUntilId", query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet=:wallet and "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN" + " AND o.id<=:maxId"),
+		@NamedQuery(name = "WalletOperation.setTreatedStatusUntilId", query = "UPDATE WalletOperation o SET o.status= org.meveo.model.billing.WalletOperationStatusEnum.TREATED "
+				+ " WHERE o.wallet=:wallet and "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN"
+				+ " AND o.id<=:maxId"),
+		@NamedQuery(name = "WalletOperation.getReservedBalance", query = "SELECT sum(o.amountWithTax)*-1 FROM WalletOperation o WHERE o.wallet.id=:walletId and "
+				+ "(o.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN or "
+				+ "o.status=org.meveo.model.billing.WalletOperationStatusEnum.RESERVED) "),
+		@NamedQuery(name = "WalletOperation.setStatusToRerate", query = "update WalletOperation w set w.status=org.meveo.model.billing.WalletOperationStatusEnum.TO_RERATE"
+				+ " where (w.status=org.meveo.model.billing.WalletOperationStatusEnum.OPEN OR w.status=org.meveo.model.billing.WalletOperationStatusEnum.TREATED)"
+				+ " and w.id IN :notBilledWalletIdList") })
 public class WalletOperation extends BusinessEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -96,7 +93,7 @@ public class WalletOperation extends BusinessEntity {
 	private OperationTypeEnum type;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CHARGE_INSTANCE_ID",nullable=false)
+	@JoinColumn(name = "CHARGE_INSTANCE_ID", nullable = false)
 	private ChargeInstance chargeInstance;
 
 	@Column(name = "UNITY_DESCRIPTION", length = 20)
@@ -178,16 +175,21 @@ public class WalletOperation extends BusinessEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PRICEPLAN_ID")
 	private PricePlanMatrix priceplan;
-	
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
+	private WalletOperation reratedWalletOperation;
+
 	@Transient
 	private BillingAccount billingAccount;
-	
-	
+
 	@Transient
 	private InvoiceSubCategory invoiceSubCategory;
-	
+
 	@Transient
 	private BillingRun billingRun;
+
+	@Transient
+	private OfferTemplate offerTemplate;
 
 	public WalletInstance getWallet() {
 		return wallet;
@@ -406,38 +408,19 @@ public class WalletOperation extends BusinessEntity {
 		this.priceplan = priceplan;
 	}
 
+	public WalletOperation getReratedWalletOperation() {
+		return reratedWalletOperation;
+	}
+
+	public void setReratedWalletOperation(WalletOperation reratedWalletOperation) {
+		this.reratedWalletOperation = reratedWalletOperation;
+	}
+
 	public String toString() {
 		return wallet + "," + operationDate + "," + type + "," + chargeInstance + "," + currency + "," + taxPercent
 				+ "," + unitAmountWithoutTax + "," + unitAmountWithTax + "," + unitAmountTax + "," + counter + ","
 				+ parameter1 + "," + parameter2 + "," + parameter3 + "," + startDate + "," + endDate + ","
-				+ subscriptionDate + "," + offerCode + "," + status + "," + seller+","+priceplan;
-	}
-	
-	
-	
-	public BillingAccount getBillingAccount() {
-		return billingAccount;
-	}
-
-
-	public InvoiceSubCategory getInvoiceSubCategory() {
-		return invoiceSubCategory;
-	}
-
-	public void setInvoiceSubCategory(InvoiceSubCategory invoiceSubCategory) {
-		this.invoiceSubCategory = invoiceSubCategory;
-	}
-
-	public void setBillingAccount(BillingAccount billingAccount) {
-		this.billingAccount = billingAccount;
-	}
-
-	public BillingRun getBillingRun() {
-		return billingRun;
-	}
-
-	public void setBillingRun(BillingRun billingRun) {
-		this.billingRun = billingRun;
+				+ subscriptionDate + "," + offerCode + "," + status + "," + seller + "," + priceplan;
 	}
 
 	@Transient
@@ -471,6 +454,38 @@ public class WalletOperation extends BusinessEntity {
 		result.setUnitAmountWithTax(unitAmountWithTax);
 		result.setUnityDescription(unityDescription);
 		return result;
+	}
+
+	public BillingAccount getBillingAccount() {
+		return billingAccount;
+	}
+
+	public void setBillingAccount(BillingAccount billingAccount) {
+		this.billingAccount = billingAccount;
+	}
+
+	public InvoiceSubCategory getInvoiceSubCategory() {
+		return invoiceSubCategory;
+	}
+
+	public void setInvoiceSubCategory(InvoiceSubCategory invoiceSubCategory) {
+		this.invoiceSubCategory = invoiceSubCategory;
+	}
+
+	public BillingRun getBillingRun() {
+		return billingRun;
+	}
+
+	public void setBillingRun(BillingRun billingRun) {
+		this.billingRun = billingRun;
+	}
+
+	public OfferTemplate getOfferTemplate() {
+		return offerTemplate;
+	}
+
+	public void setOfferTemplate(OfferTemplate offerTemplate) {
+		this.offerTemplate = offerTemplate;
 	}
 
 }

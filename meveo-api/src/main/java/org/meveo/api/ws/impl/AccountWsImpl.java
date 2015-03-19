@@ -20,16 +20,24 @@ import org.meveo.api.dto.account.CustomerAccountDto;
 import org.meveo.api.dto.account.CustomerDto;
 import org.meveo.api.dto.account.CustomerHierarchyDto;
 import org.meveo.api.dto.account.UserAccountDto;
+import org.meveo.api.dto.payment.AccountOperationDto;
+import org.meveo.api.dto.payment.DunningInclusionExclusionDto;
 import org.meveo.api.dto.response.CustomerListResponse;
 import org.meveo.api.dto.response.account.GetAccessResponse;
 import org.meveo.api.dto.response.account.GetBillingAccountResponse;
 import org.meveo.api.dto.response.account.GetCustomerAccountResponse;
 import org.meveo.api.dto.response.account.GetCustomerResponse;
-import org.meveo.api.dto.response.account.GetListAccessResponse;
 import org.meveo.api.dto.response.account.GetUserAccountResponse;
+import org.meveo.api.dto.response.account.ListAccessResponseDto;
+import org.meveo.api.dto.response.account.ListBillingAccountResponseDto;
+import org.meveo.api.dto.response.account.ListCustomerAccountResponseDto;
+import org.meveo.api.dto.response.account.ListCustomerResponseDto;
+import org.meveo.api.dto.response.account.ListUserAccountResponseDto;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.logging.LoggingInterceptor;
+import org.meveo.api.payment.AccountOperationApi;
 import org.meveo.api.ws.AccountWs;
+import org.slf4j.Logger;
 
 /**
  * @author Edward P. Legaspi
@@ -37,6 +45,12 @@ import org.meveo.api.ws.AccountWs;
 @WebService(serviceName = "AccountWs", endpointInterface = "org.meveo.api.ws.AccountWs")
 @Interceptors({ LoggingInterceptor.class })
 public class AccountWsImpl extends BaseWs implements AccountWs {
+
+	@Inject
+	private Logger log;
+
+	@Inject
+	private AccountOperationApi accountOperationApi;
 
 	@Inject
 	private AccountHierarchyApi accountHierarchyApi;
@@ -72,6 +86,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -91,6 +106,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -110,6 +126,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -129,6 +146,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -148,6 +166,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -167,6 +186,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -186,6 +206,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -205,6 +226,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -224,6 +246,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -243,6 +266,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -262,6 +286,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -281,6 +306,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -300,6 +326,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -319,6 +346,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -338,6 +366,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -357,6 +386,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -376,6 +406,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -395,6 +426,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -414,6 +446,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -433,6 +466,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -452,6 +486,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -471,6 +506,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -490,12 +526,13 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
 	@Override
-	public GetListAccessResponse listAccess(String subscriptionCode) {
-		GetListAccessResponse result = new GetListAccessResponse();
+	public ListAccessResponseDto listAccess(String subscriptionCode) {
+		ListAccessResponseDto result = new ListAccessResponseDto();
 
 		try {
 			result.setAccesses(accessApi.listBySubscription(subscriptionCode, getCurrentUser().getProvider()));
@@ -509,6 +546,7 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.getActionStatus().setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 
@@ -528,6 +566,124 @@ public class AccountWsImpl extends BaseWs implements AccountWs {
 			result.setMessage(e.getMessage());
 		}
 
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListCustomerResponseDto listCustomerWithFilter(CustomerDto postData) {
+		ListCustomerResponseDto result = new ListCustomerResponseDto();
+
+		try {
+			result.setCustomers(customerApi.filterCustomer(postData, getCurrentUser().getProvider()));
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListCustomerAccountResponseDto listByCustomer(String customerCode) {
+		ListCustomerAccountResponseDto result = new ListCustomerAccountResponseDto();
+
+		try {
+			result.setCustomerAccounts(customerAccountApi.listByCustomer(customerCode, getCurrentUser().getProvider()));
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListBillingAccountResponseDto listByCustomerAccount(String customerAccountCode) {
+		ListBillingAccountResponseDto result = new ListBillingAccountResponseDto();
+
+		try {
+			result.setBillingAccounts(billingAccountApi.listByCustomerAccount(customerAccountCode, getCurrentUser()
+					.getProvider()));
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ListUserAccountResponseDto listByBillingAccount(String billingAccountCode) {
+		ListUserAccountResponseDto result = new ListUserAccountResponseDto();
+
+		try {
+			result.setUserAccounts(userAccountApi.listByBillingAccount(billingAccountCode, getCurrentUser()
+					.getProvider()));
+		} catch (MeveoApiException e) {
+			result.getActionStatus().setErrorCode(e.getErrorCode());
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.getActionStatus().setErrorCode(MeveoApiErrorCode.GENERIC_API_EXCEPTION);
+			result.getActionStatus().setStatus(ActionStatusEnum.FAIL);
+			result.getActionStatus().setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ActionStatus createAccountOperation(AccountOperationDto postData) {
+		ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+
+		try {
+			accountOperationApi.create(postData, getCurrentUser());
+		} catch (MeveoApiException e) {
+			result.setStatus(ActionStatusEnum.FAIL);
+			result.setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.setStatus(ActionStatusEnum.FAIL);
+			result.setMessage(e.getMessage());
+		}
+
+		log.debug("RESPONSE={}", result);
+		return result;
+	}
+
+	@Override
+	public ActionStatus dunningInclusionExclusion(DunningInclusionExclusionDto dunningDto) {
+		ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+		try {
+			customerAccountApi.dunningExclusionInclusion(dunningDto, getCurrentUser().getProvider());
+		} catch (MeveoApiException e) {
+			result.setStatus(ActionStatusEnum.FAIL);
+			result.setMessage(e.getMessage());
+		} catch (Exception e) {
+			result.setStatus(ActionStatusEnum.FAIL);
+			result.setMessage(e.getMessage());
+		}
+		
+		log.debug("RESPONSE={}", result);
 		return result;
 	}
 

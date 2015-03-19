@@ -20,6 +20,7 @@ public enum RatedTransactionStatusEnum {
     OPEN,
     BILLED,
     REJECTED,
+    RERATED,
     CANCELED;
 
     public String toString() {

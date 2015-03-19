@@ -16,17 +16,16 @@
  */
 package org.meveo.admin.action.billing;
 
-import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.meveo.admin.action.BaseBean;
-import org.meveo.admin.action.StatelessBaseBean;
 import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.WalletInstance;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.local.IPersistenceService;
 import org.meveo.service.billing.impl.ChargeInstanceService;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  * Standard backing bean for {@link WalletInstance} (extends {@link BaseBean}
@@ -35,8 +34,8 @@ import org.meveo.service.billing.impl.ChargeInstanceService;
  * Manaty custom JSF components.
  */
 @Named
-@ConversationScoped
-public class ChargeInstanceBean extends StatelessBaseBean<ChargeInstance> {
+@ViewScoped
+public class ChargeInstanceBean extends BaseBean<ChargeInstance> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,6 +43,7 @@ public class ChargeInstanceBean extends StatelessBaseBean<ChargeInstance> {
 	 * Injected @{link WalletInstance} service. Extends
 	 * {@link PersistenceService}.
 	 */
+	@SuppressWarnings("rawtypes")
 	@Inject
 	private ChargeInstanceService chargeInstanceService;
 
@@ -51,7 +51,7 @@ public class ChargeInstanceBean extends StatelessBaseBean<ChargeInstance> {
 	 * Customer account Id passed as a parameter. Used when creating new
 	 * WalletInstance from customer account window, so default customer account
 	 * will be set on newly created wallet.
-	 */ 
+	 */
 
 	/**
 	 * Constructor. Invokes super constructor and provides class type of this
@@ -69,13 +69,14 @@ public class ChargeInstanceBean extends StatelessBaseBean<ChargeInstance> {
 	 * @throws InstantiationException
 	 */
 	public ChargeInstance initEntity() {
-		super.initEntity(); 
+		super.initEntity();
 		return entity;
 	}
 
 	/**
 	 * @see org.meveo.admin.action.BaseBean#getPersistenceService()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected IPersistenceService<ChargeInstance> getPersistenceService() {
 		return chargeInstanceService;
