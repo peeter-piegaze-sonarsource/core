@@ -11068,11 +11068,13 @@
   <wsdl:types>
     <xs:schema elementFormDefault="unqualified" targetNamespace="http://ws.api.meveo.org/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.api.meveo.org/">
       <xs:element name="ActionStatus" type="tns:actionStatus"/>
+      <xs:element name="ActivateServices" type="tns:activateServicesDto"/>
       <xs:element name="ApplyOneShotChargeInstance" type="tns:applyOneShotChargeInstanceDto"/>
       <xs:element name="CustomField" type="tns:customFieldDto"/>
       <xs:element name="CustomFields" type="tns:customFieldsDto"/>
-      <xs:element name="Customer" type="tns:activateServicesDto"/>
       <xs:element name="ListSubscriptionResponse" type="tns:listSubscriptionResponseDto"/>
+      <xs:element name="ServiceToActivate" type="tns:serviceToActivateDto"/>
+      <xs:element name="ServicesToActivate" type="tns:servicesToActivateDto"/>
       <xs:element name="TerminateSubscription" type="tns:terminateSubscriptionDto"/>
       <xs:element name="TerminateSubscriptionServices" type="tns:terminateSubscriptionServicesDto"/>
       <xs:element name="activateServices" type="tns:activateServices"/>
@@ -11311,23 +11313,22 @@
           <xs:extension base="tns:baseDto">
             <xs:sequence>
               <xs:element name="subscription" type="xs:string"/>
-              <xs:element name="services">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element minOccurs="0" name="key" type="xs:string"/>
-                          <xs:element minOccurs="0" name="value" type="xs:decimal"/>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
+              <xs:element minOccurs="0" name="servicesToActivateDto" type="tns:servicesToActivateDto"/>
             </xs:sequence>
           </xs:extension>
         </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="servicesToActivateDto">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="services" type="tns:serviceToActivateDto"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="serviceToActivateDto">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="xs:string"/>
+          <xs:element minOccurs="0" name="quantity" type="xs:decimal"/>
+          <xs:element minOccurs="0" name="subscriptionDate" type="xs:dateTime"/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="activateServicesResponse">
         <xs:sequence>
@@ -11434,19 +11435,21 @@
          <!--Optional:-->
          <activateServices>
          	  <subscription>SUBS1</subscription>
-            <services>
-               <!--Zero or more repetitions:-->
-               <entry>
+         	  <servicesToActivateDto>
+               <!--1 or more repetitions:-->
+               <services>
                   <!--Optional:-->
-                  <key>SERV1</key>
+                  <code>SERV1</code>
                   <!--Optional:-->
-                  <value>1</value>
-               </entry>
-            </services>
+                  <quantity>1</quantity>
+                  <!--Optional:-->
+                  <subscriptionDate>2015-03-20</subscriptionDate>
+               </services>
+            </servicesToActivateDto>
          </activateServices>
       </ws:activateServices>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://impl.ws.api.meveo.org/SubscriptionWs/activateServices"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Request 2"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
+</soapenv:Envelope>]]></con:request><con:credentials><con:username>meveo.admin</con:username><con:password>meveo.admin</con:password><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://impl.ws.api.meveo.org/SubscriptionWs/activateServices"/><con:wsrmConfig version="1.2"/></con:call><con:call name="Request 2"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment xmlns:con="http://eviware.com/soapui/config">
   &lt;con:entry key="username" value="meveo.admin"/>
   &lt;con:entry key="password" value="meveo.admin"/>
 &lt;/xml-fragment></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/meveo/SubscriptionWs</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.meveo.org/">
@@ -11456,15 +11459,16 @@
          <!--Optional:-->
          <activateServices>
          	  <subscription>SUBS2</subscription>
-            <services>
-               <!--Zero or more repetitions:-->
-               <entry>
+            <servicesToActivateDto>
+               <!--1 or more repetitions:-->
+               <services>
                   <!--Optional:-->
-                  <key>SERV1</key>
+                  <code>SERV1</code>
                   <!--Optional:-->
-                  <value>1</value>
-               </entry>
-            </services>
+                  <quantity>1</quantity>
+                  <!--Optional:-->
+               </services>
+            </servicesToActivateDto>
          </activateServices>
       </ws:activateServices>
    </soapenv:Body>
