@@ -14903,11 +14903,13 @@
   <wsdl:types>
     <xs:schema elementFormDefault="unqualified" targetNamespace="http://ws.api.meveo.org/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.api.meveo.org/">
       <xs:element name="ActionStatus" type="tns:actionStatus"/>
+      <xs:element name="ActivateServices" type="tns:activateServicesDto"/>
       <xs:element name="ApplyOneShotChargeInstance" type="tns:applyOneShotChargeInstanceDto"/>
       <xs:element name="CustomField" type="tns:customFieldDto"/>
       <xs:element name="CustomFields" type="tns:customFieldsDto"/>
-      <xs:element name="Customer" type="tns:activateServicesDto"/>
       <xs:element name="ListSubscriptionResponse" type="tns:listSubscriptionResponseDto"/>
+      <xs:element name="ServiceToActivate" type="tns:serviceToActivateDto"/>
+      <xs:element name="ServicesToActivate" type="tns:servicesToActivateDto"/>
       <xs:element name="TerminateSubscription" type="tns:terminateSubscriptionDto"/>
       <xs:element name="TerminateSubscriptionServices" type="tns:terminateSubscriptionServicesDto"/>
       <xs:element name="activateServices" type="tns:activateServices"/>
@@ -15146,23 +15148,22 @@
           <xs:extension base="tns:baseDto">
             <xs:sequence>
               <xs:element name="subscription" type="xs:string"/>
-              <xs:element name="services">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element minOccurs="0" name="key" type="xs:string"/>
-                          <xs:element minOccurs="0" name="value" type="xs:decimal"/>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
+              <xs:element minOccurs="0" name="servicesToActivateDto" type="tns:servicesToActivateDto"/>
             </xs:sequence>
           </xs:extension>
         </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="servicesToActivateDto">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="services" type="tns:serviceToActivateDto"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="serviceToActivateDto">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="xs:string"/>
+          <xs:element minOccurs="0" name="quantity" type="xs:decimal"/>
+          <xs:element minOccurs="0" name="subscriptionDate" type="xs:dateTime"/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="activateServicesResponse">
         <xs:sequence>
@@ -15259,22 +15260,25 @@
       <wsdl:output message="ns1:activateServicesResponse" name="activateServicesResponse"></wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/meveo/SubscriptionWs</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="activateServices" bindingOperationName="activateServices" type="Request-Response" outputName="activateServicesResponse" inputName="activateServices" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/meveo/SubscriptionWs</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.meveo.org/">
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/meveo/SubscriptionWs</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="activateServices" bindingOperationName="activateServices" type="Request-Response" outputName="activateServicesResponse" inputName="activateServices" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/meveo/SubscriptionWs</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.meveo.org/">
    <soapenv:Header/>
    <soapenv:Body>
       <ws:activateServices>
          <!--Optional:-->
          <activateServices>
             <subscription>?</subscription>
-            <services>
-               <!--Zero or more repetitions:-->
-               <entry>
+            <!--Optional:-->
+            <servicesToActivateDto>
+               <!--1 or more repetitions:-->
+               <services>
                   <!--Optional:-->
-                  <key>?</key>
+                  <code>?</code>
                   <!--Optional:-->
-                  <value>?</value>
-               </entry>
-            </services>
+                  <quantity>?</quantity>
+                  <!--Optional:-->
+                  <subscriptionDate>?</subscriptionDate>
+               </services>
+            </servicesToActivateDto>
          </activateServices>
       </ws:activateServices>
    </soapenv:Body>
@@ -16667,15 +16671,15 @@ we check that the recurring charge is correctly applied with prorata and quantit
    <soapenv:Header/>
    <soapenv:Body>
       <ws:activateServices>
-         <!--Optional:-->
-         <activateServices>
-         	  <subscription>SEB_SUB1</subscription>
-            <services>
-               <entry>
-                  <key>SEB_VOICE_SERV</key>
-                  <value>2</value>
-               </entry>
-            </services>
+         <activateServices>   
+            <subscription>SEB_SUB1</subscription>    
+            <servicesToActivateDto>
+               <services>
+                  <code>SEB_VOICE_SERV</code>
+                  <quantity>1</quantity>
+                  <subscriptionDate>2015-01-15</subscriptionDate>
+               </services>
+            </servicesToActivateDto>
          </activateServices>
       </ws:activateServices>
    </soapenv:Body>
