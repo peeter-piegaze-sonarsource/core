@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <subscriptions>
-    <subscription code="SUB1" userAccountId="" offerCode="OFF1">
+    <subscription code="JOB_SUB1" userAccountId="" offerCode="OFF1">
 		<customFields>
 			<customField code="SUB_CF1" description="" stringValue="DEMO" />
 			<customField code="SUB_CF2" description="" stringValue="DEMO1" />
@@ -25,7 +25,7 @@
             </access>
         </accesses>
     </subscription>
-    <subscription code="SUB2" userAccountId="UA1X" offerCode="OFF1">
+    <subscription code="JOB_SUB2" userAccountId="UA1X" offerCode="OFF1">
         <subscriptionDate>2015-02-20</subscriptionDate>
         <status date="2014-02-20">ACTIVE</status>
         <services>
