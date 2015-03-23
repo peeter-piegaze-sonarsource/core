@@ -27,6 +27,7 @@ import org.meveo.model.cache.CounterPeriodCache;
 import org.meveo.model.cache.TriggeredEDRCache;
 import org.meveo.model.cache.UsageChargeInstanceCache;
 import org.meveo.model.cache.UsageChargeTemplateCache;
+import org.meveo.model.catalog.Calendar;
 import org.meveo.model.catalog.PricePlanMatrix;
 import org.meveo.model.catalog.TriggeredEDRTemplate;
 import org.meveo.model.catalog.UsageChargeTemplate;
@@ -143,13 +144,13 @@ public class RatingCacheContainerProvider {
 				pricePlan.setCriteriaEL(null);
 			}
 
-			// Lazy loading workaround
-			if (pricePlan.getOfferTemplate() != null) {
-				pricePlan.getOfferTemplate().getCode();
-			}
-			if (pricePlan.getValidityCalendar() != null) {
-				pricePlan.getValidityCalendar().getCode();
-			}
+            // Lazy loading workaround
+            if (pricePlan.getOfferTemplate() != null) {
+                pricePlan.getOfferTemplate().getCode();
+            }
+            if (pricePlan.getValidityCalendar() != null) {
+            	preloadCalendar(pricePlan.getValidityCalendar());
+            }
 
 			log.info("Added pricePlan to cache for provider=" + pricePlan.getProvider().getCode() + "; chargeCode="
 					+ pricePlan.getEventCode() + "; priceplan=" + pricePlan);
@@ -164,13 +165,18 @@ public class RatingCacheContainerProvider {
 		log.debug("Price plan cache populated with {} price plans", activePricePlans.size());
 	}
 
-	/**
-	 * Add price plan to a cache
-	 * 
-	 * @param pricePlan
-	 *            Price plan to add
-	 */
-	public void addPricePlanToCache(PricePlanMatrix pricePlan) {
+    
+    public void preloadCalendar(Calendar calendar){
+    	log.debug("preloadCalendar {} : {}",calendar.getCode(),calendar.getClass());
+    	calendar.nextCalendarDate(new Date());
+    }
+    
+    /**
+     * Add price plan to a cache
+     * 
+     * @param pricePlan Price plan to add
+     */
+    public void addPricePlanToCache(PricePlanMatrix pricePlan) {
 
 		String cacheKey = pricePlan.getProvider().getId() + "_" + pricePlan.getEventCode();
 		if (!pricePlanCache.containsKey(cacheKey)) {
@@ -191,13 +197,13 @@ public class RatingCacheContainerProvider {
 			pricePlan.setCriteriaEL(null);
 		}
 
-		// Lazy loading workaround
-		if (pricePlan.getOfferTemplate() != null) {
-			pricePlan.getOfferTemplate().getCode();
-		}
-		if (pricePlan.getValidityCalendar() != null) {
-			pricePlan.getValidityCalendar().getCode();
-		}
+        // Lazy loading workaround
+        if (pricePlan.getOfferTemplate() != null) {
+            pricePlan.getOfferTemplate().getCode();
+        }
+        if (pricePlan.getValidityCalendar() != null) {
+        	preloadCalendar(pricePlan.getValidityCalendar());
+        }
 
 		chargePriceList.add(pricePlan);
 
