@@ -30,7 +30,6 @@ import org.meveo.model.billing.Tax;
 import org.meveo.model.billing.TradingCountry;
 import org.meveo.model.billing.TradingCurrency;
 import org.meveo.model.billing.TradingLanguage;
-import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.OneShotChargeTemplate;
 import org.meveo.model.catalog.OneShotChargeTemplateTypeEnum;
 import org.meveo.model.crm.Provider;
@@ -128,7 +127,7 @@ public class OneShotChargeTemplateApi extends BaseApi {
 			// create cat messages
 			if (postData.getLanguageDescriptions() != null) {
 				for (LanguageDescriptionDto ld : postData.getLanguageDescriptions()) {
-					CatMessages catMsg = new CatMessages(ChargeTemplate.class.getSimpleName() + "_"
+					CatMessages catMsg = new CatMessages(OneShotChargeTemplate.class.getSimpleName() + "_"
 							+ chargeTemplate.getId(), ld.getLanguageCode(), ld.getDescription());
 
 					catMessagesService.create(catMsg, currentUser, provider);
@@ -191,14 +190,14 @@ public class OneShotChargeTemplateApi extends BaseApi {
 
 					// create cat messages
 					for (LanguageDescriptionDto ld : postData.getLanguageDescriptions()) {
-						CatMessages catMsg = catMessagesService.getCatMessages(ChargeTemplate.class.getSimpleName()
+						CatMessages catMsg = catMessagesService.getCatMessages(OneShotChargeTemplate.class.getSimpleName()
 								+ "_" + chargeTemplate.getId(), ld.getLanguageCode());
 
 						if (catMsg != null) {
 							catMsg.setDescription(ld.getDescription());
 							catMessagesService.update(catMsg, currentUser);
 						} else {
-							CatMessages catMessages = new CatMessages(ChargeTemplate.class.getSimpleName() + "_"
+							CatMessages catMessages = new CatMessages(OneShotChargeTemplate.class.getSimpleName() + "_"
 									+ chargeTemplate.getId(), ld.getLanguageCode(), ld.getDescription());
 							catMessagesService.create(catMessages, currentUser, provider);
 						}
@@ -246,7 +245,7 @@ public class OneShotChargeTemplateApi extends BaseApi {
 			result = new OneShotChargeTemplateDto(chargeTemplate);
 
 			List<LanguageDescriptionDto> languageDescriptions = new ArrayList<LanguageDescriptionDto>();
-			for (CatMessages msg : catMessagesService.getCatMessagesList(ChargeTemplate.class.getSimpleName() + "_"
+			for (CatMessages msg : catMessagesService.getCatMessagesList(OneShotChargeTemplate.class.getSimpleName() + "_"
 					+ chargeTemplate.getId())) {
 				languageDescriptions.add(new LanguageDescriptionDto(msg.getLanguageCode(), msg.getDescription()));
 			}

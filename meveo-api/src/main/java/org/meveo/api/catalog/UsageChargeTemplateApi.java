@@ -20,7 +20,6 @@ import org.meveo.model.admin.User;
 import org.meveo.model.billing.CatMessages;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.TradingLanguage;
-import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.UsageChargeTemplate;
 import org.meveo.model.catalog.UsageChgTemplateEnum;
 import org.meveo.model.crm.Provider;
@@ -118,7 +117,7 @@ public class UsageChargeTemplateApi extends BaseApi {
 				for (LanguageDescriptionDto ld : postData
 						.getLanguageDescriptions()) {
 					CatMessages catMessages = new CatMessages(
-							ChargeTemplate.class.getSimpleName() + "_"
+							UsageChargeTemplate.class.getSimpleName() + "_"
 									+ chargeTemplate.getId(),
 							ld.getLanguageCode(), ld.getDescription());
 
@@ -236,7 +235,7 @@ public class UsageChargeTemplateApi extends BaseApi {
 					for (LanguageDescriptionDto ld : postData
 							.getLanguageDescriptions()) {
 						CatMessages catMsg = catMessagesService.getCatMessages(
-								ChargeTemplate.class.getSimpleName() + "_"
+								UsageChargeTemplate.class.getSimpleName() + "_"
 										+ chargeTemplate.getId(),
 								ld.getLanguageCode());
 
@@ -245,7 +244,7 @@ public class UsageChargeTemplateApi extends BaseApi {
 							catMessagesService.update(catMsg, currentUser);
 						} else {
 							CatMessages catMessages = new CatMessages(
-									ChargeTemplate.class.getSimpleName() + "_"
+									UsageChargeTemplate.class.getSimpleName() + "_"
 											+ chargeTemplate.getId(),
 									ld.getLanguageCode(), ld.getDescription());
 							catMessagesService.create(catMessages, currentUser,
@@ -290,7 +289,7 @@ public class UsageChargeTemplateApi extends BaseApi {
 
 			List<LanguageDescriptionDto> languageDescriptions = new ArrayList<LanguageDescriptionDto>();
 			for (CatMessages msg : catMessagesService
-					.getCatMessagesList(ChargeTemplate.class.getSimpleName()
+					.getCatMessagesList(UsageChargeTemplate.class.getSimpleName()
 							+ "_" + chargeTemplate.getId())) {
 				languageDescriptions.add(new LanguageDescriptionDto(msg
 						.getLanguageCode(), msg.getDescription()));
