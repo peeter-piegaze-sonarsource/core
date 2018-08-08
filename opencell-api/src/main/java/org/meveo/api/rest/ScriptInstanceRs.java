@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.meveo.api.dto.ActionStatus;
@@ -81,6 +82,17 @@ public interface ScriptInstanceRs extends IBaseRs {
     @GET
     @Path("/execute")
     Response execute(@QueryParam("scriptInstanceCode") String scriptInstanceCode);
+
+    /**
+     * Intercept data from http post
+     *
+     * @param formParams
+     * @return response of the script
+     */
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
+    @Path("/receivedPOST")
+    public Response receivedPOST(MultivaluedMap<String, String> formParams);
 
     /**
      * Create new or update an existing script instance with a given code.

@@ -3,6 +3,7 @@ package org.meveo.api.rest.impl;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.meveo.admin.exception.BusinessException;
@@ -113,6 +114,14 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
         }
         Response response = responseBuilder.build();
         return response;
+    }
+
+    @Override
+    public Response receivedPOST(MultivaluedMap<String, String> formParams) {
+        for (String paramKey : formParams.keySet()) {
+            System.out.println(paramKey + " = " + formParams.getFirst(paramKey));
+        }
+        return null;
     }
 
 
