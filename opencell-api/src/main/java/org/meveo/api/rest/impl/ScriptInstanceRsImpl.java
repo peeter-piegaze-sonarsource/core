@@ -21,6 +21,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Edward P. Legaspi
@@ -30,6 +32,10 @@ import java.util.Map;
 @RequestScoped
 @Interceptors({ WsRestApiInterceptor.class })
 public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
+
+
+    private static final Logger logger = Logger.getLogger(ScriptInstanceRsImpl.class.getName());
+
 
     @Inject
     private ScriptInstanceApi scriptInstanceApi;
@@ -118,20 +124,28 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
     @Override
     public Response receivedPOST1(MultivaluedMap<String, String> formParams) {
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "---------Test111--------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
         for (String paramKey : formParams.keySet()) {
-            System.out.println(paramKey + " = " + formParams.getFirst(paramKey));
+            logger.log(Level.FINE, paramKey + " = " + formParams.getFirst(paramKey));
         }
         return null;
     }
 
     @Override
     public Response receivedPOST2() {
-        System.out.println("-------------------------");
-        System.out.println("-------------------------");
-        System.out.println("-------------------------");
-        System.out.println("---------Test123--------");
-        System.out.println("-------------------------");
-        System.out.println("-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "---------Test222--------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
         return null;
     }
 
