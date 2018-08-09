@@ -91,7 +91,7 @@ public interface ScriptInstanceRs extends IBaseRs {
      */
     @POST
     @Consumes("application/x-www-form-urlencoded")
-    @Path("/receivedPOST1")
+    @Path("/received/receivedPOST1")
     public Response receivedPOST1(MultivaluedMap<String, String> formParams);
 
     /**
@@ -100,7 +100,7 @@ public interface ScriptInstanceRs extends IBaseRs {
      * @return response of the script
      */
     @POST
-    @Path("/receivedPOST2")
+    @Path("/received/receivedPOST2")
     public Response receivedPOST2();
 
     /**
@@ -109,8 +109,8 @@ public interface ScriptInstanceRs extends IBaseRs {
      * @return response of the script
      */
     @GET
-    @Path("/receivedPOST3")
-    public Response receivedPOST3();
+    @Path("/received/receivedGET")
+    public Response receivedGET();
 
 
     /**

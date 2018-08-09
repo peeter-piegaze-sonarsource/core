@@ -150,7 +150,7 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
     }
 
     @Override
-    public Response receivedPOST3() {
+    public Response receivedGET() {
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");

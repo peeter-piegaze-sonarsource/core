@@ -118,6 +118,12 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>RS</web-resource-name>
+			<url-pattern>/api/rest/scriptInstance/received/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>RS</web-resource-name>
 			<url-pattern>/api/rest/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
