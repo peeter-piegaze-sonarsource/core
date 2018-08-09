@@ -103,6 +103,15 @@ public interface ScriptInstanceRs extends IBaseRs {
     @Path("/receivedPOST2")
     public Response receivedPOST2();
 
+    /**
+     * Intercept data from http post
+     *
+     * @return response of the script
+     */
+    @GET
+    @Path("/receivedPOST3")
+    public Response receivedPOST3();
+
 
     /**
      * Create new or update an existing script instance with a given code.

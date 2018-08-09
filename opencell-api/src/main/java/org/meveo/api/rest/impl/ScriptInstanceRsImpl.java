@@ -149,6 +149,17 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
         return null;
     }
 
+    @Override
+    public Response receivedPOST3() {
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "---------Test333--------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.FINE, "-------------------------");
+        return null;
+    }
 
 
     @Override
