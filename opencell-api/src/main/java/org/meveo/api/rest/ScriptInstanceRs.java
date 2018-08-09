@@ -91,8 +91,18 @@ public interface ScriptInstanceRs extends IBaseRs {
      */
     @POST
     @Consumes("application/x-www-form-urlencoded")
-    @Path("/receivedPOST")
-    public Response receivedPOST(MultivaluedMap<String, String> formParams);
+    @Path("/receivedPOST1")
+    public Response receivedPOST1(MultivaluedMap<String, String> formParams);
+
+    /**
+     * Intercept data from http post
+     *
+     * @return response of the script
+     */
+    @POST
+    @Path("/receivedPOST2")
+    public Response receivedPOST2();
+
 
     /**
      * Create new or update an existing script instance with a given code.

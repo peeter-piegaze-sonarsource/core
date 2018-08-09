@@ -117,12 +117,24 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
     }
 
     @Override
-    public Response receivedPOST(MultivaluedMap<String, String> formParams) {
+    public Response receivedPOST1(MultivaluedMap<String, String> formParams) {
         for (String paramKey : formParams.keySet()) {
             System.out.println(paramKey + " = " + formParams.getFirst(paramKey));
         }
         return null;
     }
+
+    @Override
+    public Response receivedPOST2() {
+        System.out.println("-------------------------");
+        System.out.println("-------------------------");
+        System.out.println("-------------------------");
+        System.out.println("---------Test123--------");
+        System.out.println("-------------------------");
+        System.out.println("-------------------------");
+        return null;
+    }
+
 
 
     @Override
