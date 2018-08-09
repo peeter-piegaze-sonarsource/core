@@ -124,40 +124,40 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
     @Override
     public Response receivedPOST1(MultivaluedMap<String, String> formParams) {
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "---------Test111--------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "---------Test111--------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
         for (String paramKey : formParams.keySet()) {
-            logger.log(Level.FINE, paramKey + " = " + formParams.getFirst(paramKey));
+            logger.log(Level.INFO, paramKey + " = " + formParams.getFirst(paramKey));
         }
         return null;
     }
 
     @Override
     public Response receivedPOST2() {
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "---------Test222--------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "---------Test222--------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
         return null;
     }
 
     @Override
     public Response receivedPOST3() {
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "---------Test333--------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
-        logger.log(Level.FINE, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "---------Test333--------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
+        logger.log(Level.INFO, "-------------------------");
         return null;
     }
 
