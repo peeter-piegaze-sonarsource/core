@@ -192,6 +192,11 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
         try {
             Client client = getClient();
 
+
+            logger.log(Level.INFO, "client = " + client);
+            logger.log(Level.INFO, "client.merchant(\"OpenCellTest\") = " + client.merchant("OpenCellTest"));
+            logger.log(Level.INFO, "client.merchant(\"OpenCellTest\").hostedcheckouts() = " + client.merchant("OpenCellTest").hostedcheckouts());
+
             GetHostedCheckoutResponse response = client.merchant("OpenCellTest").hostedcheckouts().get(hostedCheckoutId);
 
             logger.log(Level.INFO, "status = " + response.getStatus());
