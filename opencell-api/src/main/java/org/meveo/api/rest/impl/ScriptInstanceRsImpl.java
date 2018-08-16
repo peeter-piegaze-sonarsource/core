@@ -193,6 +193,7 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
             Client client = getClient();
 
 
+
             logger.log(Level.INFO, "client = " + client);
             logger.log(Level.INFO, "client.merchant(\"OpenCellTest\") = " + client.merchant("OpenCellTest"));
             logger.log(Level.INFO, "client.merchant(\"OpenCellTest\").hostedcheckouts() = " + client.merchant("OpenCellTest").hostedcheckouts());
@@ -219,11 +220,17 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
     }
 
     private Client getClient() throws URISyntaxException {
+
+        logger.log(Level.INFO, "------ getClient 1--------");
         String apiKeyId = System.getProperty("connect.api.apiKeyId", "fe4b8561e7d6d332");
+        logger.log(Level.INFO, "------ getClient 2--------");
         String secretApiKey = System.getProperty("connect.api.secretApiKey", "t6XTfmNwAzjqdU0K5d4PScJKifkt5n2MU7k5Wb2u1mw=");
+        logger.log(Level.INFO, "------ getClient 3--------");
 
         URL propertiesUrl = getClass().getResource("/example-configuration.properties");
+        logger.log(Level.INFO, "------ getClient 4--------");
         CommunicatorConfiguration configuration = Factory.createConfiguration(propertiesUrl.toURI(), apiKeyId, secretApiKey);
+        logger.log(Level.INFO, "------ getClient 5--------");
         return Factory.createClient(configuration);
     }
 
