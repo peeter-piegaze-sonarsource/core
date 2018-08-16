@@ -13,6 +13,7 @@ import com.ingenico.connect.gateway.sdk.java.domain.definitions.Address;
 import com.ingenico.connect.gateway.sdk.java.domain.definitions.AmountOfMoney;
 import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutRequest;
 import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutResponse;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.GetHostedCheckoutResponse;
 import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.definitions.HostedCheckoutSpecificInput;
 import com.ingenico.connect.gateway.sdk.java.domain.payment.PaymentResponse;
 import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Customer;
@@ -170,7 +171,7 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
     public Response receivedGET() {
 
 
-        String state = "";
+        String hostedCheckoutId = "";
 
         Enumeration<String> parameterNames = httpServletRequest.getParameterNames();
 
@@ -181,22 +182,27 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
             logger.log(Level.INFO, name + " = " + httpServletRequest.getParameter(name));
             logger.log(Level.INFO, "-------------------------");
 
-            if ("state".equals(name)) state = httpServletRequest.getParameter(name);
+            if ("hostedCheckoutId".equals(name)) hostedCheckoutId = httpServletRequest.getParameter(name);
+
+
 
         }
 
 
-//        try {
-//            Client client = getClient();
-//            PaymentResponse response = client.merchant("OpenCellTest").payments().get(state);
-//            logger.log(Level.INFO, "status = " + response.getStatus());
-//            logger.log(Level.INFO, "getPaymentMethod = " + response.getPaymentOutput().getPaymentMethod());
-//            logger.log(Level.INFO, "getAmountPaid = " +  response.getPaymentOutput().getAmountPaid());
-//            logger.log(Level.INFO, "getCardNumber = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getCardNumber());
-//            logger.log(Level.INFO, "getExpiryDate = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getExpiryDate());
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Client client = getClient();
+
+            GetHostedCheckoutResponse response = client.merchant("OpenCellTest").hostedcheckouts().get(hostedCheckoutId);
+
+            response.getCreatedPaymentOutput().getDisplayedData().getRenderingData();
+
+
+            logger.log(Level.INFO, "status = " + response.getStatus());
+            logger.log(Level.INFO, "response.getCreatedPaymentOutput().getDisplayedData().getRenderingData() = " + response.getCreatedPaymentOutput().getDisplayedData().getRenderingData());
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
 
 
