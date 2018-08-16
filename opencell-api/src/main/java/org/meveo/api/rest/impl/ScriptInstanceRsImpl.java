@@ -139,6 +139,10 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
     @Override
     public Response receivedPOST2() {
+
+
+
+
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");
@@ -151,6 +155,20 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
     @Override
     public Response receivedGET() {
+
+
+        Enumeration<String> parameterNames = httpServletRequest.getParameterNames();
+
+        while (parameterNames.hasMoreElements()) {
+            String name = (String) parameterNames.nextElement();
+
+            logger.log(Level.INFO, "-------------------------");
+            logger.log(Level.INFO, name + " = " + httpServletRequest.getParameter(name));
+            logger.log(Level.INFO, "-------------------------");
+
+        }
+
+
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");
         logger.log(Level.INFO, "-------------------------");
