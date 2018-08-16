@@ -186,17 +186,17 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
         }
 
 
-        try {
-            Client client = getClient();
-            PaymentResponse response = client.merchant("OpenCellTest").payments().get(state);
-            logger.log(Level.INFO, "status = " + response.getStatus());
-            logger.log(Level.INFO, "getPaymentMethod = " + response.getPaymentOutput().getPaymentMethod());
-            logger.log(Level.INFO, "getAmountPaid = " +  response.getPaymentOutput().getAmountPaid());
-            logger.log(Level.INFO, "getCardNumber = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getCardNumber());
-            logger.log(Level.INFO, "getExpiryDate = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getExpiryDate());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Client client = getClient();
+//            PaymentResponse response = client.merchant("OpenCellTest").payments().get(state);
+//            logger.log(Level.INFO, "status = " + response.getStatus());
+//            logger.log(Level.INFO, "getPaymentMethod = " + response.getPaymentOutput().getPaymentMethod());
+//            logger.log(Level.INFO, "getAmountPaid = " +  response.getPaymentOutput().getAmountPaid());
+//            logger.log(Level.INFO, "getCardNumber = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getCardNumber());
+//            logger.log(Level.INFO, "getExpiryDate = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getExpiryDate());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
 
 
 
