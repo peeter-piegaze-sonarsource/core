@@ -6,6 +6,17 @@ import javax.interceptor.Interceptors;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import com.ingenico.connect.gateway.sdk.java.Client;
+import com.ingenico.connect.gateway.sdk.java.CommunicatorConfiguration;
+import com.ingenico.connect.gateway.sdk.java.Factory;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.Address;
+import com.ingenico.connect.gateway.sdk.java.domain.definitions.AmountOfMoney;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutRequest;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.CreateHostedCheckoutResponse;
+import com.ingenico.connect.gateway.sdk.java.domain.hostedcheckout.definitions.HostedCheckoutSpecificInput;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.PaymentResponse;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Customer;
+import com.ingenico.connect.gateway.sdk.java.domain.payment.definitions.Order;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.ScriptInstanceApi;
 import org.meveo.api.dto.ActionStatus;
@@ -17,6 +28,8 @@ import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.logging.WsRestApiInterceptor;
 import org.meveo.api.rest.ScriptInstanceRs;
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -157,6 +170,8 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
     public Response receivedGET() {
 
 
+        String hostedCheckoutId = "";
+
         Enumeration<String> parameterNames = httpServletRequest.getParameterNames();
 
         while (parameterNames.hasMoreElements()) {
@@ -166,7 +181,23 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
             logger.log(Level.INFO, name + " = " + httpServletRequest.getParameter(name));
             logger.log(Level.INFO, "-------------------------");
 
+            if ("hostedCheckoutId".equals(name)) hostedCheckoutId = httpServletRequest.getParameter(name);
+
         }
+
+
+        try {
+            Client client = getClient();
+            PaymentResponse response = client.merchant("OpenCellTest").payments().get(hostedCheckoutId);
+            logger.log(Level.INFO, "status = " + response.getStatus());
+            logger.log(Level.INFO, "getPaymentMethod = " + response.getPaymentOutput().getPaymentMethod());
+            logger.log(Level.INFO, "getAmountPaid = " +  response.getPaymentOutput().getAmountPaid());
+            logger.log(Level.INFO, "getCardNumber = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getCardNumber());
+            logger.log(Level.INFO, "getExpiryDate = " +  response.getPaymentOutput().getCardPaymentMethodSpecificOutput().getCard().getExpiryDate());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
 
 
         logger.log(Level.INFO, "-------------------------");
@@ -179,6 +210,14 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
         return null;
     }
 
+    private Client getClient() throws URISyntaxException {
+        String apiKeyId = System.getProperty("connect.api.apiKeyId", "fe4b8561e7d6d332");
+        String secretApiKey = System.getProperty("connect.api.secretApiKey", "t6XTfmNwAzjqdU0K5d4PScJKifkt5n2MU7k5Wb2u1mw=");
+
+        URL propertiesUrl = getClass().getResource("/example-configuration.properties");
+        CommunicatorConfiguration configuration = Factory.createConfiguration(propertiesUrl.toURI(), apiKeyId, secretApiKey);
+        return Factory.createClient(configuration);
+    }
 
     @Override
     public ScriptInstanceReponseDto createOrUpdate(ScriptInstanceDto postData) {
