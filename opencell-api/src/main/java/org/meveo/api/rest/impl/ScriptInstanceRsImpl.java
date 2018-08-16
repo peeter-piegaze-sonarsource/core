@@ -198,7 +198,7 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
 
             logger.log(Level.INFO, "status = " + response.getStatus());
-            logger.log(Level.INFO, "response.getCreatedPaymentOutput().getDisplayedData().getRenderingData() = " + response.getCreatedPaymentOutput().getDisplayedData().getRenderingData());
+            logger.log(Level.INFO, "response = " + response);
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
