@@ -229,6 +229,8 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
         URL propertiesUrl = getClass().getResource("/example-configuration.properties");
         logger.log(Level.INFO, "------ getClient 4--------");
+        logger.log(Level.INFO, "------ propertiesUrl.toURI() = " + propertiesUrl.toURI());
+
         CommunicatorConfiguration configuration = Factory.createConfiguration(propertiesUrl.toURI(), apiKeyId, secretApiKey);
         logger.log(Level.INFO, "------ getClient 5--------");
         return Factory.createClient(configuration);
