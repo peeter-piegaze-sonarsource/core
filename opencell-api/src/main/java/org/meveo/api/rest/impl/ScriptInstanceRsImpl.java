@@ -203,7 +203,11 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
             logger.log(Level.INFO, "status = " + response.getStatus());
             logger.log(Level.INFO, "getPaymentMethod = " + response.getCreatedPaymentOutput().getPayment().getPaymentOutput().getPaymentMethod());
 
-  
+            PaymentResponse paymentResponse = client.merchant("OpenCellTest").payments().get(hostedCheckoutId);
+
+            logger.log(Level.INFO, "paymentResponse = " + paymentResponse);
+
+
 
 
         } catch (URISyntaxException e) {
