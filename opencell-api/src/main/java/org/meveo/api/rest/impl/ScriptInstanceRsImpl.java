@@ -184,10 +184,7 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
 
             if ("hostedCheckoutId".equals(name)) hostedCheckoutId = httpServletRequest.getParameter(name);
 
-
-
         }
-
 
         try {
             Client client = getClient();
@@ -214,15 +211,6 @@ public class ScriptInstanceRsImpl extends BaseRs implements ScriptInstanceRs {
             e.printStackTrace();
         }
 
-
-
-        logger.log(Level.INFO, "-------------------------");
-        logger.log(Level.INFO, "-------------------------");
-        logger.log(Level.INFO, "-------------------------");
-        logger.log(Level.INFO, "---------Test333--------");
-        logger.log(Level.INFO, "-------------------------");
-        logger.log(Level.INFO, "-------------------------");
-        logger.log(Level.INFO, "-------------------------");
         return null;
     }
 
