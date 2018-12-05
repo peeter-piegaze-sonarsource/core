@@ -1,0 +1,28 @@
+      </div>
+    </div>
+  </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script>
+    $( document ).ready(function() {
+      console.log("ready!");
+      $(".docs-nav").html("<ul class=\"docs-nav__items\"></ul>");
+      
+      $( "h1" ).each(function( index ) {
+        var uuid = uuidv4();
+        $(this).attr("id",uuid);
+        $('ul.docs-nav__items').append("<li class=\"docs-nav__item docs-nav__item--request\"><a class=\"docs-nav__link no-select\" href=\"#"+ uuid +"\">" + $(this).text() + "</a></li>");
+      });
+      //$('h2').appendTo('ul.docs-nav__items');
+      // <li class=\"docs-nav__item docs-nav__item--request\"></li>
+
+    });
+
+
+    function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+  </script>
+</body>

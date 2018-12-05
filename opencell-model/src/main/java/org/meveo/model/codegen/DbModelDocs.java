@@ -1,4 +1,4 @@
-package org.meveo.codegen;
+package org.meveo.model.codegen;
 
 import java.io.BufferedWriter;
 import java.io.File;
