@@ -78,7 +78,7 @@ public class DbModelDocs {
 
     private static FieldVisitor fieldVisitor;
     
-    private  String html = "";
+    private String html = "";
 
     /**
      * 
@@ -1110,15 +1110,18 @@ public class DbModelDocs {
                 cfField.appliesTo = rs.getString("applies_to");
                 cfField.valueRequired = rs.getBoolean("value_required");
                 cfField.versionable = rs.getBoolean("versionable");
-                String[] guiPositions = rs.getString("gui_position").split(";");
-                for(String guiPosition : guiPositions) {
-                	String[] strs = guiPosition.split(":");
-                	if(strs[0].equals("tab")) {
-                		cfField.guiPositionTab = strs[1];
-                	}
-                	else if(strs[0].equals("fieldGroup")) {
-                		cfField.guiPositionFieldGroup = strs[1];
-                	}
+                String gp = rs.getString("gui_position");
+                if(gp != null) {
+                	String[] guiPositions = gp.split(";");
+                    for(String guiPosition : guiPositions) {
+                    	String[] strs = guiPosition.split(":");
+                    	if(strs[0].equals("tab")) {
+                    		cfField.guiPositionTab = strs[1];
+                    	}
+                    	else if(strs[0].equals("fieldGroup")) {
+                    		cfField.guiPositionFieldGroup = strs[1];
+                    	}
+                    }
                 }
                 fields.add(cfField);
               }

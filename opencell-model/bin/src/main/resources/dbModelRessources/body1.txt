@@ -1,6 +1,0 @@
-<body class="pm-main-body">
-  <main>
-    <div class="collection">
-      <div class="docs-nav">
-      </div>
-      <div class="docs-body">

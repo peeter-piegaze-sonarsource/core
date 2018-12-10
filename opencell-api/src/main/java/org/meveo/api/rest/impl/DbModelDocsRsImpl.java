@@ -11,10 +11,10 @@ public class DbModelDocsRsImpl extends BaseRs implements DbModelDocsRs {
 	DbModelDocsApi dbModelDocsApi;
 	
 	@Override
-	public ActionStatus getDbModelDoc() {
+	public ActionStatus getDbModelDoc(String args) {
 		ActionStatus result = new ActionStatus();
 		try {
-			result.setMessage(dbModelDocsApi.generateDocs(null));;
+			result.setMessage(dbModelDocsApi.generateDocs(args));;
 		} catch (Exception e) {
 			processException(e, result);
 		}
