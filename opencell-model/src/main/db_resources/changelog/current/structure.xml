@@ -698,5 +698,31 @@
         </createTable>
         <sql>insert into ${db.schema.adapted}ar_payment_gateway_rum_sequence_seq values(1)</sql>
 	</changeSet>
+    <changeSet id="#3790_20181128 - Subscription rating group" author="EdwardPLegaspi">
+    	<addColumn tableName="billing_subscription">
+    		<column name="rating_group" type="varchar(50)"></column>
+    	</addColumn>
+    	<createIndex tableName="billing_subscription" indexName="idx_subscription_rating_group">
+    		<column name="rating_group"></column>
+    	</createIndex>
+    </changeSet>
+    <changeSet id="20181204 - Add multilingual description field to measurable quantity entity" author="abdelkader.bouazza">
+        <addColumn tableName="dwh_measurable_quant">
+            <column name="description_i18n" type="${type.json}"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="#3543_27092018" author="AbdellatifBari">
+        <addColumn tableName="cat_serv_rec_charge_template">
+            <column name="counter_template_id" type="bigint" />
+        </addColumn>
+        <addColumn tableName="billing_recurring_charge_inst">
+            <column name="counter_id" type="bigint" />
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="counter_template_id" baseTableName="cat_serv_rec_charge_template" constraintName="fk_serv_rec_charge_template_counter_template" deferrable="false"
+            initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cat_counter_template" />
+        <addForeignKeyConstraint baseColumnNames="counter_id" baseTableName="billing_recurring_charge_inst" constraintName="fk_serv_rec_charge_template_billing_counter" deferrable="false" initiallyDeferred="false"
+            onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_counter" />
+     </changeSet>
 
 </databaseChangeLog>
