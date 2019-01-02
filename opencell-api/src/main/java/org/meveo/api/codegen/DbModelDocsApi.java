@@ -23,6 +23,9 @@ public class DbModelDocsApi extends BaseApi {
 			args[0] = root.get("inputFolder").asText();
 			args[1] = root.get("resourcesFolder").asText();
 			args[2] = root.get("outputFolder").asText();
+			args[3] = root.get("dbUrl").asText();
+			args[4] = root.get("dbId").asText();
+			args[5] = root.get("dbPwd").asText();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

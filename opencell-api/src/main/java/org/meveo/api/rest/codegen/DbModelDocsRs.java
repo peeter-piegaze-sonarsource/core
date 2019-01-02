@@ -16,6 +16,6 @@ import org.meveo.api.rest.IBaseRs;
 public interface DbModelDocsRs extends IBaseRs {
 	 @GET
 	 @Path("/dbModelDoc")
-	 ActionStatus getDbModelDoc(String args);
+	 String getDbModelDoc(String args);
 
 }

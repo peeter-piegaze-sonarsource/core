@@ -86,6 +86,9 @@ public class DbModelDocs {
      * ...\opencell-model\src\main\java
      * ...\opencell-model\src\main\resources\dbModelRessources
      * ...\opencell-model\target/docs/dbModel
+     * jdbc:postgresql://localhost:5432/meveo
+     * meveo
+     * meveo
      * @return 
      */
     public static void main(String[] args) {
@@ -97,6 +100,9 @@ public class DbModelDocs {
     	 String modelDir = args[0];
          String resourcesDir = args[1];
          String outputDir = args[2];
+         String dbUrl = args[3];
+         String dbId = args[4];
+         String dbPwd = args[5];
          
 
          System.out.println("Will parse " + modelDir + " and write db documentation to " + outputDir);
@@ -149,7 +155,7 @@ public class DbModelDocs {
              //dbTables.sort(Comparator.comparing(DBTable::getTablename));
              
          	CFTable cfTable = new CFTable();
-         	cfTable.getfields();
+         	cfTable.getfields(dbUrl, dbId, dbPwd);
          	
              // Append embedded entity data in case of superclass with nested embedded fields
              // Append fields to a parent entity in case of Inheritance.SINGLE inheritance strategy
@@ -1086,13 +1092,14 @@ public class DbModelDocs {
         	this.classname = classname;
         }
         
-		public void getfields() {
+		public void getfields(String dbUrl, String dbId, String dbPwd) {
         	try
             {
               String myDriver = "org.postgresql.Driver";
-              String myUrl = "jdbc:postgresql://localhost:5432/meveo";
+              //myUrl = "jdbc:postgresql://localhost:5432/meveo";
               Class.forName(myDriver);
-              Connection conn = DriverManager.getConnection(myUrl, "meveo", "meveo");
+              // default : jdbc:postgresql://localhost:5432/meveo, meveo, meveo
+              Connection conn = DriverManager.getConnection(dbUrl, dbId, dbPwd);
               
               String query = "SELECT * FROM public.crm_custom_field_tmpl";
               

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.meveo.api.codegen.DbModelDocsApi;
 import org.meveo.api.dto.ActionStatus;
+import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.rest.codegen.DbModelDocsRs;
 
 public class DbModelDocsRsImpl extends BaseRs implements DbModelDocsRs {
@@ -11,14 +12,17 @@ public class DbModelDocsRsImpl extends BaseRs implements DbModelDocsRs {
 	DbModelDocsApi dbModelDocsApi;
 	
 	@Override
-	public ActionStatus getDbModelDoc(String args) {
+	public String getDbModelDoc(String args) {
 		ActionStatus result = new ActionStatus();
 		try {
 			result.setMessage(dbModelDocsApi.generateDocs(args));;
 		} catch (Exception e) {
 			processException(e, result);
 		}
-		return result;
+		if(result.getStatus().equals(ActionStatusEnum.SUCCESS)) {
+			return result.getMessage();
+		}
+		else return result.toString();
 	}
 
 }
