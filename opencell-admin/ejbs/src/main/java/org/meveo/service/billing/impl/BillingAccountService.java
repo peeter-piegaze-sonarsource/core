@@ -40,7 +40,6 @@ import org.meveo.model.billing.BillingAccount;
 import org.meveo.model.billing.BillingCycle;
 import org.meveo.model.billing.DiscountPlanInstance;
 import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.billing.SubscriptionTerminationReason;
 import org.meveo.model.billing.UserAccount;
@@ -262,18 +261,6 @@ public class BillingAccountService extends AccountService<BillingAccount> {
     }
 
     /**
-     * Invoice sub category detail.
-     *
-     * @param invoiceReference the invoice reference
-     * @param invoiceSubCategoryCode the invoice sub category code
-     * @return the invoice sub category
-     */
-    public InvoiceSubCategory invoiceSubCategoryDetail(String invoiceReference, String invoiceSubCategoryCode) {
-        // TODO : need to be more clarified
-        return null;
-    }
-
-    /**
      * Find billing accounts.
      *
      * @param billingCycle the billing cycle
@@ -431,7 +418,7 @@ public class BillingAccountService extends AccountService<BillingAccount> {
         return getEntityManager().createNamedQuery("BillingAccount.listIdsByBillingRunId", Long.class).setParameter("billingRunId", billingRunId).getResultList();
     }
     
-	public BillingAccount instantiateDiscountPlans(BillingAccount entity, List<DiscountPlan> discountPlans) throws BusinessException {
+    public BillingAccount instantiateDiscountPlans(BillingAccount entity, List<DiscountPlan> discountPlans) throws BusinessException {
 		List<DiscountPlanInstance> toAdd = new ArrayList<>();
 		for (DiscountPlan dp : discountPlans) {
 			instantiateDiscountPlan(entity, dp, toAdd);
@@ -452,6 +439,7 @@ public class BillingAccountService extends AccountService<BillingAccount> {
 			discountPlanInstance.setBillingAccount(entity);
 			discountPlanInstance.setDiscountPlan(dp);
 			discountPlanInstance.copyEffectivityDates(dp);
+			discountPlanInstance.setCfValues(dp.getCfValues());
 			discountPlanInstanceService.create(discountPlanInstance, dp);
 			entity.getDiscountPlanInstances().add(discountPlanInstance);
 			
@@ -459,6 +447,7 @@ public class BillingAccountService extends AccountService<BillingAccount> {
 			boolean found = false;
 			DiscountPlanInstance dpiMatched = null;
 			for (DiscountPlanInstance dpi : entity.getDiscountPlanInstances()) {
+				dpi.setCfValues(dp.getCfValues());
 				if (dp.equals(dpi.getDiscountPlan())) {
 					found = true;
 					dpiMatched = dpi;
