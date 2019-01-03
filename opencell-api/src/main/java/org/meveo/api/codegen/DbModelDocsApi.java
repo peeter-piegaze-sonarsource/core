@@ -17,7 +17,7 @@ public class DbModelDocsApi extends BaseApi {
 	
 	public String generateDocs(String json) {
 		ObjectMapper mapper = new ObjectMapper();
-		String[] args = new String[3];
+		String[] args = new String[6];
         try {
 			JsonNode root = mapper.readTree(json);
 			args[0] = root.get("inputFolder").asText();
