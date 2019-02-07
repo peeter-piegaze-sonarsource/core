@@ -888,7 +888,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
         }
 
         ratedTransactionService.appendInvoiceAgregates(billingAccount, invoice, ratedTransactions, false, true);
-
+        invoice.setRatedTransactions(ratedTransactions);
         invoice.setTemporaryInvoiceNumber(UUID.randomUUID().toString());
 
         return invoice;
