@@ -858,7 +858,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
         if (preferedPaymentMethod != null) {
             invoice.setPaymentMethodType(preferedPaymentMethod.getPaymentType());
         }
-
+        invoice.setRatedTransactions(ratedTransactions);
         ratedTransactionService.appendInvoiceAgregates(billingAccount, invoice, ratedTransactions, false, true);
 
         invoice.setTemporaryInvoiceNumber(UUID.randomUUID().toString());
