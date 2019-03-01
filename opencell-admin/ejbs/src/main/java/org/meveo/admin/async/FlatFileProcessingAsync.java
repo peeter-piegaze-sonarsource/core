@@ -75,7 +75,7 @@ public class FlatFileProcessingAsync {
      * @throws Exception Exception
      */
     @Asynchronous
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public Future<FlatFileAsyncListResponse> launchAndForget(IFileParser fileParser, JobExecutionResultImpl result, ScriptInterface script, String recordVariableName,
             String fileName, String originFilename, String errorAction) throws Exception {
         long cpLines = 0;
