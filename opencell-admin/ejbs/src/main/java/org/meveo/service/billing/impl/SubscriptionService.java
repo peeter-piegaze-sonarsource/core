@@ -104,9 +104,9 @@ public class SubscriptionService extends BusinessService<Subscription> {
     @MeveoAudit
     @Override
     public Subscription update(Subscription subscription) throws BusinessException {
-
-        subscription.updateSubscribedTillAndRenewalNotifyDates();
-
+        if (subscription.getSubscribedTillDate() == null) {
+            subscription.updateSubscribedTillAndRenewalNotifyDates();
+        }
         Subscription subscriptionOld = this.findByCode(subscription.getCode());
         subscription.updateAutoRenewDate(subscriptionOld);
 
