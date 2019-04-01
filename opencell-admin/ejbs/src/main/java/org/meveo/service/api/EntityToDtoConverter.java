@@ -209,7 +209,7 @@ public class EntityToDtoConverter {
     }
 
     @SuppressWarnings("unchecked")
-    private CustomFieldDto customFieldToDTO(String cfCode, CustomFieldValue cfValue, CustomFieldTemplate cft) {
+	public CustomFieldDto customFieldToDTO(String cfCode, CustomFieldValue cfValue, CustomFieldTemplate cft) {
 
         boolean isChildEntityTypeField = cft.getFieldType() == CustomFieldTypeEnum.CHILD_ENTITY;
 

@@ -924,9 +924,7 @@ public class SubscriptionApi extends BaseApi {
         if (totalCount > 0) {
             List<Subscription> subscriptions = subscriptionService.list(paginationConfiguration);
             if (subscriptions != null) {
-                for (Subscription subscription : subscriptions) {
-                    result.getSubscriptions().getSubscription().add(subscriptionToDto(subscription, inheritCF));
-                }
+            	result.getSubscriptions().setSubscription(subscriptionService.listWithCfs(subscriptions, inheritCF));
             }
         }
 

@@ -1,11 +1,14 @@
 package org.meveo.service.crm.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -445,4 +448,38 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 
         return cftCopy;
     }
+
+	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> subscriptionsDistinctAtvs) {
+		
+//		if (useCFTCache) {
+
+//            Map<String, CustomFieldTemplate> cfts = customFieldsCache.getCustomFieldTemplates(appliesTo);
+//
+//            // Populate cache if record is not found in cache
+//            if (cfts == null) {
+//                cfts = findByAppliesToNoCache(appliesTo);
+//                if (cfts.isEmpty()) {
+//                    customFieldsCache.markNoCustomFieldTemplates(appliesTo);
+//                } else {
+//                    cfts.forEach((code, cft) -> customFieldsCache.addUpdateCustomFieldTemplate(cft));
+//                }
+//            }
+
+//            return null;
+//
+//        } else {
+//            
+//        }
+		
+		return findByAppliesToNoCache(subscriptionsDistinctAtvs);
+		
+	}
+
+	private Map<String, CustomFieldTemplate> findByAppliesToNoCache(Set<String> subscriptionsDistinctAtvs) {
+		List<CustomFieldTemplate> values = getEntityManager().createNamedQuery("CustomFieldTemplate.getCFTByAppliesTo", CustomFieldTemplate.class)
+	            .setParameter("appliesTo", subscriptionsDistinctAtvs).getResultList();
+	        Map<String, CustomFieldTemplate> cftMap = values.stream().collect(Collectors.toMap(cft -> cft.getCode(), cft -> cft));
+	        return cftMap;
+	}
+	
 }
