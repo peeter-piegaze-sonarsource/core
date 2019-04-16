@@ -450,7 +450,7 @@ public abstract class CustomScriptService<T extends CustomScript, SI extends Scr
      * @throws ElementNotFoundException Script not found
      */
     @Lock(LockType.WRITE)
-    @AccessTimeout (value = 1, unit = TimeUnit.MINUTES)
+    @AccessTimeout (value = 5, unit = TimeUnit.MINUTES)
     protected Class<SI> getScriptInterfaceWCompile(String scriptCode) throws ElementNotFoundException, InvalidScriptException {
         Class<SI> result = null;
 

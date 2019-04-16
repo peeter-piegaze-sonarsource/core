@@ -46,7 +46,7 @@ import org.meveo.model.security.Role;
 
 @Singleton
 @Lock(LockType.READ)
-@AccessTimeout (value = 1, unit = TimeUnit.MINUTES)
+@AccessTimeout (value = 5, unit = TimeUnit.MINUTES)
 public class ScriptInstanceService extends CustomScriptService<ScriptInstance, ScriptInterface> {
 
     /**
