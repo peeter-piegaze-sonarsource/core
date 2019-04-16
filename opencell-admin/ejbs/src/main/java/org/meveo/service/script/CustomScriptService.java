@@ -29,9 +29,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ejb.AccessTimeout;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Inject;
@@ -448,6 +450,7 @@ public abstract class CustomScriptService<T extends CustomScript, SI extends Scr
      * @throws ElementNotFoundException Script not found
      */
     @Lock(LockType.WRITE)
+    @AccessTimeout (value = 1, unit = TimeUnit.MINUTES)
     protected Class<SI> getScriptInterfaceWCompile(String scriptCode) throws ElementNotFoundException, InvalidScriptException {
         Class<SI> result = null;
 

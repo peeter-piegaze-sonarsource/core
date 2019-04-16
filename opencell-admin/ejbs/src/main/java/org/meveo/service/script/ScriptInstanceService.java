@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import javax.ejb.AccessTimeout;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
@@ -44,6 +46,7 @@ import org.meveo.model.security.Role;
 
 @Singleton
 @Lock(LockType.READ)
+@AccessTimeout (value = 1, unit = TimeUnit.MINUTES)
 public class ScriptInstanceService extends CustomScriptService<ScriptInstance, ScriptInterface> {
 
     /**
