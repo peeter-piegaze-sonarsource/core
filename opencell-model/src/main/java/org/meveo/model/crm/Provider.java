@@ -37,6 +37,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -361,6 +362,9 @@ public class Provider extends AuditableEntity implements ICustomFieldEntity {
             @AttributeOverride(name = "sequenceSize", column = @Column(name = "cust_no_sequence_size")),
             @AttributeOverride(name = "currentSequenceNb", column = @Column(name = "cust_no_current_sequence_nb")) })
     private GenericSequence customerNoSequence = new GenericSequence();
+    
+    @Transient
+    private String cftAppliesTo;
 
     public String getCode() {
         return code;
@@ -755,4 +759,13 @@ public class Provider extends AuditableEntity implements ICustomFieldEntity {
     public boolean isCurrentProvider() {
         return id != null && id == CURRENT_PROVIDER_ID;
     }
+
+	public String getCftAppliesTo() {
+		return cftAppliesTo;
+	}
+
+	public void setCftAppliesTo(String cftAppliesTo) {
+		this.cftAppliesTo = cftAppliesTo;
+	}
+    
 }

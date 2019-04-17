@@ -659,5 +659,39 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
         }
         return values;
     }
+    
+	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
+
+		if (useCFTCache) {
+			Map<String, CustomFieldTemplate> cfts = customFieldsCache.getCustomFieldTemplates(appliesToValues);
+			// Populate cache if record is not found in cache
+			if (cfts == null) {
+				cfts = findByAppliesToNoCache(appliesToValues);
+				if (cfts.isEmpty()) {
+					customFieldsCache.markNoCustomFieldTemplates(appliesToValues);
+				} else {
+					cfts.forEach((code, cft) -> customFieldsCache.addUpdateCustomFieldTemplate(cft));
+				}
+			}
+			return cfts;
+
+		} else {
+			return findByAppliesToNoCache(appliesToValues);
+		}
+
+	}
+
+	private Map<String, CustomFieldTemplate> findByAppliesToNoCache(Set<String> appliesToValues) {
+
+		List<CustomFieldTemplate> values = getEntityManager()
+				.createNamedQuery("CustomFieldTemplate.getCFTByAppliesTo", CustomFieldTemplate.class)
+				.setParameter("appliesTo", appliesToValues).getResultList();
+
+		Map<String, CustomFieldTemplate> cftMap = values.stream()
+				.collect(Collectors.toMap(cft -> cft.getCode(), cft -> cft));
+
+		return cftMap;
+
+	}
 
 }
