@@ -32,6 +32,7 @@ import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -115,6 +116,9 @@ public class Access extends EnableEntity implements ICustomFieldEntity {
     @Type(type = "cfjson")
     @Column(name = "cf_values_accum", columnDefinition = "text")
     private CustomFieldValues cfAccumulatedValues;
+    
+    @Transient
+    private String cftAppliesTo;
 
     /**
      * @return Validity start date
@@ -244,4 +248,13 @@ public class Access extends EnableEntity implements ICustomFieldEntity {
         }
         return null;
     }
+
+	public String getCftAppliesTo() {
+		return cftAppliesTo;
+	}
+
+	public void setCftAppliesTo(String cftAppliesTo) {
+		this.cftAppliesTo = cftAppliesTo;
+	}
+    
 }
