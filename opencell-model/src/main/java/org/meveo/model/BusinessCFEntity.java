@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -59,6 +60,9 @@ public abstract class BusinessCFEntity extends BusinessEntity implements ICustom
     @Type(type = "cfjson")
     @Column(name = "cf_values_accum", columnDefinition = "text")
     protected CustomFieldValues cfAccumulatedValues;
+
+	@Transient
+    private String cftAppliesTo;
 
     @Override
     public String getUuid() {
@@ -108,4 +112,13 @@ public abstract class BusinessCFEntity extends BusinessEntity implements ICustom
     public ICustomFieldEntity[] getParentCFEntities() {
         return null;
     }
+
+	public void setCftAppliesTo(String appliesToValue) {
+		this.cftAppliesTo = appliesToValue;
+	}
+
+	public String getCftAppliesTo() {
+		return cftAppliesTo;
+	}
+	
 }
