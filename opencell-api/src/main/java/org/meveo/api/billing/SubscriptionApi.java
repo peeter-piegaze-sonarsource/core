@@ -127,10 +127,10 @@ import java.util.stream.Collectors;
  * @author akadid abdelmounaim
  * @author Wassim Drira
  * @author Said Ramli
- * @author Mohamed El Youssoufi
  * @author Youssef IZEM
  * @author Abdellatif BARI
- * @lastModifiedVersion 7.0
+ * @author Mohamed El Youssoufi
+ * @lastModifiedVersion 8.0
  */
 @Stateless
 public class SubscriptionApi extends BaseApi {
@@ -1126,6 +1126,13 @@ public class SubscriptionApi extends BaseApi {
 
 	}
 
+    /**
+     * load Subscriptions Dtos
+     * 
+     * @param subscriptions
+     * @param inheritCF
+     * @return
+     */
     private List<SubscriptionDto> loadSubscriptionsDtos(List<Subscription> subscriptions, CustomFieldInheritanceEnum inheritCF) {
     	
     	List<SubscriptionDto> res = new ArrayList<SubscriptionDto>();
