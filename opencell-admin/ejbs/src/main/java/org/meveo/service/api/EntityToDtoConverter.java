@@ -48,8 +48,7 @@ import org.slf4j.Logger;
  * The Class EntityToDtoConverter.
  * 
  * @author Abdellatif BARI
- * @author melyoussoufi
- * @lastModifiedVersion 8.0
+ * @lastModifiedVersion 5.2.1
  */
 @Stateless
 public class EntityToDtoConverter {
@@ -533,11 +532,6 @@ public class EntityToDtoConverter {
 		return dtos;
 	}
 	
-	/**
-	 * load CustomFieldValueDto dtos and custom entity Instances
-	 * 
-	 * @param dtos
-	 */
 	private void loadDtosCustomEntityInstances(List<CustomFieldValueDto> dtos) {
 
 		List<CustomFieldValueDto> dtosWithCustomEntityInstances = dtos.stream()
@@ -615,12 +609,6 @@ public class EntityToDtoConverter {
 		return dtos;
 	}
 
-	/**
-	 * find CustomFieldTemplate By AppliesTo values list
-	 * 
-	 * @param allAtvs
-	 * @return
-	 */
 	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> allAtvs) {
 		return customFieldTemplateService.findByAppliesTo(allAtvs);
 	}
@@ -664,14 +652,6 @@ public class EntityToDtoConverter {
 		return currentEntityCFs.isEmpty() ? null : currentEntityCFs;
 	}
 
-	/**
-	 * add CustomFieldsDto to currentEntityCFs  
-	 * 
-	 * @param inheritCF
-	 * @param cfts
-	 * @param currentEntityCFs
-	 * @param cfValuesByCode
-	 */
 	private void addCustomFieldsDto(CustomFieldInheritanceEnum inheritCF, Map<String, CustomFieldTemplate> cfts,
 			CustomFieldsDto currentEntityCFs, Map<String, List<CustomFieldValue>> cfValuesByCode) {
 
@@ -697,16 +677,6 @@ public class EntityToDtoConverter {
 
 	}
 
-	/**
-	 * includes Inherited Custom Fields
-	 * 
-	 * @param parentEntities
-	 * @param inheritCF
-	 * @param currentEntityCFs
-	 * @param cfts
-	 * @param mergeMapValues
-	 * @throws CustomFieldException
-	 */
 	private void includeInheritedCustomFields(ICustomFieldEntity[] parentEntities, CustomFieldInheritanceEnum inheritCF,
 			CustomFieldsDto currentEntityCFs, Map<String, CustomFieldTemplate> cfts, boolean mergeMapValues)
 			throws CustomFieldException {
@@ -750,14 +720,6 @@ public class EntityToDtoConverter {
 
 	}
 
-	/**
-	 * 
-	 * keeps the used applies_to that was used in customfieldtemplate query
-	 * 
-	 * @param parentEntities
-	 * @param peDistinctAtvs
-	 * @throws CustomFieldException
-	 */
 	private void keepAppliesToValue(ICustomFieldEntity[] parentEntities, Set<String> peDistinctAtvs)
 			throws CustomFieldException {
 		for (ICustomFieldEntity pentity : parentEntities) {
@@ -788,15 +750,6 @@ public class EntityToDtoConverter {
 		}
 	}
 
-	/**
-	 * gets CustomFieldsDTO
-	 * 
-	 * @param inheritCF
-	 * @param cfts
-	 * @param entity
-	 * @return
-	 * @throws CustomFieldException
-	 */
 	public CustomFieldsDto getCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
 			Map<String, CustomFieldTemplate> cfts, ICustomFieldEntity entity) throws CustomFieldException {
 		if (entity instanceof BusinessCFEntity) {
@@ -845,15 +798,6 @@ public class EntityToDtoConverter {
 
 	}
 
-	/**
-	 * Calculates Access point CustomFieldsDto 
-	 * 
-	 * @param inheritCF
-	 * @param cfts
-	 * @param entity
-	 * @return
-	 * @throws CustomFieldException
-	 */
 	public CustomFieldsDto getAccessCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
 			Map<String, CustomFieldTemplate> cfts, Access entity) throws CustomFieldException {
 

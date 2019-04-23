@@ -127,10 +127,10 @@ import java.util.stream.Collectors;
  * @author akadid abdelmounaim
  * @author Wassim Drira
  * @author Said Ramli
+ * @author Mohamed El Youssoufi
  * @author Youssef IZEM
  * @author Abdellatif BARI
- * @author Mohamed El Youssoufi
- * @lastModifiedVersion 8.0
+ * @lastModifiedVersion 7.0
  */
 @Stateless
 public class SubscriptionApi extends BaseApi {
@@ -1100,14 +1100,6 @@ public class SubscriptionApi extends BaseApi {
         return list(pagingAndFiltering, CustomFieldInheritanceEnum.getInheritCF(true, merge));
     }
 
-	/**
-	 * List subscriptions
-	 *
-	 * @param pagingAndFiltering
-	 * @param inheritCF
-	 * @return instance of SubscriptionsListDto which contains list of Subscription DTO
-	 * @throws MeveoApiException
-	 */
 	public SubscriptionsListResponseDto list(PagingAndFiltering pagingAndFiltering,
 			CustomFieldInheritanceEnum inheritCF) throws MeveoApiException {
 
@@ -1134,13 +1126,6 @@ public class SubscriptionApi extends BaseApi {
 
 	}
 
-    /**
-     * converts subscriptions to dto 
-     * 
-     * @param subscriptions
-     * @param inheritCF
-     * @return
-     */
     private List<SubscriptionDto> loadSubscriptionsDtos(List<Subscription> subscriptions, CustomFieldInheritanceEnum inheritCF) {
     	
     	List<SubscriptionDto> res = new ArrayList<SubscriptionDto>();

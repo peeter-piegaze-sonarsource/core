@@ -20,11 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is used to calculate applies_to value. 
- * all calucalted applies_to will be set in allAtvs (unique values)
- * 
  * @author melyoussoufi
- * @lastModifiedVersion 8.0
+ *
  */
 public class AppliesToValuesCalculator {
 

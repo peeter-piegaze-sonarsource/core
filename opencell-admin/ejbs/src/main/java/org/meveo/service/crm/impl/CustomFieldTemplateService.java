@@ -65,8 +65,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 /**
  * @author Wassim Drira
  * @author Abdellatif BARI
- * @author melyoussoufi
- * @lastModifiedVersion 8.0
+ * @lastModifiedVersion 7.0
  */
 @Stateless
 public class CustomFieldTemplateService extends BusinessService<CustomFieldTemplate> {
@@ -655,12 +654,6 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
         return values;
     }
     
-	/**
-     * Find a list of custom field templates corresponding to a given appliesToValues list
-     * 
-	 * @param list of appliesTo values
-	 * @return A list of custom field templates mapped by a template key
-	 */
 	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
 
 		if (useCFTCache) {
@@ -682,12 +675,6 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 
 	}
 
-	/**
-	 * Find a list of custom field templates corresponding to a given appliesToValues list - always do a lookup in DB
-	 * 
-	 * @param appliesToValues
-	 * @return
-	 */
 	private Map<String, CustomFieldTemplate> findByAppliesToNoCache(Set<String> appliesToValues) {
 
 		List<CustomFieldTemplate> values = getEntityManager()

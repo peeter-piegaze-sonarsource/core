@@ -45,8 +45,7 @@ import org.slf4j.Logger;
  * @author Andrius Karpavicius
  * @author Wassim Drira
  * @author Abdellatif BARI
- * @author melyoussoufi
- * @lastModifiedVersion 8.0
+ * @lastModifiedVersion 7.0
  */
 @Stateless
 public class CustomFieldsCacheContainerProvider implements Serializable { 
@@ -505,12 +504,6 @@ public class CustomFieldsCacheContainerProvider implements Serializable {
         cftsByAppliesTo.clear();
     }
     
-    /**
-     * Get custom field templates for a given list of (appliesTo values).
-     * 
-     * @param appliesToValues
-     * @return
-     */
     public Map<String, CustomFieldTemplate> getCustomFieldTemplates(Set<String> appliesToValues) {
 		Map<String, CustomFieldTemplate> res = new HashMap<>();
 		for(String appliesTo : appliesToValues) {
@@ -522,11 +515,6 @@ public class CustomFieldsCacheContainerProvider implements Serializable {
         return res;
 	}
     
-    /**
-     * Mark in cache that there are no custom field templates cached under this cache key
-     * 
-     * @param appliesToValues
-     */
     public void markNoCustomFieldTemplates(Set<String> appliesToValues) {
 		for(String appliesTo : appliesToValues) {
 			CacheKeyStr cacheKeyByAppliesTo = new CacheKeyStr(currentUser.getProviderCode(), appliesTo);
