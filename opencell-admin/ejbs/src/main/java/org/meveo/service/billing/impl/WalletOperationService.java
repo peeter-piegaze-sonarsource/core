@@ -32,7 +32,6 @@ import org.meveo.model.billing.ChargeApplicationModeEnum;
 import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.CounterInstance;
 import org.meveo.model.billing.CounterPeriod;
-import org.meveo.model.billing.InstanceStatusEnum;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.OneShotChargeInstance;
 import org.meveo.model.billing.ProductChargeInstance;
@@ -690,13 +689,19 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
             log.debug("Applying recurring charge {} for {} - {}, quantity {}", chargeInstance.getId(), applyChargeOnDate, nextChargeDate, inputQuantity);
 
 
+            boolean createNewWO = true;
             if (reimbursement) {
+                inputQuantity = inputQuantity.negate();
                 walletOperations = chargeInstance.getWalletOperations();
                 for(WalletOperation walletOperation : walletOperations) {
-                    walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
+                    if (applyChargeOnDate.equals(walletOperation.getStartDate()) &&  nextChargeDate.equals(walletOperation.getEndDate())) {
+                        walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
+                        createNewWO = false;
+                    }
                 }
-                chargeInstance.setStatus(InstanceStatusEnum.CANCELED);
-            } else {
+            }
+
+            if (createNewWO) {
                 WalletOperation walletOperation = chargeApplicationRatingService.rateChargeApplication(chargeInstance,
                         reimbursement ? ApplicationTypeEnum.PRORATA_TERMINATION : ApplicationTypeEnum.RECURRENT, applyChargeOnDate, chargeInstance.getAmountWithoutTax(),
                         chargeInstance.getAmountWithTax(), inputQuantity, null, currency, buyersCountry.getId(), tax, null, nextChargeDate, invoiceSubCategory,
@@ -862,36 +867,43 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
                 inputQuantity = inputQuantity.multiply(new BigDecimal(prorataRatio + ""));
                 log.debug("Recuring charge id={} will be rated with prorata {}/{}={} -> quantity={}", chargeInstance.getId(), part1, part2, prorataRatio, inputQuantity);
             }
-
+            boolean createNewWO = true;
             if (reimbursement) {
+                inputQuantity = inputQuantity.negate();
                 walletOperations = chargeInstance.getWalletOperations();
                 for(WalletOperation walletOperation : walletOperations) {
-                    walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
+                    if (applyChargeOnDate.equals(walletOperation.getStartDate()) &&  nextChargeDate.equals(walletOperation.getEndDate())) {
+                        walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
+                        createNewWO = false;
+                    }
                 }
-                chargeInstance.setStatus(InstanceStatusEnum.CANCELED);
+
             } else {
 
-                log.debug("Applying not applied in advance recurring charge {} for {}-{}, quantity {}", chargeInstance.getId(), applyChargeOnDate, nextChargeDate, inputQuantity);
+                if (createNewWO) {
+                    log.debug("Applying not applied in advance recurring charge {} for {}-{}, quantity {}", chargeInstance.getId(), applyChargeOnDate, nextChargeDate, inputQuantity);
 
-                WalletOperation walletOperation = chargeApplicationRatingService.rateChargeApplication(chargeInstance,
-                        reimbursement ? ApplicationTypeEnum.PRORATA_TERMINATION : applicationTypeEnum, nextChargeDate, chargeInstance.getAmountWithoutTax(),
-                        chargeInstance.getAmountWithTax(), inputQuantity, null, currency, buyersCountry.getId(), tax, null, nextChargeDate, invoiceSubCategory,
-                        chargeInstance.getCriteria1(), chargeInstance.getCriteria2(), chargeInstance.getCriteria3(), chargeInstance.getOrderNumber(), applyChargeOnDate, nextChargeDate,
-                        reimbursement ? ChargeApplicationModeEnum.REIMBURSMENT : ChargeApplicationModeEnum.SUBSCRIPTION, false, false);
+                    WalletOperation walletOperation = chargeApplicationRatingService.rateChargeApplication(chargeInstance,
+                            reimbursement ? ApplicationTypeEnum.PRORATA_TERMINATION : applicationTypeEnum, nextChargeDate, chargeInstance.getAmountWithoutTax(),
+                            chargeInstance.getAmountWithTax(), inputQuantity, null, currency, buyersCountry.getId(), tax, null, nextChargeDate, invoiceSubCategory,
+                            chargeInstance.getCriteria1(), chargeInstance.getCriteria2(), chargeInstance.getCriteria3(), chargeInstance.getOrderNumber(), applyChargeOnDate, nextChargeDate,
+                            reimbursement ? ChargeApplicationModeEnum.REIMBURSMENT : ChargeApplicationModeEnum.SUBSCRIPTION, false, false);
 
 
-                walletOperation.setSubscriptionDate(chargeInstance.getSubscriptionDate());
+                    walletOperation.setSubscriptionDate(chargeInstance.getSubscriptionDate());
 
-                List<WalletOperation> operations = chargeWalletOperation(walletOperation);
-                walletOperations.addAll(operations);
+                    List<WalletOperation> operations = chargeWalletOperation(walletOperation);
+                    walletOperations.addAll(operations);
 
-                // create(walletOperation);
-                // em.flush();
-                // em.refresh(chargeInstance);
-                chargeInstance.getWalletOperations().addAll(operations);
-                if (!getEntityManager().contains(walletOperation)) {
-                    log.error("wtf wallet operation is already detached");
+                    // create(walletOperation);
+                    // em.flush();
+                    // em.refresh(chargeInstance);
+                    chargeInstance.getWalletOperations().addAll(operations);
+                    if (!getEntityManager().contains(walletOperation)) {
+                        log.error("wtf wallet operation is already detached");
+                    }
                 }
+
             }
 
             if (!getEntityManager().contains(chargeInstance)) {
