@@ -124,6 +124,7 @@
 			<role-name>apiAccess</role-name>
 		</auth-constraint>
 	</security-constraint>
+	<!--
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>AccountWS</web-resource-name>
@@ -245,11 +246,11 @@
 			<url-pattern>/WalletWs</url-pattern>
 			<http-method>POST</http-method>
 		</web-resource-collection>
-		<!-- <web-resource-collection>
+		<web-resource-collection>
 			<web-resource-name>WorkflowWs</web-resource-name>
 			<url-pattern>/WorkflowWs</url-pattern>
 			<http-method>POST</http-method>
-		</web-resource-collection> -->
+		</web-resource-collection>
 		<web-resource-collection>
 			<web-resource-name>GenericWorkflowWs</web-resource-name>
 			<url-pattern>/GenericWorkflowWs</url-pattern>
@@ -259,6 +260,7 @@
 			<role-name>apiAccess</role-name>
 		</auth-constraint>
 	</security-constraint>
+	-->
 	<login-config>
 		<auth-method>KEYCLOAK</auth-method>
 		<realm-name>opencell</realm-name>

@@ -43,7 +43,8 @@ public class WsRestApiInterceptor {
         }
 
         auditOrigin.setAuditOrigin(ChangeOriginEnum.API);
-        auditOrigin.setAuditOriginName(auditUtils.getAuditOrigin(invocationContext));
+        auditOrigin.setAuditOriginName("WS");
+        //auditOrigin.setAuditOriginName(auditUtils.getAuditOrigin(invocationContext));
 
         if (log.isDebugEnabled()) {
             log.debug("\r\n\r\n===========================================================");
