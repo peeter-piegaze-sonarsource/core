@@ -387,10 +387,11 @@ public class UsageRatingService implements Serializable {
                 stopEDRRating = true;
             }
 
-		} else {
-			boolean triggerNextCharge = false;
+        } else {
+            boolean triggerNextCharge = false;
 
-            UsageChargeTemplate usageChargeTemplate = usageChargeTemplateService.findById(usageChargeInstance.getChargeTemplate().getId());
+            UsageChargeTemplate usageChargeTemplate = usageChargeTemplateService
+                    .findById(usageChargeInstance.getChargeTemplate().getId());
 
             if (usageChargeTemplate.getTriggerNextCharge() != null) {
                 triggerNextCharge = usageChargeTemplate.getTriggerNextCharge();
@@ -679,12 +680,14 @@ public class UsageRatingService implements Serializable {
                 }
             }
 
-            if (!edrIsRated) {
+            if (!edrIsRated && !foundPricePlan) {
                 edr.setStatus(EDRStatusEnum.REJECTED);
-                edr.setRejectReason(!foundPricePlan ? EDRRejectReasonEnum.NO_PRICEPLAN.getCode() : EDRRejectReasonEnum.NO_MATCHING_CHARGE.getCode());
+                edr.setRejectReason(EDRRejectReasonEnum.NO_PRICEPLAN.getCode());
                 return null;
+            } else {
+                edr.setStatus(EDRStatusEnum.RATED);
             }
-
+            
         } catch (BusinessException e) {
             String rejectReason = "";
 
