@@ -377,7 +377,6 @@ public class UsageRatingService implements Serializable {
     private boolean rateEDRonChargeAndCounters(WalletOperation walletOperation, EDR edr, UsageChargeInstance usageChargeInstance, boolean isVirtual) throws BusinessException {
         boolean stopEDRRating = false;
         BigDecimal deducedQuantity = null;
-        boolean triggerNextCharge = false;
 
         if (usageChargeInstance.getCounter() != null) {
             // if the charge is associated to a counter, we decrement it. If decremented by the full quantity, rating is finished.
@@ -387,7 +386,8 @@ public class UsageRatingService implements Serializable {
                 stopEDRRating = true;
             }
 
-        } else {
+		} else {
+			boolean triggerNextCharge = false;
 
             UsageChargeTemplate usageChargeTemplate = usageChargeTemplateService.findById(usageChargeInstance.getChargeTemplate().getId());
 
@@ -423,11 +423,9 @@ public class UsageRatingService implements Serializable {
 
         rateEDRwithMatchingCharge(walletOperation, edr, quantityToCharge, usageChargeInstance, isVirtual);
 
-        if (triggerNextCharge) {
-            stopEDRRating = true;
-        }
         if (!isVirtual) {
             walletOperationService.chargeWalletOperation(walletOperation);
+            stopEDRRating = true;
         }
 
         // handle associated edr creation unless it is a Virtual operation
