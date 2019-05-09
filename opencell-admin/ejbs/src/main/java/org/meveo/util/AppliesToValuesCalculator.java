@@ -49,51 +49,48 @@ public class AppliesToValuesCalculator {
 
 	public void calculateSubscriptionsAtvs(List<Subscription> subscriptions) {
 
+		String subscriptionAptv = null;
+		String accessAptv = null;
+		String siAptv = null;
+		String pitv = null;
+
+		try {
+			subscriptionAptv = CustomFieldTemplateService.calculateAppliesToValue(Subscription.class);
+			accessAptv = CustomFieldTemplateService.calculateAppliesToValue(Access.class);
+			siAptv = CustomFieldTemplateService.calculateAppliesToValue(ServiceInstance.class);
+			pitv = CustomFieldTemplateService.calculateAppliesToValue(ProductInstance.class);
+		} catch (CustomFieldException e) {
+			log.error(e.getLocalizedMessage(), e);
+		}
+
 		allAtvs = new HashSet<String>();
+		allAtvs.add(subscriptionAptv);
+		allAtvs.add(accessAptv);
+		allAtvs.add(siAptv);
+		allAtvs.add(pitv);
 
 		for (Subscription subscription : subscriptions) {
-
-			try {
-				addAppliesToValue(subscription);
-			} catch (CustomFieldException e) {
-				log.error(e.getLocalizedMessage(), e);
-			}
-
+			subscription.setCftAppliesTo(subscriptionAptv);
 			List<Access> accessPoints = subscription.getAccessPoints();
 			if (accessPoints != null) {
 				for (Access ap : accessPoints) {
-					try {
-						addAppliesToValue(ap);
-					} catch (CustomFieldException e) {
-						log.error(e.getLocalizedMessage(), e);
-					}
+					ap.setCftAppliesTo(accessAptv);
 				}
 			}
-
 			List<ServiceInstance> servicesInstances = subscription.getServiceInstances();
 			if (servicesInstances != null) {
 				for (ServiceInstance si : servicesInstances) {
-					try {
-						addAppliesToValue(si);
-					} catch (CustomFieldException e) {
-						log.error(e.getLocalizedMessage(), e);
-					}
+					si.setCftAppliesTo(siAptv);
 				}
 			}
-
 			List<ProductInstance> productsInstances = subscription.getProductInstances();
 			if (productsInstances != null) {
 				for (ProductInstance pi : productsInstances) {
-					try {
-						addAppliesToValue(pi);
-					} catch (CustomFieldException e) {
-						log.error(e.getLocalizedMessage(), e);
-					}
+					pi.setCftAppliesTo(pitv);
 
 				}
 			}
 		}
-
 	}
 
 	public void calculateCustomEntityInstancesAtvs(List<CustomEntityInstance> customEntityInstances) {
@@ -102,7 +99,7 @@ public class AppliesToValuesCalculator {
 
 		for (CustomEntityInstance cei : customEntityInstances) {
 			try {
-				addAppliesToValue(cei);
+				addAppliesToValueForCei(cei);
 			} catch (CustomFieldException e) {
 				log.error(e.getLocalizedMessage(), e);
 			}
@@ -110,23 +107,23 @@ public class AppliesToValuesCalculator {
 
 	}
 
+	private void addAppliesToValueForCei(CustomEntityInstance cei) throws CustomFieldException {
+		String appliesToValue = CustomFieldTemplateService.calculateAppliesToValue(cei);
+		if (appliesToValue != null) {
+			cei.setCftAppliesTo(appliesToValue);
+			allAtvs.add(appliesToValue);
+		} else {
+			cei.setCftAppliesTo(null);
+		}
+	}
+
 	private void addAppliesToValue(BusinessCFEntity businessCFEntity) throws CustomFieldException {
-		String appliesToValue = CustomFieldTemplateService.calculateAppliesToValue(businessCFEntity);
+		String appliesToValue = CustomFieldTemplateService.calculateAppliesToValue(businessCFEntity.getClass());
 		if (appliesToValue != null) {
 			businessCFEntity.setCftAppliesTo(appliesToValue);
 			allAtvs.add(appliesToValue);
 		} else {
 			businessCFEntity.setCftAppliesTo(null);
-		}
-	}
-
-	private void addAppliesToValue(Access access) throws CustomFieldException {
-		String appliesToValue = CustomFieldTemplateService.calculateAppliesToValue(access);
-		if (appliesToValue != null) {
-			access.setCftAppliesTo(appliesToValue);
-			allAtvs.add(appliesToValue);
-		} else {
-			access.setCftAppliesTo(null);
 		}
 	}
 

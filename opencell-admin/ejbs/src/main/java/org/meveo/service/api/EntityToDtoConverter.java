@@ -317,7 +317,7 @@ public class EntityToDtoConverter {
 				AppliesToValuesCalculator appliesToValuesCalculator = new AppliesToValuesCalculator();
 				appliesToValuesCalculator.calculateCustomEntityInstancesAtvs(ceis);
 
-				Map<String, CustomFieldTemplate> allCfts = null;
+				List<CustomFieldTemplate> allCfts = null;
 				if (appliesToValuesCalculator != null && appliesToValuesCalculator.getAllAtvs() != null
 						&& !appliesToValuesCalculator.getAllAtvs().isEmpty()) {
 					allCfts = findByAppliesTo(appliesToValuesCalculator.getAllAtvs());
@@ -380,7 +380,7 @@ public class EntityToDtoConverter {
 	 * @param appliesToValues
 	 * @return Map<String, CustomFieldTemplate>
 	 */
-	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
+	public List<CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
 		return customFieldTemplateService.findByAppliesTo(appliesToValues);
 	}
 
@@ -394,7 +394,7 @@ public class EntityToDtoConverter {
 	 * @throws CustomFieldException
 	 */
 	public CustomFieldsDto getCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
-			Map<String, CustomFieldTemplate> cfts, ICustomFieldEntity entity) throws CustomFieldException {
+			List<CustomFieldTemplate> cfts, ICustomFieldEntity entity) throws CustomFieldException {
 		if (entity instanceof BusinessCFEntity) {
 			return getCustomFieldsDTO(inheritCF, cfts, (BusinessCFEntity) entity);
 		} else if (entity instanceof Access) {
@@ -406,36 +406,36 @@ public class EntityToDtoConverter {
 	}
 
 	private CustomFieldsDto getProviderCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
-			Map<String, CustomFieldTemplate> cfts, Provider entity) throws CustomFieldException {
+			List<CustomFieldTemplate> cfts, Provider entity) throws CustomFieldException {
 
 		CustomFieldsDto currentEntityCFs = new CustomFieldsDto();
 
 		if (entity != null && entity.getCftAppliesTo() != null) {
+			
+			for(CustomFieldTemplate cft : cfts) {
 
-			for (Map.Entry<String, CustomFieldTemplate> entry : cfts.entrySet()) {
+					if (entity.getCftAppliesTo().equals(cft.getAppliesTo())) {
 
-				CustomFieldTemplate cft = entry.getValue();
+						Map<String, List<CustomFieldValue>> cfValuesByCode = entity.getCfValues() != null
+								? entity.getCfValues().getValuesByCode()
+								: new HashMap<>();
 
-				if (entity.getCftAppliesTo().equals(cft.getAppliesTo())) {
+						addCustomFieldsDto(inheritCF, cfts, currentEntityCFs, cfValuesByCode);
 
-					Map<String, List<CustomFieldValue>> cfValuesByCode = entity.getCfValues() != null
-							? entity.getCfValues().getValuesByCode()
-							: new HashMap<>();
+						boolean mergeMapValues = inheritCF == CustomFieldInheritanceEnum.INHERIT_MERGED;
+						boolean includeInheritedCF = mergeMapValues
+								|| inheritCF == CustomFieldInheritanceEnum.INHERIT_NO_MERGE;
 
-					addCustomFieldsDto(inheritCF, cfts, currentEntityCFs, cfValuesByCode);
-
-					boolean mergeMapValues = inheritCF == CustomFieldInheritanceEnum.INHERIT_MERGED;
-					boolean includeInheritedCF = mergeMapValues
-							|| inheritCF == CustomFieldInheritanceEnum.INHERIT_NO_MERGE;
-
-					// add parent cf values if inherited
-					if (includeInheritedCF) {
-						ICustomFieldEntity[] parentEntities = entity.getParentCFEntities();
-						includeInheritedCustomFields(parentEntities, inheritCF, currentEntityCFs, cfts, mergeMapValues);
+						// add parent cf values if inherited
+						if (includeInheritedCF) {
+							ICustomFieldEntity[] parentEntities = entity.getParentCFEntities();
+							includeInheritedCustomFields(parentEntities, inheritCF, currentEntityCFs, cfts, mergeMapValues);
+						}
+						break;
 					}
-					break;
-				}
+				
 			}
+
 		}
 		return currentEntityCFs.isEmpty() ? null : currentEntityCFs;
 
@@ -449,25 +449,22 @@ public class EntityToDtoConverter {
 	 * @param currentEntityCFs
 	 * @param cfValuesByCode
 	 */
-	private void addCustomFieldsDto(CustomFieldInheritanceEnum inheritCF, Map<String, CustomFieldTemplate> cfts,
+	private void addCustomFieldsDto(CustomFieldInheritanceEnum inheritCF, List<CustomFieldTemplate> cfts,
 			CustomFieldsDto currentEntityCFs, Map<String, List<CustomFieldValue>> cfValuesByCode) {
-
 		boolean isValueMapEmpty = cfValuesByCode == null || cfValuesByCode.isEmpty();
-
 		if (!isValueMapEmpty) {
-
 			for (Entry<String, List<CustomFieldValue>> cfValueInfo : cfValuesByCode.entrySet()) {
 				String cfCode = cfValueInfo.getKey();
-				// Return only those values that have cft
-				if (!cfts.containsKey(cfCode)) {
-					continue;
-				}
-				for (CustomFieldValue cfValue : cfValueInfo.getValue()) {
-					currentEntityCFs.getCustomField().add(customFieldToDTO(cfCode, cfValue, cfts.get(cfCode)));
+				for (CustomFieldTemplate cft : cfts) {
+					if (cft.getCode() != null && cfCode != null && cft.getCode().equalsIgnoreCase(cfCode)) {
+						for (CustomFieldValue cfValue : cfValueInfo.getValue()) {
+							currentEntityCFs.getCustomField().add(customFieldToDTO(cfCode, cfValue, cft));
+						}
+						break;
+					}
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -481,7 +478,7 @@ public class EntityToDtoConverter {
 	 * @throws CustomFieldException
 	 */
 	private void includeInheritedCustomFields(ICustomFieldEntity[] parentEntities, CustomFieldInheritanceEnum inheritCF,
-			CustomFieldsDto currentEntityCFs, Map<String, CustomFieldTemplate> cfts, boolean mergeMapValues)
+			CustomFieldsDto currentEntityCFs, List<CustomFieldTemplate> cfts, boolean mergeMapValues)
 			throws CustomFieldException {
 
 		if (parentEntities != null) {
@@ -492,7 +489,7 @@ public class EntityToDtoConverter {
 
 			if (peDistinctAtvs.size() > 0) {
 
-				Map<String, CustomFieldTemplate> pCfts = customFieldTemplateService.findByAppliesTo(peDistinctAtvs);
+				List<CustomFieldTemplate> pCfts = customFieldTemplateService.findByAppliesTo(peDistinctAtvs);
 
 				for (ICustomFieldEntity parentEntity : parentEntities) {
 					if (parentEntity instanceof Provider && ((Provider) parentEntity).getCode() == null) {
@@ -503,9 +500,11 @@ public class EntityToDtoConverter {
 					if (parentCFs != null) {
 
 						for (CustomFieldDto parentCF : parentCFs.getCustomField()) {
-							CustomFieldTemplate template = cfts.get(parentCF.getCode());
-							if (template != null) {
-								currentEntityCFs.getInheritedCustomField().add(parentCF);
+							for(CustomFieldTemplate cft : cfts) {
+								if(cft.getCode().equals(parentCF.getCode())) {
+									currentEntityCFs.getInheritedCustomField().add(parentCF);
+									break;
+								}
 							}
 						}
 
@@ -570,18 +569,16 @@ public class EntityToDtoConverter {
 	 * @throws CustomFieldException
 	 */
 	public CustomFieldsDto getAccessCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
-			Map<String, CustomFieldTemplate> cfts, Access entity) throws CustomFieldException {
-
+			List<CustomFieldTemplate> cfts, Access entity) throws CustomFieldException {
+		
 		CustomFieldsDto currentEntityCFs = new CustomFieldsDto();
 
 		if (entity != null && entity.getCftAppliesTo() != null) {
-
-			for (Map.Entry<String, CustomFieldTemplate> entry : cfts.entrySet()) {
-
-				CustomFieldTemplate cft = entry.getValue();
-
+			
+			for(CustomFieldTemplate cft : cfts) {
+				
 				if (entity.getCftAppliesTo().equals(cft.getAppliesTo())) {
-
+					
 					Map<String, List<CustomFieldValue>> cfValuesByCode = entity.getCfValues() != null
 							? entity.getCfValues().getValuesByCode()
 							: new HashMap<>();
@@ -599,6 +596,7 @@ public class EntityToDtoConverter {
 					}
 					break;
 				}
+				
 			}
 		}
 		return currentEntityCFs.isEmpty() ? null : currentEntityCFs;
@@ -615,16 +613,14 @@ public class EntityToDtoConverter {
 	 * @throws CustomFieldException
 	 */
 	public CustomFieldsDto getCustomFieldsDTO(CustomFieldInheritanceEnum inheritCF,
-			Map<String, CustomFieldTemplate> cfts, BusinessCFEntity entity) throws CustomFieldException {
+			List<CustomFieldTemplate> cfts, BusinessCFEntity entity) throws CustomFieldException {
 
 		CustomFieldsDto currentEntityCFs = new CustomFieldsDto();
 
 		if (entity != null && entity.getCftAppliesTo() != null) {
-
-			for (Map.Entry<String, CustomFieldTemplate> entry : cfts.entrySet()) {
-
-				CustomFieldTemplate cft = entry.getValue();
-
+			
+			for(CustomFieldTemplate cft : cfts) {
+				
 				if (cft != null && cft.getAppliesTo() != null) {
 
 					if (entity.getCftAppliesTo().equals(cft.getAppliesTo())) {
@@ -649,8 +645,9 @@ public class EntityToDtoConverter {
 					}
 
 				}
-
+				
 			}
+
 		}
 		return currentEntityCFs.isEmpty() ? null : currentEntityCFs;
 	}

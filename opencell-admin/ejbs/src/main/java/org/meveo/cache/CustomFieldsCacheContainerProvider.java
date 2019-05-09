@@ -505,12 +505,12 @@ public class CustomFieldsCacheContainerProvider implements Serializable { // Cac
 	 * @param appliesToValues
 	 * @return Map<String, CustomFieldTemplate>
 	 */
-	public Map<String, CustomFieldTemplate> getCustomFieldTemplates(Set<String> appliesToValues) {
-		Map<String, CustomFieldTemplate> res = new HashMap<>();
+	public List<CustomFieldTemplate> getCustomFieldTemplates(Set<String> appliesToValues) {
+		List<CustomFieldTemplate> res = new ArrayList<CustomFieldTemplate>();
 		for(String appliesTo : appliesToValues) {
 			CacheKeyStr key = new CacheKeyStr(currentUser.getProviderCode(), appliesTo);
 			if(key != null && cftsByAppliesTo.get(key) != null) {
-				res.putAll(cftsByAppliesTo.get(key));
+				res.addAll(cftsByAppliesTo.get(key).values());
 			}
 		}
         return res;

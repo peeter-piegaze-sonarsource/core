@@ -109,17 +109,19 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 	 * @param appliesToValues
 	 * @return
 	 */
-	public Map<String, CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
+	public List<CustomFieldTemplate> findByAppliesTo(Set<String> appliesToValues) {
 		
 		if (useCFTCache) {
-            Map<String, CustomFieldTemplate> cfts = customFieldsCache.getCustomFieldTemplates(appliesToValues);
+			List<CustomFieldTemplate> cfts = customFieldsCache.getCustomFieldTemplates(appliesToValues);
             // Populate cache if record is not found in cache
             if (cfts == null) {
                 cfts = findByAppliesToNoCache(appliesToValues);
                 if (cfts.isEmpty()) {
                     customFieldsCache.markNoCustomFieldTemplates(appliesToValues);
                 } else {
-                    cfts.forEach((code, cft) -> customFieldsCache.addUpdateCustomFieldTemplate(cft));
+                	for(CustomFieldTemplate cft : cfts) {
+                		customFieldsCache.addUpdateCustomFieldTemplate(cft);
+                	}
                 }
             }
             return cfts;
@@ -136,11 +138,9 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 	 * @param appliesToValues
 	 * @return
 	 */
-	private Map<String, CustomFieldTemplate> findByAppliesToNoCache(Set<String> appliesToValues) {
-		List<CustomFieldTemplate> values = getEntityManager().createNamedQuery("CustomFieldTemplate.getCFTByAppliesTo", CustomFieldTemplate.class)
+	private List<CustomFieldTemplate> findByAppliesToNoCache(Set<String> appliesToValues) {
+		return getEntityManager().createNamedQuery("CustomFieldTemplate.getCFTByAppliesTo", CustomFieldTemplate.class)
 	            .setParameter("appliesTo", appliesToValues).getResultList();
-	        Map<String, CustomFieldTemplate> cftMap = values.stream().collect(Collectors.toMap(cft -> cft.getCode(), cft -> cft));
-	        return cftMap;
 	}
 	
 
@@ -305,6 +305,7 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
      * @throws CustomFieldException An exception when AppliesTo value can not be calculated. Occurs when value that is part of CFT.AppliesTo calculation is not set yet on entity
      */
     public static String calculateAppliesToValue(ICustomFieldEntity entity) throws CustomFieldException {
+    	
         CustomFieldEntity cfeAnnotation = entity.getClass().getAnnotation(CustomFieldEntity.class);
 
         String appliesTo = cfeAnnotation.cftCodePrefix();
@@ -325,7 +326,25 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
         }
         return appliesTo;
     }
-
+    
+    /**
+     * @param entityClass
+     * @return
+     * @throws BusinessException
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static String calculateAppliesToValue(Class entityClass) throws CustomFieldException {
+		CustomFieldEntity cfeAnnotation = (CustomFieldEntity) entityClass.getAnnotation(CustomFieldEntity.class);
+        String appliesTo = null;
+        if (cfeAnnotation != null) {
+            appliesTo = cfeAnnotation.cftCodePrefix();
+            if (cfeAnnotation.cftCodeFields().length > 0) {
+                throw new CustomFieldException("Can not determine a dynamic appliesTo value for "+entityClass.getSimpleName());
+            }
+        }
+        return appliesTo;
+    }
+    
     /**
      * Check and create missing templates given a list of templates.
      * 

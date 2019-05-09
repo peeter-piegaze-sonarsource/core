@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
@@ -962,7 +961,7 @@ public class SubscriptionApi extends BaseApi {
 		AppliesToValuesCalculator appliesToValues = new AppliesToValuesCalculator();
 		appliesToValues.calculateSubscriptionsAtvs(subscriptions);
 
-		Map<String, CustomFieldTemplate> allCfts = null;
+		List<CustomFieldTemplate> allCfts = null;
 		if (appliesToValues.getAllAtvs().size() > 0) {
 			allCfts = entityToDtoConverter.findByAppliesTo(appliesToValues.getAllAtvs());
 		}
