@@ -630,7 +630,9 @@ public class UsageRatingService implements Serializable {
 
                     if (usageChargeTemplate.getTriggerNextCharge() != null) {
                         triggerNextCharge = usageChargeTemplate.getTriggerNextCharge();
-                    } else if (!StringUtils.isBlank(usageChargeTemplate.getTriggerNextChargeEL())) {
+                    }
+
+                    if (!StringUtils.isBlank(usageChargeTemplate.getTriggerNextChargeEL())) {
                         triggerNextCharge = evaluateBooleanExpression(usageChargeTemplate.getTriggerNextChargeEL(), edr, walletOperation);
                     }
                     if (!triggerNextCharge) {
