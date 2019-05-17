@@ -239,4 +239,78 @@
         <addDefaultValue tableName="meveo_job_instance" columnName="exclude_inv_without_amount" defaultValueNumeric="0" />
         <sql>update ${db.schema.adapted}meveo_job_instance set exclude_inv_without_amount = 0 where exclude_inv_without_amount is null</sql>
     </changeSet>
+
+    <changeSet author="FranckValot" id="#3148_20190508 - knowledge center">        
+        <createTable tableName="kc_post">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_post_pkey" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="content" type="varchar(2000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="collection_id" type="bigint"/>
+        </createTable>
+               
+        <createTable tableName="kc_collection">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_collection_pkey" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="name" type="varchar(255)" />
+            <column name="collection_id" type="bigint"/>
+        </createTable>
+
+        <createSequence sequenceName="kc_collection_seq" />
+
+        <createTable tableName="kc_comments">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_comments_pkey" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(255)"/>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="content" type="varchar(2000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="post_id" type="bigint"/>
+        </createTable>
+        
+        <createSequence sequenceName="kc_comments_seq" />
+    
+        <createTable tableName="kc_post_tag">
+            <column name="post_id" type="bigint" />
+            <column name="tag" type="varchar(100)"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="post_id, tag" constraintName="kc_post_tag_pkey" tableName="kc_post_tag" />
+    </changeSet>
 </databaseChangeLog> 
