@@ -72,24 +72,24 @@ public class MediationAsync {
     public Future<String> launchAndForget(List<File> files, JobExecutionResultImpl result, String parameter, MeveoUser lastCurrentUser, String scriptCode)
             throws BusinessException {
 
-        currentUserProvider.reestablishAuthentication(lastCurrentUser);
-
-
-            for (File file : files) {
-                if (!jobExecutionService.isJobRunningOnThis(result.getJobInstance())) {
-                    break;
-                }
-                if (scriptCode == null) {
-                    mediationJobBean.execute(result, parameter, file);
-                } else {
-                    Map<String, Object> context = new HashMap<>();
-                    ScriptInterface script = scriptInstanceService.getScriptInstance(scriptCode);
-                    context.put(Script.CONTEXT_CURRENT_USER, lastCurrentUser);
-                    context.put(Script.JOB_EXECUTION_RESULT, result);
-                    context.put(CSVCDRParser.CDR_FILE, file);
-                    script.execute(context);
-                }
-            }
+//        currentUserProvider.reestablishAuthentication(lastCurrentUser);
+//
+//
+//            for (File file : files) {
+//                if (!jobExecutionService.isJobRunningOnThis(result.getJobInstance())) {
+//                    break;
+//                }
+//                if (scriptCode == null) {
+//                    mediationJobBean.execute(result, parameter, file);
+//                } else {
+//                    Map<String, Object> context = new HashMap<>();
+//                    ScriptInterface script = scriptInstanceService.getScriptInstance(scriptCode);
+//                    context.put(Script.CONTEXT_CURRENT_USER, lastCurrentUser);
+//                    context.put(Script.JOB_EXECUTION_RESULT, result);
+//                    context.put(CSVCDRParser.CDR_FILE, file);
+//                    script.execute(context);
+//                }
+//            }
 
         return new AsyncResult<String>("OK");
     }
