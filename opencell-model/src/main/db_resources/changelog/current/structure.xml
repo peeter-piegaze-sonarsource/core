@@ -248,6 +248,9 @@
             <column name="code" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="description" type="varchar(255)"/>
             <column name="version" type="int4" />
             <column name="created" type="datetime">
@@ -261,12 +264,16 @@
             </column>
             <column name="collection_id" type="bigint"/>
         </createTable>
-               
+        <addUniqueConstraint columnNames="code" constraintName="kc_post_code" deferrable="false" disabled="false" initiallyDeferred="false" tableName="kc_post" />
+
         <createSequence sequenceName="kc_post_seq" />
 
         <createTable tableName="kc_collection">
             <column name="id" type="bigint" autoIncrement="${id.auto}">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="kc_collection_pkey" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
             </column>
             <column name="code" type="varchar(255)">
                 <constraints nullable="false" />
@@ -279,9 +286,9 @@
             <column name="updated" type="datetime" />
             <column name="creator" type="varchar(100)" />
             <column name="updater" type="varchar(100)" />
-            <column name="name" type="varchar(255)" />
-            <column name="collection_id" type="bigint"/>
+            <column name="parentcollection_id" type="bigint"/>
         </createTable>
+        <addUniqueConstraint columnNames="code" constraintName="kc_collection_code" deferrable="false" disabled="false" initiallyDeferred="false" tableName="kc_collection" />
 
         <createSequence sequenceName="kc_collection_seq" />
 

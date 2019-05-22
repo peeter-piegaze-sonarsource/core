@@ -16,12 +16,12 @@ public class CollectionDto extends BusinessEntityDto {
 	 */
 	private static final long serialVersionUID = -4889360284187982497L;
 
-	private List<String> childrenCollectionsCode;
+	private List<CollectionDto> children;
 	
-	private String parentCollectionCode;
+	private String parentCode;
 	
-	private List<PostDto> posts;
-	
+	private List<String> postsCode;
+
 	private String name;
 	
 	public CollectionDto() {
@@ -29,49 +29,55 @@ public class CollectionDto extends BusinessEntityDto {
 	}
 	
 	public CollectionDto(Collection collection) {
+		super(collection);
+		name = collection.getName();
+		Collection parent = collection.getParentCollection();
 		Set<Collection> childrenCollections = collection.getChildrenCollections();
-		Collection parentCollection = collection.getParentCollection();
-		Set<Post> postsSet = collection.getPosts();
+		Set<Post> posts = collection.getPosts();
 		
-		childrenCollectionsCode = new ArrayList<String>();
-		for(Collection c : childrenCollections) {
-			childrenCollectionsCode.add(c.getCode());
-		}
-		parentCollectionCode = parentCollection.getCode();
+
+		if(parent != null)
+			parentCode = parent.getCode();
 		
-		
-		if(postsSet != null) {
-			List<PostDto> postDtos= new ArrayList<PostDto>();
-			for(Post p : postsSet) {
-				PostDto pd = new PostDto(p);
-				postDtos.add(pd);
+		if(childrenCollections != null) {
+			children = new ArrayList<CollectionDto>();
+			for(Collection c : childrenCollections) {
+				children.add(new CollectionDto(c));
 			}
-			posts = postDtos;
+		}
+		
+		
+		if(posts != null) {
+			postsCode = new ArrayList<String>();
+			for(Post p : posts) {
+				postsCode.add(p.getCode());
+			}
 		}
 	}
+
+	public List<CollectionDto> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<CollectionDto> children) {
+		this.children = children;
+	}
+
 	
-	public List<PostDto> getPosts() {
-		return posts;
+	public String getParentCode() {
+		return parentCode;
 	}
 
-	public void setPosts(List<PostDto> posts) {
-		this.posts = posts;
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 
-	public List<String> getChildrenCollectionsCode() {
-		return childrenCollectionsCode;
+	public List<String> getPostsCode() {
+		return postsCode;
 	}
 
-	public void setChildrenCollectionsCode(List<String> childrenCollectionsCode) {
-		this.childrenCollectionsCode = childrenCollectionsCode;
-	}
-
-	public String getParentCollectionCode() {
-		return parentCollectionCode;
-	}
-
-	public void setParentCollectionCode(String parentCollectionCode) {
-		this.parentCollectionCode = parentCollectionCode;
+	public void setPostsCode(List<String> postsCode) {
+		this.postsCode = postsCode;
 	}
 
 	public String getName() {
@@ -81,5 +87,6 @@ public class CollectionDto extends BusinessEntityDto {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	
 }

@@ -1,19 +1,31 @@
 package org.meveo.api.knowledgeCenter;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.BaseApi;
+import org.meveo.api.dto.account.FilterProperty;
+import org.meveo.api.dto.account.FilterResults;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
+import org.meveo.api.dto.knowledgeCenter.CollectionsDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.knowledgeCenter.CollectionsResponseDto;
 import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.exception.MissingParameterException;
+import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethod;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
+import org.meveo.api.security.filter.ListFilter;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.service.knowledgecenter.CollectionService;
 import org.meveo.service.knowledgecenter.PostService;
+import org.primefaces.model.SortOrder;
 
 @Stateless
 @Interceptors(SecuredBusinessEntityMethodInterceptor.class)
@@ -24,7 +36,7 @@ public class CollectionApi extends BaseApi {
 	@Inject
 	PostService postService;
 
-	public Collection create(CollectionDto postData) throws BusinessException, MissingParameterException {
+	public Collection create(CollectionDto postData) throws BusinessException, MissingParameterException, EntityDoesNotExistsException {
 		if(StringUtils.isBlank(postData.getName())) {
 			missingParameters.add("Name");
 		}
@@ -32,12 +44,16 @@ public class CollectionApi extends BaseApi {
 			missingParameters.add("Code");
 		}
 		handleMissingParameters();
+		
 		Collection collection = new Collection();
 		collection.setName(postData.getName());
 		collection.setCode(postData.getCode());
-		if(!StringUtils.isBlank(postData.getParentCollectionCode())) {
-			String parentCollectionCode = postData.getParentCollectionCode();
-			Collection parentCollection = collectionService.findByCode(parentCollectionCode);
+		String parentCode = postData.getParentCode();
+		if(!StringUtils.isBlank(parentCode)) {
+			Collection parentCollection = collectionService.findByCode(parentCode);
+			if (parentCollection == null) {
+				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
+			}
 			collection.setParentCollection(parentCollection);
 		}
 		collectionService.create(collection);
@@ -58,12 +74,100 @@ public class CollectionApi extends BaseApi {
 			throw new EntityDoesNotExistsException(Collection.class, code, "code");
 		}
 		
-		collection.setName(postData.getName());
-		
+		if(!StringUtils.isBlank(postData.getName()))
+			collection.setName(postData.getName());
+
+		String parentCode = postData.getParentCode();
+		if(!StringUtils.isBlank(parentCode)) {
+			Collection parentCollection = collectionService.findByCode(parentCode);
+			if (parentCollection == null) {
+				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
+			}
+			collection.setParentCollection(parentCollection);
+		}
 		collectionService.update(collection);
 		
 		return collection;
 	}
 	
+	public Collection createOrUpdate(CollectionDto postData) throws MeveoApiException, BusinessException {
+		if(StringUtils.isBlank(postData.getCode())) {
+			missingParameters.add("Code");
+		}
+
+		handleMissingParameters();
+		
+		String code = null;
+		Collection collection = collectionService.findByCode(code);
+		if(collection == null) {
+			return create(postData);
+		}
+		else {
+			return update(postData);
+		}
+	}
 	
+	public CollectionDto findByCode(String code) throws MeveoApiException {
+		if (StringUtils.isBlank(code)) {
+			missingParameters.add("code");
+		}
+
+		handleMissingParameters();
+		
+		CollectionDto collectionDto = null;
+		Collection collection = collectionService.findByCode(code);
+		
+		if(collection == null) {
+			throw new EntityDoesNotExistsException(Collection.class, code, "code");
+		}
+		
+		collectionDto = new CollectionDto(collection);
+		
+		return collectionDto;
+
+	}
+
+	public void remove(String code) throws BusinessException, EntityDoesNotExistsException {
+		Collection collection = collectionService.findByCode(code);
+
+		if (collection == null) {
+			throw new EntityDoesNotExistsException(Collection.class, code, "code");
+		}
+
+		collectionService.remove(collection);
+	}
+	
+	@SecuredBusinessEntityMethod(resultFilter = ListFilter.class)
+	@FilterResults(propertyToFilter = "collections.collection", itemPropertiesToFilter = {
+			@FilterProperty(property = "code", entityClass = Collection.class) })
+	public CollectionsResponseDto list(CollectionDto postData, PagingAndFiltering pagingAndFiltering) throws MeveoApiException {
+		if (pagingAndFiltering == null) {
+			pagingAndFiltering = new PagingAndFiltering();
+		}
+
+		if (postData != null) {
+			pagingAndFiltering.addFilter("code", postData.getCode());
+		}
+
+		PaginationConfiguration paginationConfig = toPaginationConfiguration("code", SortOrder.ASCENDING, null,
+				pagingAndFiltering, Collection.class);
+
+		Long totalCount = collectionService.count(paginationConfig);
+
+		CollectionsDto collectionsDto = new CollectionsDto();
+		CollectionsResponseDto result = new CollectionsResponseDto();
+
+		result.setPaging(pagingAndFiltering);
+		result.getPaging().setTotalNumberOfRecords(totalCount.intValue());
+		collectionsDto.setTotalNumberOfRecords(totalCount);
+
+		if (totalCount > 0) {
+			List<Collection> collections = collectionService.list(paginationConfig);
+			for (Collection c : collections) {
+				collectionsDto.getCollection().add(new CollectionDto(c));
+			}
+		}
+		result.setCollections(collectionsDto);
+		return result;
+	}
 }

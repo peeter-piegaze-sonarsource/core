@@ -1,10 +1,13 @@
 package org.meveo.service.knowledgecenter;
 
+import javax.ejb.Stateless;
+
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.ValidationException;
 import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.service.base.BusinessService;
 
+@Stateless
 public class CollectionService  extends BusinessService<Collection> {
 	@Override
 	public void create(Collection collection) throws BusinessException{

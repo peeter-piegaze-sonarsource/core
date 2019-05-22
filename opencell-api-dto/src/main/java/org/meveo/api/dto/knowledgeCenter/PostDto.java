@@ -14,15 +14,30 @@ public class PostDto extends BusinessEntityDto {
 	 */
 	private static final long serialVersionUID = 3588467558706095289L;
 	
+	private String name;
 	private String content;
 	private String collection;
 	private Set<String> tags = new HashSet<String>();
+	
+	
+	public PostDto () {
+		
+	}
 	
 	public PostDto(Post post) {
 		super(post);
 		content = post.getContent();
 		collection = post.getCollection().getName();
 		tags = post.getTags();
+	}
+
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getContent() {

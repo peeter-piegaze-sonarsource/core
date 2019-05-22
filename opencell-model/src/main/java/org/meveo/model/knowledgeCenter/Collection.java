@@ -19,7 +19,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.ExportIdentifier;
-import org.meveo.model.intcrm.AddressBook;
 
 /**
  * Knowledge center Collection
@@ -33,20 +32,24 @@ import org.meveo.model.intcrm.AddressBook;
         @Parameter(name = "sequence_name", value = "kc_collection_seq"), })
 public class Collection extends BusinessEntity {
 
-    private static final long serialVersionUID = 6638793926019456947L;
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5232430912460425525L;
+
+	/**
      * Children Collections
      */
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(mappedBy = "parentCollection", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentCollection", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     private Set<Collection> childrenCollections = new HashSet<Collection>();
     
     /**
      * Parent Collection
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_id")
+    @JoinColumn(name = "parentcollection_id")
     private Collection parentCollection;
     
     /**
@@ -62,9 +65,13 @@ public class Collection extends BusinessEntity {
     @Column(name = "name", length = 255)
     @Size(max = 255)
     private String name;
-    
+
     public Collection() {
 
+    }
+    
+    public Collection(String code) {
+        this.setCode(code);
     }
     
     

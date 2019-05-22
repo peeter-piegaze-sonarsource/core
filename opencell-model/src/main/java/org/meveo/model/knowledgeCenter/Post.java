@@ -55,8 +55,14 @@ import org.meveo.model.ExportIdentifier;
 public class Post extends BusinessEntity {
 
     private static final long serialVersionUID = 3772773449495155646L;
-
-
+    
+    /**
+     * Content
+     */
+    @Column(name = "name", length = 255)
+    @Size(max = 255)
+    private String name;
+    
     /**
      * Content
      */
@@ -89,6 +95,17 @@ public class Post extends BusinessEntity {
     public Post() {
         
     }
+
+    
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 
 	public String getContent() {
 		return content;
