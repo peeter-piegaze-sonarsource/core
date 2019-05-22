@@ -262,6 +262,8 @@
             <column name="collection_id" type="bigint"/>
         </createTable>
                
+        <createSequence sequenceName="kc_post_seq" />
+
         <createTable tableName="kc_collection">
             <column name="id" type="bigint" autoIncrement="${id.auto}">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="kc_collection_pkey" />
@@ -283,9 +285,9 @@
 
         <createSequence sequenceName="kc_collection_seq" />
 
-        <createTable tableName="kc_comments">
+        <createTable tableName="kc_comment">
             <column name="id" type="bigint" autoIncrement="${id.auto}">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_comments_pkey" />
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_comment_pkey" />
             </column>
             <column name="code" type="varchar(255)">
                 <constraints nullable="false" />
@@ -304,7 +306,7 @@
             <column name="post_id" type="bigint"/>
         </createTable>
         
-        <createSequence sequenceName="kc_comments_seq" />
+        <createSequence sequenceName="kc_comment_seq" />
     
         <createTable tableName="kc_post_tag">
             <column name="post_id" type="bigint" />

@@ -1,4 +1,4 @@
-package org.meveo.api.dto.response.knowledgecenter;
+package org.meveo.api.dto.response.knowledgeCenter;
 
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
 import org.meveo.api.dto.response.BaseResponse;

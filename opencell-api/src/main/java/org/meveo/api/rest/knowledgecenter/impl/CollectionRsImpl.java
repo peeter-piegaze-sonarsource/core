@@ -1,4 +1,4 @@
-package org.meveo.api.rest.knowledgecenter.impl;
+package org.meveo.api.rest.knowledgeCenter.impl;
 
 import javax.inject.Inject;
 
@@ -6,10 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
-import org.meveo.api.dto.response.knowledgecenter.GetCollectionResponseDto;
-import org.meveo.api.knowledgecenter.CollectionApi;
+import org.meveo.api.dto.response.knowledgeCenter.GetCollectionResponseDto;
+import org.meveo.api.knowledgeCenter.CollectionApi;
 import org.meveo.api.rest.impl.BaseRs;
-import org.meveo.api.rest.knowledgecenter.CollectionRs;
+import org.meveo.api.rest.knowledgeCenter.CollectionRs;
 import org.meveo.model.knowledgeCenter.Collection;
 
 public class CollectionRsImpl extends BaseRs implements CollectionRs{

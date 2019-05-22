@@ -1,4 +1,4 @@
-package org.meveo.api.knowledgecenter;
+package org.meveo.api.knowledgeCenter;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

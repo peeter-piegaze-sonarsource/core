@@ -1,4 +1,4 @@
-package org.meveo.api.rest.knowledgecenter;
+package org.meveo.api.rest.knowledgeCenter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
-import org.meveo.api.dto.response.knowledgecenter.GetCollectionResponseDto;
+import org.meveo.api.dto.response.knowledgeCenter.GetCollectionResponseDto;
 import org.meveo.api.rest.IBaseRs;
 
 @Path("/knowledgecenter/collection")
