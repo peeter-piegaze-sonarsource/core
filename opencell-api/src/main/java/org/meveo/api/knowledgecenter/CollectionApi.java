@@ -54,7 +54,9 @@ public class CollectionApi extends BaseApi {
 			if (parentCollection == null) {
 				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
 			}
-			collection.setParentCollection(parentCollection);
+			else {
+				collection.setParentCollection(parentCollection);
+			}
 		}
 		collectionService.create(collection);
 		return collection;
@@ -83,7 +85,9 @@ public class CollectionApi extends BaseApi {
 			if (parentCollection == null) {
 				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
 			}
-			collection.setParentCollection(parentCollection);
+			else {
+				collection.setParentCollection(parentCollection);
+			}
 		}
 		collectionService.update(collection);
 		
@@ -97,7 +101,7 @@ public class CollectionApi extends BaseApi {
 
 		handleMissingParameters();
 		
-		String code = null;
+		String code = postData.getCode();
 		Collection collection = collectionService.findByCode(code);
 		if(collection == null) {
 			return create(postData);
@@ -132,6 +136,11 @@ public class CollectionApi extends BaseApi {
 
 		if (collection == null) {
 			throw new EntityDoesNotExistsException(Collection.class, code, "code");
+		}
+		else {
+			if(!collection.getChildrenCollections().isEmpty() || !collection.getPosts().isEmpty()) {
+				throw new BusinessException("Collection code:" + collection.getCode() + "still contains collections or posts");
+			}
 		}
 
 		collectionService.remove(collection);

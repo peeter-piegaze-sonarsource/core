@@ -13,7 +13,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.ExportIdentifier;
-import org.meveo.model.communication.contact.Contact;
 
 /**
  * Knowledge Center / Post

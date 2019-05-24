@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.meveo.api.dto.BusinessEntityDto;
+import org.meveo.model.knowledgeCenter.Comment;
 import org.meveo.model.knowledgeCenter.Post;
 
 public class PostDto extends BusinessEntityDto {
@@ -18,6 +19,7 @@ public class PostDto extends BusinessEntityDto {
 	private String content;
 	private String collection;
 	private Set<String> tags = new HashSet<String>();
+	private Set<Comment> comments;
 	
 	
 	public PostDto () {
@@ -28,6 +30,7 @@ public class PostDto extends BusinessEntityDto {
 		super(post);
 		content = post.getContent();
 		collection = post.getCollection().getName();
+		comments = post.getCommments();
 		tags = post.getTags();
 	}
 
@@ -54,6 +57,15 @@ public class PostDto extends BusinessEntityDto {
 
 	public void setCollection(String collection) {
 		this.collection = collection;
+	}
+
+	
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
 	}
 
 	public Set<String> getTags() {
