@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSDestinationDefinitions;
+import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
@@ -28,10 +29,10 @@ public class MediationJobQueuePublisher extends BaseJobQueuePublisher {
 		}
 
 		try {
-			messageDto.setSourceNode(EjbUtils.getCurrentClusterNode());
 			log.trace("Publishing subset of ids between cluster nodes event {}", messageDto);
-
-			context.createProducer().send(queue, messageDto);
+			ObjectMessage message = context.createObjectMessage();
+			message.setObject(messageDto);
+			context.createProducer().send(queue, message);
 
 		} catch (Exception e) {
 			log.error("Failed to publish subset of ids between cluster nodes event", e);

@@ -1,8 +1,11 @@
 package org.meveo.admin.job;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,7 +17,6 @@ import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
 import org.meveo.admin.job.cluster.ClusterJobTopicDto;
 import org.meveo.admin.job.cluster.message.queue.MediationJobQueuePublisher;
-import org.meveo.admin.job.cluster.message.topic.ClusterJobTopicPublisher;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.commons.utils.FileUtils;
 import org.meveo.commons.utils.ParamBean;
@@ -22,7 +24,6 @@ import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
-import org.meveo.security.MeveoUser;
 
 /**
  * The Class MediationJobBean.
@@ -37,9 +38,6 @@ public class MediationJobBean extends BaseJobBean {
 
     @Inject
     private ParamBeanFactory paramBeanFactory;
-    
-    @Inject
-    private ClusterJobTopicPublisher clusterJobTopicPublisher;
     
     @Inject
     private MediationJobQueuePublisher mediationJobQueuePublisher;
@@ -62,7 +60,7 @@ public class MediationJobBean extends BaseJobBean {
 
 			String inputDir = meteringDir + "input";
 			String cdrExtension = parambean.getProperty("mediation.extensions", "csv");
-			ArrayList<String> cdrExtensions = new ArrayList<String>();
+			ArrayList<String> cdrExtensions = new ArrayList<>();
 			cdrExtensions.add(cdrExtension);
 
 			File f = new File(inputDir);
@@ -74,19 +72,23 @@ public class MediationJobBean extends BaseJobBean {
 				return;
 			}
 			SubListCreator subListCreator = new SubListCreator(Arrays.asList(files), nbRuns.intValue());
-			MeveoUser lastCurrentUser = currentUser.unProxy();
 			String scriptCode = (String) this.getParamOrCFValue(jobInstance, "scriptJob");
 			while (subListCreator.isHasNext()) {
-				ClusterJobQueueDto queueDto = initClusterQueueDto(result, lastCurrentUser,
-						new ArrayList<Long>(subListCreator.getNextWorkSet()));
-				queueDto.setScriptCode(scriptCode);
-				
+				List<Serializable> filePaths = new ArrayList<>();
+				Iterator it = subListCreator.getNextWorkSet().iterator();
+				while (it.hasNext()) {
+					File inFile = (File) it.next();
+					filePaths.add(inFile.getAbsolutePath());
+				}
+
+				ClusterJobQueueDto queueDto = initClusterQueueDto(result, filePaths);
+				queueDto.addParameter("SCRIPT_CODE", scriptCode);
+
 				// send to queue
 				mediationJobQueuePublisher.publishMessage(queueDto);
 			}
 
-			ClusterJobTopicDto clusterJobTopicDto = initClusterTopicDto(result.getJobInstance().getId(),
-					RatedTransactionsJob.class.getSimpleName(), result.getId());
+			ClusterJobTopicDto clusterJobTopicDto = initClusterTopicDto(result);
 
 			clusterJobTopicPublisher.publishMessage(clusterJobTopicDto);
 

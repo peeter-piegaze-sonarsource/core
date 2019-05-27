@@ -48,12 +48,12 @@ public class ClusterJobTopicPublisher implements Serializable {
 
 		try {
 			messageDto.setSourceNode(EjbUtils.getCurrentClusterNode());
-			log.trace("Publishing job topic between cluster nodes{}", messageDto);
-			
+			log.trace("Publishing job topic between cluster nodes {}", messageDto);
+
 			context.createProducer().send(topic, messageDto);
 
 		} catch (Exception e) {
-			log.error("Failed to publish job topic between cluster nodes", e);
+			log.error("Failed to publish job topic between cluster nodes {}", e.getMessage());
 		}
 	}
 }

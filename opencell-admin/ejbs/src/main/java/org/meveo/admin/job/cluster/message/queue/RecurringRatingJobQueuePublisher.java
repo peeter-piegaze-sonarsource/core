@@ -43,7 +43,6 @@ public class RecurringRatingJobQueuePublisher {
 		}
 
 		try {
-			messageDto.setSourceNode(EjbUtils.getCurrentClusterNode());
 			log.trace("Publishing subset of ids between cluster nodes {}", messageDto);
 
 			context.createProducer().send(queue, messageDto);
