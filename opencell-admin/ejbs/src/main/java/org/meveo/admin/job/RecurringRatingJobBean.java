@@ -79,16 +79,16 @@ public class RecurringRatingJobBean extends BaseJobBean implements Serializable 
             SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
             MeveoUser lastCurrentUser = currentUser.unProxy();
             while (subListCreator.isHasNext()) {
-                ClusterJobQueueDto queueDto = initClusterQueueDto(result, lastCurrentUser, new ArrayList<Long>(subListCreator.getNextWorkSet()));
-    			queueDto.setRateUntilDate(rateUntilDate);
-
-    			// send to queue
-    			recurringRatingJobQueuePublisher.publishMessage(queueDto);
+//                ClusterJobQueueDto queueDto = initClusterQueueDto(result, lastCurrentUser, new ArrayList<Long>(subListCreator.getNextWorkSet()));
+//    			queueDto.setRateUntilDate(rateUntilDate);
+//
+//    			// send to queue
+//    			recurringRatingJobQueuePublisher.publishMessage(queueDto);
             }
             
-            ClusterJobTopicDto clusterJobTopicDto = initClusterTopicDto(result.getJobInstance().getId(), RatedTransactionsJob.class.getSimpleName(), result.getId());
-                        
-            clusterJobTopicPublisher.publishMessage(clusterJobTopicDto);
+//            ClusterJobTopicDto clusterJobTopicDto = initClusterTopicDto(result.getJobInstance().getId(), RatedTransactionsJob.class.getSimpleName(), result.getId());
+//                        
+//            clusterJobTopicPublisher.publishMessage(clusterJobTopicDto);
         } catch (Exception e) {
             log.error("Failed to run recurring rating job", e);
             result.registerError(e.getMessage());

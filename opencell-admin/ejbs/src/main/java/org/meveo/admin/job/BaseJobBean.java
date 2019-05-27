@@ -1,6 +1,7 @@
 package org.meveo.admin.job;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -63,37 +64,40 @@ public abstract class BaseJobBean {
         return value;
     }
 
-    /**
-     * Initialize the queue dto.
-     * @param result job execution result
-     * @param lastCurrentUser currently logged user
-     * @param arrayList arrayList of ids
-     * @return initialized ClusterJobQueueDto
-     */
-	protected ClusterJobQueueDto initClusterQueueDto(JobExecutionResultImpl result, MeveoUser lastCurrentUser, ArrayList<Long> ids) {
+	/**
+	 * Initialize the queue dto.
+	 * 
+	 * @param result
+	 *            job execution result
+	 * @param arrayList
+	 *            arrayList of ids
+	 * @return initialized ClusterJobQueueDto
+	 */
+	protected ClusterJobQueueDto initClusterQueueDto(JobExecutionResultImpl result,
+			List<Serializable> items) {
 		ClusterJobQueueDto queueDto = new ClusterJobQueueDto();
-		queueDto.setJobExecutionResultImpl(result);
-		queueDto.setMeveoUser(lastCurrentUser);
-		queueDto.setIds(ids);
-		queueDto.setParameters(result.getJobInstance().getParametres());
+		queueDto.setItems(items);
+		queueDto.addParameter("JOB_PARAMETERS", result.getJobInstance().getParametres());
 
 		return queueDto;
 	}
-	
+
 	/**
 	 * Initialize the topic dto
-	 * @param jobInstanceId id of job
-	 * @param templateName class name of job
-	 * @param jobExecutionResultImplId execution result id of job
+	 * 
+	 * @param result
+	 *            Job execution result
 	 * @return initialized ClusterJobTopicDto
 	 */
-	protected ClusterJobTopicDto initClusterTopicDto(Long jobInstanceId, String templateName,
-			Long jobExecutionResultImplId) {
+	protected ClusterJobTopicDto initClusterTopicDto(JobExecutionResultImpl result) {
 		ClusterJobTopicDto topicDto = new ClusterJobTopicDto();
-		topicDto.setJobInstanceId(jobInstanceId);
-		topicDto.setJobTemplate(templateName);
-		topicDto.setJobExecutionResultImplId(jobExecutionResultImplId);
+		topicDto.setJobInstanceId(result.getJobInstance().getId());
+		topicDto.setJobTemplate(result.getJobInstance().getJobTemplate());
+		topicDto.setJobExecutionResultImplId(result.getId());
+		topicDto.setProviderCode(currentUser.getProviderCode());
+		topicDto.setCurrentUserName(currentUser.getUserName());
 
 		return topicDto;
 	}
+
 }

@@ -13,7 +13,6 @@ import org.meveo.admin.job.RecurringRatingJob;
 import org.meveo.admin.job.cluster.ClusterJobTopicDto;
 import org.meveo.admin.job.cluster.message.handler.MediationJobMessageHandler;
 import org.meveo.admin.job.cluster.message.handler.RecurringRatingJobMessageHandler;
-import org.meveo.commons.utils.EjbUtils;
 import org.slf4j.Logger;
 
 /**
@@ -41,9 +40,9 @@ public class ClusterJobTopicConsumer implements MessageListener {
 		try {
 			if (message instanceof ObjectMessage) {
 				ClusterJobTopicDto messageDto = (ClusterJobTopicDto) ((ObjectMessage) message).getObject();
-				if (EjbUtils.getCurrentClusterNode().equals(messageDto.getSourceNode())) {
-					return;
-				}
+//				if (EjbUtils.getCurrentClusterNode().equals(messageDto.getSourceNode())) {
+//					return;
+//				}
 				log.info("Received cluster job execution {}", message);
 
 				processClusterMessage(messageDto);

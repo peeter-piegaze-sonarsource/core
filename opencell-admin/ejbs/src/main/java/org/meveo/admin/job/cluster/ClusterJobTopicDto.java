@@ -14,6 +14,15 @@ public class ClusterJobTopicDto implements Serializable {
 	private String jobTemplate;
 	private Long jobExecutionResultImplId;
 	private String sourceNode;
+	private String currentUserName;
+	private String providerCode;
+
+	@Override
+	public String toString() {
+		return "ClusterJobTopicDto [jobInstanceId=" + jobInstanceId + ", jobTemplate=" + jobTemplate
+				+ ", jobExecutionResultImplId=" + jobExecutionResultImplId + ", sourceNode=" + sourceNode
+				+ ", currentUserName=" + currentUserName + ", providerCode=" + providerCode + "]";
+	}
 
 	public Long getJobInstanceId() {
 		return jobInstanceId;
@@ -45,6 +54,22 @@ public class ClusterJobTopicDto implements Serializable {
 
 	public void setSourceNode(String sourceNode) {
 		this.sourceNode = sourceNode;
+	}
+
+	public String getCurrentUserName() {
+		return currentUserName;
+	}
+
+	public void setCurrentUserName(String currentUserName) {
+		this.currentUserName = currentUserName;
+	}
+
+	public String getProviderCode() {
+		return providerCode;
+	}
+
+	public void setProviderCode(String providerCode) {
+		this.providerCode = providerCode;
 	}
 
 }

@@ -3,9 +3,12 @@ package org.meveo.admin.job.cluster.message.handler;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.jms.JMSConsumer;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
+import org.meveo.admin.job.cluster.ClusterJobQueueDto;
 import org.meveo.admin.job.cluster.ClusterJobTopicDto;
 
 /**
@@ -19,9 +22,22 @@ public class MediationJobMessageHandler extends BaseJobMessageHandler {
 	private Queue queue;
 
 	public void processMessage(ClusterJobTopicDto topicMessage) {
-		JMSConsumer consumer = context.createConsumer(queue);
-		Message message = consumer.receive();
+		log.debug("Receive a topic message {}", topicMessage);
 
-		log.debug("Queue message received {}", message);
+		try (JMSConsumer consumer = context.createConsumer(queue)) {
+			Message msg = consumer.receive();
+
+			try {
+				if (msg instanceof ObjectMessage) {
+					ClusterJobQueueDto clusterJobQueueDto;
+					clusterJobQueueDto = msg.getBody(ClusterJobQueueDto.class);
+					log.debug("Queue message received {}", clusterJobQueueDto);
+					msg.acknowledge();
+				}
+
+			} catch (JMSException e) {
+				log.error("Failed reading cluster job message {}", e.getMessage());
+			}
+		}
 	}
 }

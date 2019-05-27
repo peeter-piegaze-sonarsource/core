@@ -43,7 +43,6 @@ public class RatedTransactionsJobQueuePublisher {
 		}
 
 		try {
-			messageDto.setSourceNode(EjbUtils.getCurrentClusterNode());
 			log.trace("Publishing subset of ids between cluster nodes event {}", messageDto);
 			
 			context.createProducer().send(queue, messageDto);
