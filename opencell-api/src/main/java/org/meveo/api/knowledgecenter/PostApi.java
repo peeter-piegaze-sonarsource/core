@@ -44,6 +44,7 @@ public class PostApi extends BaseApi{
 		post.setName(postData.getName());
 		post.setContent(postData.getContent());
 		post.setCode(postData.getCode());
+		post.setDescription(postData.getDescription());
 		post.setCollection(collectionService.findByCode(postData.getCollection()));
 		
 		postService.create(post);
@@ -84,7 +85,7 @@ public class PostApi extends BaseApi{
 
 		handleMissingParameters();
 		
-		String code = null;
+		String code = postData.getCode();
 		Post post = postService.findByCode(code);
 		if(post == null) {
 			return create(postData);

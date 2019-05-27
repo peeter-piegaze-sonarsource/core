@@ -40,6 +40,7 @@ public class CommentApi extends BaseApi {
 		Comment comment = new Comment();
 		comment.setCode(postData.getCode());
 		comment.setContent(postData.getContent());
+		comment.setDescription(postData.getDescription());
 		String postCode = postData.getPostCode();
 		Post post = null;
 		if(!StringUtils.isBlank(postCode)) {
@@ -99,6 +100,25 @@ public class CommentApi extends BaseApi {
 			return update(postData);
 		}
 		
+	}
+	
+	public CommentDto findByCode(String code) throws MissingParameterException, EntityDoesNotExistsException {
+		if(StringUtils.isBlank(code)) {
+			missingParameters.add("code");
+		}
+		
+		handleMissingParameters();
+		
+		CommentDto commentDto = null;
+		Comment comment = commentService.findByCode(code);
+		
+		if(comment == null) {
+			throw new EntityDoesNotExistsException(Comment.class, code, "code");
+		}
+		
+		commentDto = new CommentDto(comment);
+		
+		return commentDto;
 	}
 	
 	public void remove (String code) throws EntityDoesNotExistsException, BusinessException {

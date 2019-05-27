@@ -48,6 +48,7 @@ public class CollectionApi extends BaseApi {
 		Collection collection = new Collection();
 		collection.setName(postData.getName());
 		collection.setCode(postData.getCode());
+		collection.setDescription(postData.getDescription());
 		String parentCode = postData.getParentCode();
 		if(!StringUtils.isBlank(parentCode)) {
 			Collection parentCollection = collectionService.findByCode(parentCode);
@@ -139,7 +140,7 @@ public class CollectionApi extends BaseApi {
 		}
 		else {
 			if(!collection.getChildrenCollections().isEmpty() || !collection.getPosts().isEmpty()) {
-				throw new BusinessException("Collection code:" + collection.getCode() + "still contains collections or posts");
+				throw new BusinessException("Collection code:" + collection.getCode() + " still contains collections or posts");
 			}
 		}
 

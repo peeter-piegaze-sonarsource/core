@@ -59,8 +59,13 @@ public class CommentRsImpl extends BaseRs implements CommentRs {
 
 	@Override
 	public GetCommentResponseDto find(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		GetCommentResponseDto result = new GetCommentResponseDto();
+		try {
+			result.setComment(commentApi.findByCode(code));
+		} catch (Exception e) {
+			processException(e, result.getActionStatus());
+		}
+		return result;
 	}
 
 	@Override
