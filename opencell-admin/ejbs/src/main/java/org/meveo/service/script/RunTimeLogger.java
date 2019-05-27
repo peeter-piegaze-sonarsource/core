@@ -1,6 +1,7 @@
 package org.meveo.service.script;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Date;
 
@@ -13,9 +14,11 @@ import org.slf4j.helpers.MessageFormatter;
  * 
  * @author Andrius Karpavicius
  */
-public class RunTimeLogger implements org.slf4j.Logger {
+public class RunTimeLogger implements org.slf4j.Logger, Serializable {
 
-    private String className;
+	private static final long serialVersionUID = -7597452215403482457L;
+
+	private String className;
 
     private String SEP = "  ";
     private String DEBUG = "DEBUG";

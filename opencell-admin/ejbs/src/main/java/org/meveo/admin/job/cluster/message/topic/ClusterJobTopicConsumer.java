@@ -40,9 +40,9 @@ public class ClusterJobTopicConsumer implements MessageListener {
 		try {
 			if (message instanceof ObjectMessage) {
 				ClusterJobTopicDto messageDto = (ClusterJobTopicDto) ((ObjectMessage) message).getObject();
-//				if (EjbUtils.getCurrentClusterNode().equals(messageDto.getSourceNode())) {
-//					return;
-//				}
+				// if (EjbUtils.getCurrentClusterNode().equals(messageDto.getSourceNode())) {
+				// return;
+				// }
 				log.info("Received cluster job execution {}", message);
 
 				processClusterMessage(messageDto);
@@ -56,7 +56,8 @@ public class ClusterJobTopicConsumer implements MessageListener {
 	}
 
 	private void processClusterMessage(ClusterJobTopicDto message) {
-		log.debug("Reading data from {}_Job queue", message.getJobTemplate());
+		log.debug("Reading data from {}_Job queue with data={}", message.getJobTemplate(), message);
+		
 		if (message.getJobTemplate().equals(RatedTransactionsJob.class.getSimpleName())) {
 
 		} else if (message.getJobTemplate().equals(RecurringRatingJob.class.getSimpleName())) {
