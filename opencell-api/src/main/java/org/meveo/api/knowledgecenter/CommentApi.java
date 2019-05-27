@@ -41,8 +41,9 @@ public class CommentApi extends BaseApi {
 		comment.setCode(postData.getCode());
 		comment.setContent(postData.getContent());
 		String postCode = postData.getPostCode();
+		Post post = null;
 		if(!StringUtils.isBlank(postCode)) {
-			Post post = postService.findByCode(postCode);
+			post = postService.findByCode(postCode);
 			if(post == null) {
 				throw new EntityDoesNotExistsException("Parent Post", postCode);
 			}
@@ -51,6 +52,10 @@ public class CommentApi extends BaseApi {
 			}
 		}
 		commentService.create(comment);
+		if(post != null) {
+			post.getCommments().add(comment);
+			postService.update(post);
+		}
 		return comment;
 	}
 	

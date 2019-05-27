@@ -19,7 +19,7 @@ public class PostDto extends BusinessEntityDto {
 	private String content;
 	private String collection;
 	private Set<String> tags = new HashSet<String>();
-	private Set<Comment> comments;
+	private Set<CommentDto> comments;
 	
 	
 	public PostDto () {
@@ -30,7 +30,11 @@ public class PostDto extends BusinessEntityDto {
 		super(post);
 		content = post.getContent();
 		collection = post.getCollection().getName();
-		comments = post.getCommments();
+		comments = new HashSet<CommentDto>();
+		Set<Comment> postComments = post.getCommments();
+		for(Comment c : postComments) {
+			comments.add(new CommentDto(c));
+		}
 		tags = post.getTags();
 	}
 
@@ -60,11 +64,12 @@ public class PostDto extends BusinessEntityDto {
 	}
 
 	
-	public Set<Comment> getComments() {
+
+	public Set<CommentDto> getComments() {
 		return comments;
 	}
 
-	public void setComments(Set<Comment> comments) {
+	public void setComments(Set<CommentDto> comments) {
 		this.comments = comments;
 	}
 
