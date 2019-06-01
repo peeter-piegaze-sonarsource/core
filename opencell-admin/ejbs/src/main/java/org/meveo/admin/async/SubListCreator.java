@@ -5,11 +5,10 @@ package org.meveo.admin.async;
 
 import java.util.List;
 
-import org.meveo.model.IEntity;
-
 /**
  * @author anasseh
- *
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
 
 public class SubListCreator<E> {
@@ -108,6 +107,13 @@ public class SubListCreator<E> {
 	 */
 	public int getListSize() {
 		return listSize;
+	}
+	
+	/**
+	 * @return number of threads to run
+	 */
+	public int getNbThreads() {
+		return nbThreads;
 	}
 
 }

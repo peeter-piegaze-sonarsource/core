@@ -15,9 +15,6 @@ import javax.interceptor.Interceptors;
 import org.meveo.admin.async.RatedTransactionAsync;
 import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
-import org.meveo.admin.job.cluster.ClusterJobQueueDto;
-import org.meveo.admin.job.cluster.ClusterJobTopicDto;
-import org.meveo.admin.job.cluster.message.queue.RatedTransactionsJobQueuePublisher;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.jobs.JobExecutionResultImpl;
@@ -55,9 +52,6 @@ public class RatedTransactionsJobBean extends BaseJobBean {
     @CurrentUser
     protected MeveoUser currentUser;
 
-    @Inject
-    private RatedTransactionsJobQueuePublisher ratedTransactionsJobQueuePublisher;
-    
     @Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void execute(JobExecutionResultImpl result, JobInstance jobInstance) {

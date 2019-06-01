@@ -21,7 +21,6 @@ import org.meveo.service.job.Job;
  * 
  * @author Edward P. Legaspi
  * @author Abdellatif BARI
- * @version %I%, %G%
  * @since 5.0
  * @lastModifiedVersion 7.0
  */

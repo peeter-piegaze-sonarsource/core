@@ -8,6 +8,7 @@ import org.meveo.security.MeveoUser;
 import org.slf4j.Logger;
 
 /**
+ * Base class for cluster job publishers.
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */

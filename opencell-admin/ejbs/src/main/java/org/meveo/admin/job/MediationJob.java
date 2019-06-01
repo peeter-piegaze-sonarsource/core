@@ -1,19 +1,31 @@
 package org.meveo.admin.job;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.meveo.admin.async.MediationAsync;
+import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.commons.utils.FileUtils;
+import org.meveo.commons.utils.ParamBean;
+import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.custom.CustomFieldTypeEnum;
 import org.meveo.model.jobs.JobCategoryEnum;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
+import org.meveo.security.MeveoUser;
 import org.meveo.service.job.Job;
 
 /**
@@ -22,19 +34,82 @@ import org.meveo.service.job.Job;
  * @author Edward P. Legaspi
  * @author Wassim Drira
  * @author HORRI khalid
- * @author Abdellatif BARI
+ * @author Abdellatif BARI * 
  * @lastModifiedVersion 7.0
  */
 @Stateless
 public class MediationJob extends Job {
 
-	@Inject
-	private MediationJobBean mediationJobBean;
+    /** The mediation async. */
+    @Inject
+    private MediationAsync mediationAsync;
 
+    @Inject
+    private ParamBeanFactory paramBeanFactory;
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
     protected void execute(JobExecutionResultImpl result, JobInstance jobInstance) throws BusinessException {
-    	mediationJobBean.execute(result, jobInstance);        
+
+        Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
+        if (nbRuns == -1) {
+            nbRuns = (long) Runtime.getRuntime().availableProcessors();
+        }
+        Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
+
+        try {
+
+            ParamBean parambean = paramBeanFactory.getInstance();
+            String meteringDir = parambean.getChrootDir(currentUser.getProviderCode()) + File.separator + "imports" + File.separator + "metering" + File.separator;
+
+            String inputDir = meteringDir + "input";
+            String cdrExtension = parambean.getProperty("mediation.extensions", "csv");
+            ArrayList<String> cdrExtensions = new ArrayList<String>();
+            cdrExtensions.add(cdrExtension);
+
+            File f = new File(inputDir);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+            File[] files = FileUtils.listFiles(inputDir, cdrExtensions);
+            if (files == null || files.length == 0) {
+                return;
+            }
+            SubListCreator subListCreator = new SubListCreator(Arrays.asList(files), nbRuns.intValue());
+
+            List<Future<String>> futures = new ArrayList<Future<String>>();
+            MeveoUser lastCurrentUser = currentUser.unProxy();
+            String scriptCode = (String) this.getParamOrCFValue(jobInstance, "scriptJob");
+            while (subListCreator.isHasNext()) {
+                futures.add(mediationAsync.launchAndForget((List<File>) subListCreator.getNextWorkSet(), result, jobInstance.getParametres(), lastCurrentUser, scriptCode));
+                if (subListCreator.isHasNext()) {
+                    try {
+                        Thread.sleep(waitingMillis.longValue());
+                    } catch (InterruptedException e) {
+                        log.error("", e);
+                    }
+                }
+            }
+            // Wait for all async methods to finish
+            for (Future<String> future : futures) {
+                try {
+                    future.get();
+
+                } catch (InterruptedException e) {
+                    // It was cancelled from outside - no interest
+
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    result.registerError(cause.getMessage());
+                    log.error("Failed to execute async method", cause);
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("Failed to run mediation", e);
+            result.registerError(e.getMessage());
+        }
     }
 
     @Override

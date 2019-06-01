@@ -46,7 +46,7 @@ import org.meveo.service.base.PersistenceService;
  * 
  * @author Edward P. Legaspi
  * @author Wassim Drira
- * @lastModifiedVersion 5.0
+ * @lastModifiedVersion 7.0
  * 
  */
 @Stateless
@@ -86,15 +86,29 @@ public class JobExecutionService extends PersistenceService<JobExecutionResultIm
     @JpaAmpNewTx
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Boolean persistResult(Job job, JobExecutionResultImpl result, JobInstance jobInstance) {
+    	return persistResult(job.getClass().getName(), result, jobInstance);
+    }
+    
+    /**
+     * Persist job execution results.
+     * 
+     * @param jobClassName Name of the job
+     * @param result Execution result
+     * @param jobInstance Job instance
+     * @return True if job is completely done. False if any data are left to process.
+     */
+    @JpaAmpNewTx
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Boolean persistResult(String jobClassName, JobExecutionResultImpl result, JobInstance jobInstance) {
         try {
             JobExecutionResultImpl resultToPersist = JobExecutionResultImpl.createFromInterface(jobInstance, result);
             boolean isPersistResult = false;
 
             if ((resultToPersist.getNbItemsCorrectlyProcessed() + resultToPersist.getNbItemsProcessedWithError() + resultToPersist.getNbItemsProcessedWithWarning()) > 0) {
-                log.info(job.getClass().getName() + resultToPersist.toString());
+                log.info(jobClassName + resultToPersist.toString());
                 isPersistResult = true;
             } else {
-                log.info("{}/{}: No items were found to process", job.getClass().getName(), jobInstance.getCode());
+                log.info("{}/{}: No items were found to process", jobClassName, jobInstance.getCode());
                 isPersistResult = "true".equals(paramBeanFactory.getInstance().getProperty("meveo.job.persistResult", "true"));
             }
             if (isPersistResult) {
