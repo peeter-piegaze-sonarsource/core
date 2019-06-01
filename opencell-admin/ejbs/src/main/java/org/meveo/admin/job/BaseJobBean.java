@@ -6,18 +6,20 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
-import org.meveo.admin.job.cluster.ClusterJobTopicDto;
-import org.meveo.admin.job.cluster.message.topic.ClusterJobTopicPublisher;
+import org.meveo.commons.utils.EjbUtils;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
 import org.meveo.security.CurrentUser;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.crm.impl.CustomFieldInstanceService;
+import org.meveo.service.job.JobExecutionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The Class BaseJobBean : Holding a common behaviors for all JoBbeans instances
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
 public abstract class BaseJobBean {
 
@@ -31,7 +33,7 @@ public abstract class BaseJobBean {
     protected CustomFieldInstanceService customFieldInstanceService;
     
     @Inject
-    protected ClusterJobTopicPublisher clusterJobTopicPublisher;
+    protected JobExecutionService jobExecutionService;
 
     /**
      * Gets the parameter CF value if found, otherwise return CF value from job definition
@@ -69,35 +71,26 @@ public abstract class BaseJobBean {
 	 * 
 	 * @param result
 	 *            job execution result
+	 * @param nbThreads number of threads to run
 	 * @param arrayList
 	 *            arrayList of ids
 	 * @return initialized ClusterJobQueueDto
 	 */
 	protected ClusterJobQueueDto initClusterQueueDto(JobExecutionResultImpl result,
-			List<Serializable> items) {
+			List<Serializable> items, int nbThreads) {
 		ClusterJobQueueDto queueDto = new ClusterJobQueueDto();
+		queueDto.setNbThreads(nbThreads);
 		queueDto.setItems(items);
 		queueDto.addParameter("JOB_PARAMETERS", result.getJobInstance().getParametres());
+		
+		queueDto.setJobInstanceId(result.getJobInstance().getId());
+		queueDto.setJobTemplate(result.getJobInstance().getJobTemplate());
+		queueDto.setJobExecutionResultImplId(result.getId());
+		queueDto.setProviderCode(currentUser.getProviderCode());
+		queueDto.setCurrentUserName(currentUser.getUserName());
+		queueDto.setSourceNode(EjbUtils.getCurrentClusterNode());
 
 		return queueDto;
-	}
-
-	/**
-	 * Initialize the topic dto
-	 * 
-	 * @param result
-	 *            Job execution result
-	 * @return initialized ClusterJobTopicDto
-	 */
-	protected ClusterJobTopicDto initClusterTopicDto(JobExecutionResultImpl result) {
-		ClusterJobTopicDto topicDto = new ClusterJobTopicDto();
-		topicDto.setJobInstanceId(result.getJobInstance().getId());
-		topicDto.setJobTemplate(result.getJobInstance().getJobTemplate());
-		topicDto.setJobExecutionResultImplId(result.getId());
-		topicDto.setProviderCode(currentUser.getProviderCode());
-		topicDto.setCurrentUserName(currentUser.getUserName());
-
-		return topicDto;
 	}
 
 }

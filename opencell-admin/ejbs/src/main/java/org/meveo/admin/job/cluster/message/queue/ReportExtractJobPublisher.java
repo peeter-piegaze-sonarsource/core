@@ -7,27 +7,24 @@ import javax.jms.JMSDestinationDefinitions;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
+import org.meveo.admin.job.ReportExtractJob;
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
-import org.meveo.commons.utils.EjbUtils;
 
 /**
+ * Cluster message publisher for {@link ReportExtractJob}.
+ * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
 @JMSDestinationDefinitions(value = {
-		@JMSDestinationDefinition(name = "java:/queue/MEDIATIONJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "MediationJobQueue") })
+		@JMSDestinationDefinition(name = "java:/queue/REPORTEXTRACTJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "ReportExtractJobQueue") })
 @Stateless
-public class MediationJobQueuePublisher extends BaseJobQueuePublisher {
+public class ReportExtractJobPublisher extends BaseJobQueuePublisher {
 
-	@Resource(lookup = "java:/queue/MEDIATIONJOBQUEUE")
+	@Resource(lookup = "java:/queue/REPORTEXTRACTJOBQUEUE")
 	private Queue queue;
 
 	public void publishMessage(ClusterJobQueueDto messageDto) {
-
-		if (!EjbUtils.isRunningInClusterMode()) {
-			return;
-		}
-
 		try {
 			log.trace("Publishing subset of ids between cluster nodes event {}", messageDto);
 			ObjectMessage message = context.createObjectMessage();
@@ -38,5 +35,4 @@ public class MediationJobQueuePublisher extends BaseJobQueuePublisher {
 			log.error("Failed to publish subset of ids between cluster nodes event", e);
 		}
 	}
-
 }
