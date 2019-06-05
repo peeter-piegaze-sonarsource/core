@@ -107,7 +107,6 @@ public class ReportExtractJobBean extends BaseJobBean implements Serializable {
 					} catch (InterruptedException e) {
 						log.error("", e);
 						Thread.currentThread().interrupt();
-
 					}
 				}
 			}

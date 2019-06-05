@@ -21,61 +21,65 @@ import org.meveo.service.billing.impl.UsageRatingService;
 import org.slf4j.Logger;
 
 /**
- * 
+ * Unit bean for {@link UsageRatingJob}.
  * @author anasseh
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
 
 @Stateless
 public class UnitUsageRatingJobBean {
 
-    @Inject
-    private Logger log;
+	@Inject
+	private Logger log;
 
-    @Inject
-    private EdrService edrService;
+	@Inject
+	private EdrService edrService;
 
-    @Inject
-    private UsageRatingService usageRatingService;
+	@Inject
+	private UsageRatingService usageRatingService;
 
-    @Inject
-    @Rejected
-    private Event<Serializable> rejectededEdrProducer;
+	@Inject
+	@Rejected
+	private Event<Serializable> rejectededEdrProducer;
 
-    @JpaAmpNewTx
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void execute(JobExecutionResultImpl result, Long edrId) throws BusinessException {
+	@JpaAmpNewTx
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public void execute(JobExecutionResultImpl result, Long edrId) throws BusinessException {
 
-        log.debug("--------------------Processing EDR {}", edrId);
+		log.debug("--------------------Processing EDR {}", edrId);
 
-        try {
-            EDR edr = edrService.findById(edrId);
-            if (edr == null) {
-                return;
-            }
-            usageRatingService.ratePostpaidUsage(edr);
+		try {
+			EDR edr = edrService.findById(edrId);
+			if (edr == null) {
+				return;
+			}
+			usageRatingService.ratePostpaidUsage(edr);
 
-            if (edr.getStatus() == EDRStatusEnum.RATED) {
-                edrService.updateNoCheck(edr);
-                result.registerSucces();
-            } else {
-                throw new BusinessException(edr.getRejectReason());
-            }
-        } catch (BusinessException e) {
-            if (!(e instanceof InsufficientBalanceException)) {
-                log.error("Failed to unit usage rate for {}", edrId, e);
-            }
-            throw e;
-        }
-    }
+			if (edr.getStatus() == EDRStatusEnum.RATED) {
+				edrService.updateNoCheck(edr);
+				result.registerSucces();
 
-    @JpaAmpNewTx
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void registerFailedEdr(JobExecutionResultImpl result, Long edrId, Exception e) throws BusinessException {
-        EDR edr = edrService.findById(edrId);
-        edr.setStatus(EDRStatusEnum.REJECTED);
-        edr.setRejectReason(StringUtils.truncate(e.getMessage(), 255, true));
-        rejectededEdrProducer.fire(edr);
-        result.registerError();
+			} else {
+				throw new BusinessException(edr.getRejectReason());
+			}
+
+		} catch (BusinessException e) {
+			if (!(e instanceof InsufficientBalanceException)) {
+				log.error("Failed to unit usage rate for {}", edrId, e);
+			}
+			throw e;
+		}
+	}
+
+	@JpaAmpNewTx
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public void registerFailedEdr(JobExecutionResultImpl result, Long edrId, Exception e) throws BusinessException {
+		EDR edr = edrService.findById(edrId);
+		edr.setStatus(EDRStatusEnum.REJECTED);
+		edr.setRejectReason(StringUtils.truncate(e.getMessage(), 255, true));
+		rejectededEdrProducer.fire(edr);
+		result.registerError();
 		String aLine = "EdrId : " + edr.getId() + " RejectReason : "
 				+ (e != null ? e.getMessage() : edr.getRejectReason()) + "\n";
 		aLine += "eventDate:" + edr.getEventDate() + "\n";
