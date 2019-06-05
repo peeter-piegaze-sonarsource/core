@@ -34,6 +34,8 @@ public abstract class BaseJobBean {
     
     @Inject
     protected JobExecutionService jobExecutionService;
+    
+    protected static final int PAGE_SIZE_IDS = 10;
 
     /**
      * Gets the parameter CF value if found, otherwise return CF value from job definition

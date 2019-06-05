@@ -73,6 +73,6 @@ public class UsageRatingAsync {
                 unitUsageRatingJobBean.registerFailedEdr(result, id, be);
             }
         }
-        return new AsyncResult<String>("OK");
+        return new AsyncResult<>("OK");
     }
 }

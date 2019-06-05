@@ -45,7 +45,7 @@ public class UnitUsageRatingJobBean {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execute(JobExecutionResultImpl result, Long edrId) throws BusinessException {
 
-        log.debug("Processing EDR {}", edrId);
+        log.debug("--------------------Processing EDR {}", edrId);
 
         try {
             EDR edr = edrService.findById(edrId);
@@ -55,7 +55,7 @@ public class UnitUsageRatingJobBean {
             usageRatingService.ratePostpaidUsage(edr);
 
             if (edr.getStatus() == EDRStatusEnum.RATED) {
-                edr = edrService.updateNoCheck(edr);
+                edrService.updateNoCheck(edr);
                 result.registerSucces();
             } else {
                 throw new BusinessException(edr.getRejectReason());

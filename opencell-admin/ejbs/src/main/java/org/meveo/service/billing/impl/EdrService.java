@@ -30,6 +30,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.cache.CdrEdrProcessingCacheContainerProvider;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
@@ -80,7 +81,13 @@ public class EdrService extends PersistenceService<EDR> {
         qb.addOrderMultiCriterion("c.subscription", true, "c.id", true);
 
         try {
-            return qb.getIdQuery(getEntityManager()).setMaxResults(nbToRetrieve).getResultList();
+			if (nbToRetrieve != 0) {
+				return qb.getIdQuery(getEntityManager()).setMaxResults(nbToRetrieve).getResultList();
+
+			} else {
+				return qb.getIdQuery(getEntityManager()).getResultList();
+			}
+        	
         } catch (NoResultException e) {
             return null;
         }
@@ -198,4 +205,44 @@ public class EdrService extends PersistenceService<EDR> {
 
         return edrCacheKeys;
     }
+    
+	public List<Long> getEDRidsToRateWithPagination(Date rateUntilDate, String ratingGroup,
+			PaginationConfiguration paginationConfiguration) {
+		QueryBuilder qb = new QueryBuilder(EDR.class, "c");
+		qb.addCriterion("c.status", "=", EDRStatusEnum.OPEN, true);
+		if (rateUntilDate != null) {
+			qb.addCriterion("c.eventDate", "<", rateUntilDate, false);
+		}
+		if (ratingGroup != null) {
+			qb.addCriterion("subscription.ratingGroup", "=", ratingGroup, false);
+		}
+		qb.addOrderMultiCriterion("c.subscription", true, "c.id", true);
+
+		qb.addPaginationConfiguration(paginationConfiguration);
+
+		try {
+			return qb.getIdQuery(getEntityManager()).getResultList();
+
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Long countEDRidsToRateWithPagination(Date rateUntilDate, String ratingGroup) {
+		QueryBuilder qb = new QueryBuilder(EDR.class, "c");
+		qb.addCriterion("c.status", "=", EDRStatusEnum.OPEN, true);
+		if (rateUntilDate != null) {
+			qb.addCriterion("c.eventDate", "<", rateUntilDate, false);
+		}
+		if (ratingGroup != null) {
+			qb.addCriterion("subscription.ratingGroup", "=", ratingGroup, false);
+		}
+		
+		try {
+			return qb.count(getEntityManager());
+
+		} catch (NoResultException e) {
+			return 0L;
+		}
+	}
 }

@@ -105,16 +105,19 @@ public class JobExecutionService extends PersistenceService<JobExecutionResultIm
             boolean isPersistResult = false;
 
             if ((resultToPersist.getNbItemsCorrectlyProcessed() + resultToPersist.getNbItemsProcessedWithError() + resultToPersist.getNbItemsProcessedWithWarning()) > 0) {
-                log.info(jobClassName + resultToPersist.toString());
+                log.info("{} {}", jobClassName, resultToPersist);
                 isPersistResult = true;
+                
             } else {
                 log.info("{}/{}: No items were found to process", jobClassName, jobInstance.getCode());
                 isPersistResult = "true".equals(paramBeanFactory.getInstance().getProperty("meveo.job.persistResult", "true"));
             }
+            
             if (isPersistResult) {
                 if (resultToPersist.isTransient()) {
                     create(resultToPersist);
                     result.setId(resultToPersist.getId());
+            
                 } else {
                     // search for job execution result
                     JobExecutionResultImpl updateEntity = findById(result.getId());
@@ -127,7 +130,7 @@ public class JobExecutionService extends PersistenceService<JobExecutionResultIm
             return resultToPersist.isDone();
 
         } catch (Exception e) { // FIXME:BusinessException e) {
-            log.error("Failed to persist job execution results", e);
+            log.error("Failed to persist job execution results {}", e);
         }
 
         return null;
