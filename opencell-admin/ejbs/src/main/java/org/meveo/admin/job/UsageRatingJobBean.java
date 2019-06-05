@@ -122,7 +122,6 @@ public class UsageRatingJobBean extends BaseJobBean {
 					} catch (InterruptedException e) {
 						log.error("", e);
 						Thread.currentThread().interrupt();
-
 					}
 				}
 			}
