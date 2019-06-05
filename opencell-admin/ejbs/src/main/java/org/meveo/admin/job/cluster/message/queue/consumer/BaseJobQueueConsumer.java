@@ -73,11 +73,11 @@ public abstract class BaseJobQueueConsumer {
 
 		} else {
 			// write to dead-letter queue
-			publicToDeadLetterQueue(message);
+			publishToDeadLetterQueue(message);
 		}
 	}
 
-	protected void publicToDeadLetterQueue(ClusterJobQueueDto message) {
+	protected void publishToDeadLetterQueue(ClusterJobQueueDto message) {
 		try {
 			log.debug("Publishing to dead letter queue {}", message);
 			ObjectMessage objectMessage = context.createObjectMessage();

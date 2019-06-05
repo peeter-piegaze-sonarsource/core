@@ -55,9 +55,10 @@ import org.meveo.service.script.revenue.RevenueRecognitionScriptService;
 /**
  * RecurringChargeInstanceService
  *
+ * @author Edward P. Legaspi
  * @author Wassim Drira
  * @author Abdellatif BARI
- * @lastModifiedVersion 5.3
+ * @lastModifiedVersion 7.0
  */
 @Stateless
 public class RecurringChargeInstanceService extends BusinessService<RecurringChargeInstance> {
@@ -117,7 +118,7 @@ public class RecurringChargeInstanceService extends BusinessService<RecurringCha
     public List<Long> findIdsByStatus(InstanceStatusEnum status, Date maxChargeDate, boolean truncateToDay) {
         List<Long> ids = new ArrayList<Long>();
         try {
-            log.debug("start of find RecurringChargeInstance --IDS---  by status {} and date {}", status, maxChargeDate);
+            log.debug("start of find RecurringChargeInstance --IDS--  by status {} and date {}", status, maxChargeDate);
             QueryBuilder qb = queryIdsByStatus(status, maxChargeDate, truncateToDay);
             ids = qb.getIdQuery(getEntityManager()).getResultList();
             log.debug("end of find {} by status (status={}). Result size found={}.", new Object[] { "RecurringChargeInstance", status, (ids != null ? ids.size() : "NULL") });

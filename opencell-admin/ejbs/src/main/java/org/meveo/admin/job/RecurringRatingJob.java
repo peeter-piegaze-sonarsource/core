@@ -20,6 +20,7 @@ import org.meveo.service.job.Job;
 /**
  * The Class RecurringRatingJob apply recurring charge for next billingCycle.
  * @author Abdellatif BARI
+ * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
 @Stateless
@@ -36,12 +37,10 @@ public class RecurringRatingJob extends Job {
         recurringRatingJobBean.execute(result, jobInstance);
     }
 
-
     @Override
     public JobCategoryEnum getJobCategory() {
         return JobCategoryEnum.RATING;
     }
-
 
     @Override
     public Map<String, CustomFieldTemplate> getCustomFields() {

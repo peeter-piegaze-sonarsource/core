@@ -23,9 +23,9 @@ import org.slf4j.Logger;
 
 /**
  * @author anasseh
- * 
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
-
 @Stateless
 public class RecurringChargeAsync {
 
@@ -63,7 +63,6 @@ public class RecurringChargeAsync {
             if (i % JobExecutionService.CHECK_IS_JOB_RUNNING_EVERY_NR == 0 && !jobExecutionService.isJobRunningOnThis(result.getJobInstance().getId())) {
                 break;
             }
-            log.debug("run recurringChargeInstace ID {}", id);
             unitRecurringRatingJobBean.execute(result, id, maxDate);
         }
         log.debug("End launchAndForget!");

@@ -17,6 +17,7 @@ public class ClusterJobQueueDto implements Serializable {
 	public static final String SCRIPT_CODE = "SCRIPT_CODE";
 	public static final String START_DATE = "START_DATE";
 	public static final String END_DATE = "END_DATE";
+	public static final String RATE_UNTIL_DATE = "RATE_UNTIL_DATE";
 
 	private Long jobInstanceId;
 	private String jobTemplate;

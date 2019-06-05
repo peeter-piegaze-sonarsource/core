@@ -17,6 +17,14 @@
 			<ejb-name>ReportExtractJobQueueConsumer</ejb-name>
 			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
 		</p:pool>
+		<p:pool>
+			<ejb-name>UsageRatingJobQueueConsumer</ejb-name>
+			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
+		</p:pool>
+		<p:pool>
+			<ejb-name>RecurringRatingJobQueueConsumer</ejb-name>
+			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
+		</p:pool>
 	</assembly-descriptor>
 </jboss:ejb-jar>
                

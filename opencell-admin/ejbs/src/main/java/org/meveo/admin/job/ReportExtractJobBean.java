@@ -68,11 +68,13 @@ public class ReportExtractJobBean extends BaseJobBean implements Serializable {
 				log.warn("Cant get customFields for {} {}", jobInstance.getJobTemplate(), e.getMessage());
 			}
 
-			List<Long> reportExtractIds = reportExtractService.listIds();
-			SubListCreator subListCreator = new SubListCreator(reportExtractIds, nbRuns.intValue());
+			List<Long> ids = reportExtractService.listIds();
+			result.setNbItemsToProcess(ids.size());
+			
+			SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
 
 			log.debug("Execute {} size={}, block to run={}, nbThreads={}", getClass().getSimpleName(),
-					(reportExtractIds == null ? null : reportExtractIds.size()), subListCreator.getBlocToRun(), nbRuns);
+					(ids == null ? null : ids.size()), subListCreator.getBlocToRun(), nbRuns);
 
 			if (EjbUtils.isRunningInClusterMode()) {
 				executeJobInCluster(result, subListCreator, startDate, endDate);
@@ -85,7 +87,6 @@ public class ReportExtractJobBean extends BaseJobBean implements Serializable {
 			log.error("Failed to run {} job {}", getClass().getSimpleName(), e.getMessage());
 			result.registerError(e.getMessage());
 		}
-		log.debug("end running {}!", getClass().getSimpleName());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -130,6 +131,7 @@ public class ReportExtractJobBean extends BaseJobBean implements Serializable {
 			log.error("Failed to run {} job {}", getClass().getSimpleName(), e);
 			result.registerError(e.getMessage());
 		}
+
 		log.debug("end running {}", getClass().getSimpleName());
 	}
 
