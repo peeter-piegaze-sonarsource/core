@@ -16,105 +16,155 @@ import javax.interceptor.Interceptors;
 
 import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.async.UsageRatingAsync;
+import org.meveo.admin.job.cluster.ClusterJobQueueDto;
+import org.meveo.admin.job.cluster.message.queue.UsageRatingJobPublisher;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
+import org.meveo.commons.utils.EjbUtils;
 import org.meveo.event.qualifier.Rejected;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
-import org.meveo.security.CurrentUser;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.billing.impl.EdrService;
 import org.slf4j.Logger;
 
+/**
+ * Job bean for UsageRatingJob.
+ * 
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
+ */
 @Stateless
 public class UsageRatingJobBean extends BaseJobBean {
 
-    /**
-     * Number of EDRS to process in a single job run
-     */
-    private static int PROCESS_NR_IN_JOB_RUN = 2000000;
+	@Inject
+	private Logger log;
 
-    @Inject
-    private Logger log;
+	@Inject
+	private EdrService edrService;
 
-    @Inject
-    private EdrService edrService;
+	@Inject
+	private UsageRatingAsync usageRatingAsync;
 
-    @Inject
-    private UsageRatingAsync usageRatingAsync;
+	@Inject
+	@Rejected
+	private Event<Serializable> rejectededEdrProducer;
 
-    @Inject
-    @Rejected
-    private Event<Serializable> rejectededEdrProducer;
+	@Inject
+	private UsageRatingJobPublisher usageRatingJobPublisher;
 
-    @Inject
-    @CurrentUser
-    protected MeveoUser currentUser;
+	/**
+	 * Number of EDRS to process in a single job run
+	 */
+	private static int PROCESS_NR_IN_JOB_RUN = 2000000;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
-    @TransactionAttribute(TransactionAttributeType.NEVER)
-    public void execute(JobExecutionResultImpl result, JobInstance jobInstance) {
-        log.debug("Running with parameter={}", jobInstance.getParametres());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
+	@TransactionAttribute(TransactionAttributeType.NEVER)
+	public void execute(JobExecutionResultImpl result, JobInstance jobInstance) {
+		log.debug("Running with parameter={}", jobInstance.getParametres());
 
-        Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
-        if (nbRuns == -1) {
-            nbRuns = (long) Runtime.getRuntime().availableProcessors();
-        }
-        Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
+		Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
+		if (nbRuns == -1) {
+			nbRuns = (long) Runtime.getRuntime().availableProcessors();
+		}
 
-        try {
-            Date rateUntilDate = null;
-            String ratingGroup = null;
-            try {
-                rateUntilDate = (Date) this.getParamOrCFValue(jobInstance, "rateUntilDate");
-                ratingGroup = (String) this.getParamOrCFValue(jobInstance, "ratingGroup");
-            } catch (Exception e) {
-                log.warn("Cant get customFields for {}. {}", jobInstance.getJobTemplate(), e.getMessage());
-            }
-            List<Long> ids = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, PROCESS_NR_IN_JOB_RUN);
-            result.setNbItemsToProcess(ids.size());
-            List<Future<String>> futures = new ArrayList<>();
-            SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
-            log.debug("edr to rate={}, block to run={} in {} threads", ids.size(), subListCreator.getBlocToRun(), nbRuns);
+		try {
+			Date rateUntilDate = null;
+			String ratingGroup = null;
+			try {
+				rateUntilDate = (Date) this.getParamOrCFValue(jobInstance, "rateUntilDate");
+				ratingGroup = (String) this.getParamOrCFValue(jobInstance, "ratingGroup");
 
-            MeveoUser lastCurrentUser = currentUser.unProxy();
-            while (subListCreator.isHasNext()) {
-                futures.add(usageRatingAsync.launchAndForget((List<Long>) subListCreator.getNextWorkSet(), result, lastCurrentUser));
+			} catch (Exception e) {
+				log.warn("Cant get customFields for {}. {}", jobInstance.getJobTemplate(), e.getMessage());
+			}
 
-                if (subListCreator.isHasNext()) {
-                    try {
-                        Thread.sleep(waitingMillis.longValue());
-                    } catch (InterruptedException e) {
-                        log.error("", e);
-                    }
-                }
-            }
-            // Wait for all async methods to finish
-            for (Future<String> future : futures) {
-                try {
-                    future.get();
+			int maxRecordToProcess = EjbUtils.isRunningInClusterMode() ? 0 : PROCESS_NR_IN_JOB_RUN;
 
-                } catch (InterruptedException e) {
-                    // It was cancelled from outside - no interest
+			List<Long> edrIds = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, maxRecordToProcess);
 
-                } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    result.registerError(cause.getMessage());
-                    result.addReport(cause.getMessage());
-                    log.error("Failed to execute async method", cause);
-                }
-            }
+			SubListCreator subListCreator = new SubListCreator(edrIds, nbRuns.intValue());
 
-            // Check if there are any more EDRS to process and mark job as completed if there are none
-            ids = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, 1);
-            result.setDone(ids.isEmpty());
+			log.debug("Execute {} size={}, block to run={}, nbThreads={}", getClass().getSimpleName(),
+					(edrIds == null ? null : edrIds.size()), subListCreator.getBlocToRun(), nbRuns);
 
-        } catch (Exception e) {
-            log.error("Failed to run usage rating job", e);
-            result.registerError(e.getMessage());
-            result.addReport(e.getMessage());
-        }
-    }
+			if (EjbUtils.isRunningInClusterMode()) {
+				executeJobInCluster(result, subListCreator, rateUntilDate, ratingGroup);
+
+			} else {
+				executeJobInNode(result, subListCreator, rateUntilDate, ratingGroup);
+			}
+
+		} catch (Exception e) {
+			log.error("Failed to run usage rating job", e);
+			result.registerError(e.getMessage());
+			result.addReport(e.getMessage());
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void executeJobInNode(JobExecutionResultImpl result, SubListCreator subListCreator, Date rateUntilDate,
+			String ratingGroup) {
+		try {
+			List<Future<String>> futures = new ArrayList<>();
+			MeveoUser lastCurrentUser = currentUser.unProxy();
+
+			Long waitingMillis = (Long) this.getParamOrCFValue(result.getJobInstance(), "waitingMillis", 0L);
+
+			while (subListCreator.isHasNext()) {
+				futures.add(usageRatingAsync.launchAndForget((List<Long>) subListCreator.getNextWorkSet(), result,
+						lastCurrentUser));
+				if (subListCreator.isHasNext()) {
+					try {
+						Thread.sleep(waitingMillis.longValue());
+
+					} catch (InterruptedException e) {
+						log.error("", e);
+						Thread.currentThread().interrupt();
+
+					}
+				}
+			}
+
+			for (Future<String> future : futures) {
+				try {
+					future.get();
+
+				} catch (InterruptedException e) {
+					// It was cancelled from outside - no interest
+					Thread.currentThread().interrupt();
+
+				} catch (ExecutionException e) {
+					Throwable cause = e.getCause();
+					result.registerError(cause.getMessage());
+					result.addReport(cause.getMessage());
+					log.error("Failed to execute async method", cause);
+				}
+			}
+
+			List<Long> ids = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, 1);
+			result.setDone(ids.isEmpty());
+
+		} catch (Exception e) {
+			log.error("Failed to run {} job {}", getClass().getSimpleName(), e);
+			result.registerError(e.getMessage());
+		}
+
+		log.debug("end running {}", getClass().getSimpleName());
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void executeJobInCluster(JobExecutionResultImpl result, SubListCreator subListCreator, Date rateUntilDate,
+			String ratingGroup) {
+		jobExecutionService.persistResult(UsageRatingJob.class.getName(), result, result.getJobInstance());
+		while (subListCreator.isHasNext()) {
+			ClusterJobQueueDto queueDto = initClusterQueueDto(result, new ArrayList<>(subListCreator.getNextWorkSet()),
+					subListCreator.getNbThreads());
+
+			// send to queue
+			usageRatingJobPublisher.publishMessage(queueDto);
+		}
+	}
 
 }

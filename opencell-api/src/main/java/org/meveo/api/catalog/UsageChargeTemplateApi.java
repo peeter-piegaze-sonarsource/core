@@ -201,20 +201,27 @@ public class UsageChargeTemplateApi extends BaseCrudApi<UsageChargeTemplate, Usa
             chargeTemplate.setDescriptionI18n(convertMultiLanguageToMapOfValues(postData.getLanguageDescriptions(), chargeTemplate.getDescriptionI18n()));
         }
 
-        if (postData.getTriggeredEdrs() != null) {
-            List<TriggeredEDRTemplate> edrTemplates = new ArrayList<TriggeredEDRTemplate>();
+		if (postData.getTriggeredEdrs() != null) {
+			if (postData.getTriggeredEdrs().getTriggeredEdr().isEmpty()) {
+				chargeTemplate.setEdrTemplates(null);
 
-            for (TriggeredEdrTemplateDto triggeredEdrTemplateDto : postData.getTriggeredEdrs().getTriggeredEdr()) {
-                TriggeredEDRTemplate triggeredEdrTemplate = triggeredEDRTemplateService.findByCode(triggeredEdrTemplateDto.getCode());
-                if (triggeredEdrTemplate == null) {
-                    throw new EntityDoesNotExistsException(TriggeredEDRTemplate.class, triggeredEdrTemplateDto.getCode());
-                }
+			} else {
+				List<TriggeredEDRTemplate> edrTemplates = new ArrayList<TriggeredEDRTemplate>();
 
-                edrTemplates.add(triggeredEdrTemplate);
-            }
+				for (TriggeredEdrTemplateDto triggeredEdrTemplateDto : postData.getTriggeredEdrs().getTriggeredEdr()) {
+					TriggeredEDRTemplate triggeredEdrTemplate = triggeredEDRTemplateService
+							.findByCode(triggeredEdrTemplateDto.getCode());
+					if (triggeredEdrTemplate == null) {
+						throw new EntityDoesNotExistsException(TriggeredEDRTemplate.class,
+								triggeredEdrTemplateDto.getCode());
+					}
 
-            chargeTemplate.setEdrTemplates(edrTemplates);
-        }
+					edrTemplates.add(triggeredEdrTemplate);
+				}
+
+				chargeTemplate.setEdrTemplates(edrTemplates);
+			}
+		}
 
         // populate customFields
         try {
