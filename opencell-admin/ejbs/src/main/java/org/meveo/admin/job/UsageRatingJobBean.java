@@ -82,12 +82,13 @@ public class UsageRatingJobBean extends BaseJobBean {
 
 			int maxRecordToProcess = EjbUtils.isRunningInClusterMode() ? 0 : PROCESS_NR_IN_JOB_RUN;
 
-			List<Long> edrIds = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, maxRecordToProcess);
+			List<Long> ids = edrService.getEDRidsToRate(rateUntilDate, ratingGroup, maxRecordToProcess);
+			result.setNbItemsToProcess(ids.size());
 
-			SubListCreator subListCreator = new SubListCreator(edrIds, nbRuns.intValue());
+			SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
 
 			log.debug("Execute {} size={}, block to run={}, nbThreads={}", getClass().getSimpleName(),
-					(edrIds == null ? null : edrIds.size()), subListCreator.getBlocToRun(), nbRuns);
+					(ids == null ? null : ids.size()), subListCreator.getBlocToRun(), nbRuns);
 
 			if (EjbUtils.isRunningInClusterMode()) {
 				executeJobInCluster(result, subListCreator, rateUntilDate, ratingGroup);

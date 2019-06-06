@@ -49,6 +49,7 @@ public class DateUtils {
 
     private static long lastTime = System.currentTimeMillis() / 1000;
 
+    public static String SIMPLE_DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
     public static String DATE_PATTERN = "yyyy-MM-dd";
     public static String DATE_TIME_PATTERN = "yyyy-MM-dd'T'hh:mm:ssXXX";
     private static final String START_DATE_DELIMITER = "[";

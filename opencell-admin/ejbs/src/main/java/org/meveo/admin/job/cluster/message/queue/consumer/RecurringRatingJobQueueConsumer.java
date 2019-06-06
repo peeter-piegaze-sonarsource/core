@@ -9,35 +9,35 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.meveo.admin.async.ReportExtractAsync;
-import org.meveo.admin.job.ReportExtractJob;
+import org.meveo.admin.async.RecurringChargeAsync;
+import org.meveo.admin.job.RecurringRatingJob;
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
-import org.meveo.admin.job.cluster.message.queue.ReportExtractJobPublisher;
+import org.meveo.admin.job.cluster.message.queue.RecurringRatingJobPublisher;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.shared.DateUtils;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.job.JobExecutionService;
 
 /**
- * Handles cluster message for {@link ReportExtractJob}.
+ * Handles cluster message for {@link RecurringRatingJob}.
  * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
-@MessageDriven(name = "ReportExtractJobQueueConsumer", activationConfig = {
-		@ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/REPORTEXTRACTJOBQUEUE"),
+@MessageDriven(name = "RecurringRatingJobQueueConsumer", activationConfig = {
+		@ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/RECURRINGRATINGJOBQUEUE"),
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
-public class ReportExtractJobQueueConsumer extends BaseJobQueueConsumer implements MessageListener {
+public class RecurringRatingJobQueueConsumer extends BaseJobQueueConsumer implements MessageListener {
 
 	@Inject
-	private ReportExtractJobPublisher reportExtractJobPublisher;
+	private RecurringRatingJobPublisher recurringRatingJobPublisher;
 
 	@Inject
 	private JobExecutionService jobExecutionService;
 
 	@Inject
-	private ReportExtractAsync reportExtractAsync;
+	private RecurringChargeAsync recurringChargeAsync;
 
 	@Override
 	public void onMessage(Message msg) {
@@ -58,33 +58,26 @@ public class ReportExtractJobQueueConsumer extends BaseJobQueueConsumer implemen
 				result = jobExecutionService.findById(message.getJobExecutionResultImplId());
 			}
 
-			Object startDateObj = message.getParameter(ClusterJobQueueDto.START_DATE);
-			Object endDateObj = message.getParameter(ClusterJobQueueDto.END_DATE);
-
-			Date startDate = null;
-			Date endDate = null;
-
-			if (startDateObj != null) {
-				startDate = DateUtils.guessDate(startDateObj.toString(), DateUtils.SIMPLE_DATE_FORMAT);
-			}
-			if (endDateObj != null) {
-				endDate = DateUtils.guessDate(endDateObj.toString(), DateUtils.SIMPLE_DATE_FORMAT);
+			Date rateUntilDate = new Date();
+			Object rateUntilDateObj = message.getParameter(ClusterJobQueueDto.RATE_UNTIL_DATE);
+			if (rateUntilDateObj != null) {
+				rateUntilDate = DateUtils.guessDate(rateUntilDateObj.toString(), DateUtils.SIMPLE_DATE_FORMAT);
 			}
 
 			if (message.getItems() != null) {
-				reportExtractAsync.launchAndForget(
-						message.getItems().stream().map(e -> (Long) e).collect(Collectors.toList()), result, startDate,
-						endDate, lastCurrentUser);
+				recurringChargeAsync.launchAndForget(
+						message.getItems().stream().map(e -> (Long) e).collect(Collectors.toList()), result,
+						rateUntilDate, lastCurrentUser);
 			}
 
 		} catch (Exception e) {
+			log.error("Failed processing job cluster message {}", e.getMessage());
 			super.requeue(message);
 		}
 	}
 
 	@Override
 	protected void republish(ClusterJobQueueDto message) {
-		reportExtractJobPublisher.publishMessage(message);
+		recurringRatingJobPublisher.publishMessage(message);
 	}
-
 }

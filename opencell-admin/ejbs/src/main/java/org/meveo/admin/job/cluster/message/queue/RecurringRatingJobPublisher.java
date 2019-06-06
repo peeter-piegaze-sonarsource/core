@@ -12,15 +12,16 @@ import org.meveo.admin.job.cluster.ClusterJobQueueDto;
 
 /**
  * Publish a subset of id to be process for {@link UsageRatingJob}.
+ * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
 @JMSDestinationDefinitions(value = {
-		@JMSDestinationDefinition(name = "java:/queue/USAGERATINGJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "UsageRatingJobQueue") })
+		@JMSDestinationDefinition(name = "java:/queue/RECURRINGRATINGJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "RecurringRatingJobQueue") })
 @Stateless
-public class UsageRatingJobPublisher extends BaseJobQueuePublisher {
+public class RecurringRatingJobPublisher extends BaseJobQueuePublisher {
 
-	@Resource(lookup = "java:/queue/USAGERATINGJOBQUEUE")
+	@Resource(lookup = "java:/queue/RECURRINGRATINGJOBQUEUE")
 	private Queue queue;
 
 	public void publishMessage(ClusterJobQueueDto messageDto) {
