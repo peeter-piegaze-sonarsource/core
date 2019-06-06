@@ -13,12 +13,14 @@ import org.slf4j.helpers.MessageFormatter;
  * A logger implementation to capture script execution logs locally
  * 
  * @author Andrius Karpavicius
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
 public class RunTimeLogger implements org.slf4j.Logger, Serializable {
 
     private static final long serialVersionUID = -7597452215403482457L;
 
-    private String className;
+	private String className;
 
     private String SEP = "  ";
     private String DEBUG = "DEBUG";

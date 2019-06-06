@@ -10,6 +10,7 @@ import javax.jms.Queue;
 
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
 import org.meveo.admin.job.cluster.ClusterJobTopicDto;
+import org.meveo.commons.utils.EjbUtils;
 
 /**
  * @author Edward P. Legaspi
@@ -22,8 +23,6 @@ public class MediationJobMessageHandler extends BaseJobMessageHandler {
 	private Queue queue;
 
 	public void processMessage(ClusterJobTopicDto topicMessage) {
-		log.debug("Receive a topic message {}", topicMessage);
-
 		try (JMSConsumer consumer = context.createConsumer(queue)) {
 			Message msg = consumer.receive();
 
@@ -31,8 +30,10 @@ public class MediationJobMessageHandler extends BaseJobMessageHandler {
 				if (msg instanceof ObjectMessage) {
 					ClusterJobQueueDto clusterJobQueueDto;
 					clusterJobQueueDto = msg.getBody(ClusterJobQueueDto.class);
-					log.debug("Queue message received {}", clusterJobQueueDto);
 					msg.acknowledge();
+
+					log.debug("Queue message received in node={} => {}", EjbUtils.getCurrentClusterNode(),
+							clusterJobQueueDto);
 				}
 
 			} catch (JMSException e) {

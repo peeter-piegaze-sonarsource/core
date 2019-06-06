@@ -12,6 +12,8 @@ import java.util.Map;
 public class ClusterJobQueueDto implements Serializable {
 
 	private static final long serialVersionUID = 2830144742632416757L;
+	
+	public static final String SCRIPT_CODE = "SCRIPT_CODE";
 
 	private List<Serializable> items;
 	private Map<String, Serializable> parameters;

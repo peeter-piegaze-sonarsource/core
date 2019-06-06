@@ -47,10 +47,11 @@ public class MediationJobBean extends BaseJobBean {
 	@TransactionAttribute(TransactionAttributeType.NEVER)
 	public void execute(JobExecutionResultImpl result, JobInstance jobInstance) {
 		Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
+		String scriptCode = (String) this.getParamOrCFValue(jobInstance, "scriptJob");
+		
 		if (nbRuns == -1) {
 			nbRuns = (long) Runtime.getRuntime().availableProcessors();
 		}
-		Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
 
 		try {
 
@@ -71,8 +72,9 @@ public class MediationJobBean extends BaseJobBean {
 			if (files == null || files.length == 0) {
 				return;
 			}
+			
 			SubListCreator subListCreator = new SubListCreator(Arrays.asList(files), nbRuns.intValue());
-			String scriptCode = (String) this.getParamOrCFValue(jobInstance, "scriptJob");
+			
 			while (subListCreator.isHasNext()) {
 				List<Serializable> filePaths = new ArrayList<>();
 				Iterator it = subListCreator.getNextWorkSet().iterator();
@@ -82,7 +84,7 @@ public class MediationJobBean extends BaseJobBean {
 				}
 
 				ClusterJobQueueDto queueDto = initClusterQueueDto(result, filePaths);
-				queueDto.addParameter("SCRIPT_CODE", scriptCode);
+				queueDto.addParameter(ClusterJobQueueDto.SCRIPT_CODE, scriptCode);
 
 				// send to queue
 				mediationJobQueuePublisher.publishMessage(queueDto);
