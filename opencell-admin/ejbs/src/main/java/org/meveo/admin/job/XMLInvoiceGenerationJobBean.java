@@ -13,118 +13,157 @@ import javax.interceptor.Interceptors;
 
 import org.meveo.admin.async.InvoicingAsync;
 import org.meveo.admin.async.SubListCreator;
+import org.meveo.admin.job.cluster.ClusterJobQueueDto;
+import org.meveo.admin.job.cluster.message.queue.XmlInvoiceGenerationJobPublisher;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
+import org.meveo.commons.utils.EjbUtils;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
-import org.meveo.security.CurrentUser;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.billing.impl.InvoiceService;
-import org.slf4j.Logger;
 
+/**
+ * Job bean for {@link XMLInvoiceGenerationJob}.
+ * 
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
+ */
 @Stateless
 public class XMLInvoiceGenerationJobBean extends BaseJobBean {
 
-    @Inject
-    private Logger log;
+	@Inject
+	private InvoiceService invoiceService;
 
-    @Inject
-    private InvoiceService invoiceService;
+	@Inject
+	private InvoicingAsync invoicingAsync;
 
-    @Inject
-    private InvoicingAsync invoicingAsync;
+	@Inject
+	private XmlInvoiceGenerationJobPublisher xmlInvoiceGenerationJobPublisher;
 
-    @Inject
-    @CurrentUser
-    protected MeveoUser currentUser;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
+	@TransactionAttribute(TransactionAttributeType.NEVER)
+	public void execute(JobExecutionResultImpl result, String parameter, JobInstance jobInstance) {
+		log.debug("Running for parameter={}", parameter);
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
-    @TransactionAttribute(TransactionAttributeType.NEVER)
-    public void execute(JobExecutionResultImpl result, String parameter, JobInstance jobInstance) {
-        log.debug("Running for parameter={}", parameter);
+		Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
+		if (nbRuns == -1) {
+			nbRuns = (long) Runtime.getRuntime().availableProcessors();
+		}
 
-        Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "nbRuns", -1L);
-        if (nbRuns == -1) {
-            nbRuns = (long) Runtime.getRuntime().availableProcessors();
-        }
-        Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
+		try {
+			InvoicesToProcessEnum invoicesToProcessEnum = InvoicesToProcessEnum
+					.valueOf((String) this.getParamOrCFValue(jobInstance, "invoicesToProcess", "FinalOnly"));
 
-        try {
+			Long billingRunId = null;
+			if (parameter != null && parameter.trim().length() > 0) {
+				try {
+					billingRunId = Long.parseLong(parameter);
+					
+				} catch (Exception e) {
+					log.error("error while getting billing run", e);
+					result.registerError(e.getMessage());
+				}
+			}
 
-            InvoicesToProcessEnum invoicesToProcessEnum = InvoicesToProcessEnum.valueOf((String) this.getParamOrCFValue(jobInstance, "invoicesToProcess", "FinalOnly"));
+			List<Long> ids = this.fetchInvoiceIdsToProcess(invoicesToProcessEnum, billingRunId);
+			result.setNbItemsToProcess(ids.size());
 
-            Long billingRunId = null;
-            if (parameter != null && parameter.trim().length() > 0) {
-                try {
-                    billingRunId = Long.parseLong(parameter);
-                } catch (Exception e) {
-                    log.error("error while getting billing run", e);
-                    result.registerError(e.getMessage());
-                }
-            }
+			SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
 
-            List<Long> invoiceIds = this.fetchInvoiceIdsToProcess(invoicesToProcessEnum, billingRunId);
+			log.debug("Execute {} size={}, block to run={}, nbThreads={}", getClass().getSimpleName(),
+					(ids == null ? null : ids.size()), subListCreator.getBlocToRun(), nbRuns);
 
-            log.info("invoices to process={}", invoiceIds == null ? null : invoiceIds.size());
-            List<Future<Boolean>> futures = new ArrayList<Future<Boolean>>();
-            SubListCreator subListCreator = new SubListCreator(invoiceIds, nbRuns.intValue());
-            result.setNbItemsToProcess(subListCreator.getListSize());
-            log.debug("block to run:" + subListCreator.getBlocToRun());
-            log.debug("nbThreads:" + nbRuns);
+			if (EjbUtils.isRunningInClusterMode()) {
+				executeJobInCluster(result, subListCreator);
 
-            MeveoUser lastCurrentUser = currentUser.unProxy();
-            while (subListCreator.isHasNext()) {
-                futures.add(invoicingAsync.generateXmlAsync((List<Long>) subListCreator.getNextWorkSet(), result, lastCurrentUser));
+			} else {
+				executeJobInNode(result, subListCreator);
+			}
 
-                if (subListCreator.isHasNext()) {
-                    try {
-                        Thread.sleep(waitingMillis.longValue());
-                    } catch (InterruptedException e) {
-                        log.error("", e);
-                    }
-                }
-            }
+		} catch (Exception e) {
+			log.error("Failed to run {} job {}", getClass().getSimpleName(), e.getMessage());
+			result.registerError(e.getMessage());
+		}
+	}
 
-            // Wait for all async methods to finish
-            for (Future<Boolean> future : futures) {
-                try {
-                    future.get();
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void executeJobInNode(JobExecutionResultImpl result, SubListCreator subListCreator) {
+		try {
+			List<Future<Boolean>> futures = new ArrayList<>();
+			MeveoUser lastCurrentUser = currentUser.unProxy();
 
-                } catch (InterruptedException e) {
-                    // It was cancelled from outside - no interest
-                } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    result.registerError(cause.getMessage());
-                    log.error("Failed to execute async method", cause);
-                }
-            }
+			Long waitingMillis = (Long) this.getParamOrCFValue(result.getJobInstance(), "waitingMillis", 0L);
 
-        } catch (Exception e) {
-            log.error("Failed to generate XML invoices", e);
-            result.registerError(e.getMessage());
-            result.addReport(e.getMessage());
-        }
-    }
+			while (subListCreator.isHasNext()) {
+				futures.add(invoicingAsync.generateXmlAsync((List<Long>) subListCreator.getNextWorkSet(), result,
+						lastCurrentUser));
+				if (subListCreator.isHasNext()) {
+					try {
+						Thread.sleep(waitingMillis.longValue());
 
-    private List<Long> fetchInvoiceIdsToProcess(InvoicesToProcessEnum invoicesToProcessEnum, Long billingRunId) {
+					} catch (InterruptedException e) {
+						log.error("", e);
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
 
-        log.debug(" fetchInvoiceIdsToProcess for invoicesToProcessEnum = {} and billingRunId = {} ", invoicesToProcessEnum, billingRunId);
-        List<Long> invoiceIds = null;
+			for (Future<Boolean> future : futures) {
+				try {
+					future.get();
 
-        switch (invoicesToProcessEnum) {
-        case FinalOnly:
-            invoiceIds = invoiceService.getInvoiceIdsByBRWithNoXml(billingRunId);
-            break;
+				} catch (InterruptedException e) {
+					// It was cancelled from outside - no interest
+					Thread.currentThread().interrupt();
 
-        case DraftOnly:
-            invoiceIds = invoiceService.getDraftInvoiceIdsByBRWithNoXml(billingRunId);
-            break;
+				} catch (ExecutionException e) {
+					Throwable cause = e.getCause();
+					result.registerError(cause.getMessage());
+					log.error("Failed to execute async method", cause);
+				}
+			}
 
-        case All:
-            invoiceIds = invoiceService.getInvoiceIdsIncludeDraftByBRWithNoXml(billingRunId);
-            break;
-        }
-        return invoiceIds;
-    }
+		} catch (Exception e) {
+			log.error("Failed to run {} job {}", getClass().getSimpleName(), e);
+			result.registerError(e.getMessage());
+		}
+
+		log.debug("end running {}", getClass().getSimpleName());
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void executeJobInCluster(JobExecutionResultImpl result, SubListCreator subListCreator) {
+		jobExecutionService.persistResult(ReportExtractJob.class.getName(), result, result.getJobInstance());
+		while (subListCreator.isHasNext()) {
+			ClusterJobQueueDto queueDto = initClusterQueueDto(result, new ArrayList<>(subListCreator.getNextWorkSet()),
+					subListCreator.getNbThreads());
+
+			// send to queue
+			xmlInvoiceGenerationJobPublisher.publishMessage(queueDto);
+		}
+	}
+
+	private List<Long> fetchInvoiceIdsToProcess(InvoicesToProcessEnum invoicesToProcessEnum, Long billingRunId) {
+
+		log.debug(" fetchInvoiceIdsToProcess for invoicesToProcessEnum = {} and billingRunId = {} ",
+				invoicesToProcessEnum, billingRunId);
+		List<Long> invoiceIds = null;
+
+		switch (invoicesToProcessEnum) {
+		case FinalOnly:
+			invoiceIds = invoiceService.getInvoiceIdsByBRWithNoXml(billingRunId);
+			break;
+
+		case DraftOnly:
+			invoiceIds = invoiceService.getDraftInvoiceIdsByBRWithNoXml(billingRunId);
+			break;
+
+		case All:
+			invoiceIds = invoiceService.getInvoiceIdsIncludeDraftByBRWithNoXml(billingRunId);
+			break;
+		}
+		return invoiceIds;
+	}
 }

@@ -38,8 +38,8 @@ public class UnitRecurringRatingJobBean implements Serializable {
 	// @Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void execute(JobExecutionResultImpl result, Long recurringChargeId, Date maxDate) {
-
 		log.debug("--------------------Processing activeRecurringChargeInstanceID {}", recurringChargeId);
+		
 		try {
 			RatingStatus ratingStatus = recurringChargeInstanceService.applyRecurringCharge(recurringChargeId, maxDate);
 			if (ratingStatus.getNbRating() == 1) {

@@ -29,7 +29,7 @@ import org.meveo.service.billing.impl.EdrService;
 import org.slf4j.Logger;
 
 /**
- * Job bean for UsageRatingJob.
+ * Job bean for {@link UsageRatingJob}.
  * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0

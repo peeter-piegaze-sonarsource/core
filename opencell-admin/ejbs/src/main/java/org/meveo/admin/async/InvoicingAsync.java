@@ -30,6 +30,8 @@ import org.slf4j.Logger;
  * The Class InvoicingAsync.
  *
  * @author anasseh
+ * @author Edward P. Legaspi
+ * @lastModifiedVersion 7.0
  */
 
 @Stateless
@@ -215,6 +217,7 @@ public class InvoicingAsync {
             try {
                 invoiceService.produceInvoiceXmlInNewTransaction(invoiceId);
                 result.registerSucces();
+                
             } catch (Exception e) {
                 result.registerError(invoiceId, e.getMessage());
                 allOk = false;

@@ -18,6 +18,7 @@ import org.meveo.service.job.Job;
 
 /**
  * The Class XMLInvoiceGenerationJob generate XML for all valid invoices that dont have it..
+ * @author Edward P. Legaspi
  * @author Abdellatif BARI
  * @lastModifiedVersion 7.0
  */

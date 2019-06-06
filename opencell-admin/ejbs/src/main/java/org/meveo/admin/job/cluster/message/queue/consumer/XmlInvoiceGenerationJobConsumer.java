@@ -1,6 +1,5 @@
 package org.meveo.admin.job.cluster.message.queue.consumer;
 
-import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.ejb.ActivationConfigProperty;
@@ -9,35 +8,34 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.meveo.admin.async.RecurringChargeAsync;
-import org.meveo.admin.job.RecurringRatingJob;
+import org.meveo.admin.async.InvoicingAsync;
+import org.meveo.admin.job.XMLInvoiceGenerationJob;
 import org.meveo.admin.job.cluster.ClusterJobQueueDto;
-import org.meveo.admin.job.cluster.message.queue.RecurringRatingJobPublisher;
+import org.meveo.admin.job.cluster.message.queue.XmlInvoiceGenerationJobPublisher;
 import org.meveo.model.jobs.JobExecutionResultImpl;
-import org.meveo.model.shared.DateUtils;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.job.JobExecutionService;
 
 /**
- * Handles cluster message for {@link RecurringRatingJob}.
+ * Handles cluster message for {@link XMLInvoiceGenerationJob}.
  * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
-@MessageDriven(name = "RecurringRatingJobQueueConsumer", activationConfig = {
-		@ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/RECURRINGRATINGJOBQUEUE"),
+@MessageDriven(name = "XmlInvoiceGenerationJobConsumer", activationConfig = {
+		@ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/XMLINVOICEGENERATIONJOBQUEUE"),
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
-public class RecurringRatingJobQueueConsumer extends BaseJobQueueConsumer implements MessageListener {
+public class XmlInvoiceGenerationJobConsumer extends BaseJobQueueConsumer implements MessageListener {
 
 	@Inject
-	private RecurringRatingJobPublisher recurringRatingJobPublisher;
+	private XmlInvoiceGenerationJobPublisher xmlInvoiceGenerationJobPublisher;
 
 	@Inject
 	private JobExecutionService jobExecutionService;
 
 	@Inject
-	private RecurringChargeAsync recurringChargeAsync;
+	private InvoicingAsync invoicingAsync;
 
 	@Override
 	public void onMessage(Message msg) {
@@ -53,26 +51,20 @@ public class RecurringRatingJobQueueConsumer extends BaseJobQueueConsumer implem
 				result = jobExecutionService.findById(message.getJobExecutionResultImplId());
 			}
 
-			Date rateUntilDate = new Date();
-			Object rateUntilDateObj = message.getParameter(ClusterJobQueueDto.RATE_UNTIL_DATE);
-			if (rateUntilDateObj != null) {
-				rateUntilDate = DateUtils.guessDate(rateUntilDateObj.toString(), DateUtils.SIMPLE_DATE_FORMAT);
-			}
-
 			if (message.getItems() != null) {
-				recurringChargeAsync.launchAndForget(
+				invoicingAsync.generateXmlAsync(
 						message.getItems().stream().map(e -> (Long) e).collect(Collectors.toList()), result,
-						rateUntilDate, lastCurrentUser);
+						lastCurrentUser);
 			}
 
 		} catch (Exception e) {
-			log.error("Failed processing job cluster message {}", e.getMessage());
 			super.requeue(message);
 		}
 	}
 
 	@Override
 	protected void republish(ClusterJobQueueDto message) {
-		recurringRatingJobPublisher.publishMessage(message);
+		xmlInvoiceGenerationJobPublisher.publishMessage(message);
 	}
+
 }

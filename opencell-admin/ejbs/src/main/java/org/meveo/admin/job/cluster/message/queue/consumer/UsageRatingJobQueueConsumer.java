@@ -39,16 +39,11 @@ public class UsageRatingJobQueueConsumer extends BaseJobQueueConsumer implements
 
 	@Override
 	public void onMessage(Message msg) {
-		log.debug("----------------------------------");
-		log.debug("Received message in queue {}", msg);
-
-		ClusterJobQueueDto message = deserialized(msg);
-		if (message != null) {
-			processMessage(message);
-		}
+		super.onMessageReceive(msg);
 	}
 
-	private void processMessage(ClusterJobQueueDto message) {
+	@Override
+	protected void processMessage(ClusterJobQueueDto message) {
 		try {
 			MeveoUser lastCurrentUser = initUser(message.getProviderCode(), message.getCurrentUserName());
 			JobExecutionResultImpl result = new JobExecutionResultImpl();

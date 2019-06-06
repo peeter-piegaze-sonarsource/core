@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Base class for cluster job consumers.
+ * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
@@ -38,6 +39,18 @@ public abstract class BaseJobQueueConsumer {
 
 	protected static MeveoUser initUser(String providerCode, String currentUserName) {
 		return MeveoUser.instantiate(currentUserName, providerCode);
+	}
+	
+	protected abstract void processMessage(ClusterJobQueueDto message);
+
+	public void onMessageReceive(Message msg) {
+		log.debug("----------------------------------");
+		log.debug("Received message in queue {}", msg);
+
+		ClusterJobQueueDto message = deserialized(msg);
+		if (message != null) {
+			processMessage(message);
+		}
 	}
 
 	public ClusterJobQueueDto deserialized(Message msg) {

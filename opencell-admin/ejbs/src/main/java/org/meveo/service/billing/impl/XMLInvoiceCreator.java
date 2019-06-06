@@ -37,7 +37,6 @@ import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -201,7 +200,7 @@ public class XMLInvoiceCreator extends PersistenceService<Invoice> {
      * @throws BusinessException business exception
      */
     public File createXMLInvoice(Invoice invoice, boolean isVirtual) throws BusinessException {
-        log.debug("Creating xml for invoice id={} number={}.", invoice.getId(), invoice.getInvoiceNumberOrTemporaryNumber());
+        log.debug("--------------------Creating xml for invoice id={} number={}.", invoice.getId(), invoice.getInvoiceNumberOrTemporaryNumber());
 
         ScriptInstance scriptInstance = invoice.getInvoiceType().getCustomInvoiceXmlScriptInstance();
         if (scriptInstance != null) {

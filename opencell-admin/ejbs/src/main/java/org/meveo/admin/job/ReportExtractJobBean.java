@@ -70,7 +70,7 @@ public class ReportExtractJobBean extends BaseJobBean implements Serializable {
 
 			List<Long> ids = reportExtractService.listIds();
 			result.setNbItemsToProcess(ids.size());
-			
+
 			SubListCreator subListCreator = new SubListCreator(ids, nbRuns.intValue());
 
 			log.debug("Execute {} size={}, block to run={}, nbThreads={}", getClass().getSimpleName(),
