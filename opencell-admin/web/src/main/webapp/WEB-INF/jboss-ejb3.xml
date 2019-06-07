@@ -25,6 +25,14 @@
 			<ejb-name>RecurringRatingJobQueueConsumer</ejb-name>
 			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
 		</p:pool>
+		<p:pool>
+			<ejb-name>XmlInvoiceGenerationJobConsumer</ejb-name>
+			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
+		</p:pool>
+		<p:pool>
+			<ejb-name>PdfInvoiceGenerationJobConsumer</ejb-name>
+			<p:bean-instance-pool-ref>mdb-strict-max-pool</p:bean-instance-pool-ref>
+		</p:pool>
 	</assembly-descriptor>
 </jboss:ejb-jar>
                
