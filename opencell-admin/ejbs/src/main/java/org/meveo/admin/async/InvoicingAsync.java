@@ -33,7 +33,6 @@ import org.slf4j.Logger;
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
-
 @Stateless
 public class InvoicingAsync {
 
@@ -182,6 +181,7 @@ public class InvoicingAsync {
             try {
                 invoiceService.produceInvoicePdfInNewTransaction(invoiceId);
                 result.registerSucces();
+                
             } catch (Exception e) {
                 result.registerError(invoiceId, e.getMessage());
                 log.error("Failed to create PDF invoice for invoice {}", invoiceId, e);

@@ -6,20 +6,20 @@ import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSDestinationDefinitions;
 import javax.jms.Queue;
 
-import org.meveo.admin.job.ReportExtractJob;
+import org.meveo.admin.job.PDFInvoiceGenerationJob;
 
 /**
- * Cluster message publisher for {@link ReportExtractJob}.
+ * Publish a subset of id to be process for {@link PDFInvoiceGenerationJob}.
  * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
 @JMSDestinationDefinitions(value = {
-		@JMSDestinationDefinition(name = "java:/queue/REPORTEXTRACTJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "ReportExtractJobQueue") })
+		@JMSDestinationDefinition(name = "java:/queue/PDFINVOICEGENERATIONJOBQUEUE", interfaceName = "javax.jms.Queue", destinationName = "PdfInvoiceGenerationJobQueue") })
 @Stateless
-public class ReportExtractJobPublisher extends BaseJobQueuePublisher {
+public class PdfInvoiceGenerationJobPublisher extends BaseJobQueuePublisher {
 
-	@Resource(lookup = "java:/queue/REPORTEXTRACTJOBQUEUE")
+	@Resource(lookup = "java:/queue/PDFINVOICEGENERATIONJOBQUEUE")
 	private Queue queue;
 
 	@Override
