@@ -1,6 +1,7 @@
 package org.meveo.service.notification;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -122,5 +123,15 @@ public class NotificationHistoryService extends PersistenceService<NotificationH
      */
     public void deleteHistory(Notification notification) {
         getEntityManager().createNamedQuery("NotificationHistory.deleteHistoryByNotification").setParameter("notification", notification).executeUpdate();
+    }
+
+    /**
+     * Get a list of notification histories that should be retried.
+     * 
+     * @return A list of notification history ids.
+     */
+    @SuppressWarnings("unchecked")
+    public List<Long> getHistoryToRetry() {
+        return getEntityManager().createNamedQuery("NotificationHistory.listToRetry").getResultList();
     }
 }

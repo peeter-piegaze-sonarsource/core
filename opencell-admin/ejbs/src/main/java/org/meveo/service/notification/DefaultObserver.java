@@ -88,7 +88,7 @@ public class DefaultObserver {
     @Inject
     @CurrentUser
     protected MeveoUser currentUser;
-    
+
     @Inject
     private DefaultNotificationService defaultNotificationService;
 
@@ -102,18 +102,18 @@ public class DefaultObserver {
      */
     private boolean checkEvent(NotificationEventTypeEnum type, Object entityOrEvent) throws BusinessException {
         boolean result = false;
-        
-		for (Notification notif : genericNotificationService.getApplicableNotifications(type, entityOrEvent)) {
-			if (notif.isRunAsync()) {
-				defaultNotificationService.fireNotificationAsync(notif, entityOrEvent);
-				result = true;
 
-			} else {
-				result = defaultNotificationService.fireNotification(notif, entityOrEvent) || result;
-			}
+        for (Notification notif : genericNotificationService.getApplicableNotifications(type, entityOrEvent)) {
+            if (notif.isRunAsync()) {
+                defaultNotificationService.fireNotificationAsync(notif, entityOrEvent);
+                result = true;
 
-		}
-		
+            } else {
+                result = defaultNotificationService.fireNotification(notif, entityOrEvent, false) || result;
+            }
+
+        }
+
         return result;
     }
 
@@ -297,5 +297,4 @@ public class DefaultObserver {
             }
         }
     }
-
 }

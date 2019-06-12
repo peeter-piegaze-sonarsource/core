@@ -39,247 +39,316 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Basically an extension of {@link DefaultObserver} to call notification asychronously.
+ * 
  * @author Edward P. Legaspi
  * @lastModifiedVersion 7.0
  */
 @Stateless
 public class DefaultNotificationService {
 
-	private static Logger log = LoggerFactory.getLogger(DefaultNotificationService.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultNotificationService.class);
 
-	@Inject
-	private BeanManager manager;
+    @Inject
+    private BeanManager manager;
 
-	@Inject
-	private ScriptInstanceService scriptInstanceService;
+    @Inject
+    private ScriptInstanceService scriptInstanceService;
 
-	@Inject
-	private NotificationHistoryService notificationHistoryService;
+    @Inject
+    private NotificationHistoryService notificationHistoryService;
 
-	@Inject
-	private EmailNotifier emailNotifier;
+    @Inject
+    private EmailNotifier emailNotifier;
 
-	@Inject
-	private WebHookNotifier webHookNotifier;
+    @Inject
+    private WebHookNotifier webHookNotifier;
 
-	@Inject
-	private InstantMessagingNotifier imNotifier;
+    @Inject
+    private InstantMessagingNotifier imNotifier;
 
-	@Inject
-	private CounterInstanceService counterInstanceService;
+    @Inject
+    private CounterInstanceService counterInstanceService;
 
-	@Inject
-	private JobTriggerLauncher jobTriggerLauncher;
+    @Inject
+    private JobTriggerLauncher jobTriggerLauncher;
 
-	@Inject
-	@CurrentUser
-	protected MeveoUser currentUser;
+    @Inject
+    @CurrentUser
+    protected MeveoUser currentUser;
 
-	/**
-	 * Evaluates an expression with the given parameter as context.
-	 * @param expression evaluatable expression
-	 * @param entityOrEvent entity or event
-	 * @return boolean value
-	 * @throws BusinessException exception when evaluation on expression failed
-	 */
-	private boolean matchExpression(String expression, Object entityOrEvent) throws BusinessException {
-		Boolean result = true;
-		if (StringUtils.isBlank(expression)) {
-			return result;
-		}
+    /**
+     * Evaluates an expression with the given parameter as context.
+     * 
+     * @param expression evaluatable expression
+     * @param entityOrEvent entity or event
+     * @return boolean value
+     * @throws BusinessException exception when evaluation on expression failed
+     */
+    private boolean matchExpression(String expression, Object entityOrEvent) throws BusinessException {
+        Boolean result = true;
+        if (StringUtils.isBlank(expression)) {
+            return result;
+        }
 
-		Map<Object, Object> userMap = new HashMap<>();
-		userMap.put("event", entityOrEvent);
+        Map<Object, Object> userMap = new HashMap<>();
+        userMap.put("event", entityOrEvent);
 
-		Object res = ValueExpressionWrapper.evaluateExpression(expression, userMap, Boolean.class);
-		try {
-			result = (Boolean) res;
+        Object res = ValueExpressionWrapper.evaluateExpression(expression, userMap, Boolean.class);
+        try {
+            result = (Boolean) res;
 
-		} catch (Exception e) {
-			throw new BusinessException("Expression " + expression + " do not evaluate to boolean but " + res);
-		}
+        } catch (Exception e) {
+            throw new BusinessException("Expression " + expression + " do not evaluate to boolean but " + res);
+        }
 
-		return result == null ? false : result;
-	}
+        return result == null ? false : result;
+    }
 
-	/**
-	 * Executes a given script instance creating a context from the given parameter.
-	 * @param scriptInstance the ScriptInstance
-	 * @param entityOrEvent entity or event
-	 * @param params map of parameters
-	 * @param context map of context
-	 * @throws BusinessException exception when script fails to run
-	 */
-	private void executeScript(ScriptInstance scriptInstance, Object entityOrEvent, Map<String, String> params,
-			Map<String, Object> context) throws BusinessException {
-		log.debug("execute notification script: {}", scriptInstance.getCode());
+    /**
+     * Executes a given script instance creating a context from the given parameter.
+     * 
+     * @param scriptInstance the ScriptInstance
+     * @param entityOrEvent entity or event
+     * @param params map of parameters
+     * @param context map of context
+     * @throws BusinessException exception when script fails to run
+     */
+    private void executeScript(ScriptInstance scriptInstance, Object entityOrEvent, Map<String, String> params, Map<String, Object> context) throws BusinessException {
+        log.debug("execute notification script: {}", scriptInstance.getCode());
 
-		try {
+        try {
 
-			context.put("entityOrEvent", entityOrEvent);
+            context.put("entityOrEvent", entityOrEvent);
 
-			Map<Object, Object> userMap = new HashMap<>();
-			userMap.put("event", entityOrEvent);
-			userMap.put("manager", manager);
+            Map<Object, Object> userMap = new HashMap<>();
+            userMap.put("event", entityOrEvent);
+            userMap.put("manager", manager);
 
-			for (Map.Entry<String, String> entry : params.entrySet()) {
-				context.put(entry.getKey(),
-						ValueExpressionWrapper.evaluateExpression(entry.getValue(), userMap, Object.class));
-			}
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                context.put(entry.getKey(), ValueExpressionWrapper.evaluateExpression(entry.getValue(), userMap, Object.class));
+            }
 
-			if (scriptInstance.getReuse()) {
-				scriptInstanceService.executeCached(entityOrEvent, scriptInstance.getCode(), context);
+            if (scriptInstance.getReuse()) {
+                scriptInstanceService.executeCached(entityOrEvent, scriptInstance.getCode(), context);
 
-			} else {
-				scriptInstanceService.executeWInitAndFinalize(entityOrEvent, scriptInstance.getCode(), context);
-			}
+            } else {
+                scriptInstanceService.executeWInitAndFinalize(entityOrEvent, scriptInstance.getCode(), context);
+            }
 
-		} catch (Exception e) {
-			log.error("failed script {} execution", scriptInstance.getCode(), e);
-			if (e instanceof BusinessException) {
-				throw e;
-			} else {
-				throw new BusinessException(e);
-			}
-		}
-	}
+        } catch (Exception e) {
+            log.error("failed script {} execution", scriptInstance.getCode(), e);
+            if (e instanceof BusinessException) {
+                throw e;
+            } else {
+                throw new BusinessException(e);
+            }
+        }
+    }
 
-	/**
-	 * Fires a CDR notification. It will execute the script linked to Notification with CDR as parameter if present.
-	 * @param notif Notification object
-	 * @param cdr the CDR
-	 * @throws BusinessException exception when notification fail
-	 */
-	public void fireCdrNotification(Notification notif, Object cdr) throws BusinessException {
-		log.debug("Fire Cdr Notification for notif {} and  cdr {}", notif, cdr);
-		try {
-			if (!StringUtils.isBlank(notif.getScriptInstance()) && matchExpression(notif.getElFilter(), cdr)) {
-				executeScript(notif.getScriptInstance(), cdr, notif.getParams(), new HashMap<String, Object>());
-			}
-			
-		} catch (BusinessException e1) {
-			log.error("Error while firing notification {}: {} ", notif.getCode(), e1);
-			throw e1;
-		}
+    /**
+     * Fires a CDR notification. It will execute the script linked to Notification with CDR as parameter if present.
+     * 
+     * @param notif Notification object
+     * @param cdr the CDR
+     * @throws BusinessException exception when notification fail
+     */
+    public void fireCdrNotification(Notification notif, Object cdr) throws BusinessException {
+        log.debug("Fire Cdr Notification for notif {} and  cdr {}", notif, cdr);
+        try {
+            if (!StringUtils.isBlank(notif.getScriptInstance()) && matchExpression(notif.getElFilter(), cdr)) {
+                executeScript(notif.getScriptInstance(), cdr, notif.getParams(), new HashMap<String, Object>());
+            }
 
-	}
+        } catch (BusinessException e1) {
+            log.error("Error while firing notification {}: {} ", notif.getCode(), e1);
+            throw e1;
+        }
 
-	/**
-	 * Fire notification asynchronously.
-	 * @param notif the Notification object
-	 * @param entityOrEvent entity or event context
-	 * @return Future boolean value
-	 * @throws BusinessException exception when notification fail
-	 */
-	@Asynchronous
-	public Future<Boolean> fireNotificationAsync(Notification notif, Object entityOrEvent) throws BusinessException {
-		return new AsyncResult<>(fireNotification(notif, entityOrEvent));
-	}
+    }
 
-	/**
-	 * Fire notification.
-	 * @param notif the Notification object
-	 * @param entityOrEvent entity or event context
-	 * @return Future boolean value
-	 * @throws BusinessException exception when notification fail
-	 */
-	public boolean fireNotification(Notification notif, Object entityOrEvent) throws BusinessException {
+    /**
+     * Fire notification asynchronously.
+     * 
+     * @param notif the Notification object
+     * @param entityOrEvent entity or event context
+     * @return Future boolean value
+     * @throws BusinessException exception when notification fail
+     */
+    @Asynchronous
+    public Future<Boolean> fireNotificationAsync(Notification notif, Object entityOrEvent) throws BusinessException {
+        return new AsyncResult<>(fireNotification(notif, entityOrEvent, false));
+    }
 
-		if (notif == null) {
-			return false;
-		}
+    /**
+     * Fire notification.
+     * 
+     * @param notif the Notification object
+     * @param entityOrEvent entity or event context
+     * @param isReplay Is it a replay of of notification. If so, notification failure will not create a history record.
+     * @return True if notification was fired
+     * @throws BusinessException exception when notification fail
+     */
+    public boolean fireNotification(Notification notif, Object entityOrEvent, boolean isReplay) throws BusinessException {
 
-		IEntity entity = null;
-		if (entityOrEvent instanceof IEntity) {
-			entity = (IEntity) entityOrEvent;
+        if (notif == null) {
+            return false;
+        }
 
-		} else if (entityOrEvent instanceof IEvent) {
-			entity = ((IEvent) entityOrEvent).getEntity();
-		}
+        IEntity entity = null;
+        if (entityOrEvent instanceof IEntity) {
+            entity = (IEntity) entityOrEvent;
 
-		log.debug("Fire Notification for notif with {} and entity with id={}", notif, entity.getId());
-		try {
-			if (!matchExpression(notif.getElFilter(), entityOrEvent)) {
-				log.debug("Expression {} does not match", notif.getElFilter());
-				return false;
-			}
+        } else if (entityOrEvent instanceof IEvent) {
+            entity = ((IEvent) entityOrEvent).getEntity();
+        }
 
-			boolean sendNotify = true;
-			// Check if the counter associated to notification was not exhausted yet
-			if (notif.getCounterInstance() != null) {
-				try {
-					counterInstanceService.deduceCounterValue(notif.getCounterInstance(), new Date(),
-							notif.getAuditable().getCreated(), new BigDecimal(1));
+        log.debug("Fire Notification for notif with {} and entity with id={}", notif, entity.getId());
+        try {
+            if (!matchExpression(notif.getElFilter(), entityOrEvent)) {
+                log.debug("Expression {} does not match", notif.getElFilter());
+                return false;
+            }
 
-				} catch (CounterValueInsufficientException ex) {
-					sendNotify = false;
-				}
-			}
+            boolean sendNotify = true;
+            // Check if the counter associated to notification was not exhausted yet
+            if (notif.getCounterInstance() != null) {
+                try {
+                    counterInstanceService.deduceCounterValue(notif.getCounterInstance(), new Date(), notif.getAuditable().getCreated(), new BigDecimal(1));
 
-			if (!sendNotify) {
-				return false;
-			}
+                } catch (CounterValueInsufficientException ex) {
+                    sendNotify = false;
+                }
+            }
 
-			Map<String, Object> context = new HashMap<>();
-			// Rethink notif and script - maybe create pre and post script
-			if (!(notif instanceof WebHook) && notif.getScriptInstance() != null) {
-				executeScript(notif.getScriptInstance(), entityOrEvent, notif.getParams(), context);
-			}
+            if (!sendNotify) {
+                return false;
+            }
 
-			// Execute notification
+            Map<String, Object> context = new HashMap<>();
+            // Rethink notif and script - maybe create pre and post script
+            if (!(notif instanceof WebHook) && notif.getScriptInstance() != null) {
+                executeScript(notif.getScriptInstance(), entityOrEvent, notif.getParams(), context);
+            }
 
-			// ONLY ScriptNotifications will produce notification history in synchronous
-			// mode. Other type notifications will produce notification history in
-			// asynchronous mode and
-			// thus
-			// will not be related to inbound request.
-			if (notif instanceof ScriptNotification) {
-				NotificationHistory histo = notificationHistoryService.create(notif, entityOrEvent,
-						(String) context.get(Script.RESULT_VALUE), NotificationHistoryStatusEnum.SENT);
+            // Execute notification
 
-				if (notif.getEventTypeFilter() == NotificationEventTypeEnum.INBOUND_REQ && histo != null) {
-					histo.setInboundRequest((InboundRequest) entityOrEvent);
-					((InboundRequest) entityOrEvent).add(histo);
-				}
+            // ONLY ScriptNotifications will produce notification history in synchronous
+            // mode. Other type notifications will produce notification history in
+            // asynchronous mode and
+            // thus
+            // will not be related to inbound request.
+            if (notif instanceof ScriptNotification) {
+                NotificationHistory histo = notificationHistoryService.create(notif, entityOrEvent, (String) context.get(Script.RESULT_VALUE), NotificationHistoryStatusEnum.SENT);
 
-			} else if (notif instanceof EmailNotification) {
-				MeveoUser lastCurrentUser = currentUser.unProxy();
-				emailNotifier.sendEmail((EmailNotification) notif, entityOrEvent, context, lastCurrentUser);
+                if (notif.getEventTypeFilter() == NotificationEventTypeEnum.INBOUND_REQ && histo != null) {
+                    histo.setInboundRequest((InboundRequest) entityOrEvent);
+                    ((InboundRequest) entityOrEvent).add(histo);
+                }
 
-			} else if (notif instanceof WebHook) {
-				MeveoUser lastCurrentUser = currentUser.unProxy();
-				webHookNotifier.sendRequest((WebHook) notif, entityOrEvent, context, lastCurrentUser);
+            } else if (notif instanceof EmailNotification) {
+                MeveoUser lastCurrentUser = currentUser.unProxy();
+                emailNotifier.sendEmail((EmailNotification) notif, entityOrEvent, context, lastCurrentUser);
 
-			} else if (notif instanceof InstantMessagingNotification) {
-				MeveoUser lastCurrentUser = currentUser.unProxy();
-				imNotifier.sendInstantMessage((InstantMessagingNotification) notif, entityOrEvent, lastCurrentUser);
+            } else if (notif instanceof WebHook) {
+                MeveoUser lastCurrentUser = currentUser.unProxy();
+                webHookNotifier.sendRequest((WebHook) notif, entityOrEvent, context, lastCurrentUser);
 
-			} else if (notif instanceof JobTrigger) {
-				MeveoUser lastCurrentUser = currentUser.unProxy();
-				jobTriggerLauncher.launch((JobTrigger) notif, entityOrEvent, lastCurrentUser);
-			}
+            } else if (notif instanceof InstantMessagingNotification) {
+                MeveoUser lastCurrentUser = currentUser.unProxy();
+                imNotifier.sendInstantMessage((InstantMessagingNotification) notif, entityOrEvent, lastCurrentUser);
 
-		} catch (Exception e1) {
-			log.error("Error while firing notification {} ", notif.getCode(), e1);
-			try {
-				NotificationHistory notificationHistory = notificationHistoryService.create(notif, entityOrEvent,
-						e1.getMessage(), NotificationHistoryStatusEnum.FAILED);
-				if (entityOrEvent instanceof InboundRequest) {
-					((InboundRequest) entityOrEvent).add(notificationHistory);
-				}
+            } else if (notif instanceof JobTrigger) {
+                MeveoUser lastCurrentUser = currentUser.unProxy();
+                jobTriggerLauncher.launch((JobTrigger) notif, entityOrEvent, lastCurrentUser);
+            }
 
-			} catch (Exception e2) {
-				log.error("Failed to create notification history", e2);
-			}
+        } catch (Exception e1) {
+            log.error("Error while firing notification {} ", notif.getCode(), e1);
 
-			if (!(e1 instanceof BusinessException)) {
-				throw new BusinessException(e1);
+            if (!isReplay) {
+                try {
+                    NotificationHistory notificationHistory = notificationHistoryService.create(notif, entityOrEvent,
+                        e1.getMessage() != null ? e1.getMessage() : e1.getClass().getSimpleName(), NotificationHistoryStatusEnum.FAILED);
+                    if (entityOrEvent instanceof InboundRequest) {
+                        ((InboundRequest) entityOrEvent).add(notificationHistory);
+                    }
 
-			} else {
-				throw (BusinessException) e1;
-			}
-		}
+                } catch (Exception e2) {
+                    log.error("Failed to create notification history", e2);
+                }
+            }
+            if (!(e1 instanceof BusinessException)) {
+                throw new BusinessException(e1);
 
-		return true;
-	}
+            } else {
+                throw (BusinessException) e1;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Retry notification up to a specified number of times. Passed that time, notification is marked as failed
+     * 
+     * @param notificationHistoryId Notification history identifier
+     * @param nrRetry Number of times to retry
+     * @throws BusinessException General business exception
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void retryNotification(Long notificationHistoryId, Long nrRetry) throws BusinessException {
+
+        NotificationHistory history = notificationHistoryService.findById(notificationHistoryId);
+
+        if (history.getNbRetry() >= nrRetry) {
+            history.setStatus(NotificationHistoryStatusEnum.FAILED);
+            notificationHistoryService.updateNoCheck(history);
+            return;
+        }
+
+        Object entityOrEvent = null;
+        if (history.getInboundRequest() != null) {
+            entityOrEvent = history.getInboundRequest();
+
+        } else if (history.getEntityClassName() != null) {
+
+            try {
+                Class clazz = Class.forName(history.getEntityClassName());
+                Long id = Long.parseLong(history.getSerializedEntity());
+                entityOrEvent = notificationHistoryService.getEntityManager().find(clazz, id);
+
+            } catch (ClassNotFoundException | NumberFormatException e) {
+                history.setStatus(NotificationHistoryStatusEnum.FAILED);
+                history.setResult("Can not identify the entity in notification");
+                notificationHistoryService.updateNoCheck(history);
+                return;
+            }
+        }
+
+        if (entityOrEvent == null) {
+            history.setStatus(NotificationHistoryStatusEnum.FAILED);
+            history.setResult("Can not identify the entity in notification");
+
+        } else {
+            try {
+
+                boolean passed = fireNotification(history.getNotification(), entityOrEvent, true);
+                if (passed) {
+                    history.setStatus(NotificationHistoryStatusEnum.SENT);
+                } else {
+                    history.setNbRetry(history.getNbRetry() + 1);
+                    history.setResult("Notification not matched EL or exceeds the counter");
+                }
+            } catch (BusinessException e) {
+                history.setNbRetry(history.getNbRetry() + 1);
+                history.setResult(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+            }
+        }
+
+        if (history.getStatus() == NotificationHistoryStatusEnum.TO_RETRY && history.getNbRetry() >= nrRetry) {
+            history.setStatus(NotificationHistoryStatusEnum.FAILED);
+        }
+
+        notificationHistoryService.updateNoCheck(history);
+    }
 }

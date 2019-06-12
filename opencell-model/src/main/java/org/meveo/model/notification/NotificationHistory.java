@@ -31,7 +31,8 @@ import org.meveo.model.AuditableEntity;
         @NamedQuery(name = "NotificationHistory.purgeHistoryByDate", query = "delete NotificationHistory hist WHERE hist.auditable.created<=:date"),
         @NamedQuery(name = "NotificationHistory.countHistoryToPurgeByDateAndNotification", query = "select count(*) FROM NotificationHistory hist WHERE hist.auditable.created<=:date and hist.notification=:notification"),
         @NamedQuery(name = "NotificationHistory.purgeHistoryByDateAndNotification", query = "delete NotificationHistory hist WHERE hist.auditable.created<=:date and hist.notification=:notification"),
-        @NamedQuery(name = "NotificationHistory.deleteHistoryByNotification", query = "delete NotificationHistory hist WHERE hist.notification=:notification") })
+        @NamedQuery(name = "NotificationHistory.deleteHistoryByNotification", query = "delete NotificationHistory hist WHERE hist.notification=:notification"),
+        @NamedQuery(name = "NotificationHistory.listToRetry", query = "select hist.id FROM NotificationHistory hist WHERE hist.status=org.meveo.model.notification.NotificationHistoryStatusEnum.TO_RETRY order by hist.nbRetry") })
 public class NotificationHistory extends AuditableEntity {
 
     private static final long serialVersionUID = -6882236977852466160L;
