@@ -9,13 +9,11 @@ import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
 import org.meveo.api.dto.response.PagingAndFiltering;
 import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
-import org.meveo.api.dto.response.crm.ContactsResponseDto;
 import org.meveo.api.dto.response.knowledgeCenter.CollectionsResponseDto;
 import org.meveo.api.dto.response.knowledgeCenter.GetCollectionResponseDto;
 import org.meveo.api.knowledgeCenter.CollectionApi;
 import org.meveo.api.rest.impl.BaseRs;
 import org.meveo.api.rest.knowledgeCenter.CollectionRs;
-import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
 import org.meveo.model.knowledgeCenter.Collection;
 
 public class CollectionRsImpl extends BaseRs implements CollectionRs{

@@ -25,7 +25,7 @@ import org.meveo.model.ExportIdentifier;
 @DiscriminatorValue(value = "ACCT_CTACT")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "kc_comment_seq"), })
-public class Comment  extends BusinessEntity {
+public class Comment extends BusinessEntity {
 
 	/**
 	 * 

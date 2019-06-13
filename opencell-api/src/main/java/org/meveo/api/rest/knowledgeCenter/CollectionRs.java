@@ -15,11 +15,9 @@ import javax.ws.rs.core.MediaType;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
 import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
-import org.meveo.api.dto.response.crm.ContactsResponseDto;
 import org.meveo.api.dto.response.knowledgeCenter.CollectionsResponseDto;
 import org.meveo.api.dto.response.knowledgeCenter.GetCollectionResponseDto;
 import org.meveo.api.rest.IBaseRs;
-import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
 
 @Path("/knowledgecenter/collection")
 @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -46,7 +44,7 @@ public interface CollectionRs extends IBaseRs{
     ActionStatus remove(@PathParam("code") String code);
     
     /**
-     * List contacts matching a given criteria
+     * List collections matching a given criteria
      *
      * @param query Search criteria
      * @param fields Data retrieval options/fieldnames separated by a comma
