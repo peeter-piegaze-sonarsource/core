@@ -6,7 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.knowledgeCenter.PostDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
 import org.meveo.api.dto.response.knowledgeCenter.GetPostResponseDto;
+import org.meveo.api.dto.response.knowledgeCenter.PostsResponseDto;
 import org.meveo.api.knowledgeCenter.CollectionApi;
 import org.meveo.api.knowledgeCenter.PostApi;
 import org.meveo.api.rest.impl.BaseRs;
@@ -82,5 +85,17 @@ public class PostRsImpl extends BaseRs implements PostRs {
 			processException(e, result);
 		}
 		return result;
+	}
+
+	@Override
+	public PostsResponseDto listGet(String query, String fields, Integer offset, Integer limit, String sortBy,
+			SortOrder sortOrder ) {
+			try {
+				return postApi.list(null, new PagingAndFiltering(query, fields, offset, limit, sortBy, sortOrder));
+			} catch (Exception e) {
+				PostsResponseDto result = new PostsResponseDto();
+				processException(e, result.getActionStatus());
+				return result;
+			}
 	}
 }

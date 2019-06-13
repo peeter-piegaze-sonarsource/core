@@ -13,8 +13,8 @@ import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.knowledgeCenter.Comment;
 import org.meveo.model.knowledgeCenter.Post;
-import org.meveo.service.knowledgecenter.CommentService;
-import org.meveo.service.knowledgecenter.PostService;
+import org.meveo.service.knowledgeCenter.CommentService;
+import org.meveo.service.knowledgeCenter.PostService;
 
 @Stateless
 @Interceptors(SecuredBusinessEntityMethodInterceptor.class)

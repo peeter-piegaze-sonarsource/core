@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CollectionsDto implements Serializable {
-
 	/**
 	 * 
 	 */
@@ -28,6 +26,11 @@ public class CollectionsDto implements Serializable {
 		return collection;
 	}
 
+
+	public void setCollection(List<CollectionDto> collection) {
+		this.collection = collection;
+	}
+	
 	public Long getTotalNumberOfRecords() {
 		return totalNumberOfRecords;
 	}
@@ -35,11 +38,6 @@ public class CollectionsDto implements Serializable {
 	public void setTotalNumberOfRecords(Long totalNumberOfRecords) {
 		this.totalNumberOfRecords = totalNumberOfRecords;
 	}
-
-	public void setCollection(List<CollectionDto> collection) {
-		this.collection = collection;
-	}
-	
 
 	public String toString() {
 		return "CollectionsDto [collection=" + collection + "]";
