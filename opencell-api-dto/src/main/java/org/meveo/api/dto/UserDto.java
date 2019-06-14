@@ -130,8 +130,8 @@ public class UserDto extends AuditableEntityDto {
         lastLoginDate = user.getLastLoginDate();
 
         if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            roles = new ArrayList<String>();
-            permissions = new ArrayList<String>();
+            roles = new ArrayList<>();
+            permissions = new ArrayList<>();
             for (Role r : user.getRoles()) {
                 roles.add(r.getName());
                 for (Permission permission : r.getPermissions()) {

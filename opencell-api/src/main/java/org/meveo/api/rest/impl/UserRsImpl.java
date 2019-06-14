@@ -53,7 +53,7 @@ public class UserRsImpl extends BaseRs implements UserRs {
     }
 
     @Override
-    public ActionStatus remove(@PathParam("username") String username) {
+    public ActionStatus remove(String username) {
         ActionStatus result = new ActionStatus();
 
         try {

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @lastModifiedVersion 5.0
  */
 @ApplicationException(rollback = true)
-public class BusinessException extends Exception {
+public class BusinessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     private static final boolean sendException;
