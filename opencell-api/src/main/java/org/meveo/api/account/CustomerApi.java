@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -827,5 +828,10 @@ public class CustomerApi extends AccountEntityApi {
 
         return result;
     }
-
+    
+    public CustomerBrandDto findCustomerBrand(String brandCode) {
+       return Optional.ofNullable(customerBrandService.findByCode(brandCode))
+                .map(CustomerBrandDto::new)
+        .orElseThrow(() -> new EntityDoesNotExistsException(CustomerBrand.class, brandCode));
+    }
 }

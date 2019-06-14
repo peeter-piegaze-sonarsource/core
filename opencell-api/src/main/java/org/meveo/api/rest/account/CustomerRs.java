@@ -196,7 +196,13 @@ public interface CustomerRs extends IBaseRs {
     @POST
     @Path("/createOrUpdateCategory")
     ActionStatus createOrUpdateCategory(CustomerCategoryDto postData);
-
+    
+    
+    @GET
+    @Path("/findBrand/{brandCode}")
+    CustomerBrandDto findBrand(@PathParam("brandCode") String brandCode);
+    
+    
     /**
      * Remove existing customer brand with a given brand code
      *

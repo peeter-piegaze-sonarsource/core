@@ -183,6 +183,11 @@ public class CustomerRsImpl extends BaseRs implements CustomerRs {
         return result;
     }
     
+    @Override
+    public CustomerBrandDto findBrand(String brandCode) {
+        return customerApi.findCustomerBrand(brandCode);
+    }
+    
     /**
      * Find customer category by customer category code
      * 
