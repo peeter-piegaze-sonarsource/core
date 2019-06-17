@@ -1,11 +1,5 @@
 package org.meveo.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.dto.CurrencyIsoDto;
 import org.meveo.api.exception.EntityAlreadyExistsException;
@@ -14,6 +8,11 @@ import org.meveo.api.exception.MeveoApiException;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.admin.Currency;
 import org.meveo.service.admin.impl.CurrencyService;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,17 +67,13 @@ public class CurrencyIsoApi extends BaseApi {
             missingParameters.add("currencyCode");
             handleMissingParameters();
         }
-
-        CurrencyIsoDto result = new CurrencyIsoDto();
-
+        
         Currency currency = currencyService.findByCode(currencyCode);
         if (currency == null) {
             throw new EntityDoesNotExistsException(Currency.class, currencyCode);
         }
 
-        result = new CurrencyIsoDto(currency);
-
-        return result;
+        return new CurrencyIsoDto(currency);
     }
 
     public void remove(String currencyCode) throws MeveoApiException, BusinessException {

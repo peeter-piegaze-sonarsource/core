@@ -1,5 +1,10 @@
 package org.meveo.api.rest;
 
+import org.meveo.api.dto.ActionStatus;
+import org.meveo.api.dto.CurrencyIsoDto;
+import org.meveo.api.dto.response.GetCurrenciesIsoResponse;
+import org.meveo.api.dto.response.GetCurrencyIsoResponse;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -8,13 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import org.meveo.api.dto.ActionStatus;
-import org.meveo.api.dto.CurrencyIsoDto;
-import org.meveo.api.dto.response.GetCurrenciesIsoResponse;
-import org.meveo.api.dto.response.GetCurrencyIsoResponse;
 
 /**
  * Web service for managing Currency.
@@ -43,7 +42,7 @@ public interface CurrencyIsoRs extends IBaseRs {
      * @return currency iso if found.
      */
     @GET
-    @Path("/") GetCurrencyIsoResponse find(@QueryParam("currencyCode") String currencyCode);
+    @Path("/{currencyCode}") GetCurrencyIsoResponse find(@PathParam("currencyCode") String currencyCode);
 
     /**
      * Remove currency with a given currency code.
