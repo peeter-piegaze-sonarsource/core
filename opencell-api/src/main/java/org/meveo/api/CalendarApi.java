@@ -1,13 +1,7 @@
 package org.meveo.api;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.dto.BankingDateStatusDto;
 import org.meveo.api.dto.CalendarDateIntervalDto;
 import org.meveo.api.dto.CalendarDto;
@@ -15,6 +9,8 @@ import org.meveo.api.dto.CalendarHolidayDto;
 import org.meveo.api.dto.CalendarTypeEnum;
 import org.meveo.api.dto.DayInYearDto;
 import org.meveo.api.dto.HourInDayDto;
+import org.meveo.api.dto.response.ListCalendarResponse;
+import org.meveo.api.dto.response.PagingAndFiltering;
 import org.meveo.api.exception.BusinessApiException;
 import org.meveo.api.exception.EntityAlreadyExistsException;
 import org.meveo.api.exception.EntityDoesNotExistsException;
@@ -37,6 +33,14 @@ import org.meveo.service.catalog.impl.CalendarBankingService;
 import org.meveo.service.catalog.impl.CalendarService;
 import org.meveo.service.catalog.impl.DayInYearService;
 import org.meveo.service.catalog.impl.HourInDayService;
+import org.primefaces.model.SortOrder;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Edward P. Legaspi
@@ -44,64 +48,65 @@ import org.meveo.service.catalog.impl.HourInDayService;
  **/
 @Stateless
 public class CalendarApi extends BaseApi {
-
+    private static final String DEFAULT_SORT_ORDER_ID = "id";
+    
     @Inject
     private CalendarService calendarService;
     
     @Inject
     private CalendarBankingService calendarBankingService;
-
+    
     @Inject
     private DayInYearService dayInYearService;
-
+    
     @Inject
     private HourInDayService hourInDayService;
     
     /** The INVALID_WEEKEND_PERIOD message. */
     private static final String INVALID_WEEKEND_PERIOD = "Invalid weekend period! Possible values are from 1 to 7";
-
+    
     private static final String INVALID_HOLIDAY_PERIOD = "Invalid holiday period! Possible values are from 101 to 1231";
-
+    
     public void create(CalendarDto postData) throws MeveoApiException, BusinessException {
-
+        
         if (StringUtils.isBlank(postData.getCode())) {
             missingParameters.add("code");
         }
         if (StringUtils.isBlank(postData.getCalendarType())) {
             missingParameters.add("calendarType");
         }
-
+        
         handleMissingParametersAndValidate(postData);
-
+        
         if (calendarService.findByCode(postData.getCode()) != null) {
             throw new EntityAlreadyExistsException(Calendar.class, postData.getCode());
         }
-
+        
         if (postData.getCalendarType() == CalendarTypeEnum.YEARLY) {
-
+            
             CalendarYearly calendar = new CalendarYearly();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
             if (postData.getDays() != null && postData.getDays().size() > 0) {
                 List<DayInYear> days = new ArrayList<DayInYear>();
                 for (DayInYearDto d : postData.getDays()) {
-                    DayInYear dayInYear = dayInYearService.findByMonthAndDay(d.getMonth(), d.getDay());                   
+                    DayInYear dayInYear = dayInYearService.findByMonthAndDay(d.getMonth(), d.getDay());
                     if (dayInYear != null) {
                         days.add(dayInYear);
                     }
                 }
-
+                
                 calendar.setDays(days);
             }
-
+            
             calendarService.create(calendar);
-
+            
         } else if (postData.getCalendarType() == CalendarTypeEnum.DAILY) {
-
+            
             CalendarDaily calendar = new CalendarDaily();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
-
+            
             if (postData.getHours() != null && postData.getHours().size() > 0) {
                 List<HourInDay> hours = new ArrayList<HourInDay>();
                 for (HourInDayDto d : postData.getHours()) {
@@ -111,127 +116,126 @@ public class CalendarApi extends BaseApi {
                     }
                     hours.add(hourInDay);
                 }
-
+                
                 calendar.setHours(hours);
             }
-
+            
             calendarService.create(calendar);
-
+            
         } else if (postData.getCalendarType() == CalendarTypeEnum.PERIOD) {
-
+            
             if (StringUtils.isBlank(postData.getPeriodUnit())) {
                 missingParameters.add("periodUnit");
                 handleMissingParameters();
             }
-
+            
             CalendarPeriod calendar = new CalendarPeriod();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
             calendar.setPeriodLength(postData.getPeriodLength());
             calendar.setNbPeriods(postData.getNbPeriods());
             calendar.setPeriodUnit(postData.getPeriodUnit().getUnitValue());
-
+            
             calendarService.create(calendar);
-
+            
         } else if (postData.getCalendarType() == CalendarTypeEnum.INTERVAL) {
-
+            
             CalendarInterval calendar = new CalendarInterval();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
             calendar.setIntervalType(postData.getIntervalType());
-
+            
             if (postData.getIntervals() != null && postData.getIntervals().size() > 0) {
                 List<CalendarDateInterval> intervals = new ArrayList<CalendarDateInterval>();
                 for (CalendarDateIntervalDto interval : postData.getIntervals()) {
                     intervals.add(new CalendarDateInterval(calendar, interval.getIntervalBegin(), interval.getIntervalEnd()));
                 }
-
+                
                 calendar.setIntervals(intervals);
             }
-
+            
             calendarService.create(calendar);
-
+            
         } else if (postData.getCalendarType().isJoin()) {
-
+            
             if (StringUtils.isBlank(postData.getJoinCalendar1Code())) {
                 missingParameters.add("joinCalendar1Code");
             }
             if (StringUtils.isBlank(postData.getJoinCalendar2Code())) {
                 missingParameters.add("joinCalendar2Code");
             }
-
+            
             handleMissingParameters();
-
+            
             Calendar cal1 = calendarService.findByCode(postData.getJoinCalendar1Code());
             Calendar cal2 = calendarService.findByCode(postData.getJoinCalendar2Code());
-
+            
             if (cal1 == null) {
                 throw new InvalidParameterException("joinCalendar1Code", postData.getJoinCalendar1Code());
             }
             if (cal2 == null) {
                 throw new InvalidParameterException("joinCalendar2Code", postData.getJoinCalendar2Code());
             }
-
+            
             CalendarJoin calendar = new CalendarJoin();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
             calendar.setJoinType(CalendarJoinTypeEnum.valueOf(postData.getCalendarType().name())); // Join type is expressed as Calendar type in DTO
             calendar.setJoinCalendar1(cal1);
             calendar.setJoinCalendar2(cal2);
-
+            
             calendarService.create(calendar);
-        } else if (postData.getCalendarType() == CalendarTypeEnum.BANKING) { 
-
+        } else if (postData.getCalendarType() == CalendarTypeEnum.BANKING) {
+            
             CalendarBanking calendar = new CalendarBanking();
             calendar.setCode(postData.getCode());
             calendar.setDescription(postData.getDescription());
             calendar.setStartDate(postData.getStartDate());
             calendar.setEndDate(postData.getEndDate());
-            if(!isWeekendPeriodValid(postData.getWeekendBegin()) || !isWeekendPeriodValid(postData.getWeekendEnd())) {
+            if (!isWeekendPeriodValid(postData.getWeekendBegin()) || !isWeekendPeriodValid(postData.getWeekendEnd())) {
                 throw new BusinessApiException(INVALID_WEEKEND_PERIOD);
             }
             calendar.setWeekendBegin(postData.getWeekendBegin());
             calendar.setWeekendEnd(postData.getWeekendEnd());
-
+            
             if (postData.getHolidays() != null && postData.getHolidays().size() > 0) {
                 List<CalendarHoliday> holidays = new ArrayList<CalendarHoliday>();
                 for (CalendarHolidayDto holiday : postData.getHolidays()) {
-                    if(!isHolidayPeriodValid(holiday.getHolidayBegin()) || !isHolidayPeriodValid(holiday.getHolidayEnd())) {
+                    if (!isHolidayPeriodValid(holiday.getHolidayBegin()) || !isHolidayPeriodValid(holiday.getHolidayEnd())) {
                         throw new BusinessApiException(INVALID_HOLIDAY_PERIOD);
                     }
                     holidays.add(new CalendarHoliday(calendar, holiday.getHolidayBegin(), holiday.getHolidayEnd()));
                 }
-
+                
                 calendar.setHolidays(holidays);
             }
-
+            
             calendarService.create(calendar);
-
-        
+            
         } else {
             throw new BusinessApiException("invalid calendar type, possible values YEARLY, DAILY, PERIOD, INTERVAL, JOIN, BANKING");
         }
-
+        
     }
-
+    
     public void update(CalendarDto postData) throws MeveoApiException, BusinessException {
-
+        
         if (StringUtils.isBlank(postData.getCode())) {
             missingParameters.add("code");
         }
         if (StringUtils.isBlank(postData.getCalendarType())) {
             missingParameters.add("calendarType");
         }
-
+        
         handleMissingParametersAndValidate(postData);
-
+        
         Calendar calendar = calendarService.findByCode(postData.getCode());
         if (calendar == null) {
             throw new EntityDoesNotExistsException(Calendar.class, postData.getCode());
         }
         calendar.setCode(StringUtils.isBlank(postData.getUpdatedCode()) ? postData.getCode() : postData.getUpdatedCode());
         calendar.setDescription(postData.getDescription());
-
+        
         if (calendar instanceof CalendarYearly) {
             if (postData.getDays() != null && postData.getDays().size() > 0) {
                 List<DayInYear> days = new ArrayList<DayInYear>();
@@ -241,10 +245,10 @@ public class CalendarApi extends BaseApi {
                         days.add(dayInYear);
                     }
                 }
-
+                
                 ((CalendarYearly) calendar).setDays(days);
             }
-
+            
         } else if (calendar instanceof CalendarDaily) {
             if (postData.getHours() != null && postData.getHours().size() > 0) {
                 List<HourInDay> hours = new ArrayList<HourInDay>();
@@ -255,52 +259,52 @@ public class CalendarApi extends BaseApi {
                     }
                     hours.add(hourInDay);
                 }
-
+                
                 ((CalendarDaily) calendar).setHours(hours);
             }
-
+            
         } else if (calendar instanceof CalendarPeriod) {
-
+            
             ((CalendarPeriod) calendar).setPeriodLength(postData.getPeriodLength());
             ((CalendarPeriod) calendar).setNbPeriods(postData.getNbPeriods());
             if (!StringUtils.isBlank(postData.getPeriodUnit())) {
                 ((CalendarPeriod) calendar).setPeriodUnit(postData.getPeriodUnit().getUnitValue());
             }
-
+            
         } else if (calendar instanceof CalendarInterval) {
-
+            
             CalendarInterval calendarInterval = (CalendarInterval) calendar;
             calendarInterval.setIntervalType(postData.getIntervalType());
-
+            
             calendarInterval.getIntervals().clear();
-
+            
             if (postData.getIntervals() != null && postData.getIntervals().size() > 0) {
                 for (CalendarDateIntervalDto interval : postData.getIntervals()) {
                     calendarInterval.getIntervals().add(new CalendarDateInterval(calendarInterval, interval.getIntervalBegin(), interval.getIntervalEnd()));
                 }
             }
-
+            
         } else if (calendar instanceof CalendarJoin) {
-
+            
             if (StringUtils.isBlank(postData.getJoinCalendar1Code())) {
                 missingParameters.add("joinCalendar1Code");
             }
             if (StringUtils.isBlank(postData.getJoinCalendar2Code())) {
                 missingParameters.add("joinCalendar2Code");
             }
-
+            
             handleMissingParameters();
-
+            
             Calendar cal1 = calendarService.findByCode(postData.getJoinCalendar1Code());
             Calendar cal2 = calendarService.findByCode(postData.getJoinCalendar2Code());
-
+            
             if (cal1 == null) {
                 throw new InvalidParameterException("joinCalendar1Code", postData.getJoinCalendar1Code());
             }
             if (cal2 == null) {
                 throw new InvalidParameterException("joinCalendar2Code", postData.getJoinCalendar2Code());
             }
-
+            
             CalendarJoin calendarJoin = (CalendarJoin) calendar;
             calendarJoin.setJoinType(CalendarJoinTypeEnum.valueOf(postData.getCalendarType().name()));// Join type is expressed as Calendar type in DTO
             calendarJoin.setJoinCalendar1(cal1);
@@ -310,44 +314,44 @@ public class CalendarApi extends BaseApi {
             CalendarBanking calendarBanking = (CalendarBanking) calendar;
             calendarBanking.setStartDate(postData.getStartDate());
             calendarBanking.setEndDate(postData.getEndDate());
-            if(!isWeekendPeriodValid(postData.getWeekendBegin()) || !isWeekendPeriodValid(postData.getWeekendEnd())) {
+            if (!isWeekendPeriodValid(postData.getWeekendBegin()) || !isWeekendPeriodValid(postData.getWeekendEnd())) {
                 throw new BusinessApiException(INVALID_WEEKEND_PERIOD);
             }
             calendarBanking.setWeekendBegin(postData.getWeekendBegin());
             calendarBanking.setWeekendEnd(postData.getWeekendEnd());
             calendarBanking.getHolidays().clear();
-
+            
             if (postData.getHolidays() != null && postData.getHolidays().size() > 0) {
                 for (CalendarHolidayDto holiday : postData.getHolidays()) {
-                    if(!isHolidayPeriodValid(holiday.getHolidayBegin()) || !isHolidayPeriodValid(holiday.getHolidayEnd())) {
+                    if (!isHolidayPeriodValid(holiday.getHolidayBegin()) || !isHolidayPeriodValid(holiday.getHolidayEnd())) {
                         throw new BusinessApiException(INVALID_HOLIDAY_PERIOD);
                     }
                     calendarBanking.getHolidays().add(new CalendarHoliday(calendarBanking, holiday.getHolidayBegin(), holiday.getHolidayEnd()));
                 }
             }
         }
-
+        
         calendarService.update(calendar);
     }
-
+    
     public CalendarDto find(String calendarCode) throws MeveoApiException {
         CalendarDto result = new CalendarDto();
-
+        
         if (!StringUtils.isBlank(calendarCode)) {
             Calendar calendar = calendarService.findByCode(calendarCode);
             if (calendar == null) {
                 throw new EntityDoesNotExistsException(Calendar.class, calendarCode);
             }
-
+            
             result = new CalendarDto(calendar);
         } else {
             if (StringUtils.isBlank(calendarCode)) {
                 missingParameters.add("calendarCode");
             }
-
+            
             handleMissingParameters();
         }
-
+        
         return result;
     }
     
@@ -366,10 +370,10 @@ public class CalendarApi extends BaseApi {
             missingParameters.add("date");
             handleMissingParameters();
         }
-
-        return new BankingDateStatusDto(date,isWorkingDate);
+        
+        return new BankingDateStatusDto(date, isWorkingDate);
     }
-
+    
     public List<CalendarDto> list() throws MeveoApiException {
         List<CalendarDto> result = new ArrayList<CalendarDto>();
         for (Calendar calendar : calendarService.list()) {
@@ -377,24 +381,24 @@ public class CalendarApi extends BaseApi {
         }
         return result;
     }
-
+    
     public void remove(String calendarCode) throws MeveoApiException, BusinessException {
         if (!StringUtils.isBlank(calendarCode)) {
             Calendar calendar = calendarService.findByCode(calendarCode);
             if (calendar == null) {
                 throw new EntityDoesNotExistsException(Calendar.class, calendarCode);
             }
-
+            
             calendarService.remove(calendar);
         } else {
             if (StringUtils.isBlank(calendarCode)) {
                 missingParameters.add("calendarCode");
             }
-
+            
             handleMissingParameters();
         }
     }
-
+    
     public void createOrUpdate(CalendarDto postData) throws MeveoApiException, BusinessException {
         Calendar calendar = calendarService.findByCode(postData.getCode());
         if (calendar == null) {
@@ -416,7 +420,6 @@ public class CalendarApi extends BaseApi {
         return holidayMonthDay != null && holidayMonthDay >= 101 && holidayMonthDay <= 1231;
     }
     
-    
     /**
      * Checks if is weekend period valid.
      *
@@ -424,7 +427,31 @@ public class CalendarApi extends BaseApi {
      * @return true, if the weekend day is between 1 and 7.
      */
     private boolean isWeekendPeriodValid(Integer weekendDay) {
-        return weekendDay != null && weekendDay >=1 && weekendDay <= 7;
+        return weekendDay != null && weekendDay >= 1 && weekendDay <= 7;
     }
-
+    
+    public ListCalendarResponse list(PagingAndFiltering pagingAndFiltering) {
+        pagingAndFiltering = initIfNull(pagingAndFiltering);
+        
+        String sortBy = getDefaultSortBy(pagingAndFiltering, DEFAULT_SORT_ORDER_ID);
+        
+        PaginationConfiguration paginationConfiguration = toPaginationConfiguration(sortBy, SortOrder.ASCENDING, null, pagingAndFiltering, Calendar.class);
+        
+        Long totalCount = calendarService.count(paginationConfiguration);
+        ListCalendarResponse response = getListCalendarResponse(pagingAndFiltering, totalCount);
+        
+        if (totalCount > 0) {
+            response.setCalendars(calendarService.list(paginationConfiguration).stream().map(CalendarDto::new).collect(Collectors.toList()));
+        }
+        
+        return response;
+    }
+    
+    private ListCalendarResponse getListCalendarResponse(PagingAndFiltering pagingAndFiltering, Long totalCount) {
+        ListCalendarResponse response = new ListCalendarResponse();
+        pagingAndFiltering.setTotalNumberOfRecords(totalCount.intValue());
+        response.setPaging(pagingAndFiltering);
+        return response;
+    }
+    
 }

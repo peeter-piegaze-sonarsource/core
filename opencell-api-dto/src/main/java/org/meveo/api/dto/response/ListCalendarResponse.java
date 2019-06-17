@@ -1,10 +1,12 @@
 package org.meveo.api.dto.response;
 
+import org.meveo.api.dto.CalendarDto;
+import org.meveo.api.dto.CalendarsDto;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.meveo.api.dto.CalendarsDto;
+import java.util.List;
 
 /**
  * The Class ListCalendarResponse.
@@ -13,7 +15,7 @@ import org.meveo.api.dto.CalendarsDto;
  */
 @XmlRootElement(name = "ListCalendarResponse")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ListCalendarResponse extends BaseResponse {
+public class ListCalendarResponse extends SearchResponse {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -8366882097461743155L;
@@ -42,5 +44,9 @@ public class ListCalendarResponse extends BaseResponse {
     @Override
     public String toString() {
         return "ListCalendarsResponse [calendars=" + calendars + ", toString()=" + super.toString() + "]";
+    }
+    
+    public void setCalendars(List<CalendarDto> calendars) {
+        this.calendars.setCalendar(calendars);
     }
 }

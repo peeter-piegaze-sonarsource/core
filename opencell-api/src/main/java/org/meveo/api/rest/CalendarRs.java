@@ -1,6 +1,12 @@
 package org.meveo.api.rest;
 
-import java.util.Date;
+import org.meveo.api.dto.ActionStatus;
+import org.meveo.api.dto.CalendarDto;
+import org.meveo.api.dto.response.BankingDateStatusResponse;
+import org.meveo.api.dto.response.GetCalendarResponse;
+import org.meveo.api.dto.response.ListCalendarResponse;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.serialize.RestDateParam;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -12,13 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import org.meveo.api.dto.ActionStatus;
-import org.meveo.api.dto.CalendarDto;
-import org.meveo.api.dto.response.BankingDateStatusResponse;
-import org.meveo.api.dto.response.GetCalendarResponse;
-import org.meveo.api.dto.response.ListCalendarResponse;
-import org.meveo.api.serialize.RestDateParam;
+import java.util.Date;
 
 /**
  * @author Edward P. Legaspi
@@ -76,6 +76,11 @@ public interface CalendarRs extends IBaseRs {
      */
     @Path("/list")
     @GET ListCalendarResponse list();
+    
+ 
+    @Path("/list")
+    @POST
+    ListCalendarResponse list(PagingAndFiltering pagingAndFiltering);
 
     /**
      * Remove calendar with a given code.

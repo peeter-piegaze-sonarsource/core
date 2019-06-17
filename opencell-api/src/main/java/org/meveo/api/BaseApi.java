@@ -1456,5 +1456,20 @@ public abstract class BaseApi {
         List<AuditableFieldDto> auditableFieldsDto = auditableFieldsToDto(auditableFields);
         dto.setAuditableFields(auditableFieldsDto);
     }
+    
+    
+    protected String getDefaultSortBy(PagingAndFiltering pagingAndFiltering, String defaultSortBy) {
+        if (!StringUtils.isBlank(pagingAndFiltering.getSortBy())) {
+            return pagingAndFiltering.getSortBy();
+        }
+        return defaultSortBy;
+    }
+    
+    protected PagingAndFiltering initIfNull(PagingAndFiltering pagingAndFiltering) {
+        if (pagingAndFiltering == null) {
+            pagingAndFiltering = new PagingAndFiltering();
+        }
+        return pagingAndFiltering;
+    }
 
 }

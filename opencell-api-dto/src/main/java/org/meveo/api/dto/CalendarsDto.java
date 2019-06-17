@@ -1,12 +1,11 @@
 package org.meveo.api.dto;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,7 +21,7 @@ public class CalendarsDto implements Serializable {
     private static final long serialVersionUID = -6354285812403951307L;
 
     /** The calendar. */
-    private List<CalendarDto> calendar;
+    private List<CalendarDto> calendar = new ArrayList<>();
 
     /**
      * Gets the calendar.
@@ -31,7 +30,7 @@ public class CalendarsDto implements Serializable {
      */
     public List<CalendarDto> getCalendar() {
         if (calendar == null)
-            calendar = new ArrayList<CalendarDto>();
+            calendar = new ArrayList<>();
         return calendar;
     }
 
