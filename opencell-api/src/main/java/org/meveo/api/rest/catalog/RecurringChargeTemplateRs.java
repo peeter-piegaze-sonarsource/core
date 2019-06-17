@@ -1,5 +1,12 @@
 package org.meveo.api.rest.catalog;
 
+import org.meveo.api.dto.ActionStatus;
+import org.meveo.api.dto.catalog.RecurringChargeTemplateDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.catalog.GetReccuringChargeTemplateListResponseDto;
+import org.meveo.api.dto.response.catalog.GetRecurringChargeTemplateResponseDto;
+import org.meveo.api.rest.IBaseRs;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -8,13 +15,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import org.meveo.api.dto.ActionStatus;
-import org.meveo.api.dto.catalog.RecurringChargeTemplateDto;
-import org.meveo.api.dto.response.catalog.GetRecurringChargeTemplateResponseDto;
-import org.meveo.api.rest.IBaseRs;
 
 /**
  * Web service for managing {@link org.meveo.model.catalog.RecurringChargeTemplate}.
@@ -35,17 +36,22 @@ public interface RecurringChargeTemplateRs extends IBaseRs {
      */
     @POST
     @Path("/")
-    public ActionStatus create(RecurringChargeTemplateDto postData);
+     ActionStatus create(RecurringChargeTemplateDto postData);
 
+
+    @POST
+    @Path("/")
+    GetReccuringChargeTemplateListResponseDto list(PagingAndFiltering pagingAndFiltering);
+    
     /**
      * Find a recurring charge template with a given code.
-     * 
+     *
      * @param recurringChargeTemplateCode The recurring charge template's code
      * @return Return a recurringChargeTemplate
      */
-    @GET
-    @Path("/")
-    public GetRecurringChargeTemplateResponseDto find(@QueryParam("recurringChargeTemplateCode") String recurringChargeTemplateCode);
+  @GET
+    @Path("/{recurringChargeTemplateCode}")
+     GetRecurringChargeTemplateResponseDto find(@PathParam("recurringChargeTemplateCode") String recurringChargeTemplateCode);
 
     /**
      * Update an existing recurring charge template.
@@ -55,7 +61,7 @@ public interface RecurringChargeTemplateRs extends IBaseRs {
      */
     @PUT
     @Path("/")
-    public ActionStatus update(RecurringChargeTemplateDto postData);
+     ActionStatus update(RecurringChargeTemplateDto postData);
 
     /**
      * Remove an existing recurring charge template with a given code.
@@ -65,7 +71,7 @@ public interface RecurringChargeTemplateRs extends IBaseRs {
      */
     @DELETE
     @Path("/{recurringChargeTemplateCode}")
-    public ActionStatus remove(@PathParam("recurringChargeTemplateCode") String recurringChargeTemplateCode);
+     ActionStatus remove(@PathParam("recurringChargeTemplateCode") String recurringChargeTemplateCode);
 
     /**
      * Create new or update an existing recurring charge template
@@ -75,7 +81,7 @@ public interface RecurringChargeTemplateRs extends IBaseRs {
      */
     @POST
     @Path("/createOrUpdate")
-    public ActionStatus createOrUpdate(RecurringChargeTemplateDto postData);
+     ActionStatus createOrUpdate(RecurringChargeTemplateDto postData);
 
     /**
      * Enable a Recurring charge template with a given code

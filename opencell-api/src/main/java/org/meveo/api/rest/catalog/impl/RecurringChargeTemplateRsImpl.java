@@ -1,17 +1,19 @@
 package org.meveo.api.rest.catalog.impl;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-
 import org.meveo.api.catalog.RecurringChargeTemplateApi;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.catalog.RecurringChargeTemplateDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.catalog.GetReccuringChargeTemplateListResponseDto;
 import org.meveo.api.dto.response.catalog.GetRecurringChargeTemplateResponseDto;
 import org.meveo.api.logging.WsRestApiInterceptor;
 import org.meveo.api.rest.catalog.RecurringChargeTemplateRs;
 import org.meveo.api.rest.impl.BaseRs;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 
 /**
  * @author Edward P. Legaspi
@@ -35,7 +37,12 @@ public class RecurringChargeTemplateRsImpl extends BaseRs implements RecurringCh
 
         return result;
     }
-
+    
+    @Override
+    public GetReccuringChargeTemplateListResponseDto list(PagingAndFiltering pagingAndFiltering) {
+        return recurringChargeTemplateApi.list(pagingAndFiltering);
+    }
+    
     @Override
     public GetRecurringChargeTemplateResponseDto find(String recurringChargeTemplateCode) {
         GetRecurringChargeTemplateResponseDto result = new GetRecurringChargeTemplateResponseDto();

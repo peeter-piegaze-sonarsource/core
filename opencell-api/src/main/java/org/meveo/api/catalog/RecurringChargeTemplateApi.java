@@ -1,16 +1,12 @@
 package org.meveo.api.catalog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.BaseCrudApi;
 import org.meveo.api.dto.catalog.RecurringChargeTemplateDto;
 import org.meveo.api.dto.catalog.TriggeredEdrTemplateDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.catalog.GetReccuringChargeTemplateListResponseDto;
 import org.meveo.api.exception.EntityAlreadyExistsException;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.exception.InvalidParameterException;
@@ -30,13 +26,22 @@ import org.meveo.service.catalog.impl.InvoiceSubCategoryService;
 import org.meveo.service.catalog.impl.RecurringChargeTemplateService;
 import org.meveo.service.catalog.impl.TriggeredEDRTemplateService;
 import org.meveo.service.finance.RevenueRecognitionRuleService;
+import org.primefaces.model.SortOrder;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Edward P. Legaspi
  **/
 @Stateless
 public class RecurringChargeTemplateApi extends BaseCrudApi<RecurringChargeTemplate, RecurringChargeTemplateDto> {
-
+    
+    public static final String DEFAULT_SORT_BY = "id";
     @Inject
     private RecurringChargeTemplateService recurringChargeTemplateService;
 
@@ -267,6 +272,22 @@ public class RecurringChargeTemplateApi extends BaseCrudApi<RecurringChargeTempl
 
         RecurringChargeTemplateDto result = new RecurringChargeTemplateDto(chargeTemplate, entityToDtoConverter.getCustomFieldsDTO(chargeTemplate, CustomFieldInheritanceEnum.INHERIT_NO_MERGE));
 
+        return result;
+    }
+    
+    public GetReccuringChargeTemplateListResponseDto list(PagingAndFiltering pagingAndFiltering) {
+        pagingAndFiltering = initIfNull(pagingAndFiltering);
+        String sortBy = getDefaultSortBy(pagingAndFiltering, DEFAULT_SORT_BY);
+        PaginationConfiguration paginationConfiguration = toPaginationConfiguration(sortBy, SortOrder.ASCENDING, null, pagingAndFiltering, RecurringChargeTemplate.class);
+        Long count = recurringChargeTemplateService.count(paginationConfiguration);
+        
+        GetReccuringChargeTemplateListResponseDto result = new GetReccuringChargeTemplateListResponseDto();
+        pagingAndFiltering.setTotalNumberOfRecords(count.intValue());
+        result.setPaging(pagingAndFiltering);
+        if(count > 0){
+            List<RecurringChargeTemplate> recurringChargeTemplates = recurringChargeTemplateService.list(paginationConfiguration);
+            result.setRecurringChargeTemplateDtos(recurringChargeTemplates.stream().map(r -> new RecurringChargeTemplateDto(r, null)).collect(Collectors.toList()));
+        }
         return result;
     }
 }
