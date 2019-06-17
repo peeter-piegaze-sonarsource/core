@@ -44,8 +44,8 @@ public interface LanguageIsoRs extends IBaseRs {
      * @return language iso for given code
      */
     @GET
-    @Path("/")
-    GetLanguageIsoResponse find(@QueryParam("languageCode") String languageCode);
+    @Path("/{languageCode}")
+    GetLanguageIsoResponse find(@PathParam("languageCode") String languageCode);
 
     /**
      * Does not delete a language but the tradingLanguage associated to it.
