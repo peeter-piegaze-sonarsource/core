@@ -124,15 +124,13 @@ public class InvoiceSequenceApi extends BaseApi {
             missingParameters.add("code");
             handleMissingParameters();
         }
-
-        InvoiceSequenceDto result = new InvoiceSequenceDto();
-
+        
         InvoiceSequence invoiceSequence = invoiceSequenceService.findByCode(invoiceSequenceCode);
         if (invoiceSequence == null) {
             throw new EntityDoesNotExistsException(InvoiceSequence.class, invoiceSequenceCode);
         }
-        result = new InvoiceSequenceDto(invoiceSequence);
-        return result;
+        return new InvoiceSequenceDto(invoiceSequence);
+       
     }
 
 

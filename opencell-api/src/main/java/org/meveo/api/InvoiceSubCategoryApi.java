@@ -206,16 +206,14 @@ public class InvoiceSubCategoryApi extends BaseApi {
             handleMissingParameters();
         }
 
-        InvoiceSubCategoryDto result = new InvoiceSubCategoryDto();
 
         InvoiceSubCategory invoiceSubCategory = invoiceSubCategoryService.findByCode(code, Arrays.asList("invoiceCategory"));
         if (invoiceSubCategory == null) {
             throw new EntityDoesNotExistsException(InvoiceSubCategory.class, code);
         }
+    
+        return new InvoiceSubCategoryDto(invoiceSubCategory, entityToDtoConverter.getCustomFieldsDTO(invoiceSubCategory, CustomFieldInheritanceEnum.INHERIT_NO_MERGE));
 
-        result = new InvoiceSubCategoryDto(invoiceSubCategory, entityToDtoConverter.getCustomFieldsDTO(invoiceSubCategory, CustomFieldInheritanceEnum.INHERIT_NO_MERGE));
-
-        return result;
     }
 
     public void remove(String code) throws MeveoApiException, BusinessException {
