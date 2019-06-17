@@ -35,7 +35,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Create a new account operation
-     * 
+     *
      * @param postData The account operation's data
      * @return Request processing status
      */
@@ -45,7 +45,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * List account operations matching a given criteria
-     * 
+     *
      * @param customerAccountCode The customer account's code. Deprecated in v. 4.7.2 Use query=userAccount.code:code instead
      * @param query Search criteria
      * @param fields Data retrieval options/fieldnames separated by a comma
@@ -57,23 +57,23 @@ public interface AccountOperationRs extends IBaseRs {
      */
     @GET
     @Path("/list")
-    public AccountOperationsResponseDto listGet(@Deprecated @QueryParam("customerAccountCode") String customerAccountCode, @QueryParam("query") String query,
+     AccountOperationsResponseDto listGet(@Deprecated @QueryParam("customerAccountCode") String customerAccountCode, @QueryParam("query") String query,
             @QueryParam("fields") String fields, @QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
             @DefaultValue("id") @QueryParam("sortBy") String sortBy, @DefaultValue("DESCENDING") @QueryParam("sortOrder") SortOrder sortOrder);
 
     /**
      * List account operations matching a given criteria
-     * 
+     *
      * @param pagingAndFiltering Pagination and filtering criteria
      * @return List of account operations
      */
     @POST
     @Path("/list")
-    public AccountOperationsResponseDto listPost(PagingAndFiltering pagingAndFiltering);
-
+    AccountOperationsResponseDto listPost(PagingAndFiltering pagingAndFiltering);
+    
     /**
      * Match operations
-     * 
+     *
      * @param postData The matching operation's data
      * @return Request processing status
      */
@@ -83,7 +83,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Unmatching operations
-     * 
+     *
      * @param postData The unmatching operations data
      * @return Request processing status
      */
@@ -93,7 +93,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Add a new litigation
-     * 
+     *
      * @param postData The litigation's data
      * @return Request processing status
      */
@@ -103,7 +103,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Cancel a litigation
-     * 
+     *
      * @param postData The litigation's data
      * @return Request processing status
      */
@@ -113,7 +113,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Finds an accountOperation given an id.
-     * 
+     *
      * @param id id of the account operation
      * @return Account operation response
      */
@@ -123,7 +123,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * Update payment method for all customerAccount AO's if customerAccountCode is set.Or single AO if aoId is set.
-     * 
+     *
      * @param customerAccountCode Customer account code
      * @param aoId Account operation Id
      * @param paymentMethod Payment method
@@ -136,7 +136,7 @@ public interface AccountOperationRs extends IBaseRs {
 
     /**
      * List matched operations for a given account operation
-     * 
+     *
      * @param accountOperationId Account operation identifier
      * @return A list of matched operations
      */

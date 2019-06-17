@@ -68,7 +68,7 @@ import org.meveo.model.WorkflowedEntity;
 @NamedQueries({ @NamedQuery(name = "UserAccount.findByCode", query = "select u from  UserAccount u where u.code = :code and lower(u.accountType) = 'acct_ua'") })
 public class UserAccount extends AccountEntity implements IWFEntity, ICounterEntity {
 
-    public static final String ACCOUNT_TYPE = ((DiscriminatorValue) UserAccount.class.getAnnotation(DiscriminatorValue.class)).value();
+    public static final String ACCOUNT_TYPE = UserAccount.class.getAnnotation(DiscriminatorValue.class).value();
 
     private static final long serialVersionUID = 1L;
 
