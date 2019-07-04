@@ -11,6 +11,29 @@ import org.meveo.model.knowledgeCenter.Post;
 
 public class CollectionDto extends BusinessEntityDto {
 
+	class Posts {
+		private String name;
+		private String code;
+		
+		
+		public Posts(String name, String code) {
+			this.name = name;
+			this.code = code;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getCode() {
+			return code;
+		}
+		public void setCode(String code) {
+			this.code = code;
+		}		
+	}
+	
 	/**
 	 * 
 	 */
@@ -21,6 +44,8 @@ public class CollectionDto extends BusinessEntityDto {
 	private String parentCode;
 	
 	private List<String> postsCode;
+	
+	private List<Posts> posts;
 
 	private String name;
 	
@@ -33,7 +58,7 @@ public class CollectionDto extends BusinessEntityDto {
 		name = collection.getName();
 		Collection parent = collection.getParentCollection();
 		Set<Collection> childrenCollections = collection.getChildrenCollections();
-		Set<Post> posts = collection.getPosts();
+		Set<Post> postsdata = collection.getPosts();
 		
 
 		if(parent != null)
@@ -47,10 +72,10 @@ public class CollectionDto extends BusinessEntityDto {
 		}
 		
 		
-		if(posts != null) {
-			postsCode = new ArrayList<String>();
-			for(Post p : posts) {
-				postsCode.add(p.getCode());
+		if(postsdata != null) {
+			posts = new ArrayList<Posts>();
+			for(Post p : postsdata) {
+				posts.add(new Posts(p.getName(), p.getCode()));
 			}
 		}
 	}
@@ -87,6 +112,5 @@ public class CollectionDto extends BusinessEntityDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
 }
+
