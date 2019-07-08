@@ -141,7 +141,7 @@ public class CollectionApi extends BaseApi {
 
 	public void remove(String code) throws BusinessException, EntityDoesNotExistsException {
 		Collection collection = collectionService.findByCode(code);
-
+		Collection collectionParent = null;
 		if (collection == null) {
 			throw new EntityDoesNotExistsException(Collection.class, code, "code");
 		}
@@ -149,8 +149,13 @@ public class CollectionApi extends BaseApi {
 			if(!collection.getChildrenCollections().isEmpty() || !collection.getPosts().isEmpty()) {
 				throw new BusinessException("Collection code:" + collection.getCode() + " still contains collections or posts");
 			}
+			collectionParent = collection.getParentCollection();
+			if(collectionParent != null) {
+				collectionParent.getChildrenCollections().remove(collection);
+				collectionService.update(collectionParent);
+			}
 		}
-
+		
 		collectionService.remove(collection);
 	}
 	
