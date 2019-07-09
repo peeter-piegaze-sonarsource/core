@@ -22,6 +22,7 @@ import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethod;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.api.security.filter.ListFilter;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.model.knowledgeCenter.Post;
 import org.meveo.service.knowledgeCenter.CollectionService;
 import org.meveo.service.knowledgeCenter.PostService;
@@ -51,7 +52,18 @@ public class PostApi extends BaseApi{
 		post.setContent(postData.getContent());
 		post.setCode(postData.getCode());
 		post.setDescription(postData.getDescription());
-		post.setCollection(collectionService.findByCode(postData.getCollection()));
+		
+		if(!StringUtils.isBlank(postData.getCollection())) {
+			Collection collection = collectionService.findByCode(postData.getCollection());
+			if(collection != null)
+				post.setCollection(collection);
+			else {
+				throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
+			}
+		}
+		else {
+			throw new BusinessException("Parent collection is not provided!");
+		}
 		
 		postService.create(post);
 		
@@ -76,8 +88,16 @@ public class PostApi extends BaseApi{
 			post.setName(postData.getName());
 		if(!StringUtils.isBlank(postData.getContent()))
 			post.setContent(postData.getContent());
-		if(!StringUtils.isBlank(postData.getCollection()))
-			post.setCollection(collectionService.findByCode(postData.getCollection()));
+		if(!StringUtils.isBlank(postData.getCollection())) {
+			Collection collection = collectionService.findByCode(postData.getCollection());
+			if(collection != null)
+				post.setCollection(collection);
+			else {
+				throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
+			}
+		}
+
+		
 		
 		postService.update(post);
 		

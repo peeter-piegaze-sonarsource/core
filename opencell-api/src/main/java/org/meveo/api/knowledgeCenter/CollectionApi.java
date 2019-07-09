@@ -1,6 +1,8 @@
 package org.meveo.api.knowledgeCenter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -59,6 +61,9 @@ public class CollectionApi extends BaseApi {
 			else if (parentCollection == null) {
 				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
 			}
+			else if(isLoop(collection, parentCollection)) {
+				throw new BusinessException("Collection is a loop");
+			}
 			else {
 				collection.setParentCollection(parentCollection);
 			}
@@ -93,10 +98,17 @@ public class CollectionApi extends BaseApi {
 			else if(parentCollection == collection) {
 				throw new BusinessException("Collection cannot contains itself");
 			}
+			else if(isLoop(collection, parentCollection)) {
+				throw new BusinessException("Collection is a loop");
+			}
 			else {
 				collection.setParentCollection(parentCollection);
 			}
 		}
+		else {
+			collection.setParentCollection(null);
+		}
+		
 		collectionService.update(collection);
 		
 		return collection;
@@ -186,10 +198,65 @@ public class CollectionApi extends BaseApi {
 		if (totalCount > 0) {
 			List<Collection> collections = collectionService.list(paginationConfig);
 			for (Collection c : collections) {
+				c.setChildrenCollections(null);
 				collectionsDto.getCollection().add(new CollectionDto(c));
 			}
 		}
 		result.setCollections(collectionsDto);
 		return result;
+	}
+	
+	@SecuredBusinessEntityMethod(resultFilter = ListFilter.class)
+	@FilterResults(propertyToFilter = "collections.collection", itemPropertiesToFilter = {
+			@FilterProperty(property = "code", entityClass = Collection.class) })
+	public CollectionsResponseDto tree(CollectionDto postData, PagingAndFiltering pagingAndFiltering) throws MeveoApiException {
+		if (pagingAndFiltering == null) {
+			pagingAndFiltering = new PagingAndFiltering();
+		}
+
+		if (postData != null) {
+			pagingAndFiltering.addFilter("code", postData.getCode());
+		}
+
+		PaginationConfiguration paginationConfig = toPaginationConfiguration("code", SortOrder.ASCENDING, null,
+				pagingAndFiltering, Collection.class);
+
+		Long totalCount = collectionService.count(paginationConfig);
+
+		CollectionsDto collectionsDto = new CollectionsDto();
+		CollectionsResponseDto result = new CollectionsResponseDto();
+
+		result.setPaging(pagingAndFiltering);
+
+		if (totalCount > 0) {
+			List<Collection> collections = collectionService.list(paginationConfig);
+			for (Collection c : collections) {
+				if(c.getParentCollection() == null) {
+					collectionsDto.getCollection().add(new CollectionDto(c));
+					
+				}
+				else totalCount--;
+			}
+		}
+		
+		result.getPaging().setTotalNumberOfRecords(totalCount.intValue());
+		collectionsDto.setTotalNumberOfRecords(totalCount);
+		
+		result.setCollections(collectionsDto);
+		return result;
+	}
+	
+	public boolean isLoop(Collection collection, Collection parentCollection) {
+		Set<String> collections =  new HashSet<String>();
+		collections.add(collection.getCode());
+		
+		collection = parentCollection;
+		
+		while(collection != null) {
+			if(!collections.add(collection.getCode()))
+				return true;
+			collection = collection.getParentCollection();
+		}
+		return false;
 	}
 }

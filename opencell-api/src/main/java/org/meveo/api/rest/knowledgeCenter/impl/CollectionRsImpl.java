@@ -96,4 +96,17 @@ public class CollectionRsImpl extends BaseRs implements CollectionRs{
 				return result;
 			}
 	}
+
+	@Override
+	public CollectionsResponseDto tree() {
+		try {
+			return collectionApi.tree(null, new PagingAndFiltering());
+		} catch (Exception e) {
+			CollectionsResponseDto result = new CollectionsResponseDto();
+			processException(e, result.getActionStatus());
+			return result;
+		}
+	}
+	
+	
 }
