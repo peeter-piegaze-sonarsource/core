@@ -494,14 +494,23 @@ public class UserBean extends CustomFieldBean<User> {
             } else {
                 copyFile(filePath, fileInputStream);
             }
-            messages.info(fileName + " is uploaded to " + ((selectedFolder != null) ? selectedFolder : "Home"));
-
             if (fileFormat != null) {
                 File[] files = tempDirectory.listFiles();
-                for (File tempFile : files) {
-                    flatFileValidator.validateAndLogFile(tempFile, fileName, fileFormat.getCode(), getFilePath(""));
-                }
+                Map<String, String> messagesValidation = flatFileValidator.validateAndLogFiles(files, fileFormat.getCode(), getFilePath(""));
                 tempDirectory.delete();
+                buildFileList();
+
+                if (messagesValidation != null && !messagesValidation.isEmpty()) {
+                    if (messagesValidation.containsKey("success")) {
+                        messages.info(messagesValidation.get("success"));
+                    }
+                    if (messagesValidation.containsKey("error")) {
+                        messages.error(messagesValidation.get("error"));
+                    }
+                }
+
+            } else {
+                messages.info(fileName + " is uploaded to " + ((selectedFolder != null) ? selectedFolder : "Home"));
             }
         } catch (BusinessException e) {
             log.error("Failed to upload a file {}", fileName, e);
