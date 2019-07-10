@@ -1954,4 +1954,11 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
         getEntityManager().createNamedQuery("RatedTransaction.deleteSupplementalRTByInvoiceIds").setParameter("invoicesIds", invoicesIds).executeUpdate();
 
     }
+
+    public void cancel(Subscription subscription, Date terminationDate) {
+         getEntityManager().createNamedQuery("RatedTransaction.cancel").setParameter("subscription",subscription)
+                .setParameter("terminationDate",terminationDate)
+                .executeUpdate();
+
+    }
 }

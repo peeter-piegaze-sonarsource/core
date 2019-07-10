@@ -152,7 +152,11 @@ import org.meveo.model.tax.TaxClass;
                 "select sum(r.amountWithoutTax), sum(r.amountWithTax), r.invoice.id, r.billingAccount.id, r.billingAccount.customerAccount.id, r.billingAccount.customerAccount.customer.id "
                         + "FROM RatedTransaction r where r.billingRun.id=:billingRunId and r.amountWithoutTax > 0 and r.status='BILLED' group by r.invoice.id, r.billingAccount.id, r.billingAccount.customerAccount.id, r.billingAccount.customerAccount.customer.id"),
         @NamedQuery(name = "RatedTransaction.unInvoiceByInvoiceIds", query = "update RatedTransaction r set r.status='OPEN', r.billingRun= null, r.invoice=null, r.invoiceAgregateF=null where r.status=org.meveo.model.billing.RatedTransactionStatusEnum.BILLED and r.invoice.id IN (:invoiceIds)"),
-        @NamedQuery(name = "RatedTransaction.deleteSupplementalRTByInvoiceIds", query = "DELETE from RatedTransaction r WHERE r.wallet IS null and r.invoice.id IN (:invoicesIds)") })
+        @NamedQuery(name = "RatedTransaction.deleteSupplementalRTByInvoiceIds", query = "DELETE from RatedTransaction r WHERE r.wallet IS null and r.invoice.id IN (:invoicesIds)") }),
+
+@NamedQuery(name = "RatedTransaction.cancel", query = "update RatedTransaction rt set rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.CANCELED where "
+        + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.subscription=:subscription and wo.operationDate>:terminationDate)")
+
 public class RatedTransaction extends BaseEntity implements ISearchable {
 
     private static final long serialVersionUID = 1L;
