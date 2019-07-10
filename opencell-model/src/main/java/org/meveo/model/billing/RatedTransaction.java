@@ -156,7 +156,12 @@ import org.meveo.model.rating.EDR;
                 + " AND :firstTransactionDate<r.usageDate AND r.usageDate<:lastTransactionDate order by r.usageDate desc "),
         @NamedQuery(name = "RatedTransaction.deleteNotOpenBetweenTwoDates", query = "delete FROM RatedTransaction r where "
                 + " r.status <> org.meveo.model.billing.RatedTransactionStatusEnum.OPEN "
-                + " AND :firstTransactionDate<r.usageDate AND r.usageDate<:lastTransactionDate ")})
+                + " AND :firstTransactionDate<r.usageDate AND r.usageDate<:lastTransactionDate "),
+
+        @NamedQuery(name = "RatedTransaction.cancel", query = "update RatedTransaction rt set rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.CANCELED where "
+                + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.subscription=:subscription and wo.operationDate>:terminationDate)")
+
+})
 public class RatedTransaction extends BaseEntity implements ISearchable {
 
     private static final long serialVersionUID = 1L;
