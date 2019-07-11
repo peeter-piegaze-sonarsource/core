@@ -11,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
@@ -32,11 +33,12 @@ import org.meveo.model.crm.custom.CustomFieldValues;
  * Discount plan item/details
  * 
  * @author Edward P. Legaspi
- * @lastModifiedVersion 5.3
- **/
+ * @author Abdellatif BARI
+ * @lastModifiedVersion 7.0
+ */
 @Entity
 @Cacheable
-@CustomFieldEntity(cftCodePrefix = "DISCOUNT_PLAN_ITEM", inheritCFValuesFrom = { "discountPlan" })
+@CustomFieldEntity(cftCodePrefix = "DiscountPlanItem", inheritCFValuesFrom = { "discountPlan" })
 @ExportIdentifier({ "discountPlan.code", "code" })
 @Table(name = "cat_discount_plan_item", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "discount_plan_id", "code" }) })
@@ -133,7 +135,7 @@ public class DiscountPlanItem extends EnableEntity implements ICustomFieldEntity
     @Column(name = "uuid", nullable = false, updatable = false, length = 60)
     @Size(max = 60)
     @NotNull
-    protected String uuid = UUID.randomUUID().toString();
+    protected String uuid;
 
     /**
      * Custom field values in JSON format
@@ -281,8 +283,19 @@ public class DiscountPlanItem extends EnableEntity implements ICustomFieldEntity
 		return discountValueEL;
 	}
 
+	/**
+     * setting uuid if null
+     */
+    @PrePersist
+    public void setUUIDIfNull() {
+    	if (uuid == null) {
+    		uuid = UUID.randomUUID().toString();
+    	}
+    }
+    
     @Override
     public String getUuid() {
+    	setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
         return uuid;
     }
 

@@ -136,6 +136,7 @@ import java.util.stream.Collectors;
  * @author Mohamed El Youssoufi
  * @author Youssef IZEM
  * @author Abdellatif BARI
+ * @author Mounir BAHIJE
  * @lastModifiedVersion 7.0
  */
 @Stateless
@@ -732,6 +733,8 @@ public class SubscriptionApi extends BaseApi {
         if (subscription.getStatus() == SubscriptionStatusEnum.RESILIATED || subscription.getStatus() == SubscriptionStatusEnum.CANCELED) {
             throw new MeveoApiException("Subscription is already RESILIATED or CANCELLED.");
         }
+        List<ServiceTemplate> serviceToInstantiates = new ArrayList<>();
+
         // check if exists
         List<ServiceToInstantiateDto> serviceToInstantiateDtos = new ArrayList<>();
         for (ServiceToInstantiateDto serviceToInstantiateDto : instantiateServicesDto.getServicesToInstantiate().getService()) {
@@ -745,7 +748,10 @@ public class SubscriptionApi extends BaseApi {
 
             serviceToInstantiateDto.setServiceTemplate(serviceTemplate);
             serviceToInstantiateDtos.add(serviceToInstantiateDto);
+            serviceToInstantiates.add(serviceTemplate);
         }
+
+        subscriptionService.checkCompatibilityOfferServices(subscription,serviceToInstantiates);
 
         // instantiate
         for (ServiceToInstantiateDto serviceToInstantiateDto : serviceToInstantiateDtos) {
@@ -2192,7 +2198,10 @@ public class SubscriptionApi extends BaseApi {
         subscription.setMinimumLabelEl(postData.getMinimumLabelEl());
         subscription.setMinimumLabelElSpark(postData.getMinimumLabelElSpark());
         subscription.setRatingGroup(postData.getRatingGroup());
-
+        
+        // populate Electronic Billing Fields
+        populateElectronicBillingFields(postData, subscription);
+        
         // populate customFields
         try {
             populateCustomFields(postData.getCustomFields(), subscription, true);
@@ -2205,6 +2214,7 @@ public class SubscriptionApi extends BaseApi {
         }
 
         subscriptionService.create(subscription);
+        userAccount.getSubscriptions().add(subscription);
 
         if (postData.getProducts() != null) {
             for (ProductDto productDto : postData.getProducts().getProducts()) {

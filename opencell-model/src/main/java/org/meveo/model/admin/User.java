@@ -44,6 +44,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -70,14 +71,17 @@ import org.meveo.model.hierarchy.UserHierarchyLevel;
 import org.meveo.model.intcrm.AddressBook;
 import org.meveo.model.security.Role;
 import org.meveo.model.shared.Name;
+import org.meveo.model.ISearchable;
 
 /**
  * Application user
+ * @author Abdellatif BARI
+ * @lastModifiedVersion 7.0
  */
 @Entity
 @ObservableEntity
 @Cacheable
-@CustomFieldEntity(cftCodePrefix = "USER")
+@CustomFieldEntity(cftCodePrefix = "User")
 @ExportIdentifier({ "userName" })
 @ReferenceIdentifierCode("userName")
 @ReferenceIdentifierDescription("email")
@@ -87,7 +91,7 @@ import org.meveo.model.shared.Name;
 @NamedQueries({ @NamedQuery(name = "User.listUsersInMM", query = "SELECT u FROM User u LEFT JOIN u.roles as role WHERE role.name IN (:roleNames)"),
         @NamedQuery(name = "User.getByUsername", query = "SELECT u FROM User u WHERE lower(u.userName)=:username", hints = {
                 @QueryHint(name = "org.hibernate.cacheable", value = "TRUE") }) })
-public class User extends AuditableEntity implements ICustomFieldEntity, IReferenceEntity {
+public class User extends AuditableEntity implements ICustomFieldEntity, IReferenceEntity, ISearchable {
 
     private static final long serialVersionUID = 1L;
 
@@ -148,7 +152,7 @@ public class User extends AuditableEntity implements ICustomFieldEntity, IRefere
     @Column(name = "uuid", nullable = false, updatable = false, length = 60)
     @Size(max = 60)
     @NotNull
-    private String uuid = UUID.randomUUID().toString();
+    private String uuid;
 
     /**
      * Custom field values in JSON format
@@ -176,6 +180,18 @@ public class User extends AuditableEntity implements ICustomFieldEntity, IRefere
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date")
     private Date lastLoginDate;
+
+    /**
+     * Code
+     */
+    @Transient
+    private String code;
+
+    /**
+     * Description
+     */
+    @Transient
+    private String description;
 
     public User() {
     }
@@ -310,7 +326,56 @@ public class User extends AuditableEntity implements ICustomFieldEntity, IRefere
         } catch (ClassNotFoundException e) {
             // do nothing
         }
+        
+		// secured entities from role
+		if (getRoles() != null && !getRoles().isEmpty()) {
+			for (Role r : getRoles()) {
+				try {
+					for (SecuredEntity securedEntity : r.getSecuredEntities()) {
+						Class<?> securedBusinessEntityClass = Class.forName(securedEntity.getEntityClass());
+						if (securedEntitiesMap.get(securedBusinessEntityClass) == null) {
+							securedEntitySet = new HashSet<>();
+							securedEntitiesMap.put(securedBusinessEntityClass, securedEntitySet);
+						}
+						securedEntitiesMap.get(securedBusinessEntityClass).add(securedEntity);
+					}
+				} catch (ClassNotFoundException e) {
+					// do nothing
+				}
+			}
+		}
+        
     }
+    
+    /**
+     * Returns all the secured entities associated with this user's roles.
+     * @return list of secured entities
+     */
+	public List<SecuredEntity> getRoleSecuredEntities() {
+		List<SecuredEntity> result = new ArrayList<>();
+
+		if (getRoles() != null && !getRoles().isEmpty()) {
+			for (Role r : getRoles()) {
+				if (r.getSecuredEntities() != null && !r.getSecuredEntities().isEmpty()) {
+					result.addAll(r.getSecuredEntities());
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Returns all the secured entities of this user and all its roles.
+	 * @return list of secured entities
+	 */
+	public List<SecuredEntity> getAllSecuredEntities() {
+		List<SecuredEntity> result = new ArrayList<>();
+		result.addAll(getSecuredEntities());
+		result.addAll(getRoleSecuredEntities());
+		
+		return result;
+	}
 
     public UserHierarchyLevel getUserLevel() {
         return userLevel;
@@ -327,9 +392,20 @@ public class User extends AuditableEntity implements ICustomFieldEntity, IRefere
 
         return userName;
     }
-
+    
+    /**
+     * setting uuid if null
+     */
+    @PrePersist
+    public void setUUIDIfNull() {
+    	if (uuid == null) {
+    		uuid = UUID.randomUUID().toString();
+    	}
+    }
+    
     @Override
     public String getUuid() {
+    	setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
         return uuid;
     }
 
@@ -395,4 +471,23 @@ public class User extends AuditableEntity implements ICustomFieldEntity, IRefere
         return getNameOrUsername();
     }
 
+    @Override
+    public String getCode() {
+        return getUserName();
+    }
+
+    @Override
+    public void setCode(String code) {
+
+    }
+
+    @Override
+    public String getDescription() {
+        return "User " + getCode();
+    }
+
+    @Override
+    public void setDescription(String description) {
+
+    }
 }

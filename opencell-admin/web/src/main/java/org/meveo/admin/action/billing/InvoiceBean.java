@@ -74,12 +74,13 @@ import org.omnifaces.cdi.Param;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 /**
  * Standard backing bean for {@link Invoice} (extends {@link BaseBean} that provides almost all common methods to handle entities filtering/sorting in datatable, their create,
  * edit, view, delete operations). It works with Manaty custom JSF components.
- *  
+ *
  * @author anasseh
  * @author Edward P. Legaspi
  * @author Khalid HORRI
@@ -132,13 +133,11 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
     private Map<Long, Boolean> pdfGenerated = new HashMap<Long, Boolean>();
 
     private Boolean xmlGenerated;
-    
-    private LinkedHashMap<String, InvoiceSubCategoryDTO> headerSubCategories;
-    
+
     private Map<String, LazyDataModelWSize<RatedTransaction>> ratedTransactionsDM = new HashMap<>();
 
     private List<InvoiceCategoryDTO> categoryDTOs;
-    
+
     /**
      * Constructor. Invokes super constructor and provides class type of this bean for {@link BaseBean}.
      */
@@ -148,11 +147,11 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
 
     @Override
     public Invoice initEntity() {
-    	entity = super.initEntity();
-    	if(categoryDTOs == null) {
-    		categoryDTOs = initInvoiceCategories();
-    	}
-    	
+        entity = super.initEntity();
+        if (categoryDTOs == null) {
+            categoryDTOs = initInvoiceCategories();
+        }
+
         return entity;
     }
 
@@ -228,10 +227,12 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
      * @return return true if BillingAccounts list is null or empty
      */
     private boolean isNullOrEmpty(Object billingAccounts) {
-        if (billingAccounts == null)
+        if (billingAccounts == null) {
             return true;
-        if (billingAccounts instanceof List && ((List) billingAccounts).isEmpty())
+        }
+        if (billingAccounts instanceof List && ((List) billingAccounts).isEmpty()) {
             return true;
+        }
         return false;
     }
 
@@ -249,11 +250,10 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
     }
 
     public List<InvoiceCategoryDTO> getInvoiceCategories() {
-    	return categoryDTOs;
+        return categoryDTOs;
     }
-	
+
     public ArrayList<InvoiceCategoryDTO> initInvoiceCategories() {
-        entity = invoiceService.refreshOrRetrieve(entity);
         LinkedHashMap<String, InvoiceCategoryDTO> headerCategories = new LinkedHashMap<String, InvoiceCategoryDTO>();
         List<CategoryInvoiceAgregate> categoryInvoiceAgregates = new ArrayList<CategoryInvoiceAgregate>();
         for (InvoiceAgregate invoiceAgregate : entity.getInvoiceAgregates()) {
@@ -289,7 +289,7 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
             }
 
             Set<SubCategoryInvoiceAgregate> subCategoryInvoiceAgregates = categoryInvoiceAgregate.getSubCategoryInvoiceAgregates();
-            headerSubCategories = headerCat.getInvoiceSubCategoryDTOMap();
+            LinkedHashMap<String, InvoiceSubCategoryDTO> headerSubCategories = headerCat.getInvoiceSubCategoryDTOMap();
             for (SubCategoryInvoiceAgregate subCatInvoiceAgregate : subCategoryInvoiceAgregates) {
                 InvoiceSubCategory invoiceSubCategory = subCatInvoiceAgregate.getInvoiceSubCategory();
                 InvoiceSubCategoryDTO headerSubCat = null;
@@ -762,7 +762,7 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
 
         return detailedInvoiceAdjustment;
     }
-    
+
     /**
      * Checks if list of selectedEntities is empty to disable or not the exclude button
      *
@@ -821,6 +821,9 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
      * @return
      */
     public boolean getGeneratePdfBtnActive() {
+        if (invoiceService.isPrepaidReport(entity)) {
+            return false;
+        }
         String value = ParamBean.getInstance().getProperty("billing.activateGenaratePdfBtn", "true");
         if ("false".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)) {
             return Boolean.valueOf(value);
@@ -834,9 +837,24 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
      * @return
      */
     public boolean getGenerateXmlBtnActive() {
+        if (invoiceService.isPrepaidReport(entity)) {
+            return false;
+        }
         String value = ParamBean.getInstance().getProperty("billing.activateGenarateXmlBtn", "true");
         if ("false".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)) {
             return Boolean.valueOf(value);
+        }
+        return true;
+    }
+
+    /**
+     * Activate/deactivate Send by Email button
+     *
+     * @return true if the invoice is not a prepaid report
+     */
+    public boolean getSendByEmailBtnActive() {
+        if (invoiceService.isPrepaidReport(entity)) {
+            return false;
         }
         return true;
     }
@@ -850,38 +868,53 @@ public class InvoiceBean extends CustomFieldBean<Invoice> {
         }
 
     }
-    
-	public LazyDataModelWSize<RatedTransaction> getRatedTransactions(String invoiceSubCategoryCode) {
-		LazyDataModelWSize<RatedTransaction> lazyRatedTransactions = ratedTransactionsDM.get(invoiceSubCategoryCode);
-		if (lazyRatedTransactions != null) {
-			return lazyRatedTransactions;
-		}
 
-		InvoiceSubCategoryDTO invoiceSubCategoryDTO = headerSubCategories.get(invoiceSubCategoryCode);
+    public LazyDataModelWSize<RatedTransaction> getRatedTransactions(InvoiceSubCategoryDTO invoiceSubCategoryDTO) {
+        LazyDataModelWSize<RatedTransaction> lazyRatedTransactions = ratedTransactionsDM.get(invoiceSubCategoryDTO.getCode());
+        if (lazyRatedTransactions != null) {
+            return lazyRatedTransactions;
+        }
 
-		if (invoiceSubCategoryDTO == null) {
-			return new LazyDataModelWSize<>();
-		}
+        LazyDataModelWSize<RatedTransaction> lazyDataModelWSize = new LazyDataModelWSize<RatedTransaction>() {
+            private static final long serialVersionUID = 1L;
 
-		LazyDataModelWSize<RatedTransaction> lazyDataModelWSize = new LazyDataModelWSize<RatedTransaction>() {
-			private static final long serialVersionUID = 1L;
+            @Override
+            public List<RatedTransaction> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> loadingFilters) {
 
-			@Override
-			public List<RatedTransaction> load(int first, int pageSize, String sortField, SortOrder sortOrder,
-					Map<String, Object> loadingFilters) {
+                List<RatedTransaction> entities = invoiceSubCategoryDTO.getRatedTransactions();
 
-				List<RatedTransaction> entities = invoiceSubCategoryDTO.getRatedTransactions();
+                setRowCount(entities.size());
 
-				setRowCount(entities.size());
+                return invoiceSubCategoryDTO.getRatedTransactions().subList(first, (first + pageSize) > entities.size() ? entities.size() : (first + pageSize));
+            }
+        };
 
-				return invoiceSubCategoryDTO.getRatedTransactions().subList(first,
-						(first + pageSize) > entities.size() ? entities.size() : (first + pageSize));
-			}
-		};
-		
-		ratedTransactionsDM.put(invoiceSubCategoryCode, lazyDataModelWSize);
-		
-		return lazyDataModelWSize;
-	}
+        ratedTransactionsDM.put(invoiceSubCategoryDTO.getCode(), lazyDataModelWSize);
 
+        return lazyDataModelWSize;
+    }
+
+    /**
+     * Activate/deactivate New aggregated invoice adjustment
+     *
+     * @return true if the invoice is not a prepaid report
+     */
+    public boolean getShowBtnNewIAAggregateds() {
+        if (invoiceService.isPrepaidReport(entity)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Activate/deactivate New detailed invoice adjustment
+     *
+     * @return true if the invoice is not a prepaid report
+     */
+    public boolean getShowBtnNewIADetailed() {
+        if (invoiceService.isPrepaidReport(entity)) {
+            return false;
+        }
+        return true;
+    }
 }
