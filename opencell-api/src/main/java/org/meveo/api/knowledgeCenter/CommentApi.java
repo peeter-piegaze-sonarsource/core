@@ -53,10 +53,8 @@ public class CommentApi extends BaseApi {
 			}
 		}
 		commentService.create(comment);
-		if(post != null) {
-			post.getCommments().add(comment);
-			postService.update(post);
-		}
+		post.getCommments().add(comment);
+		postService.update(post);
 		return comment;
 	}
 	
@@ -75,6 +73,9 @@ public class CommentApi extends BaseApi {
 		Comment comment = commentService.findByCode(postData.getCode());
 		if(comment != null) {
 			comment.setContent(postData.getContent());
+			comment.setDescription(postData.getDescription());
+			if(!comment.getPost().getCode().equals(postData.getPostCode()))
+				throw new BusinessException("Parent post code cannot be changed!");
 		}
 		else {
 			throw new EntityDoesNotExistsException("Comment", postData.getCode());

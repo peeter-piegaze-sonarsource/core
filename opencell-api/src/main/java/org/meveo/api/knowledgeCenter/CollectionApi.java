@@ -62,7 +62,7 @@ public class CollectionApi extends BaseApi {
 				throw new EntityDoesNotExistsException("Parent Collection", parentCode);
 			}
 			else if(isLoop(collection, parentCollection)) {
-				throw new BusinessException("Collection is a loop");
+				throw new BusinessException("The collection is looping on itself!");
 			}
 			else {
 				collection.setParentCollection(parentCollection);
@@ -99,7 +99,7 @@ public class CollectionApi extends BaseApi {
 				throw new BusinessException("Collection cannot contains itself");
 			}
 			else if(isLoop(collection, parentCollection)) {
-				throw new BusinessException("Collection is a loop");
+				throw new BusinessException("The collection is looping on itself!");
 			}
 			else {
 				collection.setParentCollection(parentCollection);
