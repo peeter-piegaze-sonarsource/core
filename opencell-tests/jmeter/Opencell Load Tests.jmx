@@ -12,7 +12,7 @@
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Contrôleur Boucle" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -13616,7 +13616,7 @@
         </LoopController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Fnac API" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Fnac API" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -14548,13 +14548,13 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Invoicing" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Invoicing" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">10</stringProp>
+          <stringProp name="LoopController.loops">4</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(users,10)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(users,4)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time"></stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -14562,56 +14562,6 @@
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CreateCustomer" enabled="false">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&#xd;
-  &quot;crmAccountType&quot; : &quot;C_UA&quot;,&#xd;
-  &quot;crmParentCode&quot; : &quot;CLASSIC&quot;,&#xd;
-  &quot;code&quot;: &quot;${customerID}&quot;,&#xd;
-&#xd;
-  &quot;description&quot;: &quot;desc&quot;,&#xd;
-  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
-  &quot;paymentMethod&quot; : &quot;CHECK&quot;,&#xd;
-  &quot;language&quot; : &quot;ENG&quot;,&#xd;
-  &quot;customerCategory&quot; : &quot;CLIENT&quot;,&#xd;
-  &quot;currency&quot; : &quot;EUR&quot;,&#xd;
-  &quot;billingCycle&quot; : &quot;BILLCYCLE1&quot;,&#xd;
-  &quot;country&quot; : &quot;FR&quot;,&#xd;
-  &quot;customFields&quot;: null&#xd;
-}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">${opencell_path}/account/accountHierarchy/createOrUpdateCRMAccountHierarchy</stringProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter" enabled="true">
-            <stringProp name="CounterConfig.start">customerCode</stringProp>
-            <stringProp name="CounterConfig.end"></stringProp>
-            <stringProp name="CounterConfig.incr">1</stringProp>
-            <stringProp name="CounterConfig.name">customerID</stringProp>
-            <stringProp name="CounterConfig.format">#</stringProp>
-            <boolProp name="CounterConfig.per_user">false</boolProp>
-          </CounterConfig>
-          <hashTree/>
-        </hashTree>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -14634,7 +14584,7 @@
             </elementProp>
             <elementProp name="opencell_host" elementType="Argument">
               <stringProp name="Argument.name">opencell_host</stringProp>
-              <stringProp name="Argument.value">${__P(host,hassnaa.qa.opencell.work)}</stringProp>
+              <stringProp name="Argument.value">${__P(host,maria.qa.opencell.work)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="opencell_path" elementType="Argument">
@@ -14650,6 +14600,11 @@
             <elementProp name="customerCode2" elementType="Argument">
               <stringProp name="Argument.name">customerCode2</stringProp>
               <stringProp name="Argument.value">${__P(firstCustomerId2,1)}  </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="timestamp" elementType="Argument">
+              <stringProp name="Argument.name">timestamp</stringProp>
+              <stringProp name="Argument.value">2019-07-11T17:30:58.955Z</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
           </collectionProp>
@@ -14816,32 +14771,6 @@
           </objProp>
           <stringProp name="filename"></stringProp>
         </ResultCollector>
-        <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mediation" enabled="false">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">2019-06-19T00:00:00.000Z;100;test;UNIT;25000</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">${opencell_path}/billing/mediation/chargeCdr</stringProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
         <hashTree/>
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
           <intProp name="ActionProcessor.action">1</intProp>
@@ -15135,7 +15064,15 @@
   &quot;servicesToInstantiate&quot;: { &quot;service&quot;: [  &#xd;
     	{ &#xd;
     	&#xd;
-  &quot;code&quot;: &quot;SE_CLASSIC_USG_UNIT&quot;, &#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_OSS_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+    	},&#xd;
+    	{ &#xd;
+    	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_REC_FLAT&quot;, &#xd;
     &#xd;
 	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
   &#xd;
@@ -15196,9 +15133,17 @@
          &#xd;
            &quot;subscription&quot;: &quot;SUB_${customerID5}&quot;,&#xd;
              &quot;servicesToActivate&quot; : {&#xd;
-    &quot;service&quot; : [ {&#xd;
+    &quot;service&quot; : [{&#xd;
                      	&#xd;
-  &quot;code&quot;: &quot;SE_CLASSIC_USG_UNIT&quot;, &#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_OSS_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+               },&#xd;
+    {&#xd;
+                     	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_REC_FLAT&quot;, &#xd;
     &#xd;
 	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
   &#xd;
@@ -15245,6 +15190,1614 @@
           </CounterConfig>
           <hashTree/>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="generateInvoice " enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&#xd;
+{&#xd;
+  &quot;targetCode&quot; : &quot;B987_${customerID3}&quot;,&#xd;
+  &quot;targetType&quot; : &quot;BillingAccount&quot;,&#xd;
+  &quot;invoicingDate&quot; : &quot;${timestamp}000&quot;,&#xd;
+  &quot;lastTransactionDate&quot; : &quot;${timestamp}999&quot;,&#xd;
+  &quot;generateXML&quot; : true,&#xd;
+  &quot;generatePDF&quot; : true,&#xd;
+  &quot;generateAO&quot; : true&#xd;
+}&#xd;
+&#xd;
+ &#xd;
+ </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/invoice/generateInvoice</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="GenerateInvoiceByBR" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">4</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(users,4)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4=</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="opencell_protocol" elementType="Argument">
+              <stringProp name="Argument.name">opencell_protocol</stringProp>
+              <stringProp name="Argument.value">${__P(protocol,https)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="opencell_host" elementType="Argument">
+              <stringProp name="Argument.name">opencell_host</stringProp>
+              <stringProp name="Argument.value">${__P(host,maria.qa.opencell.work)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="opencell_path" elementType="Argument">
+              <stringProp name="Argument.name">opencell_path</stringProp>
+              <stringProp name="Argument.value">/opencell/api/rest</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="customerCode" elementType="Argument">
+              <stringProp name="Argument.name">customerCode</stringProp>
+              <stringProp name="Argument.value">${__P(firstCustomerId,1)}     </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="customerCode2" elementType="Argument">
+              <stringProp name="Argument.name">customerCode2</stringProp>
+              <stringProp name="Argument.value">${__P(firstCustomerId2,1)}  </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="timestamp" elementType="Argument">
+              <stringProp name="Argument.name">timestamp</stringProp>
+              <stringProp name="Argument.value">2019-07-11T17:30:58.955Z</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Delay_between_requests" enabled="true">
+          <stringProp name="ConstantTimer.delay">10000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+          <stringProp name="CounterConfig.start">1</stringProp>
+          <stringProp name="CounterConfig.end"></stringProp>
+          <stringProp name="CounterConfig.incr">1</stringProp>
+          <stringProp name="CounterConfig.name"></stringProp>
+          <stringProp name="CounterConfig.format"></stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+          <stringProp name="TestPlan.comments">			</stringProp>
+        </CounterConfig>
+        <hashTree/>
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="HTML Writer" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">C:\Users\Pc\Documents\JMETER\Report\1LOOP.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">0</stringProp>
+        </TestAction>
+        <hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
+            <stringProp name="ConstantTimer.delay">10000</stringProp>
+            <stringProp name="RandomTimer.range">10000</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CustomerHierarchy" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+            &quot;sellers&quot;: {&#xd;
+               &quot;seller&quot;: [{&#xd;
+                  &quot;code&quot;: &quot;Reseller12&quot;,&#xd;
+                  &quot;currencyCode&quot;: &quot;EUR&quot;,&#xd;
+                  &quot;countryCode&quot;: &quot;FR&quot;,&#xd;
+                  &quot;languageCode&quot;: &quot;FRA&quot;,&#xd;
+                  &quot;customers&quot;: {&#xd;
+                     &quot;customer&quot;:[ {&#xd;
+                        &quot;code&quot;: &quot;C870S_${customerID3}&quot;,&#xd;
+                        &quot;description&quot;: &quot;C4A5S_${customerID3}&quot;,&#xd;
+                        &quot;name&quot;: {&#xd;
+                           &quot;title&quot;: &quot;MR&quot;,&#xd;
+                           &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                           &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                        },&#xd;
+                        &quot;address&quot;: {&#xd;
+                           &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                           &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                           &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                           &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                           &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                           &quot;country&quot;: &quot;France&quot;&#xd;
+                        },&#xd;
+                        &quot;customerCategory&quot;: &quot;CLIENT&quot;,&#xd;
+                    &quot;customerBrand&quot;: &quot;CLASSIC&quot;,&#xd;
+                        &quot;customerAccounts&quot;: {&#xd;
+                        	&quot;customerAccount&quot;: [&#xd;
+                           {&#xd;
+                              &quot;code&quot;: &quot;C981_${customerID3}&quot;,&#xd;
+                              &quot;description&quot;: &quot;C45A1_${customerID3}&quot;,&#xd;
+                              &quot;name&quot;: {&#xd;
+                                 &quot;title&quot;: &quot;MR&quot;,&#xd;
+                                 &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                 &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                              },&#xd;
+                              &quot;address&quot;: {&#xd;
+                                 &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                 &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                 &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                 &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                 &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                                 &quot;country&quot;: &quot;France&quot;&#xd;
+                              },&#xd;
+                              &quot;currency&quot;: &quot;EUR&quot;,&#xd;
+                              &quot;language&quot;: &quot;FRA&quot;,&#xd;
+                             &#xd;
+                                 &quot;methodOfPayment&quot;: [{&#xd;
+                                    &quot;paymentMethodType&quot;: &quot;WIRETRANSFER&quot;&#xd;
+                                 &#xd;
+                              }],&#xd;
+                              &quot;billingAccounts&quot;: {&#xd;
+                                 &quot;billingAccount&quot;: [&#xd;
+                                 	{&#xd;
+                                    &quot;code&quot;: &quot;B987_${customerID3}&quot;,&#xd;
+                                    &quot;description&quot;: &quot;B45A1_${customerID3}&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                       &quot;title&quot;: &quot;MR&quot;,&#xd;
+                                       &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                       &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                                    },&#xd;
+                                    &quot;address&quot;: {&#xd;
+                                       &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                       &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                       &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                       &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                       &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                                       &quot;country&quot;: &quot;France&quot;&#xd;
+                                    },&#xd;
+                                    &quot;billingCycle&quot;: &quot;CYC_INV_MT_1&quot;,&#xd;
+                                    &quot;country&quot;: &quot;FR&quot;,&#xd;
+                                    &quot;language&quot;: &quot;FRA&quot;,&#xd;
+                                    &quot;electronicBilling&quot;: &quot;true&quot;,&#xd;
+                                    &quot;email&quot;: &quot;maria.ab@opencellsoft.com&quot;,&#xd;
+                                    &quot;userAccounts&quot;: {&#xd;
+                                       &quot;userAccount&quot;: [ {&#xd;
+                                          &quot;code&quot;: &quot;U989_${customerID3}&quot;,&#xd;
+                                          &quot;description&quot;: &quot;UA451_${customerID3}&quot;,&#xd;
+                                          &quot;name&quot;: {&#xd;
+                                             &quot;title&quot;: &quot;Ms&quot;,&#xd;
+                                             &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                             &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                                          },&#xd;
+                                          &quot;address&quot;: {&#xd;
+                                             &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                             &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                             &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                             &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                             &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;&#xd;
+                                          &#xd;
+                                          }&#xd;
+                           &#xd;
+                                       &#xd;
+                                 }  ]}&#xd;
+&#xd;
+}]&#xd;
+}&#xd;
+}]&#xd;
+}&#xd;
+}&#xd;
+]&#xd;
+}&#xd;
+}&#xd;
+]&#xd;
+}&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/account/accountHierarchy/customerHierarchyUpdate</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter1" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode1</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID1</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter3" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode3</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID3</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CreateSubscription" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+            &quot;code&quot;: &quot;SUB_${customerID5}&quot;,&#xd;
+            &quot;description&quot;: &quot; Subscription to Super Offer&quot;,&#xd;
+            &quot;userAccount&quot;: &quot;U989_${customerID5}&quot;,&#xd;
+            &quot;offerTemplate&quot;: &quot;OF_CLASSIC_TEMPLATE&quot;,&#xd;
+            &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;&#xd;
+         }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/createOrUpdate</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="UAOnSubscriptionCodeCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID3}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID5</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="SubscriptionCounter" enabled="true">
+            <stringProp name="CounterConfig.start">U989_${customerID3}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID4</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="AccessPoint" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{ &#xd;
+      &quot;code&quot; : &quot;accesstest${customerID7}&quot;,&#xd;
+      &quot;subscription&quot; : &quot;SUB_${customerID7}&quot;,&#xd;
+      &quot;customFields&quot; : { },&#xd;
+      &quot;disabled&quot; : false&#xd;
+      &#xd;
+}&#xd;
+     &#xd;
+      &#xd;
+  &#xd;
+  &#xd;
+ &#xd;
+ </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/account/access</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="OrderCounter" enabled="true">
+            <stringProp name="CounterConfig.start">U989_${customerID5}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID6</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="SubOrderCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID6}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID7</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="instaniciateService " enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&#xd;
+ {&#xd;
+    &quot;subscription&quot;: &quot;SUB_${customerID10}&quot;,&#xd;
+  &#xd;
+  &quot;servicesToInstantiate&quot;: { &quot;service&quot;: [  &#xd;
+    	{ &#xd;
+    	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_OSS_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+    	},&#xd;
+    	{ &#xd;
+    	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_REC_FLAT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+    	}&#xd;
+    &#xd;
+	   ] }&#xd;
+}&#xd;
+ &#xd;
+  </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/instantiateServices</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">SUB_${customerID5}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID9</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceInstanceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID6}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID10</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="activateService " enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&#xd;
+ &#xd;
+  {&#xd;
+         &#xd;
+           &quot;subscription&quot;: &quot;SUB_${customerID5}&quot;,&#xd;
+             &quot;servicesToActivate&quot; : {&#xd;
+    &quot;service&quot; : [{&#xd;
+                     	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_OSS_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+               },&#xd;
+    {&#xd;
+                     	&#xd;
+  &quot;code&quot;: &quot;SE_CLASSIC_REC_FLAT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+               }&#xd;
+            ]&#xd;
+         }&#xd;
+  }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/activateServices</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">SUB_${customerID10}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID11</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceActiveCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID11}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID12</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_Rated_job" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;RT_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create_Billing_Run" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &#xd;
+  &quot;billingCycleCode&quot; : &quot;CYC_INV_MT_1&quot;,&#xd;
+  &quot;billingRunTypeEnum&quot; : &quot;AUTOMATIC&quot;,&#xd;
+  &#xd;
+  &quot;invoiceDate&quot; : &quot;2019-07-15T16:29:14.379Z&quot;,&#xd;
+  &quot;lastTransactionDate&quot; : &quot;2019-07-19T16:29:14.379Z&quot;&#xd;
+ &#xd;
+  &#xd;
+  &#xd;
+  &#xd;
+  }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/invoicing/createBillingRun</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_INV_job1" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;INV_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Validate_BR" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${customerID3}&#xd;
+&#xd;
+</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/invoicing/validateBillingRun</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_INV_job2" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;INV_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_XML_job" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;XML_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_PDF_job" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;PDF_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Mediation" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">2</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(users,2)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time"></stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4=</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="opencell_protocol" elementType="Argument">
+              <stringProp name="Argument.name">opencell_protocol</stringProp>
+              <stringProp name="Argument.value">${__P(protocol,https)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="opencell_host" elementType="Argument">
+              <stringProp name="Argument.name">opencell_host</stringProp>
+              <stringProp name="Argument.value">${__P(host,maria.qa.opencell.work)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="opencell_path" elementType="Argument">
+              <stringProp name="Argument.name">opencell_path</stringProp>
+              <stringProp name="Argument.value">/opencell/api/rest</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="customerCode" elementType="Argument">
+              <stringProp name="Argument.name">customerCode</stringProp>
+              <stringProp name="Argument.value">${__P(firstCustomerId,1)}     </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="customerCode2" elementType="Argument">
+              <stringProp name="Argument.name">customerCode2</stringProp>
+              <stringProp name="Argument.value">${__P(firstCustomerId2,1)}  </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="timestamp" elementType="Argument">
+              <stringProp name="Argument.name">timestamp</stringProp>
+              <stringProp name="Argument.value">2019-07-11T17:30:58.955Z</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Delay_between_requests" enabled="true">
+          <stringProp name="ConstantTimer.delay">10000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+          <stringProp name="CounterConfig.start">1</stringProp>
+          <stringProp name="CounterConfig.end"></stringProp>
+          <stringProp name="CounterConfig.incr">1</stringProp>
+          <stringProp name="CounterConfig.name"></stringProp>
+          <stringProp name="CounterConfig.format"></stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+          <stringProp name="TestPlan.comments">			</stringProp>
+        </CounterConfig>
+        <hashTree/>
+        <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="HTML Writer" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">C:\Users\Pc\Documents\JMETER\Report\1LOOP.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Think Time" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">0</stringProp>
+        </TestAction>
+        <hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
+            <stringProp name="ConstantTimer.delay">10000</stringProp>
+            <stringProp name="RandomTimer.range">10000</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CustomerHierarchy" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+            &quot;sellers&quot;: {&#xd;
+               &quot;seller&quot;: [{&#xd;
+                  &quot;code&quot;: &quot;Reseller12&quot;,&#xd;
+                  &quot;currencyCode&quot;: &quot;EUR&quot;,&#xd;
+                  &quot;countryCode&quot;: &quot;FR&quot;,&#xd;
+                  &quot;languageCode&quot;: &quot;FRA&quot;,&#xd;
+                  &quot;customers&quot;: {&#xd;
+                     &quot;customer&quot;:[ {&#xd;
+                        &quot;code&quot;: &quot;C870S_${customerID3}&quot;,&#xd;
+                        &quot;description&quot;: &quot;C4A5S_${customerID3}&quot;,&#xd;
+                        &quot;name&quot;: {&#xd;
+                           &quot;title&quot;: &quot;MR&quot;,&#xd;
+                           &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                           &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                        },&#xd;
+                        &quot;address&quot;: {&#xd;
+                           &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                           &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                           &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                           &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                           &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                           &quot;country&quot;: &quot;France&quot;&#xd;
+                        },&#xd;
+                        &quot;customerCategory&quot;: &quot;CLIENT&quot;,&#xd;
+                    &quot;customerBrand&quot;: &quot;CLASSIC&quot;,&#xd;
+                        &quot;customerAccounts&quot;: {&#xd;
+                        	&quot;customerAccount&quot;: [&#xd;
+                           {&#xd;
+                              &quot;code&quot;: &quot;C981_${customerID3}&quot;,&#xd;
+                              &quot;description&quot;: &quot;C45A1_${customerID3}&quot;,&#xd;
+                              &quot;name&quot;: {&#xd;
+                                 &quot;title&quot;: &quot;MR&quot;,&#xd;
+                                 &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                 &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                              },&#xd;
+                              &quot;address&quot;: {&#xd;
+                                 &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                 &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                 &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                 &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                 &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                                 &quot;country&quot;: &quot;France&quot;&#xd;
+                              },&#xd;
+                              &quot;currency&quot;: &quot;EUR&quot;,&#xd;
+                              &quot;language&quot;: &quot;FRA&quot;,&#xd;
+                             &#xd;
+                                 &quot;methodOfPayment&quot;: [{&#xd;
+                                    &quot;paymentMethodType&quot;: &quot;WIRETRANSFER&quot;&#xd;
+                                 &#xd;
+                              }],&#xd;
+                              &quot;billingAccounts&quot;: {&#xd;
+                                 &quot;billingAccount&quot;: [&#xd;
+                                 	{&#xd;
+                                    &quot;code&quot;: &quot;B987_${customerID3}&quot;,&#xd;
+                                    &quot;description&quot;: &quot;B45A1_${customerID3}&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                       &quot;title&quot;: &quot;MR&quot;,&#xd;
+                                       &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                       &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                                    },&#xd;
+                                    &quot;address&quot;: {&#xd;
+                                       &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                       &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                       &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                       &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                       &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;,&#xd;
+                                       &quot;country&quot;: &quot;France&quot;&#xd;
+                                    },&#xd;
+                                    &quot;billingCycle&quot;: &quot;CYC_INV_MT_1&quot;,&#xd;
+                                    &quot;country&quot;: &quot;FR&quot;,&#xd;
+                                    &quot;language&quot;: &quot;FRA&quot;,&#xd;
+                                    &quot;electronicBilling&quot;: &quot;true&quot;,&#xd;
+                                    &quot;email&quot;: &quot;maria.ab@opencellsoft.com&quot;,&#xd;
+                                    &quot;userAccounts&quot;: {&#xd;
+                                       &quot;userAccount&quot;: [ {&#xd;
+                                          &quot;code&quot;: &quot;U989_${customerID3}&quot;,&#xd;
+                                          &quot;description&quot;: &quot;UA451_${customerID3}&quot;,&#xd;
+                                          &quot;name&quot;: {&#xd;
+                                             &quot;title&quot;: &quot;Ms&quot;,&#xd;
+                                             &quot;firstName&quot;: &quot;Maria&quot;,&#xd;
+                                             &quot;lastName&quot;: &quot;AB&quot;&#xd;
+                                          },&#xd;
+                                          &quot;address&quot;: {&#xd;
+                                             &quot;address1&quot;: &quot;rue De Versailles&quot;,&#xd;
+                                             &quot;address2&quot;: &quot;Zac De Valmy&quot;,&#xd;
+                                             &quot;address3&quot;: &quot;address3&quot;,&#xd;
+                                             &quot;zipCode&quot;: &quot;59650&quot;,&#xd;
+                                             &quot;city&quot;: &quot;Villeneuve d&apos;ascq&quot;&#xd;
+                                          &#xd;
+                                          }&#xd;
+                           &#xd;
+                                       &#xd;
+                                 }  ]}&#xd;
+&#xd;
+}]&#xd;
+}&#xd;
+}]&#xd;
+}&#xd;
+}&#xd;
+]&#xd;
+}&#xd;
+}&#xd;
+]&#xd;
+}&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/account/accountHierarchy/customerHierarchyUpdate</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter1" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode1</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID1</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="customerCodeCounter3" enabled="true">
+            <stringProp name="CounterConfig.start">customerCode3</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID3</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CreateSubscription" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+            &quot;code&quot;: &quot;SUB_${customerID5}&quot;,&#xd;
+            &quot;description&quot;: &quot; Subscription to Super Offer&quot;,&#xd;
+            &quot;userAccount&quot;: &quot;U989_${customerID5}&quot;,&#xd;
+            &quot;offerTemplate&quot;: &quot;OF_CLASSIC_MAIN&quot;,&#xd;
+            &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;&#xd;
+         }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/createOrUpdate</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="UAOnSubscriptionCodeCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID3}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID5</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="SubscriptionCounter" enabled="true">
+            <stringProp name="CounterConfig.start">U989_${customerID3}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID4</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="AccessPoint" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{ &#xd;
+      &quot;code&quot; : &quot;accesstest_${customerID7}&quot;,&#xd;
+      &quot;subscription&quot; : &quot;SUB_${customerID7}&quot;,&#xd;
+      &quot;customFields&quot; : { },&#xd;
+      &quot;disabled&quot; : false&#xd;
+      &#xd;
+}&#xd;
+     &#xd;
+      &#xd;
+  &#xd;
+  &#xd;
+ &#xd;
+ </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/account/access/createOrUpdate</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="OrderCounter" enabled="true">
+            <stringProp name="CounterConfig.start">U989_${customerID5}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID6</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="SubOrderCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID6}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID7</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="instaniciateService " enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&#xd;
+ {&#xd;
+    &quot;subscription&quot;: &quot;SUB_${customerID10}&quot;,&#xd;
+  &#xd;
+  &quot;servicesToInstantiate&quot;: { &quot;service&quot;: [  &#xd;
+    	{ &#xd;
+    	&#xd;
+  &quot;code&quot;: &quot;5_SE_CLASSIC_USG_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+    	}&#xd;
+    &#xd;
+	   ] }&#xd;
+}&#xd;
+ &#xd;
+  </stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/instantiateServices</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">SUB_${customerID5}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID9</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceInstanceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID6}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID10</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="activateService " enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&#xd;
+ &#xd;
+  {&#xd;
+         &#xd;
+           &quot;subscription&quot;: &quot;SUB_${customerID5}&quot;,&#xd;
+             &quot;servicesToActivate&quot; : {&#xd;
+    &quot;service&quot; : [{&#xd;
+                     	&#xd;
+  &quot;code&quot;: &quot;5_SE_CLASSIC_USG_UNIT&quot;, &#xd;
+    &#xd;
+	  &quot;subscriptionDate&quot;: &quot;2018-09-19T16:29:14.379Z&quot;,&#xd;
+  &#xd;
+  	  &quot;quantity&quot;: 1&#xd;
+               }&#xd;
+   &#xd;
+            ]&#xd;
+         }&#xd;
+  }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/subscription/activateServices</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">SUB_${customerID10}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID11</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceActiveCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID11}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID12</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mediation" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">2018-01-19T16:29:14.379Z;1;accesstest_${customerID7};UNIT</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/billing/mediation/chargeCdr</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceCounter" enabled="true">
+            <stringProp name="CounterConfig.start">SUB_${customerID10}</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID11</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="ServiceActiveCounter" enabled="true">
+            <stringProp name="CounterConfig.start">${customerID11}-9</stringProp>
+            <stringProp name="CounterConfig.end"></stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">customerID12</stringProp>
+            <stringProp name="CounterConfig.format">#</stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_Usage_job" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;U_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_Rated_job" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;code&quot; : &quot;RT_Job&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>
