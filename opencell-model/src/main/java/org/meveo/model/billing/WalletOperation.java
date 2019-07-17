@@ -121,7 +121,10 @@ import org.meveo.model.rating.EDR;
         @NamedQuery(name = "WalletOperation.deleteNotOpenWObetweenTwoDates", query = "delete FROM WalletOperation o WHERE o.status <> org.meveo.model.billing.WalletOperationStatusEnum.OPEN AND  "
                 + ":firstTransactionDate<o.operationDate AND o.operationDate<:lastTransactionDate"),
         @NamedQuery(name = "WalletOperation.prepareToSafeDeleteNotOpenWObetweenTwoDates", query = "UPDATE WalletOperation o  SET o.edr = NULL, o.ratedTransaction=NULL WHERE o.status <> org.meveo.model.billing.WalletOperationStatusEnum.OPEN AND  "
-                + ":firstTransactionDate<o.operationDate AND o.operationDate<:lastTransactionDate")})
+                + ":firstTransactionDate<o.operationDate AND o.operationDate<:lastTransactionDate"),
+        @NamedQuery(name = "WalletOperation.cancel", query = "UPDATE WalletOperation o  SET o.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED WHERE o.ratedTransaction IN (select rt FROM RatedTransaction rt WHERE rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN"
+                + " AND rt.startDate>:terminationDate AND rt.chargeInstance=:chargeInstance) OR (o.ratedTransaction is null AND o.status = org.meveo.model.billing.WalletOperationStatusEnum.OPEN AND o.chargeInstance=:chargeInstance AND o.operationDate>:terminationDate)")
+})
 public class WalletOperation extends BusinessEntity {
 
     private static final long serialVersionUID = 1L;

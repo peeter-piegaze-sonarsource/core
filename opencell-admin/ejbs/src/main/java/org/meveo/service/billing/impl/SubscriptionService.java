@@ -321,7 +321,6 @@ public class SubscriptionService extends BusinessService<Subscription> {
                 orderHistoryService.create(orderNumber, orderItemId, serviceInstance, orderItemAction);
             }
         }
-        cancelRatedTransaction(subscription, terminationDate);
         subscription.setSubscriptionTerminationReason(terminationReason);
         subscription.setTerminationDate(terminationDate);
         subscription.setStatus(SubscriptionStatusEnum.RESILIATED);
@@ -341,9 +340,6 @@ public class SubscriptionService extends BusinessService<Subscription> {
         return subscription;
     }
 
-    private void cancelRatedTransaction(Subscription subscription, Date terminationDate) {
-        ratedTransactionService.cancel(subscription,terminationDate);
-    }
 
     public boolean hasSubscriptions(OfferTemplate offerTemplate) {
         try {

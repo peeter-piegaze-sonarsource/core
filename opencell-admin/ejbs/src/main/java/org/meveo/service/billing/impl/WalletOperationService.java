@@ -145,6 +145,9 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
     @Inject
     private WalletTemplateService walletTemplateService;
 
+    @Inject
+    private RatedTransactionService ratedTransactionService;
+
     public BigDecimal getRatedAmount(Seller seller, Customer customer, CustomerAccount customerAccount, BillingAccount billingAccount, UserAccount userAccount, Date startDate,
             Date endDate, boolean amountWithTax) {
 
@@ -556,12 +559,15 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
         Date applyChargeOnDate = chargeInstance.getTerminationDate();
         // applyChargeOnDate = DateUtils.addDaysToDate(applyChargeOnDate, 1);
 
+
         boolean isApplyInAdvance = chargeInstance.getRecurringChargeTemplate().getApplyInAdvance() == null ? false
                 : chargeInstance.getRecurringChargeTemplate().getApplyInAdvance();
-        if (StringUtils.isBlank(chargeInstance.getRecurringChargeTemplate().getApplyInAdvanceEl())) {
+        if (!StringUtils.isBlank(chargeInstance.getRecurringChargeTemplate().getApplyInAdvanceEl())) {
             isApplyInAdvance = recurringChargeTemplateService.matchExpression(chargeInstance.getRecurringChargeTemplate().getApplyInAdvanceEl(),
                 chargeInstance.getServiceInstance(), chargeInstance.getRecurringChargeTemplate());
         }
+
+        cancelWONotBilled(chargeInstance, isApplyInAdvance);
 
         log.debug("Will apply reimbursment for charge {}, chargeCode {}, quantity {}, termination date {}, charge was applied untill {}", chargeInstance.getId(),
             chargeInstance.getCode(), chargeInstance.getQuantity(), chargeInstance.getTerminationDate(), chargeInstance.getNextChargeDate());
@@ -616,7 +622,7 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
             log.debug("Recuring charge id={} will be rated with prorata {}/{}={} -> quantity={}", chargeInstance.getId(), part1, part2, prorataRatio, inputQuantity);
 
             Tax tax = invoiceSubCategoryCountryService.determineTax(chargeInstance, applyChargeOnDate);
-
+            if (isChargeAlreadyBilled(chargeInstance, previousChargeDate, nextChargeDate, isApplyInAdvance)) {
             Date chargeDateForWO = isApplyInAdvance ? applyChargeOnDate : nextChargeDate;
             String orderNumberForWO = (orderNumber != null) ? orderNumber : chargeInstance.getOrderNumber();
             WalletOperation chargeApplication = chargeApplicationRatingService.rateChargeApplication(chargeInstance, ApplicationTypeEnum.PRORATA_TERMINATION, chargeDateForWO,
@@ -624,8 +630,8 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
                 nextChargeDate, recurringChargeTemplate.getInvoiceSubCategory(), chargeInstance.getCriteria1(), chargeInstance.getCriteria2(), chargeInstance.getCriteria3(), orderNumberForWO,
                 applyChargeOnDate, nextChargeDate, ChargeApplicationModeEnum.REIMBURSMENT, false, false);
 
-            chargeWalletOperation(chargeApplication);
-            // create(chargeApplication);
+                chargeWalletOperation(chargeApplication);
+            }
         }
 
         // Reimburse other charges that were applied already and are passed the charge period that termination date falls into (Note: in those methods, the next period passed the
@@ -647,6 +653,31 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
                 applyNotAppliedinAdvanceReccuringCharge(chargeInstance, true, recurringChargeTemplate);
             }
         }
+    }
+
+    private boolean isChargeAlreadyBilled(RecurringChargeInstance chargeInstance, Date previousChargeDate, Date nextChargeDate, Boolean isApplyAdvance) {
+        nextChargeDate = DateUtils.addSecondsToDate(nextChargeDate, 1);
+        if (isApplyAdvance) {
+            previousChargeDate = DateUtils.addSecondsToDate(previousChargeDate, -1);
+        }
+        Boolean b = getEntityManager().createNamedQuery("RatedTransaction.isAlreadyInvoicedBySubScription", Boolean.class)
+                .setParameter("chargeInstance", chargeInstance).setParameter("previousChargeDate", previousChargeDate)
+                .setParameter("nextChargeDate", nextChargeDate).getSingleResult();
+        return b;
+    }
+
+    private void cancelWONotBilled(RecurringChargeInstance chargeInstance, Boolean isApplyInAdvance) {
+        log.debug("Will cancel WO for charge {}, chargeCode {}, termination date {}", chargeInstance.getId(), chargeInstance.getCode(), chargeInstance.getTerminationDate());
+        Date terminationDate = chargeInstance.getTerminationDate();
+        if (isApplyInAdvance) {
+             terminationDate = DateUtils.addSecondsToDate(chargeInstance.getTerminationDate(), -1);
+        }
+        getEntityManager().createNamedQuery("WalletOperation.cancel").setParameter("chargeInstance", chargeInstance).setParameter("terminationDate", terminationDate)
+                .executeUpdate();
+        terminationDate = DateUtils.addSecondsToDate(terminationDate, -1);
+        getEntityManager().createNamedQuery("RatedTransaction.cancel").setParameter("chargeInstance",chargeInstance)
+                .setParameter("terminationDate",terminationDate)
+                .executeUpdate();
     }
 
     /**
@@ -719,13 +750,7 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
             boolean createNewWO = true;
             if (reimbursement) {
                 inputQuantity = inputQuantity.negate();
-                walletOperations = chargeInstance.getWalletOperations();
-                for(WalletOperation walletOperation : walletOperations) {
-                    if (applyChargeOnDate.equals(walletOperation.getStartDate()) &&  nextChargeDate.equals(walletOperation.getEndDate())) {
-                        walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
-                        createNewWO = false;
-                    }
-                }
+                createNewWO = isChargeAlreadyBilled(chargeInstance, applyChargeOnDate, nextChargeDate, true);
             }
 
             if (createNewWO) {
@@ -900,7 +925,7 @@ public class WalletOperationService extends BusinessService<WalletOperation> {
                 walletOperations = chargeInstance.getWalletOperations();
                 for(WalletOperation walletOperation : walletOperations) {
                     if (applyChargeOnDate.equals(walletOperation.getStartDate()) &&  nextChargeDate.equals(walletOperation.getEndDate())) {
-                        walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
+                        //walletOperation.setStatus(WalletOperationStatusEnum.CANCELED);
                         createNewWO = false;
                     }
                 }

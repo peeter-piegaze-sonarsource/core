@@ -159,7 +159,11 @@ import org.meveo.model.rating.EDR;
                 + " AND :firstTransactionDate<r.usageDate AND r.usageDate<:lastTransactionDate "),
 
         @NamedQuery(name = "RatedTransaction.cancel", query = "update RatedTransaction rt set rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.CANCELED where "
-                + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.subscription=:subscription and wo.operationDate>:terminationDate)")
+                + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.chargeInstance=:chargeInstance and wo.operationDate>:terminationDate)"),
+
+        @NamedQuery(name = "RatedTransaction.isAlreadyInvoicedBySubScription", query = "SELECT case when count(r)> 0 then true else false end FROM RatedTransaction r WHERE "
+                + " (r.status = org.meveo.model.billing.RatedTransactionStatusEnum.BILLED OR r.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN)"
+                + " AND r.chargeInstance=:chargeInstance AND usageDate>:previousChargeDate AND usageDate<:nextChargeDate"),
 
 })
 public class RatedTransaction extends BaseEntity implements ISearchable {
