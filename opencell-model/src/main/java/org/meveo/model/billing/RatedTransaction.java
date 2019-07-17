@@ -152,11 +152,16 @@ import org.meveo.model.tax.TaxClass;
                 "select sum(r.amountWithoutTax), sum(r.amountWithTax), r.invoice.id, r.billingAccount.id, r.billingAccount.customerAccount.id, r.billingAccount.customerAccount.customer.id "
                         + "FROM RatedTransaction r where r.billingRun.id=:billingRunId and r.amountWithoutTax > 0 and r.status='BILLED' group by r.invoice.id, r.billingAccount.id, r.billingAccount.customerAccount.id, r.billingAccount.customerAccount.customer.id"),
         @NamedQuery(name = "RatedTransaction.unInvoiceByInvoiceIds", query = "update RatedTransaction r set r.status='OPEN', r.billingRun= null, r.invoice=null, r.invoiceAgregateF=null where r.status=org.meveo.model.billing.RatedTransactionStatusEnum.BILLED and r.invoice.id IN (:invoiceIds)"),
-        @NamedQuery(name = "RatedTransaction.deleteSupplementalRTByInvoiceIds", query = "DELETE from RatedTransaction r WHERE r.wallet IS null and r.invoice.id IN (:invoicesIds)") }),
+        @NamedQuery(name = "RatedTransaction.deleteSupplementalRTByInvoiceIds", query = "DELETE from RatedTransaction r WHERE r.wallet IS null and r.invoice.id IN (:invoicesIds)"),
 
 @NamedQuery(name = "RatedTransaction.cancel", query = "update RatedTransaction rt set rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.CANCELED where "
-        + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.subscription=:subscription and wo.operationDate>:terminationDate)")
+        + " rt in ( select wo.ratedTransaction FROM WalletOperation wo WHERE wo.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED AND wo.chargeInstance=:chargeInstance and wo.operationDate>:terminationDate)"),
 
+@NamedQuery(name = "RatedTransaction.isAlreadyInvoicedBySubScription", query = "SELECT case when count(r)> 0 then true else false end FROM RatedTransaction r WHERE "
+        + " (r.status = org.meveo.model.billing.RatedTransactionStatusEnum.BILLED OR r.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN)"
+        + " AND r.chargeInstance=:chargeInstance AND usageDate>:previousChargeDate AND usageDate<:nextChargeDate")
+
+})
 public class RatedTransaction extends BaseEntity implements ISearchable {
 
     private static final long serialVersionUID = 1L;
@@ -471,7 +476,7 @@ public class RatedTransaction extends BaseEntity implements ISearchable {
     @JoinColumn(name = "input_unitofmeasure")
     private UnitOfMeasure inputUnitOfMeasure;
 
-	/**
+    /**
      * rating_unit_unitOfMeasure
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -1130,18 +1135,18 @@ public class RatedTransaction extends BaseEntity implements ISearchable {
     }
     
     public UnitOfMeasure getInputUnitOfMeasure() {
-		return inputUnitOfMeasure;
-	}
+        return inputUnitOfMeasure;
+    }
 
-	public void setInputUnitOfMeasure(UnitOfMeasure inputUnitOfMeasure) {
-		this.inputUnitOfMeasure = inputUnitOfMeasure;
-	}
+    public void setInputUnitOfMeasure(UnitOfMeasure inputUnitOfMeasure) {
+        this.inputUnitOfMeasure = inputUnitOfMeasure;
+    }
 
-	public UnitOfMeasure getRatingUnitOfMeasure() {
-		return ratingUnitOfMeasure;
-	}
+    public UnitOfMeasure getRatingUnitOfMeasure() {
+        return ratingUnitOfMeasure;
+    }
 
-	public void setRatingUnitOfMeasure(UnitOfMeasure ratingUnitOfMeasure) {
-		this.ratingUnitOfMeasure = ratingUnitOfMeasure;
-	}
+    public void setRatingUnitOfMeasure(UnitOfMeasure ratingUnitOfMeasure) {
+        this.ratingUnitOfMeasure = ratingUnitOfMeasure;
+    }
 }

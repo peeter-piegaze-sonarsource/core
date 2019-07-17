@@ -233,6 +233,20 @@ public class DateUtils {
         return result;
     }
 
+    public static Date addSecondsToDate(Date date, Integer seconds) {
+        Date result = null;
+
+        if (date != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.SECOND, seconds);
+            result = calendar.getTime();
+        }
+
+        return result;
+    }
+
+
     public static Date addWeeksToDate(Date date, Integer weeks) {
         Date result = null;
 

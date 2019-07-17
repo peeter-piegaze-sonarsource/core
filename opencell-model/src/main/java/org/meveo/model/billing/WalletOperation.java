@@ -116,7 +116,11 @@ import org.meveo.model.tax.TaxClass;
         @NamedQuery(name = "WalletOperation.listWObetweenTwoDatesByStatus", query = "SELECT o FROM WalletOperation o WHERE o.status in (:status) AND :firstTransactionDate<=o.operationDate AND o.operationDate<=:lastTransactionDate and o.id >:lastId order by o.id asc"),
         @NamedQuery(name = "WalletOperation.deleteNotOpenWObetweenTwoDates", query = "delete FROM WalletOperation o WHERE o.status<>'OPEN' AND :firstTransactionDate<o.operationDate AND o.operationDate<:lastTransactionDate"),
         @NamedQuery(name = "WalletOperation.deleteWObetweenTwoDatesByStatus", query = "delete FROM WalletOperation o WHERE o.status in (:status) AND :firstTransactionDate<=o.operationDate AND o.operationDate<=:lastTransactionDate"),
-        @NamedQuery(name = "WalletOperation.deleteZeroWO", query = "delete FROM WalletOperation o WHERE o.quantity=0 AND o.chargeInstance.id in (select c.id FROM ChargeInstance c where c.chargeTemplate.dropZeroWo=true)")})
+        @NamedQuery(name = "WalletOperation.deleteZeroWO", query = "delete FROM WalletOperation o WHERE o.quantity=0 AND o.chargeInstance.id in (select c.id FROM ChargeInstance c where c.chargeTemplate.dropZeroWo=true)"),
+@NamedQuery(name = "WalletOperation.cancel", query = "UPDATE WalletOperation o  SET o.status = org.meveo.model.billing.WalletOperationStatusEnum.CANCELED WHERE o.ratedTransaction IN (select rt FROM RatedTransaction rt WHERE rt.status=org.meveo.model.billing.RatedTransactionStatusEnum.OPEN"
+        + " AND rt.startDate>:terminationDate AND rt.chargeInstance=:chargeInstance) OR (o.ratedTransaction is null AND o.status = org.meveo.model.billing.WalletOperationStatusEnum.OPEN AND o.chargeInstance=:chargeInstance AND o.operationDate>:terminationDate)")
+
+})
 public class WalletOperation extends BaseEntity implements ICustomFieldEntity {
 
     private static final long serialVersionUID = 1L;

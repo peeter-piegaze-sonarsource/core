@@ -1955,8 +1955,9 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
 
     }
 
-    public void cancel(Subscription subscription, Date terminationDate) {
-         getEntityManager().createNamedQuery("RatedTransaction.cancel").setParameter("subscription",subscription)
+    public void cancelNotBilled(ChargeInstance chargeInstance, Date terminationDate) {
+        terminationDate = DateUtils.addSecondsToDate(terminationDate, -1);
+         getEntityManager().createNamedQuery("RatedTransaction.cancel").setParameter("chargeInstance",chargeInstance)
                 .setParameter("terminationDate",terminationDate)
                 .executeUpdate();
 
