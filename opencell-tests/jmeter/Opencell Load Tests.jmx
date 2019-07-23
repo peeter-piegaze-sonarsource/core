@@ -15936,7 +15936,6 @@
         </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_INV_job1" enabled="true">
-<<<<<<< HEAD
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -16835,8 +16834,6 @@
         </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_INV_job2" enabled="true">
-=======
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -16844,8 +16841,6 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;code&quot; : &quot;INV_Job&quot;}</stringProp>
-<<<<<<< HEAD
-=======
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -16865,55 +16860,14 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Validate_BR" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${customerID3}&#xd;
-&#xd;
-</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${opencell_host}</stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-<<<<<<< HEAD
-          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
-=======
-          <stringProp name="HTTPSampler.path">${opencell_path}/billing/invoicing/validateBillingRun</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree/>
-<<<<<<< HEAD
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_AO_Job" enabled="true">
-=======
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_INV_job2" enabled="true">
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-<<<<<<< HEAD
   &quot;code&quot; : &quot;AO_Job&quot;}</stringProp>
-=======
-  &quot;code&quot; : &quot;INV_Job&quot;}</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -16933,18 +16887,13 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-<<<<<<< HEAD
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create Sepa job instance" enabled="true">
-=======
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_XML_job" enabled="true">
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-<<<<<<< HEAD
             &quot;code&quot;: &quot;STD_SEPA_JOB&quot;,&#xd;
             &quot;jobTemplate&quot;: &quot;SepaDirectDebitJob&quot;,&#xd;
             &quot;jobCategory&quot;: &quot;ACCOUNT_RECEIVABLES&quot;,&#xd;
@@ -16960,9 +16909,6 @@
             ]&#xd;
          }&#xd;
 }  </stringProp>
-=======
-  &quot;code&quot; : &quot;XML_Job&quot;}</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -16971,7 +16917,6 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-<<<<<<< HEAD
           <stringProp name="HTTPSampler.path">${opencell_path}/jobInstance/createOrUpdate</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -17005,9 +16950,6 @@
           <stringProp name="HTTPSampler.protocol">${opencell_protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">${opencell_path}/payment/ddrequestLotOp</stringProp>
-=======
-          <stringProp name="HTTPSampler.path">${opencell_path}/job/execute</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -17018,22 +16960,14 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-<<<<<<< HEAD
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_STD_SEPA_JOB" enabled="true">
-=======
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Run_PDF_job" enabled="true">
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-<<<<<<< HEAD
   &quot;code&quot; : &quot;STD_SEPA_JOB&quot;}</stringProp>
-=======
-  &quot;code&quot; : &quot;PDF_Job&quot;}</stringProp>
->>>>>>> e455b822c52cfd5860ef7dc5ed8e92409a00e549
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
