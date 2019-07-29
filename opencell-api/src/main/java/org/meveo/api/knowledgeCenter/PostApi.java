@@ -1,11 +1,14 @@
 package org.meveo.api.knowledgeCenter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 
+import org.apache.lucene.util.packed.PackedLongValues.Iterator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.BaseApi;
@@ -22,8 +25,11 @@ import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethod;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.api.security.filter.ListFilter;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.billing.Language;
 import org.meveo.model.knowledgeCenter.Collection;
+import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.model.knowledgeCenter.Post;
+import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.knowledgeCenter.CollectionService;
 import org.meveo.service.knowledgeCenter.PostService;
 import org.primefaces.model.SortOrder;
@@ -38,9 +44,18 @@ public class PostApi extends BaseApi{
 	@Inject
 	PostService postService;
 	
+	@Inject
+	LanguageService languageService;
+	
 	public Post create(PostDto postData) throws BusinessException, MissingParameterException {
 		if(StringUtils.isBlank(postData.getName())) {
 			missingParameters.add("Name");
+		}
+		if(StringUtils.isBlank(postData.getContent())) {
+			missingParameters.add("Content");
+		}
+		if(StringUtils.isBlank(postData.getLanguage())) {
+			missingParameters.add("Language");
 		}
 		if(StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("Code");
@@ -48,8 +63,11 @@ public class PostApi extends BaseApi{
 		handleMissingParameters();
 		
 		Post post = new Post();
-		post.setName(postData.getName());
-		post.setContent(postData.getContent());
+		
+		Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
+		Language language = languageService.findByCode(postData.getLanguage());
+		MarkdownContent mdc = new MarkdownContent(postData.getName(), postData.getContent(), language);
+		markdownContents.add(mdc);
 		post.setCode(postData.getCode());
 		post.setDescription(postData.getDescription());
 		
@@ -71,6 +89,21 @@ public class PostApi extends BaseApi{
 	}
 	
 	public Post update(PostDto postData) throws BusinessException, MissingParameterException, EntityDoesNotExistsException {
+		Boolean hasContent = false;
+		if(!StringUtils.isBlank(postData.getName()) ||
+				!StringUtils.isBlank(postData.getContent()) ||
+				!StringUtils.isBlank(postData.getLanguage())) {
+			if(StringUtils.isBlank(postData.getName())) {
+				missingParameters.add("Name");
+			}
+			if(StringUtils.isBlank(postData.getContent())) {
+				missingParameters.add("Content");
+			}
+			if(StringUtils.isBlank(postData.getLanguage())) {
+				missingParameters.add("Language");
+			}
+			hasContent = true;
+		}
 		if(StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("Code");
 		}
@@ -83,11 +116,22 @@ public class PostApi extends BaseApi{
 		if(post == null) {
 			throw new EntityDoesNotExistsException(Post.class, code, "code");
 		}
-
-		if(!StringUtils.isBlank(postData.getName()))
-			post.setName(postData.getName());
-		if(!StringUtils.isBlank(postData.getContent()))
-			post.setContent(postData.getContent());
+		
+		if(hasContent) {
+			Set<MarkdownContent> mdcs = post.getMarkdownContents();
+			Language language = languageService.findByCode(postData.getLanguage());
+			Boolean inSet = false;
+			for(MarkdownContent mdc : mdcs) {
+				if(mdc.getLanguage().equals(language)) {
+					mdc.setName(postData.getName());
+					mdc.setContent(postData.getContent());
+					inSet = true;
+				}
+			}
+			if(!inSet)
+			mdcs.add(new MarkdownContent(postData.getName(), postData.getContent(), language));
+		}
+		
 		if(!StringUtils.isBlank(postData.getCollection())) {
 			Collection collection = collectionService.findByCode(postData.getCollection());
 			if(collection != null)
@@ -96,8 +140,6 @@ public class PostApi extends BaseApi{
 				throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
 			}
 		}
-
-		
 		
 		postService.update(post);
 		

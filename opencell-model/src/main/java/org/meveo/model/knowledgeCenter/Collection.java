@@ -4,15 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -60,11 +57,11 @@ public class Collection extends BusinessEntity {
     private Set<Post> posts = new HashSet<Post>();
     
     /**
-     * Collection name
+     * Collection content
      */
-    @Column(name = "name", length = 255)
-    @Size(max = 255)
-    private String name;
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
 
     public Collection() {
 
@@ -75,6 +72,14 @@ public class Collection extends BusinessEntity {
     }
     
     
+
+	public Set<MarkdownContent> getMarkdownContents() {
+		return markdownContents;
+	}
+
+	public void setMarkdownContents(Set<MarkdownContent> markdownContents) {
+		this.markdownContents = markdownContents;
+	}
 
 	public Set<Collection> getChildrenCollections() {
 		return childrenCollections;
@@ -106,15 +111,5 @@ public class Collection extends BusinessEntity {
 
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-    
+	}   
 }

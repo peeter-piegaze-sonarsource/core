@@ -6,6 +6,7 @@ import java.util.Set;
 import org.meveo.api.dto.BusinessEntityDto;
 import org.meveo.model.knowledgeCenter.Comment;
 import org.meveo.model.knowledgeCenter.Post;
+import org.meveo.model.knowledgeCenter.MarkdownContent;
 
 public class PostDto extends BusinessEntityDto {
 	
@@ -15,8 +16,10 @@ public class PostDto extends BusinessEntityDto {
 	 */
 	private static final long serialVersionUID = 3588467558706095289L;
 	
+	private Set<MarkdownContentDto> data = new HashSet<MarkdownContentDto>();
 	private String name;
 	private String content;
+	private String language;
 	private String collection;
 	private Set<String> tags = new HashSet<String>();
 	private Set<CommentDto> comments;
@@ -28,9 +31,11 @@ public class PostDto extends BusinessEntityDto {
 	
 	public PostDto(Post post) {
 		super(post);
-		name = post.getName();
-		content = post.getContent();
-		collection = post.getCollection().getName();
+		Set<MarkdownContent> markdownContents = post.getMarkdownContents();
+		for(MarkdownContent mdc : markdownContents) {
+			data.add(new MarkdownContentDto(mdc));
+		}
+		collection = post.getCollection().getCode();
 		comments = new HashSet<CommentDto>();
 		Set<Comment> postComments = post.getCommments();
 		for(Comment c : postComments) {
@@ -38,7 +43,6 @@ public class PostDto extends BusinessEntityDto {
 		}
 		tags = post.getTags();
 	}
-
 	
 	public String getName() {
 		return name;
@@ -56,6 +60,22 @@ public class PostDto extends BusinessEntityDto {
 		this.content = content;
 	}
 
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public Set<MarkdownContentDto> getData() {
+		return data;
+	}
+
+	public void setData(Set<MarkdownContentDto> data) {
+		this.data = data;
+	}
+	
 	public String getCollection() {
 		return collection;
 	}
@@ -64,7 +84,6 @@ public class PostDto extends BusinessEntityDto {
 		this.collection = collection;
 	}
 
-	
 
 	public Set<CommentDto> getComments() {
 		return comments;
@@ -81,6 +100,4 @@ public class PostDto extends BusinessEntityDto {
 	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
-	
-	
 }

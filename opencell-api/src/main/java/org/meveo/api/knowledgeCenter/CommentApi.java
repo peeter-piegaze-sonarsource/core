@@ -11,8 +11,11 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.exception.MissingParameterException;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.billing.Language;
 import org.meveo.model.knowledgeCenter.Comment;
+import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.model.knowledgeCenter.Post;
+import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.knowledgeCenter.CommentService;
 import org.meveo.service.knowledgeCenter.PostService;
 
@@ -24,22 +27,32 @@ public class CommentApi extends BaseApi {
 	
 	@Inject
 	PostService postService;
+
+	@Inject
+	LanguageService languageService;
 	
 	public Comment create(CommentDto postData) throws MissingParameterException, EntityDoesNotExistsException, BusinessException {
-		if(StringUtils.isBlank(postData.getCode())) {
-			missingParameters.add("Code");
-		}
 		if(StringUtils.isBlank(postData.getContent())) {
 			missingParameters.add("Content");
+		}
+		if(StringUtils.isBlank(postData.getLanguage())) {
+			missingParameters.add("Language");
+		}
+		if(StringUtils.isBlank(postData.getCode())) {
+			missingParameters.add("Code");
 		}
 		if(StringUtils.isBlank(postData.getPostCode())) {
 			missingParameters.add("PostCode");
 		}
 		handleMissingParameters();
 		
+		Language language = languageService.findByCode(postData.getLanguage());
+		MarkdownContent mdc = new MarkdownContent(null, postData.getContent(), language);
+		
+		
 		Comment comment = new Comment();
 		comment.setCode(postData.getCode());
-		comment.setContent(postData.getContent());
+		comment.setMarkdownContent(mdc);
 		comment.setDescription(postData.getDescription());
 		String postCode = postData.getPostCode();
 		Post post = null;
@@ -59,11 +72,17 @@ public class CommentApi extends BaseApi {
 	}
 	
 	public Comment update(CommentDto postData) throws MissingParameterException, EntityDoesNotExistsException, BusinessException {
+		if(!StringUtils.isBlank(postData.getContent()) ||
+				!StringUtils.isBlank(postData.getLanguage())) {
+			if(StringUtils.isBlank(postData.getContent())) {
+				missingParameters.add("Content");
+			}
+			if(StringUtils.isBlank(postData.getLanguage())) {
+				missingParameters.add("Language");
+			}
+		}
 		if(StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("Code");
-		}
-		if(StringUtils.isBlank(postData.getContent())) {
-			missingParameters.add("Content");
 		}
 		if(StringUtils.isBlank(postData.getPostCode())) {
 			missingParameters.add("PostCode");
@@ -72,7 +91,8 @@ public class CommentApi extends BaseApi {
 		
 		Comment comment = commentService.findByCode(postData.getCode());
 		if(comment != null) {
-			comment.setContent(postData.getContent());
+			Language language = languageService.findByCode(postData.getLanguage());
+			comment.setMarkdownContent(new MarkdownContent(null, postData.getContent(), language));
 			comment.setDescription(postData.getDescription());
 			if(!comment.getPost().getCode().equals(postData.getPostCode()))
 				throw new BusinessException("Parent post code cannot be changed!");

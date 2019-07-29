@@ -57,18 +57,11 @@ public class Post extends BusinessEntity {
     private static final long serialVersionUID = 3772773449495155646L;
     
     /**
-     * Content
+     * Post content
      */
-    @Column(name = "name", length = 255)
-    @Size(max = 255)
-    private String name;
-    
-    /**
-     * Content
-     */
-    @Column(name = "content", length = 2000)
-    @Size(max = 2000)
-    private String content;
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
     
     /**
      * Comments in the post
@@ -96,24 +89,22 @@ public class Post extends BusinessEntity {
         
     }
 
-    
-	public String getName() {
-		return name;
+
+    public Post(String code) {
+        this.setCode(code);
+    }
+
+	public Set<MarkdownContent> getMarkdownContents() {
+		return markdownContents;
 	}
 
 
-	public void setName(String name) {
-		this.name = name;
+
+	public void setMarkdownContents(Set<MarkdownContent> markdownContents) {
+		this.markdownContents = markdownContents;
 	}
 
 
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
 
 	public Set<Comment> getCommments() {
 		return commments;

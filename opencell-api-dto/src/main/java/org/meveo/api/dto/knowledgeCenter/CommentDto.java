@@ -1,9 +1,7 @@
 package org.meveo.api.dto.knowledgeCenter;
 
 import org.meveo.api.dto.BusinessEntityDto;
-import org.meveo.model.BusinessEntity;
 import org.meveo.model.knowledgeCenter.Comment;
-import org.meveo.model.knowledgeCenter.Post;
 
 public class CommentDto extends BusinessEntityDto {
 
@@ -13,9 +11,10 @@ public class CommentDto extends BusinessEntityDto {
 	private static final long serialVersionUID = 6224893272089126086L;
 	
 	private String postCode;
-	
+	private MarkdownContentDto markdownContent;
+	private String name;
 	private String content;
-
+	private String language;
 	
 	public CommentDto() {
 
@@ -24,12 +23,7 @@ public class CommentDto extends BusinessEntityDto {
 	public CommentDto(Comment comment) {
 		super(comment);
 		postCode = comment.getPost().getCode();
-		content = comment.getContent();
-	}
-
-	public CommentDto(BusinessEntity e) {
-		super(e);
-		// TODO Auto-generated constructor stub
+		markdownContent = new MarkdownContentDto(comment.getMarkdownContent());
 	}
 
 
@@ -41,12 +35,36 @@ public class CommentDto extends BusinessEntityDto {
 		this.postCode = postCode;
 	}
 
+	public MarkdownContentDto getMarkdownContent() {
+		return markdownContent;
+	}
+
+	public void setMarkdownContent(MarkdownContentDto markdownContent) {
+		this.markdownContent = markdownContent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 	
 	

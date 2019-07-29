@@ -9,8 +9,8 @@ public class CommentService extends BusinessService<Comment>{
 
 	@Override
 	public void create(Comment comment) throws BusinessException{
-		if(comment.getContent() == null || comment.getContent().isEmpty()) {
-            throw new ValidationException("Content must not be null or empty");
+		if(comment.getMarkdownContent() == null) {
+            throw new ValidationException("MarkdownContent must not be null or empty");
 		}
 		
 		super.create(comment);
@@ -18,8 +18,8 @@ public class CommentService extends BusinessService<Comment>{
 	
 	@Override
 	public Comment update(Comment comment) throws BusinessException{
-		if(comment.getContent() == null || comment.getContent().isEmpty()) {
-            throw new ValidationException("Content must not be null or empty");
+		if(comment.getMarkdownContent() == null) {
+            throw new ValidationException("MarkdownContent must not be null or empty");
 		}
 		
 		return super.update(comment);

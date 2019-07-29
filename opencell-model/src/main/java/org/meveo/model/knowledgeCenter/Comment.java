@@ -1,14 +1,12 @@
 package org.meveo.model.knowledgeCenter;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
@@ -31,13 +29,14 @@ public class Comment extends BusinessEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 7170050892148515342L;
-	
-	/**
-     * Content
+
+    /**
+     * Comment content
      */
-    @Column(name = "content", length = 2000)
-    @Size(max = 2000)
-    private String content;
+	@OneToOne
+    @JoinColumn(name = "markdown_content")
+    private MarkdownContent markdownContent;
+
     
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -47,12 +46,12 @@ public class Comment extends BusinessEntity {
         
     }
 
-	public String getContent() {
-		return content;
+	public MarkdownContent getMarkdownContent() {
+		return markdownContent;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setMarkdownContent(MarkdownContent markdownContent) {
+		this.markdownContent = markdownContent;
 	}
 
 	public Post getPost() {

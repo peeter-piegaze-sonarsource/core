@@ -1,31 +1,41 @@
 package org.meveo.api.dto.knowledgeCenter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.meveo.api.dto.BusinessEntityDto;
 import org.meveo.api.dto.knowledgeCenter.PostDto;
 import org.meveo.model.knowledgeCenter.Collection;
+import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.model.knowledgeCenter.Post;
 
 public class CollectionDto extends BusinessEntityDto {
 
 	class Posts {
-		private String name;
+		private Set<MarkdownContentDto> data = new HashSet<MarkdownContentDto>();
 		private String code;
 		
-		
-		public Posts(String name, String code) {
-			this.name = name;
+		public Posts(Set<MarkdownContentDto> data, String code) {
+			this.data = data;
 			this.code = code;
+			for(MarkdownContentDto mdc : this.data) {
+				mdc.setContent(null);
+			}
 		}
-		public String getName() {
-			return name;
+		
+
+		public Set<MarkdownContentDto> getData() {
+			return data;
 		}
-		public void setName(String name) {
-			this.name = name;
+
+
+		public void setData(Set<MarkdownContentDto> data) {
+			this.data = data;
 		}
+
+
 		public String getCode() {
 			return code;
 		}
@@ -40,14 +50,13 @@ public class CollectionDto extends BusinessEntityDto {
 	private static final long serialVersionUID = -4889360284187982497L;
 
 	private List<CollectionDto> children;
-	
 	private String parentCode;
-	
-	private List<String> postsCode;
-	
 	private List<Posts> posts;
-
+	
+	private Set<MarkdownContentDto> data = new HashSet<MarkdownContentDto>();
 	private String name;
+	private String content;
+	private String language;
 	
 	public CollectionDto() {
 		
@@ -55,7 +64,10 @@ public class CollectionDto extends BusinessEntityDto {
 	
 	public CollectionDto(Collection collection) {
 		super(collection);
-		name = collection.getName();
+		Set<MarkdownContent> markdownContents = collection.getMarkdownContents();
+		for(MarkdownContent mdc : markdownContents) {
+			data.add(new MarkdownContentDto(mdc));
+		}
 		Collection parent = collection.getParentCollection();
 		Set<Collection> childrenCollections = collection.getChildrenCollections();
 		Set<Post> postsdata = collection.getPosts();
@@ -75,7 +87,11 @@ public class CollectionDto extends BusinessEntityDto {
 		if(postsdata != null) {
 			posts = new ArrayList<Posts>();
 			for(Post p : postsdata) {
-				posts.add(new Posts(p.getName(), p.getCode()));
+				Set<MarkdownContentDto> mdcdtos = new HashSet<MarkdownContentDto>();
+				for(MarkdownContent mdc : p.getMarkdownContents()) {
+					mdcdtos.add(new MarkdownContentDto(mdc));
+				}
+				posts.add(new Posts(mdcdtos, p.getCode()));
 			}
 		}
 	}
@@ -88,7 +104,6 @@ public class CollectionDto extends BusinessEntityDto {
 		this.children = children;
 	}
 
-	
 	public String getParentCode() {
 		return parentCode;
 	}
@@ -97,12 +112,20 @@ public class CollectionDto extends BusinessEntityDto {
 		this.parentCode = parentCode;
 	}
 
-	public List<String> getPostsCode() {
-		return postsCode;
+	public List<Posts> getPosts() {
+		return posts;
 	}
 
-	public void setPostsCode(List<String> postsCode) {
-		this.postsCode = postsCode;
+	public void setPosts(List<Posts> posts) {
+		this.posts = posts;
+	}
+
+	public Set<MarkdownContentDto> getData() {
+		return data;
+	}
+
+	public void setData(Set<MarkdownContentDto> data) {
+		this.data = data;
 	}
 
 	public String getName() {
@@ -112,5 +135,23 @@ public class CollectionDto extends BusinessEntityDto {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	
 }
 

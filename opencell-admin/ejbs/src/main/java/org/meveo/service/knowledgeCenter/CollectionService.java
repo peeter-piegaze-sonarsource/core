@@ -11,8 +11,8 @@ import org.meveo.service.base.BusinessService;
 public class CollectionService  extends BusinessService<Collection> {
 	@Override
 	public void create(Collection collection) throws BusinessException{
-		if(collection.getName() == null || collection.getName().isEmpty()) {
-            throw new ValidationException("Name must not be null or empty");
+		if(collection.getMarkdownContents() == null || collection.getMarkdownContents().isEmpty()) {
+            throw new ValidationException("MarkdownContent must not be null or empty");
 		}
 		if(collection.getCode() == null || collection.getCode().isEmpty()) {
             throw new ValidationException("Code must not be null or empty");
@@ -22,8 +22,8 @@ public class CollectionService  extends BusinessService<Collection> {
 	
 	@Override
 	public Collection update(Collection collection) throws BusinessException{
-		if(collection.getName() == null || collection.getName().isEmpty()) {
-            throw new ValidationException("Name must not be null or empty");
+		if(collection.getMarkdownContents() == null || collection.getMarkdownContents().isEmpty()) {
+            throw new ValidationException("MarkdownContent must not be null or empty");
 		}
 		if(collection.getCode() == null || collection.getCode().isEmpty()) {
             throw new ValidationException("Code must not be null or empty");
