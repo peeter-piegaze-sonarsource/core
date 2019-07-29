@@ -42,6 +42,8 @@ public class WorkflowJob /* extends Job */ {
     // @Override
     public Map<String, CustomFieldTemplate> getCustomFields() {
         Map<String, CustomFieldTemplate> result = new HashMap<String, CustomFieldTemplate>();
+<<<<<<< HEAD
+=======
 
 //        CustomFieldTemplate filterCF = new CustomFieldTemplate();
 //        filterCF.setCode("wfJob_filter");
@@ -83,6 +85,7 @@ public class WorkflowJob /* extends Job */ {
 //        waitingMillis.setDefaultValue("0");
 //        result.put("wfJob_waitingMillis", waitingMillis);
 
+>>>>>>> dc0c3ec7f607a8387854df057928c15fecbd3ee3
         return result;
     }
 }

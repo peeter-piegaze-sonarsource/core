@@ -526,7 +526,6 @@ public class ServiceInstanceService extends BusinessService<ServiceInstance> {
             log.info("Terminating recurring charge {} with chargeDate {}, nextChargeDate {}, terminationDate {}, endAggrementDate {}, terminationReason {}",
                     recurringChargeInstance.getId(), recurringChargeInstance.getChargeDate(), recurringChargeInstance.getNextChargeDate(), endDate,
                     serviceInstance.getEndAgreementDate(), terminationReason.getCode());
-
             if (endDate.after(nextChargeDate)) {
                 walletOperationService.applyChargeAgreement(recurringChargeInstance, recurringChargeInstance.getRecurringChargeTemplate(), endDate);
 

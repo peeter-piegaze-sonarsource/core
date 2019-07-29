@@ -1,11 +1,5 @@
 package org.meveo.api.rest.billing.impl;
 
-import java.util.List;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-
 import org.meveo.api.billing.SubscriptionApi;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
@@ -41,6 +35,11 @@ import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import java.util.List;
 
 /**
  * @author Edward P. Legaspi

@@ -9,7 +9,6 @@
     <artifactId>opencell-security</artifactId>
     <packaging>jar</packaging>
     <name>Opencell Security</name>
-
     <build>
         <plugins>
             <plugin>

@@ -1,5 +1,15 @@
 package org.meveo.api.billing;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.IncorrectServiceInstanceException;
@@ -1200,6 +1210,18 @@ public class SubscriptionApi extends BaseApi {
      * @return instance of SubscriptionDto
      */
     public SubscriptionDto subscriptionToDto(Subscription subscription, CustomFieldInheritanceEnum inheritCF) {
+        return this.subscriptionToDto(subscription, inheritCF, null);
+    }
+
+    /**
+     * Convert subscription dto to entity
+     *
+     * @param subscription instance of Subscription to be mapped
+     * @param inheritCF choose whether CF values are inherited and/or merged
+     * @param oneShotChargeInstances instances of OneShotCharges to be mapped
+     * @return instance of SubscriptionDto
+     */
+    public SubscriptionDto subscriptionToDto(Subscription subscription, CustomFieldInheritanceEnum inheritCF, List<OneShotChargeInstance> oneShotChargeInstances) {
         SubscriptionDto dto = new SubscriptionDto(subscription);
         if (subscription.getAccessPoints() != null) {
             for (Access ac : subscription.getAccessPoints()) {

@@ -198,10 +198,13 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
 
     private ServiceInstance selectedTerminableService;
 
+<<<<<<< HEAD
+=======
     private LazyDataModel<OfferTemplate> activeOfferTemplateDataModel;
 
     private CounterInstance selectedCounterInstance;
 
+>>>>>>> dc0c3ec7f607a8387854df057928c15fecbd3ee3
     /**
      * User Account Id passed as a parameter. Used when creating new subscription entry from user account definition window, so default uset Account will be set on newly created
      * subscription entry.
@@ -719,7 +722,6 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
 
     @ActionMethod
     public void terminateService() throws IncorrectSusbcriptionException, IncorrectServiceInstanceException, BusinessException {
-
         log.debug("selected subscriptionTerminationReason={}, terminationDate={}, selectedServiceInstanceId={}, status={}", terminationReason, terminationDate,
             selectedServiceInstance.getId(), selectedServiceInstance.getStatus());
 
