@@ -51,6 +51,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.IncorrectSusbcriptionException;
 import org.meveo.admin.exception.UnrolledbackBusinessException;
 import org.meveo.api.dto.RatedTransactionDto;
+import org.meveo.cassandra.mapper.CassandraService;
 import org.meveo.commons.utils.NumberUtils;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.QueryBuilder;
@@ -468,12 +469,13 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
 
     /**
      * @param walletOperationId wallet operation i
+     * @param cassandraService
      * @throws BusinessException business exception
      */
-    public void createRatedTransaction(Long walletOperationId) throws BusinessException {
+    public void createRatedTransaction(Long walletOperationId, CassandraService cassandraService) throws BusinessException {
         WalletOperation walletOperation = walletOperationService.findById(walletOperationId);
 
-        createRatedTransaction(walletOperation, false);
+        createRatedTransaction(walletOperation, false, cassandraService);
     }
 
     /**
@@ -498,7 +500,7 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
         }
 
         for (WalletOperation walletOp : walletOps) {
-            createRatedTransaction(walletOp, false);
+//            createRatedTransaction(walletOp, false, cassandraService);
         }
     }
 
@@ -507,23 +509,30 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
      * 
      * @param walletOperation Wallet operation
      * @param isVirtual Is charge event a virtual operation? If so, no entities should be created/updated/persisted in DB
+     * @param cassandraService
      * @return Rated transaction
      * @throws BusinessException business exception
      */
-    public RatedTransaction createRatedTransaction(WalletOperation walletOperation, boolean isVirtual) throws BusinessException {
-        RatedTransaction ratedTransaction = new RatedTransaction(walletOperation);
+    public RatedTransaction createRatedTransaction(WalletOperation walletOperation, boolean isVirtual, CassandraService cassandraService) throws BusinessException {
+        org.meveo.cassandra.model.RatedTransaction ratedTransaction
+                = new org.meveo.cassandra.model.RatedTransaction(walletOperation);
 
         if (!isVirtual) {
-            create(ratedTransaction);
+            log.debug("start of create {}", ratedTransaction.getClass().getSimpleName());
+
+            cassandraService.getRatedTransactionDao().save(ratedTransaction);
+
+            log.trace("end of create {}. entity id={}.", ratedTransaction.getClass().getSimpleName(), ratedTransaction.getId());
+
         }
         walletOperation.setStatus(WalletOperationStatusEnum.TREATED);
-        walletOperation.setRatedTransaction(ratedTransaction);
+//        walletOperation.setRatedTransaction(ratedTransaction);
 
         if (!isVirtual) {
             walletOperationService.updateNoCheck(walletOperation);
         }
 
-        return ratedTransaction;
+        return null;
     }
 
     /**

@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.meveo.cassandra.mapper.CassandraService;
 import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.service.billing.impl.AggregatedWalletOperation;
@@ -29,10 +30,10 @@ public class UnitRatedTransactionsJobBean {
 
     @JpaAmpNewTx
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public void execute(JobExecutionResultImpl result,Long walletOperationId ) {
+	public void execute(JobExecutionResultImpl result, Long walletOperationId, CassandraService cassandraService) {
 		log.debug("Running with walletOperationId={}", walletOperationId);
 		try {
-			ratedTransactionService.createRatedTransaction(walletOperationId);
+			ratedTransactionService.createRatedTransaction(walletOperationId, cassandraService);
 			result.registerSucces();
 		
 		} catch (Exception e) {

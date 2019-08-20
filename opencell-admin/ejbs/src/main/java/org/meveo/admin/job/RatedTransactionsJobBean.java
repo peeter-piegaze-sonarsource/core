@@ -16,6 +16,7 @@ import org.meveo.admin.async.RatedTransactionAsync;
 import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
+import org.meveo.cassandra.mapper.CassandraService;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
@@ -58,7 +59,7 @@ public class RatedTransactionsJobBean extends BaseJobBean {
             nbRuns = (long) Runtime.getRuntime().availableProcessors();
         }
         Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
-
+        CassandraService cassandraService = CassandraService.getInstance();
         try {
             RatedTransactionsJobAggregationSetting aggregationSetting = new RatedTransactionsJobAggregationSetting();
 
@@ -77,10 +78,10 @@ public class RatedTransactionsJobBean extends BaseJobBean {
                 aggregationSetting.setAggregateByParam3((boolean) this.getParamOrCFValue(jobInstance, "aggregateByParam3", false));
                 aggregationSetting.setAggregateByExtraParam((boolean) this.getParamOrCFValue(jobInstance, "aggregateByExtraParam", false));
 
-                executeWithAggregation(result, nbRuns, waitingMillis, aggregationSetting);
+                executeWithAggregation(result, nbRuns, waitingMillis, aggregationSetting, cassandraService);
 
             } else {
-                executeWithoutAggregation(result, nbRuns, waitingMillis);
+                executeWithoutAggregation(result, nbRuns, waitingMillis, cassandraService);
             }
 
         } catch (Exception e) {
@@ -88,7 +89,7 @@ public class RatedTransactionsJobBean extends BaseJobBean {
         }
     }
 
-    private void executeWithoutAggregation(JobExecutionResultImpl result, Long nbRuns, Long waitingMillis) throws Exception {
+    private void executeWithoutAggregation(JobExecutionResultImpl result, Long nbRuns, Long waitingMillis, CassandraService cassandraService) throws Exception {
         List<Long> walletOperationIds = walletOperationService.listToInvoiceIds(new Date(), PROCESS_NR_IN_JOB_RUN);
         log.info("WalletOperations to convert into rateTransactions={}", walletOperationIds.size());
         result.setNbItemsToProcess(walletOperationIds.size());
@@ -97,7 +98,7 @@ public class RatedTransactionsJobBean extends BaseJobBean {
         List<Future<String>> futures = new ArrayList<>();
         MeveoUser lastCurrentUser = currentUser.unProxy();
         while (subListCreator.isHasNext()) {
-            futures.add(ratedTransactionAsync.launchAndForget((List<Long>) subListCreator.getNextWorkSet(), result, lastCurrentUser));
+            futures.add(ratedTransactionAsync.launchAndForget((List<Long>) subListCreator.getNextWorkSet(), result, lastCurrentUser, cassandraService));
             try {
                 Thread.sleep(waitingMillis.longValue());
 
@@ -127,7 +128,8 @@ public class RatedTransactionsJobBean extends BaseJobBean {
         result.setDone(walletOperationIds.isEmpty());
     }
 
-    private void executeWithAggregation(JobExecutionResultImpl result, Long nbRuns, Long waitingMillis, RatedTransactionsJobAggregationSetting aggregationSetting)
+    private void executeWithAggregation(JobExecutionResultImpl result, Long nbRuns, Long waitingMillis, RatedTransactionsJobAggregationSetting aggregationSetting,
+            CassandraService cassandraService)
             throws Exception {
         Date invoicingDate = new Date();
         List<AggregatedWalletOperation> aggregatedWo = walletOperationService.listToInvoiceIdsWithGrouping(invoicingDate, aggregationSetting);

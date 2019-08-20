@@ -15,6 +15,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.meveo.admin.job.UnitRatedTransactionsJobBean;
+import org.meveo.cassandra.mapper.CassandraService;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.security.MeveoUser;
 import org.meveo.security.keycloak.CurrentUserProvider;
@@ -46,11 +47,12 @@ public class RatedTransactionAsync {
      * @param result Job execution result
      * @param lastCurrentUser Current user. In case of multitenancy, when user authentication is forced as result of a fired trigger (scheduled jobs, other timed event
      *        expirations), current user might be lost, thus there is a need to reestablish.
+     * @param cassandraService
      * @return Future String
      */
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Future<String> launchAndForget(List<Long> ids, JobExecutionResultImpl result, MeveoUser lastCurrentUser) {
+    public Future<String> launchAndForget(List<Long> ids, JobExecutionResultImpl result, MeveoUser lastCurrentUser, CassandraService cassandraService) {
 
         currentUserProvider.reestablishAuthentication(lastCurrentUser);
         int i = 0;
@@ -59,7 +61,7 @@ public class RatedTransactionAsync {
             if (i % JobExecutionService.CHECK_IS_JOB_RUNNING_EVERY_NR_FAST == 0 && !jobExecutionService.isJobRunningOnThis(result.getJobInstance().getId())) {
                 break;
             }
-            unitRatedTransactionsJobBean.execute(result, walletOperationId);
+            unitRatedTransactionsJobBean.execute(result, walletOperationId, cassandraService);
         }
         return new AsyncResult<>("OK");
     }
