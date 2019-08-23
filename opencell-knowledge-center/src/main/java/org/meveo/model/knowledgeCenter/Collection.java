@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -60,7 +61,7 @@ public class Collection extends BusinessEntity {
      * Collection content
      */
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
 
     public Collection() {
@@ -102,7 +103,6 @@ public class Collection extends BusinessEntity {
 	public void setParentCollection(Collection parentCollection) {
 		this.parentCollection = parentCollection;
 	}
-
 
 
 	public Set<Post> getPosts() {

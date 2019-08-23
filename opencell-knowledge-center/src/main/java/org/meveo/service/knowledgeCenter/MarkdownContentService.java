@@ -5,11 +5,11 @@ import javax.ejb.Stateless;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.ValidationException;
 import org.meveo.model.knowledgeCenter.MarkdownContent;
-import org.meveo.service.base.BusinessService;
+import org.meveo.service.base.PersistenceService;
 
 @Stateless
 
-public class MarkdownContentService extends BusinessService <MarkdownContent> {
+public class MarkdownContentService extends PersistenceService<MarkdownContent> {
 	@Override
 	public void create(MarkdownContent markdownContent) throws BusinessException{
 		if(markdownContent.getContent() == null || markdownContent.getContent().isEmpty()) {

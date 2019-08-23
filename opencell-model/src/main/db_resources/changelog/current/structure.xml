@@ -1362,4 +1362,42 @@
         </sql>   
     </changeSet>
     
+    <changeSet author="FranckValot" id="#4359_20190821 - knowledge center">        
+        <createTable tableName="kc_markdown_content">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_markdown_content_pkey" />
+            </column>
+            <column name="version" type="int4" />
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="language_id" type="bigint">
+            </column>
+            <column name="collection_id" type="bigint">
+            </column>
+            <column name="post_id" type="bigint">
+            </column>
+            <column name="comment_id" type="bigint">
+            </column>
+        </createTable>
+		
+        
+		<dropColumn tableName="kc_post">
+            <column name="name"></column>
+            <column name="content"></column>
+        </dropColumn>
+
+		<dropColumn tableName="kc_collection">
+            <column name="name"></column>
+        </dropColumn>
+        
+        <dropColumn tableName="kc_comment">
+            <column name="content"></column>
+        </dropColumn>
+    </changeSet>
+    
+    
 </databaseChangeLog>

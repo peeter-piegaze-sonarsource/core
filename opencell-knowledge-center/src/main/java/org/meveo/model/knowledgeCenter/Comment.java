@@ -33,8 +33,7 @@ public class Comment extends BusinessEntity {
     /**
      * Comment content
      */
-	@OneToOne
-    @JoinColumn(name = "markdown_content")
+	@OneToOne(mappedBy = "comment", fetch = FetchType.LAZY)
     private MarkdownContent markdownContent;
 
     

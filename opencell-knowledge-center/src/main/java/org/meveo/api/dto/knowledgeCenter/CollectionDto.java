@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.meveo.api.dto.BusinessEntityDto;
-import org.meveo.api.dto.knowledgeCenter.PostDto;
 import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.model.knowledgeCenter.Post;

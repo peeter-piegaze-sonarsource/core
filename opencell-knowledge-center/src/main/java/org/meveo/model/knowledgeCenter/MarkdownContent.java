@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BaseEntity;
 import org.meveo.model.ExportIdentifier;
+import org.meveo.model.bi.Job;
 import org.meveo.model.billing.Language;
 
 /**
@@ -53,15 +54,23 @@ public class MarkdownContent extends BaseEntity {
     @JoinColumn(name = "language_id")
     private Language language;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "collection_id")
+    private Collection collection;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
     
 	public MarkdownContent() {
-		
 	}
 	
 
 	public MarkdownContent(String name, String content, Language language) {
-		super();
 		this.name = name;
 		this.content = content;
 		this.language = language;
