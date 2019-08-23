@@ -1574,6 +1574,9 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
      * @return A list of rated transactions
      */
     public List<RatedTransaction> getRatedTransactionsByInvoice(Invoice invoice, boolean includeFree) {
+        if (invoice == null || invoice.getId() == null) {
+            return new ArrayList<>();
+        }
         if (includeFree) {
             return getEntityManager().createNamedQuery("RatedTransaction.listByInvoice", RatedTransaction.class).setParameter("invoice", invoice).getResultList();
         } else {
@@ -1584,7 +1587,7 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
     /**
      * Retrieve rated transactions associated to an invoice aggregate
      * 
-     * @param invoice Invoice
+     * @param subCategoryInvoiceAgregate sub category Invoice Aggregate
      * @return A list of rated transactions
      */
     public List<RatedTransaction> getRatedTransactionsByInvoiceAggr(SubCategoryInvoiceAgregate subCategoryInvoiceAgregate) {
