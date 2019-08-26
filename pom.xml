@@ -97,6 +97,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.opencellsoft</groupId>
+                <artifactId>opencell-knowledge-center</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             
             <dependency>
                 <groupId>com.opencellsoft</groupId>
