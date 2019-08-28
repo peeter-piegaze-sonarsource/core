@@ -52,7 +52,7 @@ public class CollectionDto extends BusinessEntityDto {
 	private String parentCode;
 	private List<Posts> posts;
 	
-	private Set<MarkdownContentDto> data = new HashSet<MarkdownContentDto>();
+	private List<MarkdownContentDto> data = new ArrayList<MarkdownContentDto>();
 	private String name;
 	private String content;
 	private String language;
@@ -119,11 +119,11 @@ public class CollectionDto extends BusinessEntityDto {
 		this.posts = posts;
 	}
 
-	public Set<MarkdownContentDto> getData() {
+	public List<MarkdownContentDto> getData() {
 		return data;
 	}
 
-	public void setData(Set<MarkdownContentDto> data) {
+	public void setData(List<MarkdownContentDto> data) {
 		this.data = data;
 	}
 

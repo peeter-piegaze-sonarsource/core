@@ -1,6 +1,7 @@
 package org.meveo.api.knowledgeCenter;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import org.meveo.api.dto.account.FilterProperty;
 import org.meveo.api.dto.account.FilterResults;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
 import org.meveo.api.dto.knowledgeCenter.CollectionsDto;
+import org.meveo.api.dto.knowledgeCenter.MarkdownContentDto;
 import org.meveo.api.dto.response.PagingAndFiltering;
 import org.meveo.api.dto.response.knowledgeCenter.CollectionsResponseDto;
 import org.meveo.api.exception.EntityDoesNotExistsException;
@@ -29,6 +31,7 @@ import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.knowledgeCenter.CollectionService;
+import org.meveo.service.knowledgeCenter.MarkdownContentService;
 import org.meveo.service.knowledgeCenter.PostService;
 import org.primefaces.model.SortOrder;
 
@@ -43,28 +46,45 @@ public class CollectionApi extends BaseApi {
 
 	@Inject
 	LanguageService languageService;
+	
+	@Inject
+	MarkdownContentService markdownContentService;
 
 	public Collection create(CollectionDto postData) throws BusinessException, MissingParameterException, EntityDoesNotExistsException {
-		if(StringUtils.isBlank(postData.getName())) {
-			missingParameters.add("Name");
+		if(postData.getData().isEmpty()) {
+			missingParameters.add("Data");
 		}
-		if(StringUtils.isBlank(postData.getContent())) {
-			missingParameters.add("Content");
-		}
-		if(StringUtils.isBlank(postData.getLanguage())) {
-			missingParameters.add("Language");
-		}
-		if(StringUtils.isBlank(postData.getCode())) {
-			missingParameters.add("Code");
+		else {
+			Iterator<MarkdownContentDto> itr = postData.getData().iterator();
+			while(itr.hasNext()) {
+				MarkdownContentDto mdcDto = itr.next();
+				if(StringUtils.isBlank(mdcDto.getName())) {
+					missingParameters.add("Name");
+				}
+				if(StringUtils.isBlank(mdcDto.getContent())) {
+					missingParameters.add("Content");
+				}
+				if(StringUtils.isBlank(mdcDto.getLanguage())) {
+					missingParameters.add("Language");
+				}
+			}
 		}
 		handleMissingParameters();
 		
+		
+			
 		Collection collection = new Collection();
 		
 		Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
-		Language language = languageService.findByCode(postData.getLanguage());
-		MarkdownContent mdc = new MarkdownContent(postData.getName(), postData.getContent(), language);
-		markdownContents.add(mdc);
+		Iterator<MarkdownContentDto> itr = postData.getData().iterator();
+		while(itr.hasNext()) {
+			MarkdownContentDto mdcDto = itr.next();
+			Language language = languageService.findByCode(mdcDto.getLanguage());
+			if(language == null) throw new EntityDoesNotExistsException(Language.class, mdcDto.getLanguage(), "code");
+			MarkdownContent mdc = new MarkdownContent(mdcDto.getName(), mdcDto.getContent(), language);
+			markdownContents.add(mdc);
+		}
+		collection.setMarkdownContents(markdownContents);
 		collection.setCode(postData.getCode());
 		collection.setDescription(postData.getDescription());
 		String parentCode = postData.getParentCode();
@@ -83,6 +103,10 @@ public class CollectionApi extends BaseApi {
 			else {
 				collection.setParentCollection(parentCollection);
 			}
+		}
+		for(MarkdownContent mdc : collection.getMarkdownContents()) {
+			mdc.setCollection(collection);
+			markdownContentService.create(mdc);
 		}
 		collectionService.create(collection);
 		return collection;

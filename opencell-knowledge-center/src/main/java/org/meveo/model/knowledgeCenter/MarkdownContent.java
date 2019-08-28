@@ -101,6 +101,36 @@ public class MarkdownContent extends BaseEntity {
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
+
+
+	public Collection getCollection() {
+		return collection;
+	}
+
+
+	public void setCollection(Collection collection) {
+		this.collection = collection;
+	}
+
+
+	public Post getPost() {
+		return post;
+	}
+
+
+	public void setPost(Post post) {
+		this.post = post;
+	}
+
+
+	public Comment getComment() {
+		return comment;
+	}
+
+
+	public void setComment(Comment comment) {
+		this.comment = comment;
+	}
     
     
 }
