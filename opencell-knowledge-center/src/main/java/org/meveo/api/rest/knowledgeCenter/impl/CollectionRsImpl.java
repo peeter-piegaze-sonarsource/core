@@ -48,6 +48,12 @@ public class CollectionRsImpl extends BaseRs implements CollectionRs{
 	}
 
 	@Override
+	public ActionStatus patch(CollectionDto postData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public ActionStatus createOrUpdate(CollectionDto postData) {
 		ActionStatus result = new ActionStatus();
 		try {
@@ -107,6 +113,7 @@ public class CollectionRsImpl extends BaseRs implements CollectionRs{
 			return result;
 		}
 	}
+
 	
 	
 }

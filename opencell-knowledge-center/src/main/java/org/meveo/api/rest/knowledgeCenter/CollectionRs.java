@@ -12,6 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.meveo.api.rest.PATCH;
+
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.knowledgeCenter.CollectionDto;
 import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
@@ -30,6 +32,11 @@ public interface CollectionRs extends IBaseRs{
 	@PUT
     @Path("/")
     ActionStatus update(CollectionDto postData);
+	
+	@PATCH
+    @Path("/")
+    ActionStatus patch(CollectionDto postData);
+	
 	
 	@POST
     @Path("/createOrUpdate")
