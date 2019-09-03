@@ -12,7 +12,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BaseEntity;
 import org.meveo.model.ExportIdentifier;
-import org.meveo.model.billing.Language;
 
 /**
  * Knowledge center Collection
@@ -51,7 +50,7 @@ public class MarkdownContent extends BaseEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")
-    private Language language;
+    private Lang language;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "collection_id")
@@ -69,7 +68,7 @@ public class MarkdownContent extends BaseEntity {
 	}
 	
 
-	public MarkdownContent(String name, String content, Language language) {
+	public MarkdownContent(String name, String content, Lang language) {
 		this.name = name;
 		this.content = content;
 		this.language = language;
@@ -120,11 +119,11 @@ public class MarkdownContent extends BaseEntity {
 		this.content = content;
 	}
 
-	public Language getLanguage() {
+	public Lang getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(Language language) {
+	public void setLanguage(Lang language) {
 		this.language = language;
 	}
 

@@ -11,12 +11,12 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.exception.MissingParameterException;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.commons.utils.StringUtils;
-import org.meveo.model.billing.Language;
 import org.meveo.model.knowledgeCenter.Comment;
+import org.meveo.model.knowledgeCenter.Lang;
 import org.meveo.model.knowledgeCenter.MarkdownContent;
 import org.meveo.model.knowledgeCenter.Post;
-import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.knowledgeCenter.CommentService;
+import org.meveo.service.knowledgeCenter.LangService;
 import org.meveo.service.knowledgeCenter.PostService;
 
 @Stateless
@@ -29,7 +29,7 @@ public class CommentApi extends BaseApi {
 	PostService postService;
 
 	@Inject
-	LanguageService languageService;
+	LangService languageService;
 	
 	public Comment create(CommentDto postData) throws MissingParameterException, EntityDoesNotExistsException, BusinessException {
 		if(StringUtils.isBlank(postData.getContent())) {
@@ -46,7 +46,7 @@ public class CommentApi extends BaseApi {
 		}
 		handleMissingParameters();
 		
-		Language language = languageService.findByCode(postData.getLanguage());
+		Lang language = languageService.findByCode(postData.getLanguage());
 		MarkdownContent mdc = new MarkdownContent(null, postData.getContent(), language);
 		
 		
@@ -91,7 +91,7 @@ public class CommentApi extends BaseApi {
 		
 		Comment comment = commentService.findByCode(postData.getCode());
 		if(comment != null) {
-			Language language = languageService.findByCode(postData.getLanguage());
+			Lang language = languageService.findByCode(postData.getLanguage());
 			comment.setMarkdownContent(new MarkdownContent(null, postData.getContent(), language));
 			comment.setDescription(postData.getDescription());
 			if(!comment.getPost().getCode().equals(postData.getPostCode()))

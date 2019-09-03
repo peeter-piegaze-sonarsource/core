@@ -26,11 +26,11 @@ import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethod;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.api.security.filter.ListFilter;
 import org.meveo.commons.utils.StringUtils;
-import org.meveo.model.billing.Language;
 import org.meveo.model.knowledgeCenter.Collection;
+import org.meveo.model.knowledgeCenter.Lang;
 import org.meveo.model.knowledgeCenter.MarkdownContent;
-import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.knowledgeCenter.CollectionService;
+import org.meveo.service.knowledgeCenter.LangService;
 import org.meveo.service.knowledgeCenter.MarkdownContentService;
 import org.meveo.service.knowledgeCenter.PostService;
 import org.primefaces.model.SortOrder;
@@ -45,7 +45,7 @@ public class CollectionApi extends BaseApi {
 	PostService postService;
 
 	@Inject
-	LanguageService languageService;
+	LangService languageService;
 	
 	@Inject
 	MarkdownContentService markdownContentService;
@@ -81,8 +81,8 @@ public class CollectionApi extends BaseApi {
 		Iterator<MarkdownContentDto> itr = postData.getData().iterator();
 		while(itr.hasNext()) {
 			MarkdownContentDto mdcDto = itr.next();
-			Language language = languageService.findByCode(mdcDto.getLanguage());
-			if(language == null) throw new EntityDoesNotExistsException(Language.class, mdcDto.getLanguage(), "code");
+			Lang language = languageService.findByCode(mdcDto.getLanguage());
+			if(language == null) throw new EntityDoesNotExistsException(Lang.class, mdcDto.getLanguage(), "code");
 			markdownContents.add(new MarkdownContent(mdcDto.getName(), mdcDto.getContent(), language));
 		}
 		collection.setMarkdownContents(markdownContents);
@@ -134,9 +134,9 @@ public class CollectionApi extends BaseApi {
 		Set<MarkdownContent> mdcs = collection.getMarkdownContents();
 		Set<MarkdownContent> mdcToRemove = new HashSet<MarkdownContent>();
 		for(MarkdownContentDto mdcDto : mdcDtos) {
-			Language language = languageService.findByCode(mdcDto.getLanguage());
+			Lang language = languageService.findByCode(mdcDto.getLanguage());
 			if(language == null) {
-				throw new EntityDoesNotExistsException(Language.class, mdcDto.getLanguage(), "language");
+				throw new EntityDoesNotExistsException(Lang.class, mdcDto.getLanguage(), "language");
 			}
 			Boolean inSet = false;
 			for(MarkdownContent mdc : mdcs) {
