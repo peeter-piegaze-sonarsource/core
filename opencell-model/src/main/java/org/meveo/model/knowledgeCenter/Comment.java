@@ -35,7 +35,7 @@ public class Comment extends BusinessEntity {
 	/**
      * Content
      */
-    @Column(name = "content", length = 2000)
+    @Column(name = "content", columnDefinition = "TEXT")
     @Size(max = 2000)
     private String content;
     

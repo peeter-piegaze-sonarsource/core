@@ -259,7 +259,7 @@
             <column name="updated" type="datetime" />
             <column name="creator" type="varchar(100)" />
             <column name="updater" type="varchar(100)" />
-            <column name="content" type="varchar(2000)">
+            <column name="content" type="text">
                 <constraints nullable="false" />
             </column>
             <column name="collection_id" type="bigint"/>
@@ -307,7 +307,7 @@
             <column name="updated" type="datetime" />
             <column name="creator" type="varchar(100)" />
             <column name="updater" type="varchar(100)" />
-            <column name="content" type="varchar(2000)">
+            <column name="content" type="text">
                 <constraints nullable="false" />
             </column>
             <column name="post_id" type="bigint"/>
