@@ -69,10 +69,12 @@ public class CollectionApi extends BaseApi {
 				}
 			}
 		}
+		if(StringUtils.isBlank(postData.getCode())) {
+			missingParameters.add("Code");
+		}
+		
 		handleMissingParameters();
 		
-		
-			
 		Collection collection = new Collection();
 		
 		Set<MarkdownContent> markdownContents = new HashSet<MarkdownContent>();
@@ -81,8 +83,7 @@ public class CollectionApi extends BaseApi {
 			MarkdownContentDto mdcDto = itr.next();
 			Language language = languageService.findByCode(mdcDto.getLanguage());
 			if(language == null) throw new EntityDoesNotExistsException(Language.class, mdcDto.getLanguage(), "code");
-			MarkdownContent mdc = new MarkdownContent(mdcDto.getName(), mdcDto.getContent(), language);
-			markdownContents.add(mdc);
+			markdownContents.add(new MarkdownContent(mdcDto.getName(), mdcDto.getContent(), language));
 		}
 		collection.setMarkdownContents(markdownContents);
 		collection.setCode(postData.getCode());
@@ -113,23 +114,11 @@ public class CollectionApi extends BaseApi {
 	}
 	
 	public Collection update(CollectionDto postData) throws BusinessException, MissingParameterException, EntityDoesNotExistsException {
-		Boolean hasContent = false;
-		if(!StringUtils.isBlank(postData.getName()) ||
-				!StringUtils.isBlank(postData.getContent()) ||
-				!StringUtils.isBlank(postData.getLanguage())) {
-			if(StringUtils.isBlank(postData.getName())) {
-				missingParameters.add("Name");
-			}
-			if(StringUtils.isBlank(postData.getContent())) {
-				missingParameters.add("Content");
-			}
-			if(StringUtils.isBlank(postData.getLanguage())) {
-				missingParameters.add("Language");
-			}
-			hasContent = true;
-		}
 		if(StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("Code");
+		}
+		if(StringUtils.isBlank(postData.getData())) {
+			missingParameters.add("Data");
 		}
 		handleMissingParameters();
 		
@@ -141,20 +130,35 @@ public class CollectionApi extends BaseApi {
 			throw new EntityDoesNotExistsException(Collection.class, code, "code");
 		}
 		
-		if(hasContent) {
-			Set<MarkdownContent> mdcs = collection.getMarkdownContents();
-			Language language = languageService.findByCode(postData.getLanguage());
+		List<MarkdownContentDto> mdcDtos = postData.getData();
+		Set<MarkdownContent> mdcs = collection.getMarkdownContents();
+		Set<MarkdownContent> mdcToRemove = new HashSet<MarkdownContent>();
+		for(MarkdownContentDto mdcDto : mdcDtos) {
+			Language language = languageService.findByCode(mdcDto.getLanguage());
+			if(language == null) {
+				throw new EntityDoesNotExistsException(Language.class, mdcDto.getLanguage(), "language");
+			}
 			Boolean inSet = false;
 			for(MarkdownContent mdc : mdcs) {
 				if(mdc.getLanguage().equals(language)) {
-					mdc.setName(postData.getName());
-					mdc.setContent(postData.getContent());
+					if(postData.getContent().isEmpty()) {
+						mdcs.remove(mdc);
+						mdcToRemove.add(mdc);
+					}
+					else {
+						mdc.setName(postData.getName());
+						mdc.setContent(postData.getContent());
+					}
 					inSet = true;
 				}
 			}
-			if(!inSet)
-			mdcs.add(new MarkdownContent(postData.getName(), postData.getContent(), language));
+			if(!inSet) {
+				MarkdownContent mdc = new MarkdownContent(postData.getName(), postData.getContent(), language);
+				mdc.setCollection(collection);
+				mdcs.add(mdc);
+			}
 		}
+		
 
 		String parentCode = postData.getParentCode();
 		if(!StringUtils.isBlank(parentCode)) {
@@ -175,7 +179,18 @@ public class CollectionApi extends BaseApi {
 		else {
 			collection.setParentCollection(null);
 		}
-		
+
+		for(MarkdownContent mdc : mdcs) {
+			if(markdownContentService.findById(mdc.getId()) == null) {
+				markdownContentService.create(mdc);
+			}
+			else {
+				markdownContentService.update(mdc);
+			}
+		}
+		for(MarkdownContent mdc : mdcToRemove) {
+			markdownContentService.remove(mdc);
+		}
 		collectionService.update(collection);
 		
 		return collection;
