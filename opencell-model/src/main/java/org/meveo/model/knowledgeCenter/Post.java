@@ -67,7 +67,6 @@ public class Post extends BusinessEntity {
      * Content
      */
     @Column(name = "content", columnDefinition = "TEXT")
-    @Size(max = 2000)
     private String content;
     
     /**

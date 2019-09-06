@@ -30,7 +30,7 @@ public class PostDto extends BusinessEntityDto {
 		super(post);
 		name = post.getName();
 		content = post.getContent();
-		collection = post.getCollection().getName();
+		collection = post.getCollection().getCode();
 		comments = new HashSet<CommentDto>();
 		Set<Comment> postComments = post.getCommments();
 		for(Comment c : postComments) {

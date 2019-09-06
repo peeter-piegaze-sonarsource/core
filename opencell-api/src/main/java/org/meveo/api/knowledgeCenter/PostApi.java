@@ -45,6 +45,9 @@ public class PostApi extends BaseApi{
 		if(StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("Code");
 		}
+		if(StringUtils.isBlank(postData.getCollection())) {
+			missingParameters.add("Collection");
+		}
 		handleMissingParameters();
 		
 		Post post = new Post();
@@ -53,19 +56,17 @@ public class PostApi extends BaseApi{
 		post.setCode(postData.getCode());
 		post.setDescription(postData.getDescription());
 		
-		if(!StringUtils.isBlank(postData.getCollection())) {
-			Collection collection = collectionService.findByCode(postData.getCollection());
-			if(collection != null)
-				post.setCollection(collection);
-			else {
-				throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
-			}
+		Collection collection = collectionService.findByCode(postData.getCollection());
+		if(collection == null) {
+			throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
 		}
 		else {
-			throw new BusinessException("Parent collection is not provided!");
+			post.setCollection(collection);
 		}
 		
 		postService.create(post);
+		collection.getPosts().add(post);
+		collectionService.update(collection);
 		
 		return post;
 	}
@@ -76,6 +77,8 @@ public class PostApi extends BaseApi{
 		}
 		handleMissingParameters();
 		
+		Collection collection = null;
+		Collection prevCollection = null;
 		String code = postData.getCode();
 		
 		Post post = postService.findByCode(code);
@@ -89,17 +92,23 @@ public class PostApi extends BaseApi{
 		if(!StringUtils.isBlank(postData.getContent()))
 			post.setContent(postData.getContent());
 		if(!StringUtils.isBlank(postData.getCollection())) {
-			Collection collection = collectionService.findByCode(postData.getCollection());
-			if(collection != null)
-				post.setCollection(collection);
-			else {
+			collection = collectionService.findByCode(postData.getCollection());
+			if(collection == null) {
 				throw new EntityDoesNotExistsException("Parent Collection", postData.getCollection());
+			}
+			else {
+				prevCollection = post.getCollection();
+				prevCollection.getPosts().remove(post);
+				collectionService.update(prevCollection);
+				post.setCollection(collection);
 			}
 		}
 
-		
-		
 		postService.update(post);
+		if(collection != null) {
+			collection.getPosts().add(post);
+			collectionService.update(collection);
+		}
 		
 		return post;
 	}
@@ -147,7 +156,9 @@ public class PostApi extends BaseApi{
 		if (post == null) {
 			throw new EntityDoesNotExistsException(Post.class, code, "code");
 		}
-
+		Collection collection = post.getCollection();
+		collection.getPosts().remove(post);
+		collectionService.update(collection);
 		postService.remove(post);
 	}
 	
