@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.meveo.api.dto.BusinessEntityDto;
-import org.meveo.api.dto.knowledgeCenter.PostDto;
 import org.meveo.model.knowledgeCenter.Collection;
 import org.meveo.model.knowledgeCenter.Post;
 
 public class CollectionDto extends BusinessEntityDto {
 
-	class Posts {
+	static class Posts {
 		private String name;
 		private String code;
 		
+		public Posts() {
+			
+		}
 		
 		public Posts(String name, String code) {
 			this.name = name;
