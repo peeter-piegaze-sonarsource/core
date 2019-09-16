@@ -91,6 +91,8 @@ public class PostApi extends BaseApi{
 			post.setName(postData.getName());
 		if(!StringUtils.isBlank(postData.getContent()))
 			post.setContent(postData.getContent());
+		if(!StringUtils.isBlank(postData.getDescription()))
+			post.setDescription(postData.getDescription());
 		if(!StringUtils.isBlank(postData.getCollection())) {
 			collection = collectionService.findByCode(postData.getCollection());
 			if(collection == null) {

@@ -88,6 +88,8 @@ public class CollectionApi extends BaseApi {
 		
 		if(!StringUtils.isBlank(postData.getName()))
 			collection.setName(postData.getName());
+		if(!StringUtils.isBlank(postData.getDescription()))
+			collection.setDescription(postData.getDescription());
 
 		String parentCode = postData.getParentCode();
 		if(!StringUtils.isBlank(parentCode)) {
