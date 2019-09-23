@@ -1362,4 +1362,48 @@
         </sql>   
     </changeSet>
     
+    <changeSet author="FranckValot" id="#4599_20190920 - knowledge center">        
+        <createTable tableName="kc_article">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_article_pkey" />
+            </column>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="parent_article_id" type="bigint"/>
+        </createTable>
+        <createSequence sequenceName="kc_article_seq" />
+
+        <createTable tableName="kc_content">
+            <column name="id" type="bigint" autoIncrement="${id.auto}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="kc_content_pkey" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="content" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="article_id" type="bigint">
+            	<constraints nullable="false" />
+            </column>
+            <column name="language_id" type="bigint">
+            	<constraints nullable="false" />
+            </column>
+        </createTable>
+        <createSequence sequenceName="kc_content_seq" />
+    </changeSet>
+    
+    
 </databaseChangeLog>
