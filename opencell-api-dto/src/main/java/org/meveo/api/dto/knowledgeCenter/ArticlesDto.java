@@ -11,7 +11,7 @@ public class ArticlesDto implements Serializable {
 	 */
 	private static final long serialVersionUID = -6967664766228749309L;
 
-	private List<ArticleDto> articles;
+	private List<ArticleDto> article;
 	
 	private Long totalNumberOfRecords;
 	
@@ -19,16 +19,16 @@ public class ArticlesDto implements Serializable {
 		
 	}
 
-	public List<ArticleDto> getArticles() {
-		if(articles == null) {
-			articles = new ArrayList<ArticleDto>();
+	public List<ArticleDto> getArticle() {
+		if(article == null) {
+			article = new ArrayList<ArticleDto>();
 		}
 		
-		return articles;
+		return article;
 	}
 
-	public void setArticles(List<ArticleDto> articles) {
-		this.articles = articles;
+	public void setArticle(List<ArticleDto> article) {
+		this.article = article;
 	}
 
 	public Long getTotalNumberOfRecords() {
@@ -41,7 +41,7 @@ public class ArticlesDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ArticlesDto [articles=" + articles + ", totalNumberOfRecords=" + totalNumberOfRecords + "]";
+		return "ArticlesDto [articles=" + article + ", totalNumberOfRecords=" + totalNumberOfRecords + "]";
 	}
 	
 	

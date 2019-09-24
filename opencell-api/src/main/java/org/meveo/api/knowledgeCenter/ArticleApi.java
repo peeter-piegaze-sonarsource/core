@@ -191,7 +191,7 @@ public class ArticleApi extends BaseApi {
 			List<Article> articles = articleService.list(paginationConfig);
 			for (Article c : articles) {
 				c.setChildrenArticle(null);
-				articlesDto.getArticles().add(new ArticleDto(c, 1, true));
+				articlesDto.getArticle().add(new ArticleDto(c, 1, true));
 			}
 		}
 		result.setArticles(articlesDto);

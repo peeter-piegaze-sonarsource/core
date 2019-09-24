@@ -1,10 +1,16 @@
 package org.meveo.api;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.dto.LanguageDto;
+import org.meveo.api.dto.LanguagesDto;
+import org.meveo.api.dto.response.LanguagesResponseDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
 import org.meveo.api.exception.EntityAlreadyExistsException;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.exception.MeveoApiException;
@@ -12,8 +18,10 @@ import org.meveo.api.exception.MissingParameterException;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.billing.Language;
 import org.meveo.model.billing.TradingLanguage;
+import org.meveo.model.knowledgeCenter.Article;
 import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.billing.impl.TradingLanguageService;
+import org.primefaces.model.SortOrder;
 
 /**
  * @author Edward P. Legaspi
@@ -179,4 +187,36 @@ public class LanguageApi extends BaseApi {
             tradingLanguageService.disable(tradingLanguage);
         }
     }
+    
+    public LanguagesResponseDto list(LanguageDto postData, PagingAndFiltering pagingAndFiltering) throws MeveoApiException {
+		if (pagingAndFiltering == null) {
+			pagingAndFiltering = new PagingAndFiltering();
+		}
+
+		if (postData != null) {
+			pagingAndFiltering.addFilter("id", postData.getCode());
+		}
+		
+		PaginationConfiguration paginationConfig = toPaginationConfiguration("id", SortOrder.ASCENDING, null,
+				pagingAndFiltering, Article.class);
+		
+
+		Long totalCount = languageService.count(paginationConfig);
+		
+		LanguagesDto languagesDto = new LanguagesDto();
+		LanguagesResponseDto result = new LanguagesResponseDto();
+
+		result.setPaging(pagingAndFiltering);
+		result.getPaging().setTotalNumberOfRecords(totalCount.intValue());
+		languagesDto.setTotalNumberOfRecords(totalCount);
+		
+		if (totalCount > 0) {
+			List<Language> languages = languageService.list(paginationConfig);
+			for (Language l : languages) {
+				languagesDto.getLanguage().add(new LanguageDto(l));
+			}
+		}
+		result.setLanguages(languagesDto);
+		return result;
+	}
 }

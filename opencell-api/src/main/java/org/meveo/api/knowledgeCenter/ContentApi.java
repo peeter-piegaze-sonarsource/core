@@ -37,7 +37,7 @@ public class ContentApi  extends BaseApi {
 	LanguageService languageService;
 	
 	public Content create(ContentDto postData) {
-		
+
 		if(postData.getParentId() == null) {
 			missingParameters.add("ParentId");
 		}
@@ -152,7 +152,7 @@ public class ContentApi  extends BaseApi {
 			throw new EntityDoesNotExistsException(Content.class, id);
 		}
 		
-		ContentDto contentDto = new ContentDto(content);
+		ContentDto contentDto = new ContentDto(content, false);
 		
 		return contentDto;
 	}
@@ -193,7 +193,7 @@ public class ContentApi  extends BaseApi {
 		if (totalCount > 0) {
 			List<Content> contents = contentService.list(paginationConfig);
 			for (Content c : contents) {
-				contentsDto.getContents().add(new ContentDto(c));
+				contentsDto.getContent().add(new ContentDto(c, false));
 			}
 		}
 		result.setContents(contentsDto);

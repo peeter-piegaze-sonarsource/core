@@ -9,6 +9,9 @@ import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.LanguageDto;
 import org.meveo.api.dto.response.GetTradingLanguageResponse;
+import org.meveo.api.dto.response.LanguagesResponseDto;
+import org.meveo.api.dto.response.PagingAndFiltering;
+import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
 import org.meveo.api.logging.WsRestApiInterceptor;
 import org.meveo.api.rest.LanguageRs;
 
@@ -113,4 +116,16 @@ public class LanguageRsImpl extends BaseRs implements LanguageRs {
 
         return result;
     }
+
+	@Override
+	public LanguagesResponseDto listGet(String query, String fields, Integer offset, Integer limit, String sortBy,
+			SortOrder sortOrder) {
+		try {
+			return languageApi.list(null, new PagingAndFiltering(query, fields, offset, limit, sortBy, sortOrder));
+		} catch (Exception e) {
+			LanguagesResponseDto result = new LanguagesResponseDto();
+			processException(e, result.getActionStatus());
+			return result;
+		}
+	}
 }

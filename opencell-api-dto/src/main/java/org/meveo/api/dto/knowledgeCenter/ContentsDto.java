@@ -11,7 +11,7 @@ public class ContentsDto implements Serializable {
 	 */
 	private static final long serialVersionUID = -7451998834776194900L;
 	
-	private List<ContentDto> contents;
+	private List<ContentDto> content;
 	
 	private Long totalNumberOfRecords;
 
@@ -19,15 +19,15 @@ public class ContentsDto implements Serializable {
 
 	}
 
-	public List<ContentDto> getContents() {
-		if(contents == null) {
-			contents = new ArrayList<ContentDto>();
+	public List<ContentDto> getContent() {
+		if(content == null) {
+			content = new ArrayList<ContentDto>();
 		}
-		return contents;
+		return content;
 	}
 
-	public void setContents(List<ContentDto> contents) {
-		this.contents = contents;
+	public void setContent(List<ContentDto> content) {
+		this.content = content;
 	}
 
 	public Long getTotalNumberOfRecords() {
@@ -40,6 +40,6 @@ public class ContentsDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ContentsDto [contents=" + contents + ", totalNumberOfRecords=" + totalNumberOfRecords + "]";
+		return "ContentsDto [contents=" + content + ", totalNumberOfRecords=" + totalNumberOfRecords + "]";
 	}
 }

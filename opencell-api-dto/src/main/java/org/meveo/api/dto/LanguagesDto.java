@@ -22,6 +22,8 @@ public class LanguagesDto extends BaseEntityDto {
     /** The language. */
     private List<LanguageDto> language;
 
+	private Long totalNumberOfRecords;
+	
     /**
      * Gets the language.
      *
@@ -42,4 +44,11 @@ public class LanguagesDto extends BaseEntityDto {
         this.language = language;
     }
 
+	public Long getTotalNumberOfRecords() {
+		return totalNumberOfRecords;
+	}
+
+	public void setTotalNumberOfRecords(Long totalNumberOfRecords) {
+		this.totalNumberOfRecords = totalNumberOfRecords;
+	}
 }

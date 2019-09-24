@@ -2,6 +2,7 @@ package org.meveo.api.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -14,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.LanguageDto;
 import org.meveo.api.dto.response.GetTradingLanguageResponse;
+import org.meveo.api.dto.response.LanguagesResponseDto;
+import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
 
 /**
  * * Web service for managing {@link org.meveo.model.billing.Language} and {@link org.meveo.model.billing.TradingLanguage}.
@@ -96,4 +99,21 @@ public interface LanguageRs extends IBaseRs {
     @POST
     @Path("/{code}/disable")
     ActionStatus disable(@PathParam("code") String code);
+    
+    /**
+     * List contents matching a given criteria
+     *
+     * @param query Search criteria
+     * @param fields Data retrieval options/fieldnames separated by a comma
+     * @param offset Pagination - from record number
+     * @param limit Pagination - number of records to retrieve
+     * @param sortBy Sorting - field to sort by - a field from a main entity being searched. See Data model for a list of fields.
+     * @param sortOrder Sorting - sort order.
+     * @return List of contacts
+     */
+    @GET
+    @Path("/list")
+    public LanguagesResponseDto listGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
+            @QueryParam("limit") Integer limit, @DefaultValue("code") @QueryParam("sortBy") String sortBy, @DefaultValue("ASCENDING") @QueryParam("sortOrder") SortOrder sortOrder);
+
 }
