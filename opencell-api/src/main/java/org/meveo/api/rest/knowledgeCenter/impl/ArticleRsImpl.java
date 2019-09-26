@@ -25,7 +25,7 @@ public class ArticleRsImpl extends BaseRs implements ArticleRs {
 
 		try {
 			Article article = articleApi.create(postData);
-			result.setEntityId(article.getId());
+			result.setId(article.getId());
 		} catch (Exception e) {
 			processException(e, result);
 		}
@@ -49,7 +49,7 @@ public class ArticleRsImpl extends BaseRs implements ArticleRs {
 		ActionStatus result = new ActionStatus();
 		try {
 			Article article = articleApi.createOrUpdate(postData);
-			result.setEntityId(article.getId());
+			result.setId(article.getId());
 		} catch (Exception e) {
 			processException(e, result);
 		}

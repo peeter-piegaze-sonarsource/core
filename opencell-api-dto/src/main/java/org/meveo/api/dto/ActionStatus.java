@@ -43,6 +43,12 @@ public class ActionStatus {
      */
     @XmlElement
     private Long entityId;
+    
+    /**
+     * the identifier
+     */
+    @XmlElement
+    private Long id;
 
     /**
      * the entity code
@@ -125,7 +131,16 @@ public class ActionStatus {
         this.entityId = entityId;
     }
 
-    /**
+    
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
      * Gets the entity code
      *
      * @return the entity code

@@ -6,8 +6,8 @@ import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.knowledgeCenter.ContentDto;
 import org.meveo.api.dto.response.PagingAndFiltering;
-import org.meveo.api.dto.response.knowledgeCenter.ContentsResponseDto;
 import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
+import org.meveo.api.dto.response.knowledgeCenter.ContentsResponseDto;
 import org.meveo.api.dto.response.knowledgeCenter.GetContentResponseDto;
 import org.meveo.api.knowledgeCenter.ContentApi;
 import org.meveo.api.rest.impl.BaseRs;
@@ -24,7 +24,7 @@ public class ContentRsImpl extends BaseRs implements ContentRs {
 
 		try {
 			Content content = contentApi.create(postData);
-			result.setEntityId(content.getId());
+			result.setId(content.getId());
 		} catch (Exception e) {
 			processException(e, result);
 		}
@@ -48,7 +48,7 @@ public class ContentRsImpl extends BaseRs implements ContentRs {
 		ActionStatus result = new ActionStatus();
 		try {
 			Content content = contentApi.createOrUpdate(postData);
-			result.setEntityId(content.getId());
+			result.setId(content.getId());
 		} catch (Exception e) {
 			processException(e, result);
 		}
