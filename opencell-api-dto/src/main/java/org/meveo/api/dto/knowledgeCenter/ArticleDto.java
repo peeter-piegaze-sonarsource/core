@@ -1,6 +1,7 @@
 package org.meveo.api.dto.knowledgeCenter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,8 @@ public class ArticleDto extends AuditableEntityDto {
 	private Long parentId;
 	
 	private List<ContentDto> contents;
-
+	
+	private HashMap<String, ContentDto> hashContents;
 	public ArticleDto() {
 
 	}
@@ -50,8 +52,11 @@ public class ArticleDto extends AuditableEntityDto {
 		
 		if(contents != null) {
 			this.contents = new ArrayList<ContentDto>();
+			this.hashContents = new HashMap<String, ContentDto>();
 			for(Content c : contents) {
-				this.contents.add(new ContentDto(c, noContent));
+				ContentDto cdto = new ContentDto(c, noContent);
+				this.contents.add(cdto);
+				this.hashContents.put(c.getLanguage().getLanguageCode(), cdto);
 			}
 		}
 	}
@@ -86,6 +91,15 @@ public class ArticleDto extends AuditableEntityDto {
 
 	public void setContents(List<ContentDto> contents) {
 		this.contents = contents;
+	}
+
+	
+	public HashMap<String, ContentDto> getHashContents() {
+		return hashContents;
+	}
+
+	public void setHashContents(HashMap<String, ContentDto> hashContents) {
+		this.hashContents = hashContents;
 	}
 
 	@Override

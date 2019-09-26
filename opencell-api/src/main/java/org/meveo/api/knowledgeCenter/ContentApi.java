@@ -116,12 +116,14 @@ public class ContentApi  extends BaseApi {
 		if(language == null) {
 			throw new EntityDoesNotExistsException(Language.class, languageCode);
 		}
-		for(Content pc : parentArticle.getContents()){
-			if(language.equals(pc.getLanguage()))
-				throw new BusinessException("This language already exist in this article. Please use update API.");
+		if(language != content.getLanguage()) {
+			for(Content pc : parentArticle.getContents()){
+				if(language.equals(pc.getLanguage()))
+					throw new BusinessException("This language already exist in this article. Please use update API.");
+			}
+			content.setLanguage(language);
 		}
 		
-		content.setLanguage(language);
 		content.setTitle(postData.getTitle());
 		content.setContent(postData.getContent());
 		content.setArticle(parentArticle);
