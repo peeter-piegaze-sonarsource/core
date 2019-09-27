@@ -100,5 +100,16 @@ public class ArticleRsImpl extends BaseRs implements ArticleRs {
 		}
 		return result;
 	}
+
+	@Override
+	public ArticlesResponseDto tree() {
+		try {
+			return articleApi.tree(null, new PagingAndFiltering());
+		} catch (Exception e) {
+			ArticlesResponseDto result = new ArticlesResponseDto();
+			processException(e, result.getActionStatus());
+			return result;
+		}
+	}
 	
 }

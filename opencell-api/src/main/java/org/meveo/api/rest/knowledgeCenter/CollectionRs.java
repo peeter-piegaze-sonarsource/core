@@ -56,11 +56,11 @@ public interface CollectionRs extends IBaseRs{
      */
     @GET
     @Path("/list")
-    public CollectionsResponseDto listGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
+    CollectionsResponseDto listGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
             @QueryParam("limit") Integer limit, @DefaultValue("code") @QueryParam("sortBy") String sortBy, @DefaultValue("ASCENDING") @QueryParam("sortOrder") SortOrder sortOrder);
     
 
 	@GET
     @Path("/tree")
-    public CollectionsResponseDto tree();
+    CollectionsResponseDto tree();
 }

@@ -165,7 +165,7 @@ public class ArticleApi extends BaseApi {
 	}
 	
 
-	public ArticlesResponseDto list(ArticleDto postData, PagingAndFiltering pagingAndFiltering) throws MeveoApiException {
+	public ArticlesResponseDto list(ArticleDto postData, PagingAndFiltering pagingAndFiltering, int level, Boolean noContent, Boolean root) throws MeveoApiException {
 		if (pagingAndFiltering == null) {
 			pagingAndFiltering = new PagingAndFiltering();
 		}
@@ -190,11 +190,19 @@ public class ArticleApi extends BaseApi {
 		if (totalCount > 0) {
 			List<Article> articles = articleService.list(paginationConfig);
 			for (Article c : articles) {
-				c.setChildrenArticle(null);
-				articlesDto.getArticle().add(new ArticleDto(c, 1, true));
+				if(!root) {
+					articlesDto.getArticle().add(new ArticleDto(c, level, noContent));
+				}
+				else if(c.getParentArticle() == null){
+					articlesDto.getArticle().add(new ArticleDto(c, level, noContent));
+				}
+				else totalCount--;
 			}
 		}
+		articlesDto.setTotalNumberOfRecords(totalCount);
+		
 		result.setArticles(articlesDto);
+		
 		return result;
 	}
 	
@@ -210,6 +218,14 @@ public class ArticleApi extends BaseApi {
 			article = article.getParentArticle();
 		}
 		return false;
+	}
+	
+	public ArticlesResponseDto list(ArticleDto postData, PagingAndFiltering pagingAndFiltering) throws MeveoApiException {
+		return this.list(postData, pagingAndFiltering, 0, true, false);
+	}
+
+	public ArticlesResponseDto tree(ArticleDto postData, PagingAndFiltering pagingAndFiltering) {
+		return this.list(postData, pagingAndFiltering, -1, true, true);
 	}
 
 }

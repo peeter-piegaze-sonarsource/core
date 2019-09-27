@@ -57,10 +57,14 @@ public interface ArticleRs extends IBaseRs {
      */
     @GET
     @Path("/list")
-    public ArticlesResponseDto listGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
+    ArticlesResponseDto listGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
             @QueryParam("limit") Integer limit, @DefaultValue("id") @QueryParam("sortBy") String sortBy, @DefaultValue("ASCENDING") @QueryParam("sortOrder") SortOrder sortOrder);
     
     @GET
     @Path("/{id}/{language}")
     GetContentResponseDto findLang(@PathParam("id") Long id, @PathParam("language") String languageCode);
+
+    @GET
+    @Path("/tree")
+	ArticlesResponseDto tree();
 }
