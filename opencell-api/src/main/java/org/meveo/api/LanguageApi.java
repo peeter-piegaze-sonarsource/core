@@ -18,7 +18,6 @@ import org.meveo.api.exception.MissingParameterException;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.billing.Language;
 import org.meveo.model.billing.TradingLanguage;
-import org.meveo.model.knowledgeCenter.Article;
 import org.meveo.service.admin.impl.LanguageService;
 import org.meveo.service.billing.impl.TradingLanguageService;
 import org.primefaces.model.SortOrder;
@@ -198,7 +197,7 @@ public class LanguageApi extends BaseApi {
 		}
 		
 		PaginationConfiguration paginationConfig = toPaginationConfiguration("id", SortOrder.ASCENDING, null,
-				pagingAndFiltering, Article.class);
+				pagingAndFiltering, Language.class);
 		
 
 		Long totalCount = languageService.count(paginationConfig);

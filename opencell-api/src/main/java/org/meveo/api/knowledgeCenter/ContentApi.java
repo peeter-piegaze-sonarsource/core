@@ -180,7 +180,7 @@ public class ContentApi  extends BaseApi {
 		}
 		
 		PaginationConfiguration paginationConfig = toPaginationConfiguration("id", SortOrder.ASCENDING, null,
-				pagingAndFiltering, Article.class);
+				pagingAndFiltering, Content.class);
 		
 
 		Long totalCount = contentService.count(paginationConfig);
