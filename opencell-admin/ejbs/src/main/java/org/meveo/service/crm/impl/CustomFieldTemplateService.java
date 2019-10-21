@@ -8,15 +8,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
@@ -38,6 +42,7 @@ import org.meveo.commons.utils.PersistenceUtils;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.event.monitoring.ClusterEventDto.CrudActionEnum;
 import org.meveo.event.monitoring.ClusterEventPublisher;
+import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ICustomFieldEntity;
@@ -211,39 +216,111 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
         }
     }
 
+	public void create(CustomFieldTemplate cft, Boolean updateUniqueConstraint) {
+		   if ("INVOICE_SEQUENCE".equals(cft.getCode()) && (cft.getFieldType() != CustomFieldTypeEnum.LONG || cft.getStorageType() != CustomFieldStorageTypeEnum.SINGLE
+	                || !cft.isVersionable() || cft.getCalendar() == null)) {
+	            throw new ValidationException("invoice_sequence CF must be versionnable, Long, Single value and must have a Calendar");
+	        }
+	        if ("INVOICE_ADJUSTMENT_SEQUENCE".equals(cft.getCode()) && (cft.getFieldType() != CustomFieldTypeEnum.LONG || cft.getStorageType() != CustomFieldStorageTypeEnum.SINGLE
+	                || !cft.isVersionable() || cft.getCalendar() == null)) {
+	            throw new ValidationException("invoice_adjustement_sequence CF must be versionnable, Long, Single value and must have a Calendar");
+	        }
+	        super.create(cft);
+
+	        // Check if its a custom table field and add it to a db table
+	        if (cft.getAppliesTo().startsWith(CustomEntityInstance.class.getAnnotation(CustomFieldEntity.class).cftCodePrefix())) {
+	            String entityCode = EntityCustomizationUtils.getEntityCode(cft.getAppliesTo());
+	            CustomEntityTemplate cet = customEntityTemplateService.findByCode(entityCode);
+	            if (cet == null) {
+	                log.warn("Custom entity template {} was not found", entityCode);
+	            } else if (cet.isStoreAsTable()) {
+	                customTableCreatorService.addField(cet.getDbTablename(), cft);
+	            }
+	        }
+
+	        customFieldsCache.addUpdateCustomFieldTemplate(cft);
+	        elasticClient.updateCFMapping(cft);
+
+	        boolean reaccumulateCFValues = cfValueAccumulator.refreshCfAccumulationRules(cft);
+	        if (reaccumulateCFValues) {
+
+	            clusterEventPublisher.publishEvent(cft, CrudActionEnum.create);
+	             cfValueAccumulator.cftCreated(cft);
+	        }
+	        if(updateUniqueConstraint) {
+	        	this.checkAndUpdateUniqueConstraint(cft);
+	        }
+		
+	}
+    
     @Override
     public void create(CustomFieldTemplate cft) throws BusinessException {
+    	create(cft, true);
+     
+    }
 
-        if ("INVOICE_SEQUENCE".equals(cft.getCode()) && (cft.getFieldType() != CustomFieldTypeEnum.LONG || cft.getStorageType() != CustomFieldStorageTypeEnum.SINGLE
-                || !cft.isVersionable() || cft.getCalendar() == null)) {
-            throw new ValidationException("invoice_sequence CF must be versionnable, Long, Single value and must have a Calendar");
-        }
-        if ("INVOICE_ADJUSTMENT_SEQUENCE".equals(cft.getCode()) && (cft.getFieldType() != CustomFieldTypeEnum.LONG || cft.getStorageType() != CustomFieldStorageTypeEnum.SINGLE
-                || !cft.isVersionable() || cft.getCalendar() == null)) {
-            throw new ValidationException("invoice_adjustement_sequence CF must be versionnable, Long, Single value and must have a Calendar");
-        }
-        super.create(cft);
+    void checkAndUpdateUniqueConstraint(CustomFieldTemplate cft) {
+        Optional.ofNullable(cft).filter(c -> StringUtils.isNotBlank(cft.getAppliesTo()))
+                .ifPresent(c -> updateUniqueConstraint(cft, c));
+    }
 
-        // Check if its a custom table field and add it to a db table
-        if (cft.getAppliesTo().startsWith(CustomEntityInstance.class.getAnnotation(CustomFieldEntity.class).cftCodePrefix())) {
-            String entityCode = EntityCustomizationUtils.getEntityCode(cft.getAppliesTo());
-            CustomEntityTemplate cet = customEntityTemplateService.findByCode(entityCode);
-            if (cet == null) {
-                log.warn("Custom entity template {} was not found", entityCode);
-            } else if (cet.isStoreAsTable()) {
-                customTableCreatorService.addField(cet.getDbTablename(), cft);
+    private void updateUniqueConstraint(CustomFieldTemplate cft, CustomFieldTemplate c) {
+        CustomEntityTemplate customEntityTemplate = customEntityTemplateService.findByCode(removePrefixeFromTableName(cft.getAppliesTo()));
+        Optional.ofNullable(customEntityTemplate).filter(CustomEntityTemplate::isStoreAsTable).ifPresent(cus -> defineColumnsAndReplaceUniqueConstraint(c, cus));
+    }
+
+     String removePrefixeFromTableName(String tableName) {
+        return tableName.startsWith("CE_") ? tableName.substring("CE_".length()) : tableName;
+    }
+
+    private void defineColumnsAndReplaceUniqueConstraint(CustomFieldTemplate cft, CustomEntityTemplate customEntityTemplate) {
+        tryToRemoveAlreadyPresentConstraint(customEntityTemplate);
+        Set<CustomFieldTemplate> allReferences = findByTableAndUnique(customEntityTemplate.getDbTablename());
+
+        if(cft.isUniqueConstraint()){
+            allReferences.add(cft);
+        }
+
+        udateConstraintKey(customEntityTemplate, allReferences);
+    }
+
+    public void updateUniqueConstraintOnRemoving(CustomFieldTemplate cft){
+        CustomEntityTemplate customEntityTemplate = customEntityTemplateService.findByCode(removePrefixeFromTableName(cft.getAppliesTo()));
+        Optional.ofNullable(customEntityTemplate).filter(CustomEntityTemplate::isStoreAsTable).ifPresent(cus -> {
+            Set<CustomFieldTemplate> allReferences = findByTableAndUnique(customEntityTemplate.getDbTablename());
+            udateConstraintKey(customEntityTemplate, allReferences);
+        });
+    }
+    @JpaAmpNewTx
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private void udateConstraintKey(CustomEntityTemplate customEntityTemplate, Set<CustomFieldTemplate> allReferences) {
+        if(!allReferences.isEmpty()) {
+            String columnNames = allReferences.stream().map(CustomFieldTemplate::getCode).distinct().sorted().collect(Collectors.joining(","));
+            addConstraintByColumnsName(customEntityTemplate, columnNames);
+        }
+    }
+    
+	public void addConstraintByColumnsName(CustomEntityTemplate customEntityTemplate, String columnNames) {
+		String constraintName = columnNames.replaceAll(",", "_");
+
+		String query = String.format("ALTER TABLE %s ADD CONSTRAINT %s UNIQUE (%s)", customEntityTemplate.getDbTablename(), constraintName, columnNames);
+		getEntityManager().createNativeQuery(query).executeUpdate();
+
+		customEntityTemplate.setUniqueContraintName(constraintName);
+	}
+
+    private void tryToRemoveAlreadyPresentConstraint(CustomEntityTemplate cus) {
+        try {
+            if (StringUtils.isNotBlank(cus.getUniqueContraintName())) {
+                getEntityManager().createNativeQuery(String.format("ALTER TABLE %s DROP CONSTRAINT %s;", cus.getDbTablename(), cus.getUniqueContraintName())).executeUpdate();
             }
+        }catch (Exception ex){
+            cus.setUniqueContraintName(null);
         }
+    }
 
-        customFieldsCache.addUpdateCustomFieldTemplate(cft);
-        elasticClient.updateCFMapping(cft);
-
-        boolean reaccumulateCFValues = cfValueAccumulator.refreshCfAccumulationRules(cft);
-        if (reaccumulateCFValues) {
-
-            clusterEventPublisher.publishEvent(cft, CrudActionEnum.create);
-            cfValueAccumulator.cftCreated(cft);
-        }
+    private Set<CustomFieldTemplate> findByTableAndUnique(String code) {
+        return new HashSet<>(getEntityManager().createNamedQuery("CustomFieldTemplate.getUniqueFromTable", CustomFieldTemplate.class).setParameter("appliesTo", ("CE_" + code).toLowerCase()).getResultList());
     }
 
     @Override
@@ -272,7 +349,7 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 
         customFieldsCache.addUpdateCustomFieldTemplate(cftUpdated);
         elasticClient.updateCFMapping(cftUpdated);
-
+        checkAndUpdateUniqueConstraint(cftUpdated);
         return cftUpdated;
     }
 
@@ -297,6 +374,7 @@ public class CustomFieldTemplateService extends BusinessService<CustomFieldTempl
 
     @Override
     public CustomFieldTemplate enable(CustomFieldTemplate cft) throws BusinessException {
+        cft = refreshOrRetrieve(cft);
         cft = super.enable(cft);
         customFieldsCache.addUpdateCustomFieldTemplate(cft);
         return cft;

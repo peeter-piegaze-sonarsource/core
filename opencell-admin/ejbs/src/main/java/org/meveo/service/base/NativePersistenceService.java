@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,14 +35,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.ValidationException;
 import org.meveo.admin.util.pagination.PaginationConfiguration;
@@ -51,9 +58,15 @@ import org.meveo.commons.utils.ReflectionUtils;
 import org.meveo.jpa.EntityManagerWrapper;
 import org.meveo.jpa.MeveoJpa;
 import org.meveo.model.IdentifiableEnum;
+import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.EntityReferenceWrapper;
+import org.meveo.model.crm.custom.CustomFieldTypeEnum;
+import org.meveo.model.customEntities.CustomEntityInstance;
+import org.meveo.model.customEntities.CustomEntityTemplate;
 import org.meveo.model.shared.DateUtils;
 import org.meveo.model.transformer.AliasToEntityOrderedMapResultTransformer;
+import org.meveo.service.crm.impl.CustomFieldTemplateService;
+import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.util.MeveoParamBean;
 
 /**
@@ -96,6 +109,12 @@ public class NativePersistenceService extends BaseService {
     @Inject
     private DeletionService deletionService;
 
+    @Inject
+    private CustomFieldTemplateService customFieldTemplateService;
+
+    @Inject
+	private CustomEntityTemplateService customEntityTemplateService;
+
     /**
      * Find record by its identifier
      * 
@@ -107,16 +126,24 @@ public class NativePersistenceService extends BaseService {
     public Map<String, Object> findById(String tableName, Long id) {
 
         try {
-
             Session session = getEntityManager().unwrap(Session.class);
             SQLQuery query = session.createSQLQuery("select * from " + tableName + " e where id=:id");
             query.setParameter("id", id);
             query.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
 
             Map<String, Object> values = (Map<String, Object>) query.uniqueResult();
+            if(values!=null) {
+            for (String key : values.keySet()) {
+                if (values.get(key) instanceof java.sql.Timestamp) {
+                    java.sql.Timestamp date = (java.sql.Timestamp) values.get(key);
+                    values.put(key, new Date(date.getTime()));
+                }
+            }
 
             return values;
-
+            } else {
+            	throw new BusinessException("Failed to retrieve values from table "+tableName+" by id "+ id );
+            }
         } catch (Exception e) {
             log.error("Failed to retrieve values from table by id {}/{} sql {}", tableName, id, e);
             throw e;
@@ -147,7 +174,7 @@ public class NativePersistenceService extends BaseService {
      * @param values A list of values to insert
      * @throws BusinessException General exception
      */
-    public void create(String tableName, List<Map<String, Object>> values) throws BusinessException {
+    public void create(String tableName, String code, List<Map<String, Object>> values) throws BusinessException {
 
         if (values == null || values.isEmpty()) {
             return;
@@ -160,9 +187,9 @@ public class NativePersistenceService extends BaseService {
         StringBuffer fields = new StringBuffer();
         StringBuffer fieldValues = new StringBuffer();
         List<String> fieldNames = new LinkedList<>();
-
+        Map<String, Object> customTableFields = getFields(code);
         boolean first = true;
-        for (String fieldName : firstValue.keySet()) {
+        for (String fieldName : customTableFields.keySet()) {
 
             if (!first) {
                 fields.append(",");
@@ -193,10 +220,11 @@ public class NativePersistenceService extends BaseService {
                         i = 1;
                         for (String fieldName : fieldNames) {
                             fieldValue = value.get(fieldName);
-
+                            Object defaultValue = customTableFields.get(fieldName);
                             if (fieldValue == null) {
-                                preparedStatement.setNull(i, Types.NULL);
-                            } else if (fieldValue instanceof String) {
+                                fieldValue = defaultValue;
+                            }
+                            if (fieldValue instanceof String) {
                                 preparedStatement.setString(i, (String) fieldValue);
                             } else if (fieldValue instanceof Long) {
                                 preparedStatement.setLong(i, (Long) fieldValue);
@@ -209,8 +237,13 @@ public class NativePersistenceService extends BaseService {
                             } else if (fieldValue instanceof BigDecimal) {
                                 preparedStatement.setBigDecimal(i, (BigDecimal) fieldValue);
                             } else if (fieldValue instanceof Date) {
-                                preparedStatement.setDate(i, new java.sql.Date(((Date) fieldValue).getTime()));
+                                preparedStatement.setTimestamp(i, new Timestamp(((Date) fieldValue).getTime()));
+                            } else if (fieldValue instanceof Boolean) {
+                                preparedStatement.setBoolean(i, (Boolean) fieldValue);
+                            } else if (fieldValue == null) {
+                                preparedStatement.setNull(i, Types.NULL);
                             }
+
 
                             i++;
                         }
@@ -231,6 +264,44 @@ public class NativePersistenceService extends BaseService {
                 }
             }
         });
+    }
+
+    /**
+     * List all fields with thier default values of tableName
+     * @param tableName the table name
+     * @return
+     */
+    private Map<String, Object> getFields(String tableName) {
+        Map<String, Object> fields = new HashedMap();
+        Map<String, CustomFieldTemplate> customFieldTemplateMap = customFieldTemplateService.findByAppliesTo(CustomEntityTemplate.CFT_PREFIX + "_" + tableName);
+        for (String key : customFieldTemplateMap.keySet()) {
+            CustomFieldTemplate cft = customFieldTemplateMap.get(key);
+            Class clazz = cft.getFieldType().getDataClass();
+            String defaultValueString = cft.getDefaultValue();
+            if (StringUtils.isBlank(defaultValueString)) {
+                fields.put(cft.getDbFieldname(), defaultValueString);
+                continue;
+            }
+            Object defaultValue = defaultValueString;
+
+            if (Long.class.equals(clazz)) {
+                defaultValue = new Long(defaultValueString);
+            } else if (Double.class.equals(clazz)) {
+                defaultValue = new Double(defaultValueString);
+            } else if (BigInteger.class.equals(clazz)) {
+                defaultValue = new BigInteger(defaultValueString);
+            } else if (Integer.class.equals(clazz)) {
+                defaultValue = new Integer(defaultValueString);
+            } else if (BigDecimal.class.equals(clazz)) {
+                defaultValue = new BigDecimal(defaultValueString);
+            } else if (Date.class.equals(clazz)) {
+                defaultValue = DateUtils.parseDateWithPattern(defaultValueString, DateUtils.DATE_TIME_PATTERN);
+            } else if (Boolean.class.equals(clazz)) {
+                defaultValue = new Boolean(defaultValueString);
+            }
+            fields.put(cft.getDbFieldname(), defaultValue);
+        }
+        return fields;
     }
 
     /**
@@ -781,7 +852,8 @@ public class NativePersistenceService extends BaseService {
                         queryBuilder.addCriterion("a." + fieldName, "ne".equals(condition) ? " != " : " = ", filterValue, true);
 
                     } else if (filterValue instanceof Boolean) {
-                        queryBuilder.addCriterion("a." + fieldName, "ne".equals(condition) ? " not is" : " is ", filterValue, true);
+                    	boolean bValue= (boolean)filterValue;
+                        queryBuilder.addBooleanCriterion("a." + fieldName, "ne".equals(condition) ? !bValue :  bValue);
 
                     } else if (filterValue instanceof Enum) {
                         if (filterValue instanceof IdentifiableEnum) {
@@ -898,19 +970,20 @@ public class NativePersistenceService extends BaseService {
      *        converted accordingly. If a single value is passed, it will be added to a list.
      * @param datePatterns Optional. Date patterns to apply to a date type field. Conversion is attempted in that order until a valid date is matched.If no values are provided, a
      *        standard date and time and then date only patterns will be applied.
+     * @param cft 
+     * @param regExp 
      * @return A converted data type
      * @throws ValidationException Value can not be cast to a target class
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected Object castValue(Object value, Class targetClass, boolean expectedList, String[] datePatterns) throws ValidationException {
+    protected Object castValue(Object value, Class targetClass, boolean expectedList, String[] datePatterns, CustomFieldTemplate cft) throws ValidationException {
 
         // log.debug("Casting {} of class {} target class {} expected list {} is array {}", value, value != null ? value.getClass() : null, targetClass, expectedList,
         // value != null ? value.getClass().isArray() : null);
 
-        // Nothing to cast - same data type
+		// Nothing to cast - same data type
         if (targetClass.isAssignableFrom(value.getClass()) && !expectedList) {
-            return value;
-
+			return extractString(value, targetClass, cft);
             // A list is expected as value. If value is not a list, parse value as comma separated string and convert each value separately
         } else if (expectedList) {
             if (value instanceof List || value instanceof Set || value.getClass().isArray()) {
@@ -921,7 +994,7 @@ public class NativePersistenceService extends BaseService {
                 List valuesConverted = new ArrayList<>();
                 String[] valueItems = ((String) value).split(",");
                 for (String valueItem : valueItems) {
-                    Object valueConverted = castValue(valueItem, targetClass, false, datePatterns);
+                    Object valueConverted = castValue(valueItem, targetClass, false, datePatterns, cft);
                     if (valueConverted != null) {
                         valuesConverted.add(valueConverted);
                     } else {
@@ -932,7 +1005,7 @@ public class NativePersistenceService extends BaseService {
 
                 // A single value list
             } else {
-                Object valueConverted = castValue(value, targetClass, false, datePatterns);
+                Object valueConverted = castValue(value, targetClass, false, datePatterns, cft);
                 if (valueConverted != null) {
                     return Arrays.asList(valueConverted);
                 } else {
@@ -966,14 +1039,14 @@ public class NativePersistenceService extends BaseService {
 
         try {
             if (targetClass == String.class) {
-                if (stringVal != null || listVal != null) {
-                    return value;
-                } else {
-                    return value.toString();
+            	return extractString(value, targetClass, cft);
+            } else if(targetClass == EntityReferenceWrapper.class){
+                long id = Long.parseLong(value.toString());
+                boolean exist=validateRecordExistance(cft, id);
+                if (!exist) {
+                    throw new ValidationException("Failed to find reference of record on database [ class: "+cft.getEntityClazz()+", id: "+id+"]");
                 }
-
-            }else if(targetClass == EntityReferenceWrapper.class){
-                return Long.parseLong(value.toString());
+				return id;
 
             } else if (targetClass == Boolean.class || (targetClass.isPrimitive() && targetClass.getName().equals("boolean"))) {
                 if (booleanVal != null) {
@@ -987,7 +1060,7 @@ public class NativePersistenceService extends BaseService {
                     return value;
                 } else if (numberVal != null) {
                     return new Date(numberVal.longValue());
-                } else if (stringVal != null) {
+                } else if (stringVal != null && ! stringVal.isEmpty()) {
 
                     // Use provided date patterns or try default patterns if they were not provided
                     if (datePatterns != null) {
@@ -1010,10 +1083,9 @@ public class NativePersistenceService extends BaseService {
                         if (date == null) {
                             date = DateUtils.parseDateWithPattern(stringVal, paramBean.getDateFormat());
                         }
-                        return date;
                     }
                 }
-
+                
             } else if (targetClass.isEnum()) {
                 if (listVal != null || targetClass.isAssignableFrom(value.getClass())) {
                     return value;
@@ -1076,8 +1148,82 @@ public class NativePersistenceService extends BaseService {
             }
 
         } catch (NumberFormatException e) {
-            // Swallow - validation will take care of it later
+            throw new ValidationException("wrong value format for filter, cannot cast '"+value+"' to "+targetClass, e);
         }
-        return null;
+        throw new ValidationException("Failed to cast value [" + value + "] to class: " + targetClass.getSimpleName());
     }
+
+	private Object extractString(Object value, Class targetClass, CustomFieldTemplate cft) {
+		if (targetClass == String.class) {
+			if (cft.getRegExp() != null) {
+				final Pattern pattern = Pattern.compile(cft.getRegExp());
+				if (!pattern.matcher((String) value).matches()) {
+					throw new ValidationException( "value of String " + value + " not accepted for regexp" + pattern.toString());
+				}
+			}
+			if(CustomFieldTypeEnum.LIST.equals(cft.getFieldType())) {
+				Map<String, String> listValues = cft.getListValuesSorted();
+				if(!listValues.containsKey(value)) {
+					throw new ValidationException( "value " + value + " is not accepted as value for enum " + cft.getCode());
+				}
+			}
+		}
+		return value;
+	}
+    
+    public Map<String, Object> findByClassAndId(String className, Long id) {
+		try {
+			Class clazz = Class.forName(className);
+			String tableName= getTableNameForClass(clazz);
+	        return findById(tableName, id);
+		} catch (ClassNotFoundException e) {
+			throw new BusinessException("Exception when trying to get class with name: "+className);
+		}
+    }
+    
+    public String getTableNameForClass(Class entityClass){
+        SessionFactory sessionFactory = ((Session) getEntityManager().getDelegate()).getSessionFactory();
+        ClassMetadata classMetadata = sessionFactory.getClassMetadata(entityClass);
+        SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionFactory;
+        AbstractEntityPersister entityPersister = (AbstractEntityPersister) sessionFactoryImpl.getEntityPersister(classMetadata.getEntityName());
+        return entityPersister.getTableName();
+    }
+    
+    public boolean validateRecordExistance(CustomFieldTemplate field, Long id) {
+    	String tableName =null;
+    	
+		CustomEntityTemplate relatedEntity = customEntityTemplateService.findByCode(field.tableName());
+		try {
+			if (relatedEntity != null) {
+				if (relatedEntity.isStoreAsTable()) {
+					tableName = relatedEntity.getDbTablename();
+				} else {
+					tableName = getTableNameForClass(CustomEntityInstance.class);
+				}
+			} else {
+				tableName = getTableNameForClass(Class.forName(field.getEntityClazz()));
+			}
+		} catch (ClassNotFoundException e) {
+			throw new BusinessException("Exception when trying to get class with name: "+field.getEntityClazz());
+		}
+        
+        return validateRecordExistanceByTableName(tableName, id);
+    }
+
+	public boolean validateRecordExistanceByTableName(String tableName,Long id) {
+		Session session = getEntityManager().unwrap(Session.class);
+        SQLQuery query = session.createSQLQuery("select "+FIELD_ID+" from " + tableName + " e where "+FIELD_ID+"=:id");
+        query.setParameter("id", id);
+        return query.uniqueResult()!=null;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<BigInteger> filterExistingRecordsOnTable(String tableName,List<Long> ids) {
+		Session session = getEntityManager().unwrap(Session.class);
+		
+        SQLQuery query = session.createSQLQuery("select "+FIELD_ID+" from " + tableName + " e where "+FIELD_ID+" in (:ids)");
+        query.setParameterList("ids", ids);
+        return (List<BigInteger>)query.list();
+	}
 }
