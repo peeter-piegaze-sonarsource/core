@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * This program is not suitable for any direct or indirect application in MILITARY industry
  * See the GNU Affero General Public License for more details.
  *
@@ -18,6 +18,7 @@
  */
 package org.meveo.service.payments.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,10 +54,9 @@ import org.meveo.model.payments.PaymentStatusEnum;
 
 import org.meveo.service.base.PersistenceService;
 
-
-
 /**
  * The Class DDRequestLOTService.
+ *
  * @author anasseh
  * @author Said Ramli
  * @lastModifiedVersion 5.3
@@ -64,170 +64,173 @@ import org.meveo.service.base.PersistenceService;
 @Stateless
 public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
 
-	/** The dd request item service. */
-	@Inject
-	private DDRequestItemService ddRequestItemService;
+    /**
+     * The dd request item service.
+     */
+    @Inject
+    private DDRequestItemService ddRequestItemService;
 
-	@Inject
-	private PaymentService paymentService;
+    @Inject
+    private PaymentService paymentService;
 
-	@Inject
-	private SepaDirectDebitAsync sepaDirectDebitAsync;
+    @Inject
+    private SepaDirectDebitAsync sepaDirectDebitAsync;
 
+    /**
+     * Creates the DDRequest lot.
+     *
+     * @param ddrequestLotOp   the ddrequest lot op
+     * @param ddRequestBuilder direct debit request builder
+     * @param result           the result
+     * @return the DD request LOT
+     * @throws BusinessEntityException the business entity exception
+     * @throws Exception               the exception
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public DDRequestLOT createDDRequestLot(DDRequestLotOp ddrequestLotOp, DDRequestBuilder ddRequestBuilder, JobExecutionResultImpl result)
+            throws BusinessEntityException, Exception {
 
-	/**
-	 * Creates the DDRequest lot.
-	 *
-	 * @param ddrequestLotOp   the ddrequest lot op
-	 * @param listAoToPay      list of account operations
-	 * @param ddRequestBuilder direct debit request builder
-	 * @param result           the result
-	 * @return the DD request LOT
-	 * @throws BusinessEntityException the business entity exception
-	 * @throws Exception               the exception
-	 */
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public DDRequestLOT createDDRquestLot(DDRequestLotOp ddrequestLotOp, List<AccountOperation> listAoToPay, DDRequestBuilder ddRequestBuilder, JobExecutionResultImpl result)
-			throws BusinessEntityException, Exception {
+        try {
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            DDRequestLOT ddRequestLOT = new DDRequestLOT();
+            ddRequestLOT.setDdRequestBuilder(ddRequestBuilder);
+            ddRequestLOT.setSendDate(new Date());
+            ddRequestLOT.setPaymentOrRefundEnum(ddrequestLotOp.getPaymentOrRefundEnum());
+            ddRequestLOT.setSeller(ddrequestLotOp.getSeller());
+            ddRequestLOT.setTotalAmount(totalAmount);
+            ddRequestLOT.setNbItemsKo(0);
+            ddRequestLOT.setNbItemsOk(0);
+            ddRequestLOT.setRejectedCause("");
+            this.create(ddRequestLOT);
+            return ddRequestLOT;
+        } catch (Exception e) {
+            log.error("Failed to create direct debit request lot for id {}", ddrequestLotOp.getId(), e);
+            ddrequestLotOp.setStatus(DDRequestOpStatusEnum.ERROR);
+            ddrequestLotOp.setErrorCause(StringUtils.truncate(e.getMessage(), 255, true));
+            result.registerError(ddrequestLotOp.getId(), e.getMessage());
+            result.addReport("ddrequestLotOp id : " + ddrequestLotOp.getId() + " RejectReason : " + e.getMessage());
+            return null;
+        }
 
-		try {
-			if (listAoToPay == null || listAoToPay.isEmpty()) {
-				throw new BusinessEntityException("no invoices!");
-			}
-			Future<DDRequestLOT> futureisNow = sepaDirectDebitAsync.launchAndForgetDDRequesltLotCreation(ddrequestLotOp, ddRequestBuilder, listAoToPay, appProvider);
-			DDRequestLOT ddRequestLOT = retrieveIfNotManaged(futureisNow.get());
-			create(ddRequestLOT);
-			log.info("Successful createDDRquestLot totalAmount: {}", ddRequestLOT.getTotalAmount());
-			return ddRequestLOT;
-		} catch (Exception e) {
-			log.error("Failed to sepa direct debit for id {}", ddrequestLotOp.getId(), e);
-			ddrequestLotOp.setStatus(DDRequestOpStatusEnum.ERROR);
-			ddrequestLotOp.setErrorCause(StringUtils.truncate(e.getMessage(), 255, true));
-			result.registerError(ddrequestLotOp.getId(), e.getMessage());
-			result.addReport("ddrequestLotOp id : " + ddrequestLotOp.getId() + " RejectReason : " + e.getMessage());
-			return null;
-		}
+    }
 
-	}
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void generateDDRquestLotFile(DDRequestLOT ddRequestLOT, final DDRequestBuilderInterface ddRequestBuilderInterface, Provider appProvider) throws Exception {
+        ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
+        ddRequestLOT.setFileName(ddRequestBuilderInterface.getDDFileName(ddRequestLOT, appProvider));
+        ddRequestBuilderInterface.generateDDRequestLotFile(ddRequestLOT, appProvider);
+        ddRequestLOT.setSendDate(new Date());
+        update(ddRequestLOT);
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public void generateDDRquestLotFile(DDRequestLOT ddRequestLOT, final DDRequestBuilderInterface ddRequestBuilderInterface, Provider appProvider)
-			throws BusinessEntityException, Exception {
-		ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
-		ddRequestLOT.setFileName(ddRequestBuilderInterface.getDDFileName(ddRequestLOT, appProvider));	
-		ddRequestBuilderInterface.generateDDRequestLotFile(ddRequestLOT, appProvider);
-		ddRequestLOT.setSendDate(new Date());
-		update(ddRequestLOT);
+    }
 
-	}
-	
-	public void createPaymentsOrRefundsForDDRequestLot(DDRequestLOT ddRequestLOT) throws Exception {
-		createPaymentsOrRefundsForDDRequestLot( ddRequestLOT ,1L, 0L,null);
-	}
+    public void createPaymentsOrRefundsForDDRequestLot(DDRequestLOT ddRequestLOT) throws Exception {
+        createPaymentsOrRefundsForDDRequestLot(ddRequestLOT, 1L, 0L, null);
+    }
 
-	/**
-	 * Creates the payments or refunds for DD request lot.
-	 *
-	 * @param ddRequestLOT the dd request LOT
-	 * @throws Exception
-	 */
-	public void createPaymentsOrRefundsForDDRequestLot(DDRequestLOT ddRequestLOT ,Long nbRuns, Long waitingMillis,JobExecutionResultImpl result) throws Exception {
-		ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
-		log.info("createPaymentsForDDRequestLot ddRequestLotId: {}, size:{}", ddRequestLOT.getId(), ddRequestLOT.getDdrequestItems().size());
-		if (ddRequestLOT.isPaymentCreated()) {
-			throw new BusinessException("Payment Already created.");
-		}
+    /**
+     * Creates the payments or refunds for DD request lot.
+     *
+     * @param ddRequestLOT the dd request LOT
+     * @throws Exception
+     */
+    public void createPaymentsOrRefundsForDDRequestLot(DDRequestLOT ddRequestLOT, Long nbRuns, Long waitingMillis, JobExecutionResultImpl result) throws Exception {
+        ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
+        log.info("createPaymentsForDDRequestLot ddRequestLotId: {}, size:{}", ddRequestLOT.getId(), ddRequestLOT.getDdrequestItems().size());
+        if (ddRequestLOT.isPaymentCreated()) {
+            throw new BusinessException("Payment Already created.");
+        }
 
-		SubListCreator subListCreator = new SubListCreator(ddRequestLOT.getDdrequestItems(), nbRuns.intValue());
-		List<Future<String>> futures = new ArrayList<Future<String>>();
-		while (subListCreator.isHasNext()) {
-			futures.add(sepaDirectDebitAsync.launchAndForgetPaymentCreation((List<DDRequestItem>) subListCreator.getNextWorkSet(),result));
-			try {
-				Thread.sleep(waitingMillis);
-			} catch (InterruptedException e) {
-				log.error("", e);
-			}
-		}
+        SubListCreator subListCreator = new SubListCreator(ddRequestLOT.getDdrequestItems(), nbRuns.intValue());
+        List<Future<String>> futures = new ArrayList<Future<String>>();
+        while (subListCreator.isHasNext()) {
+            futures.add(sepaDirectDebitAsync.launchAndForgetPaymentCreation((List<DDRequestItem>) subListCreator.getNextWorkSet(), result));
+            try {
+                Thread.sleep(waitingMillis);
+            } catch (InterruptedException e) {
+                log.error("", e);
+            }
+        }
 
-		for (Future<String> future : futures) {
-			try {
-				future.get();
-			} catch (InterruptedException e) {
-				// It was cancelled from outside - no interest
-			} catch (ExecutionException e) {
-				Throwable cause = e.getCause();
-				if(result != null) {
-					result.registerError(cause.getMessage());
-					result.addReport(cause.getMessage());
-				}
-				log.error("Failed to execute async method", cause);
-			}
-		}
-		ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
-		ddRequestLOT.setPaymentCreated(true);
-		update(ddRequestLOT);
-		log.info("Successful createPaymentsForDDRequestLot ddRequestLotId: {}", ddRequestLOT.getId());
+        for (Future<String> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                // It was cancelled from outside - no interest
+            } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                if (result != null) {
+                    result.registerError(cause.getMessage());
+                    result.addReport(cause.getMessage());
+                }
+                log.error("Failed to execute async method", cause);
+            }
+        }
+        ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
+        ddRequestLOT.setPaymentCreated(true);
+        update(ddRequestLOT);
+        log.info("Successful createPaymentsForDDRequestLot ddRequestLotId: {}", ddRequestLOT.getId());
 
-	}
+    }
 
-	/**
-	 * Reject payment.
-	 *
-	 * @param ddRequestItem the dd request item
-	 * @param rejectCause   the reject cause
-	 * @throws BusinessException the business exception
-	 */
-	public void rejectPayment(DDRequestItem ddRequestItem, String rejectCause, String fileName) throws BusinessException {
-		if (ddRequestItem.getRejectedFileName() != null) {
-			log.warn("DDRequestItem already rejected.");
-			return;
-		}
-		ddRequestItem.setRejectedFileName(fileName);
-		AccountOperation automatedPaymentorRefund = null;
-		if (ddRequestItem.getAutomatedPayment() != null) {
-			automatedPaymentorRefund = ddRequestItem.getAutomatedPayment();
-		} else {
-			automatedPaymentorRefund = ddRequestItem.getAutomatedRefund();
-		}
-		if (automatedPaymentorRefund == null || automatedPaymentorRefund.getMatchingAmounts() == null || automatedPaymentorRefund.getMatchingAmounts().isEmpty()) {
-			throw new BusinessException("ddRequestItem id :" + ddRequestItem.getId() + " Callback not expected");
-		}
-		paymentService.paymentCallback(automatedPaymentorRefund.getReference(), PaymentStatusEnum.REJECTED, rejectCause, rejectCause);
-	}
+    /**
+     * Reject payment.
+     *
+     * @param ddRequestItem the dd request item
+     * @param rejectCause   the reject cause
+     * @throws BusinessException the business exception
+     */
+    public void rejectPayment(DDRequestItem ddRequestItem, String rejectCause, String fileName) throws BusinessException {
+        if (ddRequestItem.getRejectedFileName() != null) {
+            log.warn("DDRequestItem already rejected.");
+            return;
+        }
+        ddRequestItem.setRejectedFileName(fileName);
+        AccountOperation automatedPaymentorRefund = null;
+        if (ddRequestItem.getAutomatedPayment() != null) {
+            automatedPaymentorRefund = ddRequestItem.getAutomatedPayment();
+        } else {
+            automatedPaymentorRefund = ddRequestItem.getAutomatedRefund();
+        }
+        if (automatedPaymentorRefund == null || automatedPaymentorRefund.getMatchingAmounts() == null || automatedPaymentorRefund.getMatchingAmounts().isEmpty()) {
+            throw new BusinessException("ddRequestItem id :" + ddRequestItem.getId() + " Callback not expected");
+        }
+        paymentService.paymentCallback(automatedPaymentorRefund.getReference(), PaymentStatusEnum.REJECTED, rejectCause, rejectCause);
+    }
 
-	/**
-	 * Process reject file.
-	 *
-	 * @param ddRejectFileInfos the dd reject file infos
-	 * @throws BusinessException the business exception
-	 */
-	public void processRejectFile(DDRejectFileInfos ddRejectFileInfos) throws BusinessException {
-		DDRequestLOT dDRequestLOT = null;
-		if (ddRejectFileInfos.getDdRequestLotId() != null) {
-			dDRequestLOT = findById(ddRejectFileInfos.getDdRequestLotId(), Arrays.asList("ddrequestItems"));
-		}
-		if (dDRequestLOT != null) {
-			if (ddRejectFileInfos.isTheDDRequestFileWasRejected()) {
-				// original message rejected at protocol level control
-				CopyOnWriteArrayList<DDRequestItem> items = new CopyOnWriteArrayList<>(dDRequestLOT.getDdrequestItems());
-				for (DDRequestItem ddRequestItem : items) {
-					if (!ddRequestItem.hasError()) {
-						rejectPayment(ddRequestItem, "RJCT", ddRejectFileInfos.getFileName());
-					}
-				}
-				dDRequestLOT.setReturnStatusCode(ddRejectFileInfos.getReturnStatusCode());
-			}
-			dDRequestLOT.setReturnFileName(ddRejectFileInfos.getFileName());
-		}
-		for (Entry<Long, String> entry : ddRejectFileInfos.getListInvoiceRefsRejected().entrySet()) {
-			DDRequestItem ddRequestItem = ddRequestItemService.findById(entry.getKey(), Arrays.asList("ddRequestLOT"));
-			if (ddRequestItem == null) {
-				throw new BusinessException("Cant find item by id:" + entry.getKey());
-			}
+    /**
+     * Process reject file.
+     *
+     * @param ddRejectFileInfos the dd reject file infos
+     * @throws BusinessException the business exception
+     */
+    public void processRejectFile(DDRejectFileInfos ddRejectFileInfos) throws BusinessException {
+        DDRequestLOT dDRequestLOT = null;
+        if (ddRejectFileInfos.getDdRequestLotId() != null) {
+            dDRequestLOT = findById(ddRejectFileInfos.getDdRequestLotId(), Arrays.asList("ddrequestItems"));
+        }
+        if (dDRequestLOT != null) {
+            if (ddRejectFileInfos.isTheDDRequestFileWasRejected()) {
+                // original message rejected at protocol level control
+                CopyOnWriteArrayList<DDRequestItem> items = new CopyOnWriteArrayList<>(dDRequestLOT.getDdrequestItems());
+                for (DDRequestItem ddRequestItem : items) {
+                    if (!ddRequestItem.hasError()) {
+                        rejectPayment(ddRequestItem, "RJCT", ddRejectFileInfos.getFileName());
+                    }
+                }
+                dDRequestLOT.setReturnStatusCode(ddRejectFileInfos.getReturnStatusCode());
+            }
+            dDRequestLOT.setReturnFileName(ddRejectFileInfos.getFileName());
+        }
+        for (Entry<Long, String> entry : ddRejectFileInfos.getListInvoiceRefsRejected().entrySet()) {
+            DDRequestItem ddRequestItem = ddRequestItemService.findById(entry.getKey(), Arrays.asList("ddRequestLOT"));
+            if (ddRequestItem == null) {
+                throw new BusinessException("Cant find item by id:" + entry.getKey());
+            }
 
-			rejectPayment(ddRequestItem, entry.getValue(), ddRejectFileInfos.getFileName());
-			ddRequestItem.getDdRequestLOT().setReturnStatusCode(ddRejectFileInfos.getReturnStatusCode());
-			ddRequestItem.getDdRequestLOT().setReturnFileName(ddRejectFileInfos.getFileName());
-		}
-	}
+            rejectPayment(ddRequestItem, entry.getValue(), ddRejectFileInfos.getFileName());
+            ddRequestItem.getDdRequestLOT().setReturnStatusCode(ddRejectFileInfos.getReturnStatusCode());
+            ddRequestItem.getDdRequestLOT().setReturnFileName(ddRejectFileInfos.getFileName());
+        }
+    }
 }

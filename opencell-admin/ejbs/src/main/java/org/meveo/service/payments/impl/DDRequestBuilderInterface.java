@@ -26,8 +26,15 @@ public interface DDRequestBuilderInterface {
      * @throws BusinessException the business exception
      */
     public List<AccountOperation> findListAoToPay(DDRequestLotOp ddrequestLotOp) throws BusinessException;
-    
-         
+
+    /**
+     * Find list of Account operations to pay or refund according the current ddrequestLotOp with pagination.
+     *
+     * @param ddrequestLotOp the ddrequest lot op
+     * @return the list of account operation
+     * @throws BusinessException the business exception
+     */
+    public List<Long> findListAoToPayIds(DDRequestLotOp ddrequestLotOp, int pageSize) throws BusinessException;
    /**
     * Generate the  sdd or sct request file for a given DDRequestLot.
     * 
