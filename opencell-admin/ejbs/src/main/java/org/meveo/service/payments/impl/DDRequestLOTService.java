@@ -39,9 +39,7 @@ import org.meveo.admin.exception.BusinessEntityException;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.sepa.DDRejectFileInfos;
 import org.meveo.commons.utils.StringUtils;
-
 import org.meveo.model.crm.Provider;
-
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.payments.DDRequestBuilder;
@@ -49,10 +47,9 @@ import org.meveo.model.payments.DDRequestItem;
 import org.meveo.model.payments.DDRequestLOT;
 import org.meveo.model.payments.DDRequestLotOp;
 import org.meveo.model.payments.DDRequestOpStatusEnum;
-
 import org.meveo.model.payments.PaymentStatusEnum;
-
 import org.meveo.service.base.PersistenceService;
+import org.meveo.service.script.payment.AccountOperationFilterScript;
 
 /**
  * The Class DDRequestLOTService.
@@ -232,5 +229,51 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
             ddRequestItem.getDdRequestLOT().setReturnStatusCode(ddRejectFileInfos.getReturnStatusCode());
             ddRequestItem.getDdRequestLOT().setReturnFileName(ddRejectFileInfos.getFileName());
         }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public DDRequestLOT createDdRequestLotWithItems(JobExecutionResultImpl result, DDRequestLOT ddRequestLot, DDRequestBuilder ddRequestBuilder, DDRequestLotOp ddrequestLotOp,
+            AccountOperationFilterScript aoFilterScript, Long nbRuns, Long waitingMillis, DDRequestBuilderInterface ddRequestBuilderInterface, int limit) throws Exception {
+        List<Future<DDRequestLOT>> futures = new ArrayList<>();
+        List<Long> listAoToPayIds = ddRequestBuilderInterface.findListAoToPayIds(ddrequestLotOp, limit);
+        SubListCreator<Long> subListCreator = new SubListCreator<>(listAoToPayIds, nbRuns.intValue());
+
+        while (subListCreator.isHasNext()) {
+            futures.add(sepaDirectDebitAsync.launchAndForgetDDRequestItemsCreation(ddRequestBuilder, subListCreator.getNextWorkSet(), appProvider, aoFilterScript, ddrequestLotOp));
+
+            if (subListCreator.isHasNext()) {
+                try {
+                    Thread.sleep(waitingMillis);
+                } catch (InterruptedException e) {
+                    log.error("", e);
+                }
+            }
+        }
+        waitAllFuturesToFinishAndUpdateDDRLot(ddRequestLot, futures, result);
+        return ddRequestLot;
+    }
+
+    private void waitAllFuturesToFinishAndUpdateDDRLot(DDRequestLOT ddRequestLot, List<Future<DDRequestLOT>> futures, JobExecutionResultImpl result) {
+        log.info("waiting for all DDR items to be created");
+        for (Future<DDRequestLOT> future : futures) {
+            try {
+                DDRequestLOT ddRLotPart = future.get();
+                ddRequestLot.getDdrequestItems().addAll(ddRLotPart.getDdrequestItems());
+                ddRequestLot.setNbItemsOk(ddRequestLot.getNbItemsOk() + ddRLotPart.getNbItemsOk());
+                ddRequestLot.setNbItemsKo(ddRequestLot.getNbItemsKo() + ddRLotPart.getNbItemsKo());
+                ddRequestLot.setTotalAmount(ddRequestLot.getTotalAmount().add(ddRLotPart.getTotalAmount()));
+                String rejectedCause = StringUtils.concat(ddRequestLot.getRejectedCause(), ddRLotPart.getRejectedCause());
+                ddRequestLot.setRejectedCause(StringUtils.truncate(rejectedCause, 255, true));
+            } catch (InterruptedException e) {
+                // should ask why is interrupted
+                log.error("this future was interrupted because ", e);
+            } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                result.registerError(cause.getMessage());
+                log.error("Failed to execute async method", cause);
+            }
+        }
+        update(ddRequestLot);
+        log.info("Creating DDR lot with total amount {} ", ddRequestLot.getTotalAmount());
     }
 }

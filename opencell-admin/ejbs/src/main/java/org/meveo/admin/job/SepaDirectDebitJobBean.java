@@ -1,13 +1,9 @@
 package org.meveo.admin.job;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -16,9 +12,7 @@ import javax.interceptor.Interceptors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.assertj.core.util.Strings;
 import org.meveo.admin.async.SepaDirectDebitAsync;
-import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.commons.utils.StringUtils;
@@ -28,7 +22,6 @@ import org.meveo.model.crm.EntityReferenceWrapper;
 import org.meveo.model.crm.Provider;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
-import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.payments.DDRequestBuilder;
 import org.meveo.model.payments.DDRequestLOT;
 import org.meveo.model.payments.DDRequestLotOp;
@@ -37,7 +30,6 @@ import org.meveo.model.payments.DDRequestOpStatusEnum;
 import org.meveo.model.payments.PaymentOrRefundEnum;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.shared.DateUtils;
-import org.meveo.security.MeveoUser;
 import org.meveo.service.admin.impl.SellerService;
 import org.meveo.service.job.JobExecutionService;
 import org.meveo.service.payments.impl.DDRequestBuilderFactory;
@@ -129,9 +121,6 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
     @Inject
     private SepaDirectDebitAsync sepaDirectDebitAsync;
 
-    @EJB
-    private SepaDirectDebitJobBean sepaDirectDebitJobBeanNewTx;
-
     /**
      * Execute.
      *
@@ -193,9 +182,13 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
                         this.updateOperationDateRange(ddrequestLotOp, dateRangeScript);
                     }
                     if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.CREATE) {
-                        DDRequestLOT ddRequestLOT = createDdRequestLOT(result, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis);
-                        if (ddRequestLOT != null) {
+                        // create DDR lot
+                        DDRequestLOT ddRequestLot = dDRequestLOTService.createDDRequestLot(ddrequestLotOp, ddRequestBuilder, result);
 
+                        DDRequestLOT ddRequestLOT = dDRequestLOTService
+                                .createDdRequestLotWithItems(result, ddRequestLot, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis, ddRequestBuilderInterface,
+                                        PROCESS_ROWS_IN_JOB_RUN);
+                        if (ddRequestLOT != null) {
                             dDRequestLOTService.generateDDRquestLotFile(ddRequestLOT, ddRequestBuilderInterface, appProvider);
                             result.addReport(ddRequestLOT.getRejectedCause());
                             dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLOT, nbRuns, waitingMillis, result);
@@ -232,54 +225,6 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
         } catch (Exception e) {
             log.error("Failed to sepa direct debit", e);
         }
-    }
-
-    private DDRequestLOT createDdRequestLOT(JobExecutionResultImpl result, DDRequestBuilder ddRequestBuilder, DDRequestLotOp ddrequestLotOp,
-            AccountOperationFilterScript aoFilterScript, Long nbRuns, Long waitingMillis) throws Exception {
-        // create DDR lot
-        DDRequestLOT ddRequestLot = dDRequestLOTService.createDDRequestLot(ddrequestLotOp, ddRequestBuilder, result);
-        DDRequestBuilderInterface ddRequestBuilderInterface = ddRequestBuilderFactory.getInstance(ddRequestBuilder);
-        List<Future<DDRequestLOT>> futures = new ArrayList<>();
-        List<Long> listAoToPayIds = ddRequestBuilderInterface.findListAoToPayIds(ddrequestLotOp, PROCESS_ROWS_IN_JOB_RUN);
-        SubListCreator<Long> subListCreator = new SubListCreator<>(listAoToPayIds, nbRuns.intValue());
-
-        while (subListCreator.isHasNext()) {
-            futures.add(sepaDirectDebitAsync.launchAndForgetDDRequestItemsCreation(ddRequestBuilder, subListCreator.getNextWorkSet(), appProvider, aoFilterScript, ddrequestLotOp));
-
-            if (subListCreator.isHasNext()) {
-                try {
-                    Thread.sleep(waitingMillis);
-                } catch (InterruptedException e) {
-                    log.error("", e);
-                }
-            }
-        }
-        waitAllFuturesToFinishAndUpdateDDRLot(ddRequestLot, futures, result);
-        return ddRequestLot;
-    }
-
-    private void waitAllFuturesToFinishAndUpdateDDRLot(DDRequestLOT ddRequestLot, List<Future<DDRequestLOT>> futures, JobExecutionResultImpl result) {
-        log.info("waiting for all DDR items to be created");
-        for (Future<DDRequestLOT> future : futures) {
-            try {
-                DDRequestLOT ddRLotPart = future.get();
-                ddRequestLot.getDdrequestItems().addAll(ddRLotPart.getDdrequestItems());
-                ddRequestLot.setNbItemsOk(ddRequestLot.getNbItemsOk() + ddRLotPart.getNbItemsOk());
-                ddRequestLot.setNbItemsKo(ddRequestLot.getNbItemsKo() + ddRLotPart.getNbItemsKo());
-                ddRequestLot.setTotalAmount(ddRequestLot.getTotalAmount().add(ddRLotPart.getTotalAmount()));
-                String rejectedCause = Strings.concat(ddRequestLot.getRejectedCause(), ddRLotPart.getRejectedCause());
-                ddRequestLot.setRejectedCause(StringUtils.truncate(rejectedCause, 255, true));
-            } catch (InterruptedException e) {
-                // should ask why is interrupted
-                log.error("this future was interrupted because ", e);
-            } catch (ExecutionException e) {
-                Throwable cause = e.getCause();
-                result.registerError(cause.getMessage());
-                log.error("Failed to execute async method", cause);
-            }
-        }
-        dDRequestLOTService.update(ddRequestLot);
-        log.info("Creating DDR lot with total amount {} ", ddRequestLot.getTotalAmount());
     }
 
     /**
