@@ -53,6 +53,7 @@ public class DDRequestItemService extends PersistenceService<DDRequestItem> {
         if(listAO.size() == 1 && !StringUtils.isBlank(listAO.get(0).getReference())) {
             ddDequestItem.setReference(listAO.get(0).getReference());
         }
+        // todo create or update for the same CA
         create(ddDequestItem);
         for (AccountOperation ao : listAO) {
             ao.setDdRequestItem(ddDequestItem);

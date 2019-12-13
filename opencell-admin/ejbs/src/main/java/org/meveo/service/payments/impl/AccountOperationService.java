@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * This program is not suitable for any direct or indirect application in MILITARY industry
  * See the GNU Affero General Public License for more details.
  *
@@ -19,6 +19,7 @@
 package org.meveo.service.payments.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import javax.ejb.Stateless;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.commons.utils.QueryBuilder;
@@ -40,9 +42,9 @@ import org.meveo.service.base.PersistenceService;
 
 /**
  * AccountOperation service implementation.
- * 
+ *
  * @author anasseh
- * @lastModifiedVersion 5.3 
+ * @lastModifiedVersion 5.3
  */
 @Stateless
 public class AccountOperationService extends PersistenceService<AccountOperation> {
@@ -50,14 +52,14 @@ public class AccountOperationService extends PersistenceService<AccountOperation
     /**
      * Gets the account operations.
      *
-     * @param date date
+     * @param date          date
      * @param operationCode code of operation.
      * @return list of account operations.
      */
     @SuppressWarnings("unchecked")
     public List<AccountOperation> getAccountOperations(Date date, String operationCode) {
         Query query = getEntityManager().createQuery("from " + getEntityClass().getSimpleName() + " a where a.occCode=:operationCode and  a.transactionDate=:date")
-            .setParameter("date", date).setParameter("operationCode", operationCode);
+                .setParameter("date", date).setParameter("operationCode", operationCode);
 
         return query.getResultList();
     }
@@ -65,7 +67,7 @@ public class AccountOperationService extends PersistenceService<AccountOperation
     /**
      * Gets the account operation.
      *
-     * @param amount account operation account
+     * @param amount          account operation account
      * @param customerAccount customer account
      * @param transactionType transaction type.
      * @return account operation.
@@ -74,8 +76,8 @@ public class AccountOperationService extends PersistenceService<AccountOperation
     public AccountOperation getAccountOperation(BigDecimal amount, CustomerAccount customerAccount, String transactionType) {
 
         Query query = getEntityManager()
-            .createQuery("from " + getEntityClass().getSimpleName() + " a where a.amount=:amount and  a.customerAccount=:customerAccount and  a.type=:transactionType")
-            .setParameter("amount", amount).setParameter("transactionType", transactionType).setParameter("customerAccount", customerAccount);
+                .createQuery("from " + getEntityClass().getSimpleName() + " a where a.amount=:amount and  a.customerAccount=:customerAccount and  a.type=:transactionType")
+                .setParameter("amount", amount).setParameter("transactionType", transactionType).setParameter("customerAccount", customerAccount);
         List<AccountOperation> accountOperations = query.getResultList();
 
         return accountOperations.size() > 0 ? accountOperations.get(0) : null;
@@ -99,7 +101,7 @@ public class AccountOperationService extends PersistenceService<AccountOperation
 
     /**
      * Set the discriminatorValue value, so it would be available in the list of entities right away.
-     * 
+     *
      * @param aop account operation.
      * @return id of account operation.
      * @throws BusinessException business exception.
@@ -119,9 +121,9 @@ public class AccountOperationService extends PersistenceService<AccountOperation
      * Gets the a os to pay.
      *
      * @param paymentMethodEnum the payment method enum
-     * @param fromDueDate the from due date
-     * @param toDueDate the to due date
-     * @param opCatToProcess the op cat to process
+     * @param fromDueDate       the from due date
+     * @param toDueDate         the to due date
+     * @param opCatToProcess    the op cat to process
      * @param customerAccountId the customer account id
      * @return the a os to pay
      */
@@ -130,8 +132,8 @@ public class AccountOperationService extends PersistenceService<AccountOperation
             Long customerAccountId) {
         try {
             return (List<AccountOperation>) getEntityManager().createNamedQuery("AccountOperation.listAoToPayOrRefund").setParameter("paymentMethodIN", paymentMethodEnum)
-                .setParameter("caIdIN", customerAccountId).setParameter("fromDueDateIN", fromDueDate).setParameter("toDueDateIN", toDueDate)
-                .setParameter("opCatToProcessIN", opCatToProcess).getResultList();
+                    .setParameter("caIdIN", customerAccountId).setParameter("fromDueDateIN", fromDueDate).setParameter("toDueDateIN", toDueDate)
+                    .setParameter("opCatToProcessIN", opCatToProcess).getResultList();
         } catch (NoResultException e) {
             return null;
         }
@@ -141,10 +143,10 @@ public class AccountOperationService extends PersistenceService<AccountOperation
      * Gets the a os to pay.
      *
      * @param paymentMethodEnum the payment method enum
-     * @param fromDueDate the from due date
-     * @param toDueDate the to due date
-     * @param opCatToProcess the op cat to process
-     * @param seller the seller
+     * @param fromDueDate       the from due date
+     * @param toDueDate         the to due date
+     * @param opCatToProcess    the op cat to process
+     * @param seller            the seller
      * @return the a os to pay
      */
     @SuppressWarnings("unchecked")
@@ -155,7 +157,7 @@ public class AccountOperationService extends PersistenceService<AccountOperation
                 queryName = "AccountOperation.listAoToPayOrRefundWithoutCAbySeller";
             }
             Query query = getEntityManager().createNamedQuery(queryName).setParameter("paymentMethodIN", paymentMethodEnum).setParameter("fromDueDateIN", fromDueDate)
-                .setParameter("toDueDateIN", toDueDate).setParameter("opCatToProcessIN", opCatToProcess);
+                    .setParameter("toDueDateIN", toDueDate).setParameter("opCatToProcessIN", opCatToProcess);
 
             if (seller != null) {
                 query.setParameter("sellerIN", seller);
@@ -169,8 +171,44 @@ public class AccountOperationService extends PersistenceService<AccountOperation
     }
 
     /**
+     * Gets the AOs to pay with pagination
+     *
+     * @param pm             the payment method enum
+     * @param fromDueDate    the from due date
+     * @param toDueDate      the to due date
+     * @param opCatToProcess the op cat to process
+     * @param seller         the seller
+     * @param pageSize         the last id used for pagination
+     * @return the AOs id to pay
+     */
+    public List<Long> getAOsToPayOrRefundIds(PaymentMethodEnum pm, Date fromDueDate, Date toDueDate, OperationCategoryEnum opCatToProcess, Seller seller,
+            int pageSize) {
+        try {
+            String namedQuery = "AccountOperation.listIdsAoToPayOrRefundWithoutCA";
+            if (seller != null) {
+                namedQuery = "AccountOperation.listIdsAoToPayOrRefundWithoutCAbySeller";
+            }
+            Query query = getEntityManager().createNamedQuery(namedQuery, Long.class)
+                    .setParameter("paymentMethodIN", pm)
+                    .setParameter("fromDueDateIN", fromDueDate)
+                    .setParameter("toDueDateIN", toDueDate)
+                    .setParameter("opCatToProcessIN", opCatToProcess)
+                    .setMaxResults(pageSize);
+
+            if (seller != null) {
+                query.setParameter("sellerIN", seller);
+            }
+            return (List<Long>) query.getResultList();
+
+        } catch (Exception e) {
+            log.error("Can't retrieve a list of AO to pay, cause :", e);
+            return new ArrayList<Long>();
+        }
+    }
+
+    /**
      * Return all AccountOperation with now - invoiceDate date &gt; n years.
-     * 
+     *
      * @param nYear age of the account operation
      * @return Filtered list of account operations
      */
@@ -186,7 +224,7 @@ public class AccountOperationService extends PersistenceService<AccountOperation
 
     /**
      * Return all unpaid AccountOperation with now - invoiceDate date &gt; n years.
-     * 
+     *
      * @param nYear age of the account operation
      * @return Filtered list of account operations
      */
@@ -218,7 +256,7 @@ public class AccountOperationService extends PersistenceService<AccountOperation
 
     /**
      * Count unmatched AOs by CA.
-     * 
+     *
      * @param customerAccount Customer Account.
      * @return count of unmatched AOs.
      */

@@ -1,14 +1,13 @@
 package org.meveo.admin.job;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.meveo.service.script.payment.AccountOperationFilterScript.LIST_AO_TO_PAY;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -17,6 +16,9 @@ import javax.interceptor.Interceptors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.assertj.core.util.Strings;
+import org.meveo.admin.async.SepaDirectDebitAsync;
+import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.commons.utils.StringUtils;
@@ -32,11 +34,10 @@ import org.meveo.model.payments.DDRequestLOT;
 import org.meveo.model.payments.DDRequestLotOp;
 import org.meveo.model.payments.DDRequestOpEnum;
 import org.meveo.model.payments.DDRequestOpStatusEnum;
-import org.meveo.model.payments.MatchingStatusEnum;
-import org.meveo.model.payments.PaymentMethodEnum;
 import org.meveo.model.payments.PaymentOrRefundEnum;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.shared.DateUtils;
+import org.meveo.security.MeveoUser;
 import org.meveo.service.admin.impl.SellerService;
 import org.meveo.service.job.JobExecutionService;
 import org.meveo.service.payments.impl.DDRequestBuilderFactory;
@@ -49,7 +50,9 @@ import org.meveo.service.script.ScriptInterface;
 import org.meveo.service.script.payment.AccountOperationFilterScript;
 import org.meveo.service.script.payment.DateRangeScript;
 import org.meveo.util.ApplicationProvider;
-import org.slf4j.Logger;;
+import org.slf4j.Logger;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * The Class SepaDirectDebitJobBean.
@@ -61,148 +64,169 @@ import org.slf4j.Logger;;
 @Stateless
 public class SepaDirectDebitJobBean extends BaseJobBean {
 
-    /** The log. */
+    /**
+     * Number of AOs id to process in a single job run
+     */
+    private static final int PROCESS_ROWS_IN_JOB_RUN = 2_000_000;
+    /**
+     * The log.
+     */
     @Inject
     private Logger log;
 
-    /** The d D request lot op service. */
+    /**
+     * The d D request lot op service.
+     */
     @Inject
     private DDRequestLotOpService dDRequestLotOpService;
 
-    /** The d D request LOT service. */
+    /**
+     * The d D request LOT service.
+     */
     @Inject
     private DDRequestLOTService dDRequestLOTService;
 
-    /** The job execution service. */
+    /**
+     * The job execution service.
+     */
     @Inject
     private JobExecutionService jobExecutionService;
 
-    /** The dd request builder service. */
+    /**
+     * The dd request builder service.
+     */
     @Inject
     private DDRequestBuilderService ddRequestBuilderService;
 
-    /** The dd request builder factory. */
+    /**
+     * The dd request builder factory.
+     */
     @Inject
     private DDRequestBuilderFactory ddRequestBuilderFactory;
 
-    /** The seller service. */
+    /**
+     * The seller service.
+     */
     @Inject
     private SellerService sellerService;
 
-    /** The app provider. */
+    /**
+     * The app provider.
+     */
     @Inject
     @ApplicationProvider
     private Provider appProvider;
 
-    /** The script instance service. */
+    /**
+     * The script instance service.
+     */
     @Inject
     private ScriptInstanceService scriptInstanceService;
 
     /**
+     * The SEPA Direct Debit Async service.
+     */
+    @Inject
+    private SepaDirectDebitAsync sepaDirectDebitAsync;
+
+    @EJB
+    private SepaDirectDebitJobBean sepaDirectDebitJobBeanNewTx;
+
+    /**
      * Execute.
      *
-     * @param result the result
+     * @param result      the result
      * @param jobInstance the job instance
      */
-	@Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
-	@TransactionAttribute(TransactionAttributeType.NEVER)
+    @Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void execute(JobExecutionResultImpl result, JobInstance jobInstance) {
-        
+
         try {
-			Long nbRuns = new Long(1);
-			Long waitingMillis = new Long(0);
+            Long nbRuns = (Long) this.getParamOrCFValue(jobInstance, "SepaJob_nbRuns", -1L);
+            Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "SepaJob_waitingMillis", (long) Runtime.getRuntime().availableProcessors());
 
-			try {
-				nbRuns = (Long) this.getParamOrCFValue(jobInstance, "SepaJob_nbRuns");
-				waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "SepaJob_waitingMillis");
-				if (nbRuns == -1) {
-					nbRuns = (long) Runtime.getRuntime().availableProcessors();
-				}
-
-			} catch (Exception e) {
-				nbRuns = new Long(1);
-				waitingMillis = new Long(0);
-				log.warn("Cant get nbRuns and waitingMillis customFields for " + jobInstance.getCode(), e.getMessage());
-			}
-            DDRequestBuilder ddRequestBuilder = null;
-            Seller seller = null;
-            String ddRequestBuilderCode = null;
-            String sellerCode = null;
-            PaymentOrRefundEnum paymentOrRefundEnum = PaymentOrRefundEnum.PAYMENT;
-            paymentOrRefundEnum = PaymentOrRefundEnum.valueOf(((String) this.getParamOrCFValue(jobInstance, "SepaJob_paymentOrRefund")).toUpperCase());
-            if ((EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_ddRequestBuilder") != null) {
-                ddRequestBuilderCode = ((EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_ddRequestBuilder")).getCode();
+            DDRequestBuilder ddRequestBuilder;
+            String paymentOrRefundCF = (String) this.getParamOrCFValue(jobInstance, "SepaJob_paymentOrRefund", PaymentOrRefundEnum.PAYMENT);
+            PaymentOrRefundEnum paymentOrRefundEnum = PaymentOrRefundEnum.valueOf(paymentOrRefundCF.toUpperCase());
+            EntityReferenceWrapper ddRequestBuilderCF = (EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_ddRequestBuilder");
+            if (ddRequestBuilderCF != null) {
+                String ddRequestBuilderCode = (ddRequestBuilderCF).getCode();
                 ddRequestBuilder = ddRequestBuilderService.findByCode(ddRequestBuilderCode);
+                if (ddRequestBuilder == null) {
+                    throw new BusinessException("Can't find ddRequestBuilder by code:" + ddRequestBuilderCode);
+                }
             } else {
-                throw new BusinessException("Can't find ddRequestBuilder");
+                throw new BusinessException("Can't find ddRequestBuilder in CFs");
             }
-            if (ddRequestBuilder == null) {
-                throw new BusinessException("Can't find ddRequestBuilder by code:" + ddRequestBuilderCode);
-            }
-            if ((EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_seller") != null) {
-                sellerCode = ((EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_seller")).getCode();
+
+            EntityReferenceWrapper sellerCF = (EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_seller");
+            Seller seller = null;
+            if (sellerCF != null) {
+                String sellerCode = (sellerCF).getCode();
                 seller = sellerService.findByCode(sellerCode);
             }
 
+            AccountOperationFilterScript aoFilterScript = this.getAOScriptInstance(jobInstance);
+
             DDRequestBuilderInterface ddRequestBuilderInterface = ddRequestBuilderFactory.getInstance(ddRequestBuilder);
-            List<DDRequestLotOp> ddrequestOps = dDRequestLotOpService.getDDRequestOps(ddRequestBuilder, seller,paymentOrRefundEnum);
 
-			if (CollectionUtils.isNotEmpty(ddrequestOps)) {
-				log.info("ddrequestOps found:" + ddrequestOps.size());
-				result.setNbItemsToProcess(ddrequestOps.size());
+            List<DDRequestLotOp> ddrequestOps = dDRequestLotOpService.getDDRequestOps(ddRequestBuilder, seller, paymentOrRefundEnum);
 
-			} else {
-				final String msg = "ddrequestOps IS EMPTY !";
-				log.info(msg);
-				result.setNbItemsToProcess(0);
-				result.registerWarning(msg);
-				return;
-			}
+            if (CollectionUtils.isEmpty(ddrequestOps)) {
+                final String msg = "ddrequestOps IS EMPTY !";
+                log.info(msg);
+                result.setNbItemsToProcess(0);
+                result.registerWarning(msg);
+                return;
+            }
+            log.info("ddrequestOps found:" + ddrequestOps.size());
+            result.setNbItemsToProcess(ddrequestOps.size());
 
             for (DDRequestLotOp ddrequestLotOp : ddrequestOps) {
                 if (!jobExecutionService.isJobRunningOnThis(result.getJobInstance().getId())) {
                     break;
                 }
-                try {                	
+                try {
                     DateRangeScript dateRangeScript = this.getDueDateRangeScript(ddrequestLotOp);
                     if (dateRangeScript != null) { // computing custom due date range :
                         this.updateOperationDateRange(ddrequestLotOp, dateRangeScript);
                     }
                     if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.CREATE) {
-                        List<AccountOperation> listAoToPay = this.filterAoToPayOrRefund(ddRequestBuilderInterface.findListAoToPay(ddrequestLotOp), jobInstance, ddrequestLotOp);
-                        DDRequestLOT ddRequestLOT = dDRequestLOTService.createDDRquestLot(ddrequestLotOp, listAoToPay, ddRequestBuilder, result);
-                        if (ddRequestLOT != null) {                        	
+                        DDRequestLOT ddRequestLOT = createDdRequestLOT(result, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis);
+                        if (ddRequestLOT != null) {
+
                             dDRequestLOTService.generateDDRquestLotFile(ddRequestLOT, ddRequestBuilderInterface, appProvider);
-							result.addReport(ddRequestLOT.getRejectedCause());
-							dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLOT, nbRuns, waitingMillis, result);
+                            result.addReport(ddRequestLOT.getRejectedCause());
+                            dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLOT, nbRuns, waitingMillis, result);
                             if (isEmpty(ddRequestLOT.getRejectedCause())) {
                                 result.registerSucces();
                             }
                         }
                     }
-					if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.PAYMENT) {
-						dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddrequestLotOp.getDdrequestLOT(), nbRuns, waitingMillis, result);
-						result.registerSucces();
-					}
-					if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.FILE) {												
-						dDRequestLOTService.generateDDRquestLotFile(ddrequestLotOp.getDdrequestLOT(), ddRequestBuilderInterface, appProvider);
-						result.registerSucces();
-					}
+                    if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.PAYMENT) {
+                        dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddrequestLotOp.getDdrequestLOT(), nbRuns, waitingMillis, result);
+                        result.registerSucces();
+                    }
+                    if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.FILE) {
+                        dDRequestLOTService.generateDDRquestLotFile(ddrequestLotOp.getDdrequestLOT(), ddRequestBuilderInterface, appProvider);
+                        result.registerSucces();
+                    }
                     ddrequestLotOp.setStatus(DDRequestOpStatusEnum.PROCESSED);
                     dDRequestLotOpService.update(ddrequestLotOp);
                     if (BooleanUtils.isTrue(ddrequestLotOp.getRecurrent())) {
                         this.createNewDdrequestLotOp(ddrequestLotOp);
                     }
                 } catch (Exception e) {
-                    log.error("Failed to sepa direct debit for id {}", ddrequestLotOp.getId(), e);            		
-					if (BooleanUtils.isTrue(ddrequestLotOp.getRecurrent())) {
-						this.createNewDdrequestLotOp(ddrequestLotOp);
-					}
-					ddrequestLotOp.setStatus(DDRequestOpStatusEnum.ERROR);
-					ddrequestLotOp.setErrorCause(StringUtils.truncate(e.getMessage(), 255, true));
-					dDRequestLotOpService.update(ddrequestLotOp);
-					result.registerError(ddrequestLotOp.getId(), e.getMessage());
-					result.addReport("ddrequestLotOp id : " + ddrequestLotOp.getId() + " RejectReason : " + e.getMessage());
+                    log.error("Failed to sepa direct debit for id {}", ddrequestLotOp.getId(), e);
+                    if (BooleanUtils.isTrue(ddrequestLotOp.getRecurrent())) {
+                        this.createNewDdrequestLotOp(ddrequestLotOp);
+                    }
+                    ddrequestLotOp.setStatus(DDRequestOpStatusEnum.ERROR);
+                    ddrequestLotOp.setErrorCause(StringUtils.truncate(e.getMessage(), 255, true));
+                    dDRequestLotOpService.update(ddrequestLotOp);
+                    result.registerError(ddrequestLotOp.getId(), e.getMessage());
+                    result.addReport("ddrequestLotOp id : " + ddrequestLotOp.getId() + " RejectReason : " + e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -210,10 +234,58 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
         }
     }
 
+    private DDRequestLOT createDdRequestLOT(JobExecutionResultImpl result, DDRequestBuilder ddRequestBuilder, DDRequestLotOp ddrequestLotOp,
+            AccountOperationFilterScript aoFilterScript, Long nbRuns, Long waitingMillis) throws Exception {
+        // create DDR lot
+        DDRequestLOT ddRequestLot = dDRequestLOTService.createDDRequestLot(ddrequestLotOp, ddRequestBuilder, result);
+        DDRequestBuilderInterface ddRequestBuilderInterface = ddRequestBuilderFactory.getInstance(ddRequestBuilder);
+        List<Future<DDRequestLOT>> futures = new ArrayList<>();
+        List<Long> listAoToPayIds = ddRequestBuilderInterface.findListAoToPayIds(ddrequestLotOp, PROCESS_ROWS_IN_JOB_RUN);
+        SubListCreator<Long> subListCreator = new SubListCreator<>(listAoToPayIds, nbRuns.intValue());
+
+        while (subListCreator.isHasNext()) {
+            futures.add(sepaDirectDebitAsync.launchAndForgetDDRequestItemsCreation(ddRequestBuilder, subListCreator.getNextWorkSet(), appProvider, aoFilterScript, ddrequestLotOp));
+
+            if (subListCreator.isHasNext()) {
+                try {
+                    Thread.sleep(waitingMillis);
+                } catch (InterruptedException e) {
+                    log.error("", e);
+                }
+            }
+        }
+        waitAllFuturesToFinishAndUpdateDDRLot(ddRequestLot, futures, result);
+        return ddRequestLot;
+    }
+
+    private void waitAllFuturesToFinishAndUpdateDDRLot(DDRequestLOT ddRequestLot, List<Future<DDRequestLOT>> futures, JobExecutionResultImpl result) {
+        log.info("waiting for all DDR items to be created");
+        for (Future<DDRequestLOT> future : futures) {
+            try {
+                DDRequestLOT ddRLotPart = future.get();
+                ddRequestLot.getDdrequestItems().addAll(ddRLotPart.getDdrequestItems());
+                ddRequestLot.setNbItemsOk(ddRequestLot.getNbItemsOk() + ddRLotPart.getNbItemsOk());
+                ddRequestLot.setNbItemsKo(ddRequestLot.getNbItemsKo() + ddRLotPart.getNbItemsKo());
+                ddRequestLot.setTotalAmount(ddRequestLot.getTotalAmount().add(ddRLotPart.getTotalAmount()));
+                String rejectedCause = Strings.concat(ddRequestLot.getRejectedCause(), ddRLotPart.getRejectedCause());
+                ddRequestLot.setRejectedCause(StringUtils.truncate(rejectedCause, 255, true));
+            } catch (InterruptedException e) {
+                // should ask why is interrupted
+                log.error("this future was interrupted because ", e);
+            } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                result.registerError(cause.getMessage());
+                log.error("Failed to execute async method", cause);
+            }
+        }
+        dDRequestLOTService.update(ddRequestLot);
+        log.info("Creating DDR lot with total amount {} ", ddRequestLot.getTotalAmount());
+    }
+
     /**
      * Update operation date range.
      *
-     * @param ddrequestLotOp the ddrequest lot op
+     * @param ddrequestLotOp  the ddrequest lot op
      * @param dateRangeScript the date range script
      */
     private void updateOperationDateRange(DDRequestLotOp ddrequestLotOp, DateRangeScript dateRangeScript) {
@@ -247,7 +319,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
         try {
             ScriptInstance scriptInstance = ddrequestLotOp.getScriptInstance();
             if (scriptInstance != null) {
-            	 scriptInstance = scriptInstanceService.retrieveIfNotManaged(scriptInstance);
+                scriptInstance = scriptInstanceService.retrieveIfNotManaged(scriptInstance);
                 final String scriptCode = scriptInstance.getCode();
                 if (scriptCode != null) {
                     log.debug(" looking for ScriptInstance with code :  [{}] ", scriptCode);
@@ -273,8 +345,9 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
         try {
             DDRequestLotOp newDDRequestLotOp = new DDRequestLotOp();
             newDDRequestLotOp.setPaymentOrRefundEnum(ddrequestLotOp.getPaymentOrRefundEnum());
-            newDDRequestLotOp.setRecurrent(true);
             newDDRequestLotOp.setStatus(DDRequestOpStatusEnum.WAIT);
+
+            newDDRequestLotOp.setRecurrent(true);
             newDDRequestLotOp.setSeller(ddrequestLotOp.getSeller());
             ScriptInstance dueDateRange = ddrequestLotOp.getScriptInstance();
             newDDRequestLotOp.setScriptInstance(dueDateRange);
@@ -293,32 +366,6 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
     }
 
     /**
-     * Filter ao to pay or refund, based on a given script, which is set through a job CF.
-     *
-     * @param listAoToPay the list ao to pay
-     * @param jobInstance the job instance
-     * @param ddRequestLotOp the dd request lot op
-     * @return the accountOperation list to process
-     */
-    private List<AccountOperation> filterAoToPayOrRefund(List<AccountOperation> listAoToPay, JobInstance jobInstance, DDRequestLotOp ddRequestLotOp) {
-        AccountOperationFilterScript aoFilterScript = this.getAOScriptInstance(jobInstance);
-        if (aoFilterScript != null) {
-            Map<String, Object> methodContext = new HashMap<>();
-            methodContext.put(LIST_AO_TO_PAY, listAoToPay);
-            listAoToPay = aoFilterScript.filterAoToPay(methodContext);
-        }
-        Seller ddReqOpSeller = sellerService.refreshOrRetrieve(ddRequestLotOp.getSeller());
-        if (CollectionUtils.isNotEmpty(listAoToPay)) {
-            listAoToPay =  listAoToPay.stream()
-                .filter((ao) -> (ao.getPaymentMethod() == PaymentMethodEnum.DIRECTDEBIT && ao.getTransactionCategory() == ddRequestLotOp.getPaymentOrRefundEnum().getOperationCategoryToProcess()
-                        && (ao.getMatchingStatus() == MatchingStatusEnum.O || ao.getMatchingStatus() == MatchingStatusEnum.P)
-                        && (ddReqOpSeller == null || ao.getSeller().equals(ddReqOpSeller))))
-                .collect(Collectors.toList());
-        }       
-        return listAoToPay;
-    }
-
-    /**
      * Gets the AO script instance.
      *
      * @param jobInstance the job instance
@@ -327,7 +374,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
     private AccountOperationFilterScript getAOScriptInstance(JobInstance jobInstance) {
         try {
             String aoFilterScriptCode = null;
-            EntityReferenceWrapper entityReferenceWrapper = ((EntityReferenceWrapper) this.getParamOrCFValue(jobInstance, "SepaJob_aoFilterScript"));
+            EntityReferenceWrapper entityReferenceWrapper = ((EntityReferenceWrapper) getParamOrCFValue(jobInstance, "SepaJob_aoFilterScript"));
             if (entityReferenceWrapper != null) {
                 aoFilterScriptCode = entityReferenceWrapper.getCode();
             }
@@ -335,7 +382,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
             if (aoFilterScriptCode != null) {
                 log.debug(" looking for ScriptInstance with code :  [{}] ", aoFilterScriptCode);
                 ScriptInterface si = scriptInstanceService.getScriptInstance(aoFilterScriptCode);
-                if (si != null && si instanceof AccountOperationFilterScript) {
+                if (si instanceof AccountOperationFilterScript) {
                     return (AccountOperationFilterScript) si;
                 }
             }
@@ -343,6 +390,32 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
             log.error(" Error on newAoFilterScriptInstance : [{}]", e.getMessage());
         }
         return null;
+    }
+
+    private class PageResult {
+        private long lastId;
+        private boolean moreToProcess;
+
+        public PageResult(long lastId, boolean moreToProcess) {
+            this.lastId = lastId;
+            this.moreToProcess = moreToProcess;
+        }
+
+        public long getLastId() {
+            return lastId;
+        }
+
+        public boolean isMoreToProcess() {
+            return moreToProcess;
+        }
+
+        public void setLastId(Long lastId) {
+            this.lastId = lastId;
+        }
+
+        public void setMoreToProcess(boolean moreToProcess) {
+            this.moreToProcess = moreToProcess;
+        }
     }
 
 }
