@@ -12,7 +12,6 @@ import javax.interceptor.Interceptors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.meveo.admin.async.SepaDirectDebitAsync;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.commons.utils.StringUtils;
@@ -116,12 +115,6 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
     private ScriptInstanceService scriptInstanceService;
 
     /**
-     * The SEPA Direct Debit Async service.
-     */
-    @Inject
-    private SepaDirectDebitAsync sepaDirectDebitAsync;
-
-    /**
      * Execute.
      *
      * @param result      the result
@@ -185,14 +178,15 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
                         // create DDR lot
                         DDRequestLOT ddRequestLot = dDRequestLOTService.createDDRequestLot(ddrequestLotOp, ddRequestBuilder, result);
 
-                        DDRequestLOT ddRequestLOT = dDRequestLOTService
-                                .createDdRequestLotWithItems(result, ddRequestLot, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis, ddRequestBuilderInterface,
-                                        PROCESS_ROWS_IN_JOB_RUN);
-                        if (ddRequestLOT != null) {
-                            dDRequestLOTService.generateDDRquestLotFile(ddRequestLOT, ddRequestBuilderInterface, appProvider);
-                            result.addReport(ddRequestLOT.getRejectedCause());
-                            dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLOT, nbRuns, waitingMillis, result);
-                            if (isEmpty(ddRequestLOT.getRejectedCause())) {
+                        List<DDRequestLOT> lots = dDRequestLOTService
+                                .createDdRequestLotWithItems(result, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis,
+                                        ddRequestBuilderInterface, PROCESS_ROWS_IN_JOB_RUN);
+                        ddRequestLot = dDRequestLOTService.updateDDRLot(ddRequestLot, lots);
+                        if (ddRequestLot != null) {
+                            dDRequestLOTService.generateDDRquestLotFile(ddRequestLot, ddRequestBuilderInterface, appProvider);
+                            result.addReport(ddRequestLot.getRejectedCause());
+                            dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLot, nbRuns, waitingMillis, result);
+                            if (isEmpty(ddRequestLot.getRejectedCause())) {
                                 result.registerSucces();
                             }
                         }

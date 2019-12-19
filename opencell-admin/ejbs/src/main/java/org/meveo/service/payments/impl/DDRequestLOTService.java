@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -111,7 +112,7 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
 
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void generateDDRquestLotFile(DDRequestLOT ddRequestLOT, final DDRequestBuilderInterface ddRequestBuilderInterface, Provider appProvider) throws Exception {
         ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
         ddRequestLOT.setFileName(ddRequestBuilderInterface.getDDFileName(ddRequestLOT, appProvider));
@@ -138,10 +139,10 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
             throw new BusinessException("Payment Already created.");
         }
 
-        SubListCreator subListCreator = new SubListCreator(ddRequestLOT.getDdrequestItems(), nbRuns.intValue());
-        List<Future<String>> futures = new ArrayList<Future<String>>();
+        SubListCreator<DDRequestItem> subListCreator = new SubListCreator<>(ddRequestLOT.getDdrequestItems(), nbRuns.intValue());
+        List<Future<String>> futures = new ArrayList<>();
         while (subListCreator.isHasNext()) {
-            futures.add(sepaDirectDebitAsync.launchAndForgetPaymentCreation((List<DDRequestItem>) subListCreator.getNextWorkSet(), result));
+            futures.add(sepaDirectDebitAsync.launchAndForgetPaymentCreation(subListCreator.getNextWorkSet(), result));
             try {
                 Thread.sleep(waitingMillis);
             } catch (InterruptedException e) {
@@ -232,12 +233,12 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
     }
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public DDRequestLOT createDdRequestLotWithItems(JobExecutionResultImpl result, DDRequestLOT ddRequestLot, DDRequestBuilder ddRequestBuilder, DDRequestLotOp ddrequestLotOp,
+    public List<DDRequestLOT> createDdRequestLotWithItems(JobExecutionResultImpl result, DDRequestBuilder ddRequestBuilder, DDRequestLotOp ddrequestLotOp,
             AccountOperationFilterScript aoFilterScript, Long nbRuns, Long waitingMillis, DDRequestBuilderInterface ddRequestBuilderInterface, int limit) throws Exception {
         List<Future<DDRequestLOT>> futures = new ArrayList<>();
         List<Long> listAoToPayIds = ddRequestBuilderInterface.findListAoToPayIds(ddrequestLotOp, limit);
         SubListCreator<Long> subListCreator = new SubListCreator<>(listAoToPayIds, nbRuns.intValue());
-
+        log.info("{} AOs, divided into {} sublist", listAoToPayIds.size(), nbRuns.intValue());
         while (subListCreator.isHasNext()) {
             futures.add(sepaDirectDebitAsync.launchAndForgetDDRequestItemsCreation(ddRequestBuilder, subListCreator.getNextWorkSet(), appProvider, aoFilterScript, ddrequestLotOp));
 
@@ -249,21 +250,12 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
                 }
             }
         }
-        waitAllFuturesToFinishAndUpdateDDRLot(ddRequestLot, futures, result);
-        return ddRequestLot;
-    }
-
-    private void waitAllFuturesToFinishAndUpdateDDRLot(DDRequestLOT ddRequestLot, List<Future<DDRequestLOT>> futures, JobExecutionResultImpl result) {
+        List<DDRequestLOT> items = new ArrayList<>();
         log.info("waiting for all DDR items to be created");
         for (Future<DDRequestLOT> future : futures) {
             try {
                 DDRequestLOT ddRLotPart = future.get();
-                ddRequestLot.getDdrequestItems().addAll(ddRLotPart.getDdrequestItems());
-                ddRequestLot.setNbItemsOk(ddRequestLot.getNbItemsOk() + ddRLotPart.getNbItemsOk());
-                ddRequestLot.setNbItemsKo(ddRequestLot.getNbItemsKo() + ddRLotPart.getNbItemsKo());
-                ddRequestLot.setTotalAmount(ddRequestLot.getTotalAmount().add(ddRLotPart.getTotalAmount()));
-                String rejectedCause = StringUtils.concat(ddRequestLot.getRejectedCause(), ddRLotPart.getRejectedCause());
-                ddRequestLot.setRejectedCause(StringUtils.truncate(rejectedCause, 255, true));
+                items.add(ddRLotPart);
             } catch (InterruptedException e) {
                 // should ask why is interrupted
                 log.error("this future was interrupted because ", e);
@@ -273,7 +265,24 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
                 log.error("Failed to execute async method", cause);
             }
         }
+        return items;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public DDRequestLOT updateDDRLot(DDRequestLOT ddRequestLot, List<DDRequestLOT> ddRequestLots) {
+        log.info("Update DDR lot, add {} items", ddRequestLots.size());
+        List<Long> itemIds = new ArrayList<>();
+        for (DDRequestLOT lot : ddRequestLots) {
+            itemIds.addAll(lot.getDdrequestItems().parallelStream().map(DDRequestItem::getId).collect(Collectors.toList()));
+            ddRequestLot.setNbItemsOk(ddRequestLot.getNbItemsOk() + lot.getNbItemsOk());
+            ddRequestLot.setNbItemsKo(ddRequestLot.getNbItemsKo() + lot.getNbItemsKo());
+            ddRequestLot.setTotalAmount(ddRequestLot.getTotalAmount().add(lot.getTotalAmount()));
+            String rejectedCause = StringUtils.concat(ddRequestLot.getRejectedCause(), lot.getRejectedCause());
+            ddRequestLot.setRejectedCause(StringUtils.truncate(rejectedCause, 255, true));
+        }
         update(ddRequestLot);
+        ddRequestItemService.updateDDRequestItems(itemIds, ddRequestLot.getId());
         log.info("Creating DDR lot with total amount {} ", ddRequestLot.getTotalAmount());
+        return ddRequestLot;
     }
 }

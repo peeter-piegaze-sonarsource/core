@@ -6,8 +6,16 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 import org.meveo.admin.exception.BusinessException;
@@ -81,58 +89,94 @@ import org.slf4j.LoggerFactory;
 @DDRequestBuilderClass
 public class SepaFile extends AbstractDDRequestBuilder {
 
-    /** The log. */
+    /**
+     * The log.
+     */
     private static Logger log = LoggerFactory.getLogger(SepaFile.class);
 
-    /** The PATTERN that the IBAN should match. */
+    /**
+     * The PATTERN that the IBAN should match.
+     */
     private static final String IBAN_PATTERN = "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}";
 
-    /** The location of SDD schema. */
+    /**
+     * The location of SDD schema.
+     */
     private static final String SDD_SCHEMA_LOCATION = "https://github.com/w2c/sepa-sdd-xml-generator/blob/master/validation_schemes/pain.008.001.02.xsd";
 
-    /** The location of SCT schema. */
+    /**
+     * The location of SCT schema.
+     */
     private static final String SCT_SCHEMA_LOCATION = "https://github.com/digitick/php-sepa-xml/blob/master/tests/pain.001.001.03.xsd";
 
-    /** The Constant SIMPLE_DATE_PATTERN. */
+    /**
+     * The Constant SIMPLE_DATE_PATTERN.
+     */
     private static final String SIMPLE_DATE_PATTERN = "yyyyMMdd";
 
-    /** The Constant EMPTY_STRING. */
+    /**
+     * The Constant EMPTY_STRING.
+     */
     private static final String EMPTY_STRING = "";
 
-    /** The Constant DASH_STRING. */
+    /**
+     * The Constant DASH_STRING.
+     */
     private static final String DASH_STRING = "-";
 
-    /** The Constant DOUBLE_POINT. */
+    /**
+     * The Constant DOUBLE_POINT.
+     */
     private static final String DOUBLE_POINT = "\\..";
 
-    /** The Constant COMMA_STRING. */
+    /**
+     * The Constant COMMA_STRING.
+     */
     private static final String COMMA_STRING = ",";
 
-    /** The underscore separator used at sepa file name. */
+    /**
+     * The underscore separator used at sepa file name.
+     */
     private static final String UNDERSCORE_SEPARATOR = "_";
 
-    /** The Constant EURO_CCY. */
+    /**
+     * The Constant EURO_CCY.
+     */
     private static final String EURO_CCY = "EUR";
 
-    /** The Constant REJECT_STS_CODE. */
+    /**
+     * The Constant REJECT_STS_CODE.
+     */
     private static final String REJECT_STS_CODE = "RJCT";
 
-    /** The Constant SEPA_SERVICE_LEVEL_CD. */
+    /**
+     * The Constant SEPA_SERVICE_LEVEL_CD.
+     */
     private static final String SEPA_SERVICE_LEVEL_CD = "SEPA";
 
-    /** The Constant SEPA_LOCAL_INSTRUMENT_CODE. */
+    /**
+     * The Constant SEPA_LOCAL_INSTRUMENT_CODE.
+     */
     private static final String SEPA_LOCAL_INSTRUMENT_CODE = "CORE";
 
-    /** The Constant NUMBER_OF_TRANSACTIONS. */
+    /**
+     * The Constant NUMBER_OF_TRANSACTIONS.
+     */
     private static final String NUMBER_OF_TRANSACTIONS_1 = "1";
 
-    /** The Constant FR_COUNTRY. */
+    /**
+     * The Constant FR_COUNTRY.
+     */
     private static final String FR_COUNTRY = "FR";
 
-    /** The Constant NOTPROVIDED_BIC. */
+    /**
+     * The Constant NOTPROVIDED_BIC.
+     */
     private static final String NOTPROVIDED_BIC = "NOTPROVIDED";
 
-    /** The Constant CATEGORY_PURPOSE_CODE. */
+    /**
+     * The Constant CATEGORY_PURPOSE_CODE.
+     */
     private static final String CATEGORY_PURPOSE_CODE = "SUPP";
 
     private CalendarBankingService calendarBankingService = (CalendarBankingService) EjbUtils.getServiceInterface(CalendarBankingService.class.getSimpleName());
@@ -205,10 +249,10 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Gets the file name.
      *
-     * @param ddRequestLot the dd request lot
-     * @param appProvider the app provider
-     * @param fileNamePrefix the file name prefix
-     * @param fileNameExtension the file name extension
+     * @param ddRequestLot        the dd request lot
+     * @param appProvider         the app provider
+     * @param fileNamePrefix      the file name prefix
+     * @param fileNameExtension   the file name extension
      * @param additionalOutputDir the additional output dir
      * @return the file name
      * @throws BusinessException the business exception
@@ -247,7 +291,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
      * Generate DD request lot file for SSD.
      *
      * @param ddRequestLot the dd request lot
-     * @param appProvider the app provider
+     * @param appProvider  the app provider
      * @throws BusinessException the business exception
      */
     private void generateDDRequestLotFileForSSD(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
@@ -257,15 +301,30 @@ public class SepaFile extends AbstractDDRequestBuilder {
             CustomerDirectDebitInitiationV02 message = new CustomerDirectDebitInitiationV02();
             document.setCstmrDrctDbtInitn(message);
             addHeader(message, ddRequestLot, appProvider);
-            for (DDRequestItem ddrequestItem : ddRequestLot.getDdrequestItems()) {
-                if (!ddrequestItem.hasError()) {
-                    addPaymentInformation(message, ddrequestItem, appProvider);
-                }
+            List<DDRequestItem> ddRequestItems = ddRequestLot.getDdrequestItems();
+
+            XMLGregorianCalendar nextBankWorkingDate = DateUtils.dateToXMLGregorianCalendarFieldUndefined(calendarBankingService.getNextBankWorkingDate(new Date()));
+
+            //process all DDR items in parallel
+            ExecutorService executorService = Executors.newCachedThreadPool();
+            List<Callable<Void>> tasks = new ArrayList<>();
+            List<List<DDRequestItem>> lists = Lists.partition(ddRequestItems, 1000);
+            for (final List<DDRequestItem> itemList: lists) {
+                Callable<Void> c = () -> {
+                    for (DDRequestItem ddrequestItem : itemList) {
+                        if (!ddrequestItem.hasError()) {
+                            addPaymentInformation(message, ddrequestItem, appProvider, nextBankWorkingDate);
+                        }
+                    }
+                    return null;
+                };
+                tasks.add(c);
             }
+            executorService.invokeAll(tasks);
             String schemaLocation = paramBean.getProperty("sepa.schemaLocation.pain008", SDD_SCHEMA_LOCATION);
             JAXBUtils.marshaller(document, new File(ddRequestLot.getFileName()), schemaLocation);
         } catch (Exception e) {
-        	log.error("Error on generateDDRequestLotFileForSSD",e);
+            log.error("Error on generateDDRequestLotFileForSSD", e);
             throw new BusinessException(e.getMessage());
         }
 
@@ -275,7 +334,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
      * Generate DD request lot file for SCT.
      *
      * @param ddRequestLot the dd request lot
-     * @param appProvider the app provider
+     * @param appProvider  the app provider
      * @throws BusinessException the business exception
      */
     private void generateDDRequestLotFileForSCT(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
@@ -341,9 +400,9 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the header of SDD file.
      *
-     * @param message the SDD message
+     * @param message      the SDD message
      * @param ddRequestLOT the dd request LOT
-     * @param appProvider the provider
+     * @param appProvider  the provider
      * @throws Exception the exception
      */
     private void addHeader(CustomerDirectDebitInitiationV02 message, DDRequestLOT ddRequestLOT, Provider appProvider) throws Exception {
@@ -368,12 +427,14 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the payment information of SDD file.
      *
-     * @param Message the SDD message
+     * @param Message       the SDD message
      * @param dDRequestItem the dd request item
-     * @param appProvider the provider
+     * @param appProvider   the provider
+     * @param reqdColltnDt
      * @throws Exception the exception
      */
-    private void addPaymentInformation(CustomerDirectDebitInitiationV02 Message, DDRequestItem dDRequestItem, Provider appProvider) throws Exception {
+    private void addPaymentInformation(CustomerDirectDebitInitiationV02 Message, DDRequestItem dDRequestItem, Provider appProvider, XMLGregorianCalendar reqdColltnDt)
+            throws Exception {
 
         log.info("addPaymentInformation dDRequestItem id=" + dDRequestItem.getId());
         ParamBean paramBean = ParamBean.getInstanceByProvider(appProvider.getCode());
@@ -393,7 +454,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
         localInstrument.setCd(paramBean.getProperty("sepa.LclInstrm", SEPA_LOCAL_INSTRUMENT_CODE));
         paymentTypeInformation.setSeqTp(SequenceType1Code.RCUR);
 
-        paymentInformation.setReqdColltnDt(DateUtils.dateToXMLGregorianCalendarFieldUndefined(calendarBankingService.getNextBankWorkingDate(new Date()))); // à revoir
+        paymentInformation.setReqdColltnDt(reqdColltnDt);
 
         BankCoordinates bankCoordinates = getBankCoordinates(dDRequestItem.getDdRequestLOT(), appProvider);
 
@@ -438,7 +499,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the transaction of SDD file.
      *
-     * @param dDRequestItem the dd request item
+     * @param dDRequestItem      the dd request item
      * @param paymentInformation the payment information of SDD file
      * @throws Exception the exception
      */
@@ -492,9 +553,9 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the payment information for SCT file.
      *
-     * @param message the SCT message
+     * @param message       the SCT message
      * @param ddrequestItem the ddrequest item
-     * @param appProvider the provider
+     * @param appProvider   the provider
      * @throws Exception the exception
      */
     private void addSctPaymentInformation(CustomerCreditTransferInitiationV03 message, DDRequestItem ddrequestItem, Provider appProvider) throws Exception {
@@ -517,7 +578,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
         paymentTypeInformation.setCtgyPurp(ctgyPurp);
         ctgyPurp.setCd(CATEGORY_PURPOSE_CODE);
 
-        paymentInformation.setReqdExctnDt(DateUtils.dateToXMLGregorianCalendarFieldUndefined(calendarBankingService.getNextBankWorkingDate(new Date()))); 
+        paymentInformation.setReqdExctnDt(DateUtils.dateToXMLGregorianCalendarFieldUndefined(calendarBankingService.getNextBankWorkingDate(new Date())));
 
         org.meveo.admin.sepa.jaxb.pain001.PartyIdentification32 dbtr = new org.meveo.admin.sepa.jaxb.pain001.PartyIdentification32();
         if (ddrequestItem.getDdRequestLOT().getSeller() != null) {
@@ -553,7 +614,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
             org.meveo.admin.sepa.jaxb.pain001.GenericFinancialIdentification1 othr = new org.meveo.admin.sepa.jaxb.pain001.GenericFinancialIdentification1();
             othr.setId(NOTPROVIDED_BIC);
             financialInstitutionIdentification.setOthr(othr);
-        } 
+        }
 
         financialInstitutionIdentification.setBIC(bankCoordinates.getBic());
         paymentInformation.setChrgBr(org.meveo.admin.sepa.jaxb.pain001.ChargeBearerType1Code.SLEV);
@@ -563,10 +624,10 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the header for SCT file.
      *
-     * @param message the SCT message
+     * @param message      the SCT message
      * @param ddRequestLot the dd request lot
-     * @param appProvider the provider
-     * @param fileNumber the file number: used when generatin severals files for one ddRequest lot
+     * @param appProvider  the provider
+     * @param fileNumber   the file number: used when generatin severals files for one ddRequest lot
      * @throws Exception the exception
      */
     private void addSctHeader(CustomerCreditTransferInitiationV03 message, DDRequestLOT ddRequestLot, Provider appProvider, int fileNumber) throws Exception {
@@ -583,7 +644,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Adds the transaction for SCT file.
      *
-     * @param ao the account operation
+     * @param ao                 the account operation
      * @param paymentInformation the payment information of SCT file
      * @throws Exception the exception
      */
@@ -615,7 +676,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
 
         org.meveo.admin.sepa.jaxb.pain001.BranchAndFinancialInstitutionIdentification4 cdtrAgent = new org.meveo.admin.sepa.jaxb.pain001.BranchAndFinancialInstitutionIdentification4();
         cdtTrfTxInf.setCdtrAgt(cdtrAgent);
-        org.meveo.admin.sepa.jaxb.pain001.FinancialInstitutionIdentification7 finInstnId = new org.meveo.admin.sepa.jaxb.pain001.FinancialInstitutionIdentification7();       
+        org.meveo.admin.sepa.jaxb.pain001.FinancialInstitutionIdentification7 finInstnId = new org.meveo.admin.sepa.jaxb.pain001.FinancialInstitutionIdentification7();
         finInstnId.setBIC(bankCoordinates.getBic());
         cdtrAgent.setFinInstnId(finInstnId);
         org.meveo.admin.sepa.jaxb.pain001.PartyIdentification32 cdtr = new org.meveo.admin.sepa.jaxb.pain001.PartyIdentification32();
@@ -639,7 +700,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
     /**
      * Checks if is matched.
      *
-     * @param field the field to validate : character sequence to be matched
+     * @param field    the field to validate : character sequence to be matched
      * @param sPattern The expression to be compiled for regEx pattern
      * @return true if, and only if, the field matches the matcher s pattern
      */

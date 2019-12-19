@@ -40,6 +40,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.UnitSepaDirectDebitJobBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.commons.utils.PersistenceUtils;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.billing.BankCoordinates;
@@ -113,12 +114,6 @@ public class SepaDirectDebitAsync {
     @Inject
     private SellerService sellerService;
 
-    @Inject
-    private CustomerAccountService customerAccountService;
-
-    @EJB
-    private SepaDirectDebitAsync sepaDirectDebitAsyncNewTx;
-
     /**
      * Create payments for all items from the ddRequestLot. One Item at a time in a
      * separate transaction.
@@ -157,14 +152,13 @@ public class SepaDirectDebitAsync {
      * @throws BusinessException the business exception
      */
     @Asynchronous
-    @TransactionAttribute(TransactionAttributeType.NEVER)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Future<DDRequestLOT> launchAndForgetDDRequestItemsCreation(DDRequestBuilder ddRequestBuilder, List<Long> listAoToPayIds, Provider appProvider,
             AccountOperationFilterScript filterScript, DDRequestLotOp ddRequestLotOp) throws BusinessException {
-        DDRequestLOT ddRequestLOT = sepaDirectDebitAsyncNewTx.createDDReqItemsWithTransaction(ddRequestBuilder, listAoToPayIds, appProvider, filterScript, ddRequestLotOp);
+        DDRequestLOT ddRequestLOT = createDDReqItemsWithTransaction(ddRequestBuilder, listAoToPayIds, appProvider, filterScript, ddRequestLotOp);
         return new AsyncResult<>(ddRequestLOT);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public DDRequestLOT createDDReqItemsWithTransaction(DDRequestBuilder ddRequestBuilder, List<Long> listAoToPayIds, Provider appProvider,
             AccountOperationFilterScript filterScript, DDRequestLotOp ddRequestLotOp) {
         DDRequestLOT ddRequestLOT = new DDRequestLOT();
@@ -173,7 +167,12 @@ public class SepaDirectDebitAsync {
         int nbItemsOk = 0;
         StringBuilder allErrors = new StringBuilder();
         List<DDRequestItem> ddrItems = new ArrayList<>();
-        List<AccountOperation> listAoToPay = listAoToPayIds.parallelStream().map(accountOperationService::findById).collect(Collectors.toList());
+        List<AccountOperation> listAoToPay = new ArrayList<>();
+        for (Long aoId : listAoToPayIds) {
+            AccountOperation ao = accountOperationService.findById(aoId);
+            ao.setCustomerAccount(PersistenceUtils.initializeAndUnproxy(ao.getCustomerAccount()));
+            listAoToPay.add(ao);
+        }
         listAoToPay = this.filterAoToPayOrRefund(listAoToPay, ddRequestLotOp, filterScript);
 
         if (PaymentLevelEnum.AO == ddRequestBuilder.getPaymentLevel()) {
