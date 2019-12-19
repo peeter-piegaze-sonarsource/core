@@ -1,24 +1,24 @@
 {
-	"code":"OF",
-	"description":"{{template.label}} offer {{$timestamp}}",
-	"disabled":false,
-	"lifeCycleStatus":"ACTIVE",
-	"bomCode":null,
-	"offerTemplateCategoryCode":null,
-	"offerServiceTemplate":[
+	"code": "TEST",
+	"description": "test offer}",
+	"disabled": false,
+	"lifeCycleStatus": "ACTIVE",
+	"bomCode": null,
+	"offerTemplateCategoryCode": null,
+	"offerServiceTemplate": [
 		{
-			"serviceTemplate":
-			{
-				"code":"SE_CLASSIC_USG_UNIT",
-				"customFields":null
+			"serviceTemplate": {
+				"code": "WS_BASE_SERVICE1",
+				"customFields": null
 			},
-			"mandatory":false
-		},{
-			"serviceTemplate":{
-				"code":"SE_CLASSIC_REC_FLAT",
-				"customFields":null
+			"mandatory": false
+		},
+		{
+			"serviceTemplate": {
+				"code": "WS_BASE_SERVICE2",
+				"customFields": null
 			},
-			"mandatory":false
+			"mandatory": false
 		}
 	]
 }

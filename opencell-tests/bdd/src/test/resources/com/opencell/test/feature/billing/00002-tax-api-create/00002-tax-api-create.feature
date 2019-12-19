@@ -18,4 +18,4 @@ Feature: Create a tax by API
       | billing/00002-tax-api-create/SuccessTest.json       | TaxDto | /tax/createOrUpdate |        200 | SUCCESS |                   |                                                                    |
       | billing/00002-tax-api-create/SuccessTest1.json      | TaxDto | /tax/createOrUpdate |        200 | SUCCESS |                   |                                                                    |
       | billing/00002-tax-api-create/MISSING_PARAMETER.json | TaxDto | /tax/createOrUpdate |        400 | FAIL    | MISSING_PARAMETER | The following parameters are required or contain invalid values    |
-      | billing/00002-tax-api-create/INVALID_PARAMETER.json | TaxDto | /tax/createOrUpdate |        400 | FAIL    | INVALID_PARAMETER | Can not deserialize value of type java.math.BigDecimal from String |
+      | billing/00002-tax-api-create/INVALID_PARAMETER.json | TaxDto | /tax/createOrUpdate |        400 | FAIL    | INVALID_PARAMETER | Cannot deserialize value of type `java.math.BigDecimal` from String |

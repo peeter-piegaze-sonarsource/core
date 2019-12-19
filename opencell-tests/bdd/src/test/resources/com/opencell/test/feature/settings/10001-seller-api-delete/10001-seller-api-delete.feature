@@ -1,12 +1,12 @@
 @settings
-Feature: Delete seller Plan by API
+Feature: Delete seller by API
 
   Background: The classic offer is already executed
               Create seller Plan by API is already executed
 
 
   @admin @superadmin
-  Scenario Outline: Delete a seller Plan by API
+  Scenario Outline: Delete a seller by API
     Given The entity has the following information "<jsonFile>" as "<dto>"
     When I call the delete "<api>"
     Then The entity is deleted

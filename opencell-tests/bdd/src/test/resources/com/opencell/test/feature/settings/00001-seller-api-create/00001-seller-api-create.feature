@@ -1,10 +1,10 @@
 @settings
-Feature: Create seller Plan by API
+Feature: Create seller by API
 
   Background: The classic offer is already executed
 
   @admin @superadmin
-  Scenario Outline: Create seller Plan by API
+  Scenario Outline: Create seller by API
     Given The entity has the following information "<jsonFile>" as "<dto>"
     When I call the "<api>"
     Then The seller is created

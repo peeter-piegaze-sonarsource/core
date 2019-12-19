@@ -1,6 +1,6 @@
 {
 	"code":"OF",
-	"description":"{{template.label}} offer {{$timestamp}}",
+	"description":"Test not exist}",
 	"disabled":false,
 	"lifeCycleStatus":"ACTIVE",
 	"bomCode":null,
