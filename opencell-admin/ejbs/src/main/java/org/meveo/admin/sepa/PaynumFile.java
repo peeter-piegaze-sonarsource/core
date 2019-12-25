@@ -63,7 +63,7 @@ public class PaynumFile extends AbstractDDRequestBuilder {
 
 
     @Override
-    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
+    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider, int nbRuns) throws BusinessException {
         if(ddRequestLot.getPaymentOrRefundEnum().getOperationCategoryToProcess() == OperationCategoryEnum.CREDIT) {
             throw new UnsupportedOperationException("Refund Sepa not implimented for Paynum");
         }

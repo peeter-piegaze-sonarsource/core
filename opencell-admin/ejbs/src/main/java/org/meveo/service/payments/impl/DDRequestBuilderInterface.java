@@ -38,10 +38,11 @@ public interface DDRequestBuilderInterface {
    /**
     * Generate the  sdd or sct request file for a given DDRequestLot.
     * 
+    * @param nbRuns
     * @param ddRequestLot The DDRequestLot to process.
     * @throws BusinessException the BusinessException.
     */
-    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot,Provider appProvider) throws BusinessException;
+    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider, int nbRuns) throws BusinessException;
        
     
     /**

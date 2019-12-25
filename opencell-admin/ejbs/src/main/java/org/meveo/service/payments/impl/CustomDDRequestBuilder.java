@@ -42,7 +42,7 @@ public class CustomDDRequestBuilder extends AbstractDDRequestBuilder {
     }
 
     @Override
-    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
+    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider, int nbRuns) throws BusinessException {
         Map<String, Object> scriptContext = new HashMap<String, Object>();
         scriptContext.put(DDRequestBuilderScript.DD_REQUEST_LOT, ddRequestLot);
         scriptContext.put(DDRequestBuilderScript.PROVIDER, appProvider);

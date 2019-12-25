@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -191,9 +190,9 @@ public class SepaFile extends AbstractDDRequestBuilder {
     }
 
     @Override
-    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
+    public void generateDDRequestLotFile(DDRequestLOT ddRequestLot, Provider appProvider, int nbRuns) throws BusinessException {
         if (ddRequestLot.getPaymentOrRefundEnum().getOperationCategoryToProcess() == OperationCategoryEnum.DEBIT) {
-            generateDDRequestLotFileForSSD(ddRequestLot, appProvider);
+            generateDDRequestLotFileForSSD(ddRequestLot, appProvider, nbRuns);
         } else {
             generateDDRequestLotFileForSCT(ddRequestLot, appProvider);
         }
@@ -292,9 +291,10 @@ public class SepaFile extends AbstractDDRequestBuilder {
      *
      * @param ddRequestLot the dd request lot
      * @param appProvider  the app provider
+     * @param nbRuns
      * @throws BusinessException the business exception
      */
-    private void generateDDRequestLotFileForSSD(DDRequestLOT ddRequestLot, Provider appProvider) throws BusinessException {
+    private void generateDDRequestLotFileForSSD(DDRequestLOT ddRequestLot, Provider appProvider, int nbRuns) throws BusinessException {
         try {
             ParamBean paramBean = ParamBean.getInstanceByProvider(appProvider.getCode());
             Document document = new Document();
@@ -308,7 +308,7 @@ public class SepaFile extends AbstractDDRequestBuilder {
             //process all DDR items in parallel
             ExecutorService executorService = Executors.newCachedThreadPool();
             List<Callable<Void>> tasks = new ArrayList<>();
-            List<List<DDRequestItem>> lists = Lists.partition(ddRequestItems, 1000);
+            List<List<DDRequestItem>> lists = Lists.partition(ddRequestItems, nbRuns);
             for (final List<DDRequestItem> itemList: lists) {
                 Callable<Void> c = () -> {
                     for (DDRequestItem ddrequestItem : itemList) {

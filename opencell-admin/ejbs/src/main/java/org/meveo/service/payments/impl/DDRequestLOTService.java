@@ -112,14 +112,13 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
 
     }
 
-//    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void generateDDRquestLotFile(DDRequestLOT ddRequestLOT, final DDRequestBuilderInterface ddRequestBuilderInterface, Provider appProvider) throws Exception {
+    //    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void generateDDRquestLotFile(DDRequestLOT ddRequestLOT, final DDRequestBuilderInterface ddRequestBuilderInterface, Provider appProvider, int nbRuns) throws Exception {
         ddRequestLOT = refreshOrRetrieve(ddRequestLOT);
         ddRequestLOT.setFileName(ddRequestBuilderInterface.getDDFileName(ddRequestLOT, appProvider));
-        ddRequestBuilderInterface.generateDDRequestLotFile(ddRequestLOT, appProvider);
+        ddRequestBuilderInterface.generateDDRequestLotFile(ddRequestLOT, appProvider, nbRuns);
         ddRequestLOT.setSendDate(new Date());
         update(ddRequestLOT);
-
     }
 
     public void createPaymentsOrRefundsForDDRequestLot(DDRequestLOT ddRequestLOT) throws Exception {
@@ -270,7 +269,7 @@ public class DDRequestLOTService extends PersistenceService<DDRequestLOT> {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public DDRequestLOT updateDDRLot(DDRequestLOT ddRequestLot, List<DDRequestLOT> ddRequestLots) {
-        log.info("Update DDR lot, add {} items", ddRequestLots.size());
+        log.info("Update DDR lot, from {} threads", ddRequestLots.size());
         List<Long> itemIds = new ArrayList<>();
         for (DDRequestLOT lot : ddRequestLots) {
             itemIds.addAll(lot.getDdrequestItems().parallelStream().map(DDRequestItem::getId).collect(Collectors.toList()));

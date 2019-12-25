@@ -110,9 +110,6 @@ public class SepaDirectDebitAsync {
     private JobExecutionService jobExecutionService;
 
     @Inject
-    private SepaFile sepaFile;
-
-    @Inject
     private PaymentGatewayService paymentGatewayService;
 
     @Inject
@@ -181,8 +178,9 @@ public class SepaDirectDebitAsync {
 
         if (PaymentLevelEnum.AO == ddRequestBuilder.getPaymentLevel()) {
             for (AccountOperation ao : listAoToPay) {
-                String errorMsg = getMissingField(ao, ddRequestLOT, appProvider);
-                Name caName = ao.getCustomerAccount().getName();
+                CustomerAccount customerAccount = ao.getCustomerAccount();
+                Name caName = customerAccount.getName();
+                String errorMsg = getMissingField(ao, ddRequestLOT, appProvider, customerAccount);
                 String caFullName = this.getCaFullName(caName);
                 ddrItems.add(ddRequestItemService.createDDRequestItem(ao.getUnMatchingAmount(), ddRequestLOT, caFullName, errorMsg, Collections.singletonList(ao)));
                 if (errorMsg != null) {
@@ -204,7 +202,7 @@ public class SepaDirectDebitAsync {
                 CustomerAccount ca = entry.getKey();
                 String caFullName = this.getCaFullName(ca.getName());
                 for (AccountOperation ao : entry.getValue()) {
-					String errorMsg = getMissingField(ao, ddRequestLOT, appProvider, ca);
+					          String errorMsg = getMissingField(ao, ddRequestLOT, appProvider, ca);
                     if (errorMsg != null) {
                         allErrorsByItem.append(errorMsg).append(" ; ");
                     } else {

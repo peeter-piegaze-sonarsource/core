@@ -14,6 +14,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.job.logging.JobLoggingInterceptor;
+import org.meveo.admin.sepa.SepaFile;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.model.admin.Seller;
@@ -113,6 +114,8 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
      */
     @Inject
     private ScriptInstanceService scriptInstanceService;
+    @Inject
+    private SepaFile sepaFile;
 
     /**
      * Execute.
@@ -177,13 +180,14 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
                     if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.CREATE) {
                         // create DDR lot
                         DDRequestLOT ddRequestLot = dDRequestLOTService.createDDRequestLot(ddrequestLotOp, ddRequestBuilder, result);
+                        ddRequestLot.setFileName(sepaFile.getDDFileName(ddRequestLot, appProvider));
 
                         List<DDRequestLOT> lots = dDRequestLOTService
                                 .createDdRequestLotWithItems(result, ddRequestBuilder, ddrequestLotOp, aoFilterScript, nbRuns, waitingMillis,
                                         ddRequestBuilderInterface, PROCESS_ROWS_IN_JOB_RUN);
                         ddRequestLot = dDRequestLOTService.updateDDRLot(ddRequestLot, lots);
                         if (ddRequestLot != null) {
-                            dDRequestLOTService.generateDDRquestLotFile(ddRequestLot, ddRequestBuilderInterface, appProvider);
+                            dDRequestLOTService.generateDDRquestLotFile(ddRequestLot, ddRequestBuilderInterface, appProvider, nbRuns.intValue());
                             result.addReport(ddRequestLot.getRejectedCause());
                             dDRequestLOTService.createPaymentsOrRefundsForDDRequestLot(ddRequestLot, nbRuns, waitingMillis, result);
                             if (isEmpty(ddRequestLot.getRejectedCause())) {
@@ -196,7 +200,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
                         result.registerSucces();
                     }
                     if (ddrequestLotOp.getDdrequestOp() == DDRequestOpEnum.FILE) {
-                        dDRequestLOTService.generateDDRquestLotFile(ddrequestLotOp.getDdrequestLOT(), ddRequestBuilderInterface, appProvider);
+                        dDRequestLOTService.generateDDRquestLotFile(ddrequestLotOp.getDdrequestLOT(), ddRequestBuilderInterface, appProvider, nbRuns.intValue());
                         result.registerSucces();
                     }
                     ddrequestLotOp.setStatus(DDRequestOpStatusEnum.PROCESSED);
