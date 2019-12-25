@@ -32,18 +32,18 @@ public class Offers extends BasePage {
   /**
    * new code label.
    */
-  @FindBy(id = "moduleForm:code_txt")
-  private WebElement codeOfferModels;
+  @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[1]/div/div/div[1]/div/input")
+  private WebElement codeOffer;
   /**
    * new description label.
    */
-  @FindBy(id = "moduleForm:description")
-  private WebElement descriptionOfferModel;
+  @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[1]/div/div/div[3]/div/input")
+  private WebElement descriptionOffer;
   /**
    * offer code.
    */
-  @FindBy(id = "moduleForm:offerSelectId_selectLink")
-  private WebElement offerCode;
+  @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[1]/div/div/div[2]/div/input")
+  private WebElement name;
 
   
 
@@ -66,66 +66,58 @@ public class Offers extends BasePage {
  * @throws InterruptedException 
    */
   public void fillData(WebDriver driver, Map<String, String> data) throws InterruptedException {
-      waitUntilElementDisplayed(btnCreate, driver);
+     
       btnCreate.click();
-      waitUntilElementDisplayed(codeOfferModels, driver);
-    codeOfferModels.click();
-    codeOfferModels.clear();
-    codeOfferModels.sendKeys((String) data.get(Constants.CODE));
-    waitUntilElementDisplayed(descriptionOfferModel, driver);
-    descriptionOfferModel.click();
-    descriptionOfferModel.clear();
-    descriptionOfferModel.sendKeys((String) data.get(Constants.DESCRIPTION));
-    waitUntilElementDisplayed(offerCode, driver);
-    offerCode.click();
-    driver.findElement(By.cssSelector("tr.ui-datatable-even:nth-child(1) > td:nth-child(1)")).click();
-    WebElement moduleIandA = driver.findElement(By.id("moduleForm:script_selectLink"));
-    waitUntilElementDisplayed(moduleIandA, driver);
-    moveMouseAndClick(moduleIandA);
-    WebElement element = driver.findElement(By.xpath("/html/body/div[10]/div[2]/form/div[2]/div[2]/table/tbody/tr[1]/td[1]"));
-    waitUntilElementDisplayed(element, driver);
-    moveMouseAndClick(element);
-    WebElement btnSave = driver.findElements(By.className("ui-button-text-icon-left")).get(0);
-    waitUntilElementDisplayed(btnSave, driver);
+      
+    codeOffer.click();
+    codeOffer.clear();
+    codeOffer.sendKeys((String) data.get(Constants.CODE));
+    
+    descriptionOffer.click();
+    descriptionOffer.clear();
+    descriptionOffer.sendKeys((String) data.get(Constants.DESCRIPTION));
+    
+    name.click();
+    name.clear();
+    name.sendKeys((String) data.get(Constants.DESCRIPTION));
+    WebElement detailsMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[1]/div/div/div/a[2]/span[1]/span/span"));
+    
+    moveMouseAndClick(detailsMenu);
+    WebElement lifeCycle = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[2]/div/div/div[1]"));
+    lifeCycle.click();
+    WebElement lifeCycleStatus = driver.findElement(By.xpath("/html/body/div[2]/div[2]/ul/li[0]"));
+    lifeCycleStatus.click();
+    WebElement btnSave = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[3]/div/button/span[1]"));
+    
     moveMouseAndClick(btnSave);
   }
 
+public WebElement getCodeOffer() {
+    return codeOffer;
+}
+
+public void setCodeOffer(WebElement codeOffer) {
+    this.codeOffer = codeOffer;
+}
+
+public WebElement getDescriptionOffer() {
+    return descriptionOffer;
+}
+
+public void setDescriptionOffer(WebElement descriptionOffer) {
+    this.descriptionOffer = descriptionOffer;
+}
+
+public WebElement getName() {
+    return name;
+}
+
+public void setName(WebElement name) {
+    this.name = name;
+}
 
 
-  /**
-   * code setter.
-   * 
-   * @param codeOfferModels setter
-   */
-  public void setcodeOfferModels(WebElement codeOfferModels) {
-    this.codeOfferModels = codeOfferModels;
-  }
 
-  /**
-   * code getter.
-   * 
-   * @return code
-   */
-  public WebElement getcodeOfferModels() {
-    return this.codeOfferModels;
-  }
-
-  /**
-   * description setter.
-   * 
-   * @param descriptionOfferModel setter
-   */
-  public void setdescriptionOfferModel(WebElement descriptionOfferModel) {
-    this.descriptionOfferModel = descriptionOfferModel;
-  }
-
-  /**
-   * description getter.
-   * 
-   * @return description
-   */
-  public WebElement getdescriptionOfferModel() {
-    return this.descriptionOfferModel;
-  }
+ 
 
 }
