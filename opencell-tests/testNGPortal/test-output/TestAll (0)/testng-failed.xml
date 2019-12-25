@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestAll (0)]">
+  <parameter name="language" value="fr"/>
+  <test name="Catalog(failed)">
+    <classes>
+      <class name="com.opencellsoft.testng.tests.catalog.TestPricePlans">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+          <include name="testPricePlanPage"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestPricePlans -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestCatalogRecurring">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestCatalogRecurring -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestProductCharges">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestProductCharges -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestOfferCategories">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestOfferCategories -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestDiscountPlans">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testDiscountPlanPage"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestDiscountPlans -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestBundles">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestBundles -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestPrepaidWallet">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testprepaidWallets"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestPrepaidWallet -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestService">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestService -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestOneshotChargeCreate">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestOneshotChargeCreate -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestAll">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestAll -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestServiceModel">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+          <include name="create"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestServiceModel -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestProductModel">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestProductModel -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestOffers">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestOffers -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestOfferModel">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testOfferModelPage"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestOfferModel -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestCounters">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterSuite"/>
+          <include name="beforeTest"/>
+          <include name="afterMethod"/>
+          <include name="afterTest"/>
+          <include name="beforeSuite"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestCounters -->
+      <class name="com.opencellsoft.testng.tests.catalog.TestProducts">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.catalog.TestProducts -->
+    </classes>
+  </test> <!-- Catalog(failed) -->
+</suite> <!-- Failed suite [TestAll (0)] -->

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestAll (2)]">
+  <parameter name="language" value="en"/>
+  <test name="Administration(failed)">
+    <classes>
+      <class name="com.opencellsoft.testng.tests.administration.TestWebhooks">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestWebhooks -->
+      <class name="com.opencellsoft.testng.tests.administration.TestJobInstances">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterSuite"/>
+          <include name="beforeTest"/>
+          <include name="afterMethod"/>
+          <include name="afterTest"/>
+          <include name="beforeSuite"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestJobInstances -->
+      <class name="com.opencellsoft.testng.tests.administration.TestModule">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestModule -->
+      <class name="com.opencellsoft.testng.tests.administration.TestScriptCategory">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestScriptCategory -->
+      <class name="com.opencellsoft.testng.tests.administration.TestJobNotifications">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestJobNotifications -->
+      <class name="com.opencellsoft.testng.tests.administration.TestEntityCustomization">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="create"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestEntityCustomization -->
+      <class name="com.opencellsoft.testng.tests.administration.TestOpenCellInstances">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestOpenCellInstances -->
+      <class name="com.opencellsoft.testng.tests.administration.TestFilter">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestFilter -->
+      <class name="com.opencellsoft.testng.tests.administration.TestEmailNotifications">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestEmailNotifications -->
+      <class name="com.opencellsoft.testng.tests.administration.TestTimers">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+          <include name="create"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestTimers -->
+      <class name="com.opencellsoft.testng.tests.administration.TestNotification">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestNotification -->
+      <class name="com.opencellsoft.testng.tests.administration.TestScript">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.administration.TestScript -->
+    </classes>
+  </test> <!-- Administration(failed) -->
+</suite> <!-- Failed suite [TestAll (2)] -->

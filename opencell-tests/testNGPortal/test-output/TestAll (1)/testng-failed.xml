@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestAll (1)]">
+  <test name="Customers(failed)">
+    <classes>
+      <class name="com.opencellsoft.testng.tests.customers.TestBusinessAccountModel">
+        <methods>
+          <include name="createBusinessAccountModel"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestBusinessAccountModel -->
+      <class name="com.opencellsoft.testng.tests.customers.TestAccessPoint">
+        <methods>
+          <include name="createAccessPoint"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestAccessPoint -->
+      <class name="com.opencellsoft.testng.tests.customers.TestBillingAccount">
+        <methods>
+          <include name="createBA"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestBillingAccount -->
+      <class name="com.opencellsoft.testng.tests.customers.TestUserAccount">
+        <methods>
+          <include name="createUA"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestUserAccount -->
+      <class name="com.opencellsoft.testng.tests.customers.TestCustomerAccount">
+        <methods>
+          <include name="createCustomers"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestCustomerAccount -->
+      <class name="com.opencellsoft.testng.tests.customers.TestSubscription">
+        <methods>
+          <include name="createSubscription"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.customers.TestSubscription -->
+    </classes>
+  </test> <!-- Customers(failed) -->
+</suite> <!-- Failed suite [TestAll (1)] -->
