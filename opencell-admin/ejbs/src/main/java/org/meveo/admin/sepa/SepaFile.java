@@ -75,7 +75,6 @@ import org.meveo.service.payments.impl.PaymentGatewayService;
 import org.meveo.util.DDRequestBuilderClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * The Class SepaFile.
  *
