@@ -46,6 +46,8 @@ public class Offers extends BasePage {
   private WebElement name;
 
   
+  
+  
 
   /**
    * Opening offer model menu.
@@ -83,10 +85,22 @@ public class Offers extends BasePage {
     WebElement detailsMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[1]/div/div/div/a[2]/span[1]/span/span"));
     
     moveMouseAndClick(detailsMenu);
-    WebElement lifeCycle = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[2]/div/div/div[1]"));
-    lifeCycle.click();
-    WebElement lifeCycleStatus = driver.findElement(By.xpath("/html/body/div[2]/div[2]/ul/li[0]"));
-    lifeCycleStatus.click();
+    WebElement lifecycleStatusList = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[2]/div/div/div[1]/div/div/div"));
+    
+    moveMouseAndClick(lifecycleStatusList); 
+    WebElement lifecycleStatus = driver.findElement(By.xpath("/html/body/div[3]/div[2]/ul/li[4]"));
+    
+    moveMouseAndClick(lifecycleStatus); 
+    
+WebElement categoryList = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[2]/div/div/div[2]/div/div/div"));
+    
+    moveMouseAndClick(categoryList); 
+    WebElement category = driver.findElement(By.xpath("/html/body/div[3]/div[2]/ul/li[2]"));
+    
+    moveMouseAndClick(category); 
+
+    
+    
     WebElement btnSave = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[3]/div/button/span[1]"));
     
     moveMouseAndClick(btnSave);
