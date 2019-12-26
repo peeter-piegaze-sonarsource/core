@@ -11,10 +11,13 @@
 	<test name="Configuration" enabled="true">
 
 		<classes>
-
+			<class
+				name="com.opencellsoft.testng.tests.customers.TestCustomerAccount" />
+			<class
+				name="com.opencellsoft.testng.tests.customers.TestUserAccount" />
 			<class
 				name="com.opencellsoft.testng.tests.customers.TestCustomer" />
-					</classes>
+		</classes>
 	</test>
 
 
