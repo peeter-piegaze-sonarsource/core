@@ -12,7 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
- * @author MIFTAH
+ * @author Maria AIT BRAHIM
  *
  */
 public class ModulePage extends BasePage {
