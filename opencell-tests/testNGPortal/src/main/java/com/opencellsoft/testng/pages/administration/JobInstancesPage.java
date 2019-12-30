@@ -12,7 +12,7 @@ import com.opencellsoft.testng.pages.Constants;
 
 /**
  * 
- * @author  Maria AIT BRAHIM   
+ * @author Maria AIT BRAHIM
  *
  */
 public class JobInstancesPage extends BasePage {
@@ -58,22 +58,21 @@ public class JobInstancesPage extends BasePage {
     @FindBy(xpath = "/html/body/div[3]/div[2]/ul/li[2]")
     private WebElement timerChoice;
     /**
-     * parametres tab . 
+     * parametres tab .
      */
     @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[1]/div/div/div/a[2]/span[1]/span/span")
     private WebElement parametresTab;
     /**
-     * parametres  . 
+     * parametres .
      */
     @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[2]/span[2]/div/div/div[2]/div/input")
     private WebElement parametres;
-   
+    
     /**
-     *code To Search.
+     * code To Search.
      */
     @FindBy(xpath = "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[2]/div[1]/div[1]/div[1]/div/input")
     private WebElement codeToSearch;
-    
     
     /**
      * element To Delete.
@@ -96,11 +95,14 @@ public class JobInstancesPage extends BasePage {
      * @param driver WebDriver
      */
     public void gotoListPage(WebDriver driver) {
-        WebElement adminstrationMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[5]/span[2]"));
+        WebElement adminstrationMenu = driver.findElement(By
+            .xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[5]/span[2]"));
         moveMouse(adminstrationMenu);
-        WebElement jobsMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[6]/div/div/div[1]/span[2]"));
+        WebElement jobsMenu = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[6]/div/div/div[1]/span[2]"));
         moveMouseAndClick(jobsMenu);
-        WebElement jobInstancesMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[6]/div/div/div[2]/div/div/a"));
+        WebElement jobInstancesMenu = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[6]/div/div/div[2]/div/div/a"));
         moveMouseAndClick(jobInstancesMenu);
     }
     
@@ -111,19 +113,16 @@ public class JobInstancesPage extends BasePage {
      * @throws InterruptedException
      */
     public void fillForm(WebDriver driver, Map<String, String> data) throws InterruptedException {
-        waitUntilElementDisplayed(newBtn, driver);
+        
         newBtn.click();
         
         jobCategory.click();
         
-       forceClick(jobCategoryChoice);
-        
-        
+        forceClick(jobCategoryChoice);
         
         moveMouseAndClick(code);
         code.sendKeys((String) data.get(Constants.CODE));
         
-       
         moveMouseAndClick(description);
         description.sendKeys((String) data.get(Constants.CODE));
         jobTemplate.click();
@@ -134,35 +133,34 @@ public class JobInstancesPage extends BasePage {
         parametres.clear();
         parametres.sendKeys("parametres");
         forceClick(timer);
-       
-        forceClick(timerChoice); 
         
+        forceClick(timerChoice);
         
- WebElement btnSave = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[3]/div/button/span[1]"));
+        WebElement btnSave = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/form/div[3]/div/button/span[1]"));
         
- forceClick(btnSave); 
-       
- forceClick(codeToSearch);
- codeToSearch.clear();
- codeToSearch.sendKeys((String) data.get(Constants.CODE));
- 
- WebElement btnCheck = driver.findElement(By.xpath(
-     "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[3]/div/table/tbody/tr/td[1]/span/span[1]/input"));
- 
- forceClick(btnCheck);
- 
- WebElement elementToDelete = driver.findElement(By.xpath(
-     "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[1]/div[2]/button/span[1]/span"));
- 
- forceClick(elementToDelete);
- 
- WebElement confirmDelete = driver
-     .findElement(By.xpath("/html/body/div[3]/div[2]/div[3]/button[2]/span[1]"));
- 
- confirmDelete.click();
+        forceClick(btnSave);
+        
+        forceClick(codeToSearch);
+        codeToSearch.clear();
+        codeToSearch.sendKeys((String) data.get(Constants.CODE));
+        
+        WebElement btnCheck = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[3]/div/table/tbody/tr/td[1]/span/span[1]/input"));
+        
+        forceClick(btnCheck);
+        
+        WebElement elementToDelete = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[1]/div[2]/button/span[1]/span"));
+        
+        forceClick(elementToDelete);
+        
+        WebElement confirmDelete = driver
+            .findElement(By.xpath("/html/body/div[3]/div[2]/div[3]/button[2]/span[1]"));
+        
+        confirmDelete.click();
     }
     
-   
     /**
      * @return the newBtn
      */
@@ -205,11 +203,6 @@ public class JobInstancesPage extends BasePage {
         this.jobCategoryChoice = jobCategoryChoice;
     }
     
-   
-  
-    
-        
-   
     /**
      * @return the code
      */
@@ -279,6 +272,5 @@ public class JobInstancesPage extends BasePage {
     public void setParametres(WebElement parametres) {
         this.parametres = parametres;
     }
-   
-   
+    
 }

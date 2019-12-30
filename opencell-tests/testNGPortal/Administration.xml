@@ -12,8 +12,10 @@
 
 		<classes>
 
-			<class
-				name="com.opencellsoft.testng.tests.administration.TestJobInstances" />
+		 <class
+				name="com.opencellsoft.testng.tests.administration.TestJobInstances" />  
+				<class
+				name="com.opencellsoft.testng.tests.administration.TestModule" />
 					</classes>
 	</test>
 
