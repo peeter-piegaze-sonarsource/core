@@ -14,7 +14,9 @@
 		<class
 				name="com.opencellsoft.testng.tests.setup.TestSeller" />
 				 <class
-				name="com.opencellsoft.testng.tests.setup.TestAssuredFactor" />  
+				name="com.opencellsoft.testng.tests.setup.TestAssuredFactor" /> 
+ <class
+				name="com.opencellsoft.testng.tests.setup.TestBillingCycles" /> 				
 		
 		</classes>
 	</test>
