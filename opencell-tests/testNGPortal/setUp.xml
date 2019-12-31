@@ -2,22 +2,20 @@
 
 <suite name="TestAll" preserve-order="true">
 	<parameter name="language" value="fr" />
-	<test name="Login" enabled="true">
-		<classes>
-			<class
-				name="com.opencellsoft.testng.tests.finance.TestAdminLoginKC" />
-		</classes>
-	</test>
 	<test name="setUp" enabled="true">
 
 		<classes>
-		<class
-				name="com.opencellsoft.testng.tests.setup.TestSeller" />
-				 <class
-				name="com.opencellsoft.testng.tests.setup.TestAssuredFactor" /> 
- <class
-				name="com.opencellsoft.testng.tests.setup.TestBillingCycles" /> 				
-		
+			<class name="com.opencellsoft.testng.tests.setup.TestSeller" />
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestAssuredFactor" />
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestBillingCycles" />
+
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestActionQualifier" />
+			<class name="com.opencellsoft.testng.tests.setup.TestCalendars" />
+
+
 		</classes>
 	</test>
 
