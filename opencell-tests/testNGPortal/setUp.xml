@@ -15,8 +15,12 @@
 				name="com.opencellsoft.testng.tests.setup.TestActionQualifier" />
 			<class name="com.opencellsoft.testng.tests.setup.TestCalendars" />
 			
-				<class
+			<class
 				name="com.opencellsoft.testng.tests.setup.TestInvoicecategories" />
+                       <class
+				name="com.opencellsoft.testng.tests.setup.TestInvoiceSequence" />
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestServiceType" />
 
 
 		</classes>
