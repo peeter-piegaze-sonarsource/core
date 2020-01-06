@@ -21,6 +21,12 @@
 				name="com.opencellsoft.testng.tests.setup.TestInvoiceSequence" />
 			<class
 				name="com.opencellsoft.testng.tests.setup.TestServiceType" />
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestChannel" />
+			<class
+				name="com.opencellsoft.testng.tests.setup.TestClassOfService" />
+                       <class
+				name="com.opencellsoft.testng.tests.setup.TestCreditCategories" />
 
 
 		</classes>
