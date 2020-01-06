@@ -25,6 +25,10 @@
 				name="com.opencellsoft.testng.tests.setup.TestInvoiceSubCategories" />
 				<class
 				name="com.opencellsoft.testng.tests.setup.TestCurrencies" />
+                                <class
+				name="com.opencellsoft.testng.tests.setup.TestClassOfService" />
+                               <class
+				name="com.opencellsoft.testng.tests.setup.TestCreditCategories" />
 
 
 		</classes>
