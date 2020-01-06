@@ -29,6 +29,10 @@
 				name="com.opencellsoft.testng.tests.setup.TestClassOfService" />
                                <class
 				name="com.opencellsoft.testng.tests.setup.TestCreditCategories" />
+				<class
+				name="com.opencellsoft.testng.tests.setup.TestContact" />
+					<class
+				name="com.opencellsoft.testng.tests.setup.TestCustomerCategories" />
 
 
 		</classes>
