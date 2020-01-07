@@ -33,6 +33,8 @@
 				name="com.opencellsoft.testng.tests.setup.TestContact" />
 					<class
 				name="com.opencellsoft.testng.tests.setup.TestCustomerCategories" />
+				<class
+				name="com.opencellsoft.testng.tests.setup.TestBrands" />
 
 
 		</classes>

@@ -18,14 +18,12 @@ public class AssuredFactorPage extends BasePage {
         super(driver);
         // TODO Auto-generated constructor stub
     }
-
+    
     /**
      * code.
      */
     @FindBy(xpath = "/html/body/div[3]/div[2]/div/div/form/div[1]/div/div[1]/div/div/input")
     private WebElement codeAF;
-    
-    
     
     /**
      * description.
@@ -57,8 +55,6 @@ public class AssuredFactorPage extends BasePage {
     @FindBy(id = "formId:formButtonsCC:deletelink")
     private WebElement deleteBttn;
     
-   
-    
     /**
      * click on setup -> Assured factors .
      * 
@@ -66,12 +62,12 @@ public class AssuredFactorPage extends BasePage {
      * @throws InterruptedException
      */
     public void gotoListPage(WebDriver driver) throws InterruptedException {
-        WebElement setupMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[10]/div/div/a[2]"));
+        WebElement setupMenu = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[10]/div/div/a[2]"));
         moveMouse(setupMenu);
         
-       
-        
-        WebElement AssuredFactorMenu = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[10]/div/div/a[5]"));
+        WebElement AssuredFactorMenu = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[1]/div/div/div/div[2]/div[10]/div/div/a[5]"));
         moveMouseAndClick(AssuredFactorMenu);
     }
     
@@ -81,8 +77,9 @@ public class AssuredFactorPage extends BasePage {
      * @param driver instance of WebDriver
      */
     public void gotoNewPage(WebDriver driver) {
-        WebElement btnNew = driver.findElement(By.xpath("/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a/span[1]/span"));
-        waitUntilElementDisplayed(btnNew,driver);
+        WebElement btnNew = driver.findElement(By.xpath(
+            "/html/body/div[1]/div/div/div/main/div[2]/div/div[2]/div[2]/div/div/div[2]/div/a/span[1]/span"));
+        
         forceClick(btnNew);
     }
     
@@ -93,8 +90,9 @@ public class AssuredFactorPage extends BasePage {
      */
     
     public void saveOperation(WebDriver driver) {
-        WebElement btnSave = driver.findElement(By.xpath("/html/body/div[3]/div[2]/div/div/form/div[2]/div/button/span[1]"));
-        waitUntilElementDisplayed(btnSave,driver);
+        WebElement btnSave = driver.findElement(
+            By.xpath("/html/body/div[3]/div[2]/div/div/form/div[2]/div/button/span[1]"));
+        
         moveMouseAndClick(btnSave);
     }
     
@@ -107,38 +105,32 @@ public class AssuredFactorPage extends BasePage {
      */
     public void fillFormCreate(WebDriver driver, Map<String, String> data)
             throws InterruptedException {
-       
+        
         moveMouseAndClick(getCodeAF());
         getCodeAF().clear();
         getCodeAF().sendKeys((String) data.get(Constants.CODE));
-               moveMouseAndClick(getDescriptionAF());
-               getDescriptionAF().clear();
-               getDescriptionAF().sendKeys((String) data.get(Constants.DESCRIPTION));
-       
+        moveMouseAndClick(getDescriptionAF());
+        getDescriptionAF().clear();
+        getDescriptionAF().sendKeys((String) data.get(Constants.DESCRIPTION));
         
     }
-    
-   
-    
-   
-   
     
     public WebElement getCodeAF() {
         return codeAF;
     }
-
+    
     public void setCodeAF(WebElement codeAF) {
         this.codeAF = codeAF;
     }
-
+    
     public WebElement getDescriptionAF() {
         return descriptionAF;
     }
-
+    
     public void setDescriptionAF(WebElement descriptionAF) {
         this.descriptionAF = descriptionAF;
     }
-
+    
     /**
      * @return the codeSearch
      */

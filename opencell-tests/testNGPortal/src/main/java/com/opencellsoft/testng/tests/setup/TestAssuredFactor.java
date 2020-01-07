@@ -38,7 +38,7 @@ public class TestAssuredFactor extends TestBase {
         assuredFactorPage.gotoListPage(driver);
         assuredFactorPage.gotoNewPage(driver);
         assuredFactorPage.fillFormCreate(driver, data);
-        
+        testData(assuredFactorPage);
         assuredFactorPage.saveOperation(driver);
        
     }
