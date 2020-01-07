@@ -37,6 +37,8 @@
 				name="com.opencellsoft.testng.tests.setup.TestBrands" />
 				<class
 				name="com.opencellsoft.testng.tests.setup.TestDensity" />
+				<class
+				name="com.opencellsoft.testng.tests.setup.TestDiscountPlan" />
 
 
 		</classes>
