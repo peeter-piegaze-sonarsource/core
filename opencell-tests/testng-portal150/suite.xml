@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="allSuites" parallel="none">
+	<suite-files>
+
+		<suite-file path="scenario1.xml" />
+		<suite-file path="scenario2.xml" />
+		
+
+	</suite-files>
+</suite>	

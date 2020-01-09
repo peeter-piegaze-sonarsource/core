@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="TestAll" duration-ms="12732" started-at="2020-01-09T14:49:40Z" finished-at="2020-01-09T14:49:53Z">
+    <groups>
+    </groups>
+    <test name="Login" duration-ms="10988" started-at="2020-01-09T14:49:40Z" finished-at="2020-01-09T14:49:51Z">
+      <class name="com.opencellsoft.testng.tests.configuration.TestAdminLoginKC">
+        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.opencellsoft.testng.tests.configuration.TestAdminLoginKC@72035809]" name="beforeTest" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:40Z" finished-at="2020-01-09T15:49:40Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeTest -->
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:com.opencellsoft.testng.tests.configuration.TestAdminLoginKC@72035809]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:40Z" finished-at="2020-01-09T15:49:40Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="login()[pri:0, instance:com.opencellsoft.testng.tests.configuration.TestAdminLoginKC@72035809]" name="login" duration-ms="10446" started-at="2020-01-09T15:49:40Z" finished-at="2020-01-09T15:49:50Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- login -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:com.opencellsoft.testng.tests.configuration.TestAdminLoginKC@72035809]" name="afterMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:50Z" finished-at="2020-01-09T15:49:50Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="afterTest()[pri:0, instance:com.opencellsoft.testng.tests.configuration.TestAdminLoginKC@72035809]" name="afterTest" is-config="true" duration-ms="501" started-at="2020-01-09T15:49:50Z" finished-at="2020-01-09T15:49:51Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+      </class> <!-- com.opencellsoft.testng.tests.configuration.TestAdminLoginKC -->
+    </test> <!-- Login -->
+    <test name="scenario1" duration-ms="1703" started-at="2020-01-09T14:49:51Z" finished-at="2020-01-09T14:49:53Z">
+      <class name="com.opencellsoft.testng.tests.clients.TestClient">
+        <test-method status="PASS" signature="beforeSuite(java.lang.String)[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="beforeSuite" is-config="true" duration-ms="57" started-at="2020-01-09T15:49:40Z" finished-at="2020-01-09T15:49:40Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeSuite -->
+        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="beforeTest" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:51Z" finished-at="2020-01-09T15:49:51Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeTest -->
+        <test-method status="PASS" signature="clientdetails()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="clientdetails" duration-ms="1197" started-at="2020-01-09T15:49:51Z" finished-at="2020-01-09T15:49:52Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- clientdetails -->
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:51Z" finished-at="2020-01-09T15:49:51Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="afterMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:52Z" finished-at="2020-01-09T15:49:52Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="afterTest()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="afterTest" is-config="true" duration-ms="501" started-at="2020-01-09T15:49:52Z" finished-at="2020-01-09T15:49:53Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+        <test-method status="PASS" signature="afterSuite()[pri:0, instance:com.opencellsoft.testng.tests.clients.TestClient@14028087]" name="afterSuite" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:53Z" finished-at="2020-01-09T15:49:53Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterSuite -->
+      </class> <!-- com.opencellsoft.testng.tests.clients.TestClient -->
+    </test> <!-- scenario1 -->
+  </suite> <!-- TestAll -->
+  <suite name="TestAll (0)" duration-ms="5315" started-at="2020-01-09T14:49:53Z" finished-at="2020-01-09T14:49:58Z">
+    <groups>
+    </groups>
+    <test name="Login" duration-ms="1" started-at="2020-01-09T14:49:53Z" finished-at="2020-01-09T14:49:53Z">
+    </test> <!-- Login -->
+    <test name="scenario2" duration-ms="5297" started-at="2020-01-09T14:49:53Z" finished-at="2020-01-09T14:49:58Z">
+      <class name="com.opencellsoft.testng.tests.compteClient.TestCompteClient">
+        <test-method status="PASS" signature="beforeSuite(java.lang.String)[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="beforeSuite" is-config="true" duration-ms="1" started-at="2020-01-09T15:49:53Z" finished-at="2020-01-09T15:49:53Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[en]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeSuite -->
+        <test-method status="PASS" signature="beforeTest()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="beforeTest" is-config="true" duration-ms="1" started-at="2020-01-09T15:49:53Z" finished-at="2020-01-09T15:49:53Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeTest -->
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:53Z" finished-at="2020-01-09T15:49:53Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="clientClientdetails()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="clientClientdetails" duration-ms="4791" started-at="2020-01-09T15:49:53Z" finished-at="2020-01-09T15:49:57Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- clientClientdetails -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="afterMethod" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:57Z" finished-at="2020-01-09T15:49:57Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="afterTest()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="afterTest" is-config="true" duration-ms="501" started-at="2020-01-09T15:49:57Z" finished-at="2020-01-09T15:49:58Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+        <test-method status="PASS" signature="afterSuite()[pri:0, instance:com.opencellsoft.testng.tests.compteClient.TestCompteClient@7c137fd5]" name="afterSuite" is-config="true" duration-ms="0" started-at="2020-01-09T15:49:58Z" finished-at="2020-01-09T15:49:58Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterSuite -->
+      </class> <!-- com.opencellsoft.testng.tests.compteClient.TestCompteClient -->
+    </test> <!-- scenario2 -->
+  </suite> <!-- TestAll (0) -->
+  <suite name="allSuites" duration-ms="0" started-at="2020-01-09T14:49:58Z" finished-at="2020-01-09T14:49:58Z">
+    <groups>
+    </groups>
+  </suite> <!-- allSuites -->
+</testng-results>

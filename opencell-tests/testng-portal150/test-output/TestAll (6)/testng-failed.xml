@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestAll (6)]">
+  <parameter name="language" value="en"/>
+  <test name="Reporting(failed)">
+    <classes>
+      <class name="com.opencellsoft.testng.tests.reporting.TestMQ">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="afterSuite"/>
+          <include name="beforeTest"/>
+          <include name="afterMethod"/>
+          <include name="afterTest"/>
+          <include name="beforeSuite"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.reporting.TestMQ -->
+      <class name="com.opencellsoft.testng.tests.reporting.TestCharts">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testCharts"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.reporting.TestCharts -->
+    </classes>
+  </test> <!-- Reporting(failed) -->
+</suite> <!-- Failed suite [TestAll (6)] -->

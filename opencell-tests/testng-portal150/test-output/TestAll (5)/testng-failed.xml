@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [TestAll (5)]">
+  <parameter name="language" value="fr"/>
+  <test name="quotesAndOrders(failed)">
+    <classes>
+      <class name="com.opencellsoft.testng.tests.quotesandorders.TestOrders">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testOrdersPage"/>
+          <include name="afterSuite"/>
+          <include name="beforeTest"/>
+          <include name="afterMethod"/>
+          <include name="afterTest"/>
+          <include name="beforeSuite"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.quotesandorders.TestOrders -->
+      <class name="com.opencellsoft.testng.tests.quotesandorders.TestQuotes">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="testQuotesPage"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class> <!-- com.opencellsoft.testng.tests.quotesandorders.TestQuotes -->
+    </classes>
+  </test> <!-- quotesAndOrders(failed) -->
+</suite> <!-- Failed suite [TestAll (5)] -->
