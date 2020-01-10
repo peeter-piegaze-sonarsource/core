@@ -18,7 +18,7 @@ public class TestGestionCompteClient extends TestBase {
     }
     
     @Test
-    public void clientdetails() throws InterruptedException {
+    public void gestionCompteClient() throws InterruptedException {
         
         /**
          * Client details
