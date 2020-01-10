@@ -4,11 +4,11 @@ import static org.testng.Assert.assertEquals;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.Test;
 import com.opencellsoft.testng.pages.Constants;
-import com.opencellsoft.testng.pages.compteClient.CompteClientPage;
+import com.opencellsoft.testng.pages.compteClient.CreateCompteClientPage;
 
 import com.opencellsoft.testng.tests.base.TestBase;
 
-public class TestCompteClient extends  TestBase {
+public class TestCreateCompteClient extends  TestBase {
     /**
      * generate values.
      */
@@ -19,7 +19,7 @@ public class TestCompteClient extends  TestBase {
    
         
         
-    public TestCompteClient() {
+    public TestCreateCompteClient() {
 String test = "CL_" + System.currentTimeMillis();
         
         data.put(Constants.CODE, test);
@@ -31,11 +31,11 @@ String test = "CL_" + System.currentTimeMillis();
         /**
          * Client details
          */
-        CompteClientPage compteclient = PageFactory.initElements(this.getDriver(),
-            CompteClientPage.class);
+        CreateCompteClientPage createCompteclient = PageFactory.initElements(this.getDriver(),
+            CreateCompteClientPage.class);
         
         
-        compteclient.clientDetailsTest(driver, data);
+        createCompteclient.clientDetailsTest(driver, data);
         
     }
     
@@ -44,9 +44,9 @@ String test = "CL_" + System.currentTimeMillis();
      * 
      * @param page compte client
      */
-    private void testData(CompteClientPage page) {
+    private void testData(CreateCompteClientPage page) {
         String code = page.getCompteClient().getAttribute(ATTRIBUTE_VALUE);
-        String description = page.getPrenomCompteClient().getAttribute(ATTRIBUTE_VALUE);
+        String description = page.getIdCompteClient().getAttribute(ATTRIBUTE_VALUE);
         
         assertEquals(code, data.get(Constants.CODE));
         assertEquals(description, data.get(Constants.DESCRIPTION));

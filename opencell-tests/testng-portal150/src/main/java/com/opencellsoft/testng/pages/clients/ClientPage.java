@@ -43,7 +43,7 @@ public class ClientPage extends BasePage {
         forceClick(pagination25);
         forceClick(searchButton);
         searchButton.sendKeys("96561512225997892");
-
+        forceClick(searchButton);
     }
 
 

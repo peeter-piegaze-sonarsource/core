@@ -12,6 +12,8 @@
 		<classes>
 		<class
 				name="com.opencellsoft.testng.tests.clients.TestClient" />
+				<!--  <class
+				name="com.opencellsoft.testng.tests.compteClient.TestCreateCompteClient" />-->
 			</classes>
 	</test>
 </suite>

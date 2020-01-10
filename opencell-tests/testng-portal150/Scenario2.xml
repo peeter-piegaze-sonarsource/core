@@ -12,6 +12,8 @@
 		<classes>
 		<class
 				name="com.opencellsoft.testng.tests.compteClient.TestCompteClient" />
+				<class
+				name="com.opencellsoft.testng.tests.compteClient.TestChampsPersonnalises" />
 			
 			</classes>
 	</test>
