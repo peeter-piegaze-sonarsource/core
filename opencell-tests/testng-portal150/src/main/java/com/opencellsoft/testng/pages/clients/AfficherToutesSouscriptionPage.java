@@ -33,17 +33,11 @@ public class AfficherToutesSouscriptionPage extends BasePage {
     public void afficherToutesSouscritpions(WebDriver driver, Map<String, String> data)
             throws InterruptedException {
         moveMouseAndClick(clientMenu);
-        Thread.sleep(9000);
         moveMouseAndClick(client);
-        Thread.sleep(9000);
         client.sendKeys("63021508253829808");
-        Thread.sleep(9000);
         moveMouseAndClick(compteID);
-        Thread.sleep(9000);
         moveMouseAndClick(compteClientID);
-        Thread.sleep(9000);
         moveMouseAndClick(compteFactID);
-        Thread.sleep(9000);
         moveMouseAndClick(afficherSouscriptionBtn);
     }
     
