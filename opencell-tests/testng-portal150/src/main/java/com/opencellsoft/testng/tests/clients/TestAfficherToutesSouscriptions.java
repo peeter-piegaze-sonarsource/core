@@ -15,7 +15,9 @@ public class TestAfficherToutesSouscriptions extends TestBase {
             AfficherToutesSouscriptionPage.class);
         
         afficherToutesSouscriptionPage.afficherToutesSouscritpions(driver, data);
-        testData(afficherToutesSouscriptionPage);
+//To be used when the next GUI is OK  
+
+        //testData(afficherToutesSouscriptionPage);
     }
     
     private void testData(AfficherToutesSouscriptionPage afficherToutesSouscriptionPage) {
