@@ -30,6 +30,9 @@ import org.slf4j.Logger;
 public class StartupListener {
 
     @Inject
+    private ResourceBundleInitializer resourceBundleInitializer;
+    
+    @Inject
     private ApplicationInitializer applicationInitializer;
 
     @Inject
@@ -39,6 +42,7 @@ public class StartupListener {
     private void init() {
         log.info("Thank you for running Opencell Community code. For Commercial Grade Support, please purchase an Opencell subscription from https://opencellsoft.com/");
 
+        resourceBundleInitializer.init();
         applicationInitializer.init();
     }
 }
