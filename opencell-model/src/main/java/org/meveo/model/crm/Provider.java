@@ -36,7 +36,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -52,7 +51,6 @@ import org.meveo.model.AuditableEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.ISearchable;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.admin.Currency;
 import org.meveo.model.billing.AccountingCode;
@@ -86,7 +84,7 @@ import org.meveo.model.shared.InterBankTitle;
 @Table(name = "crm_provider", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "crm_provider_seq"), })
-public class Provider extends AuditableEntity implements ICustomFieldEntity, ISearchable {
+public class Provider extends AuditableEntity implements ICustomFieldEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -296,7 +294,7 @@ public class Provider extends AuditableEntity implements ICustomFieldEntity, ISe
     @Column(name = "uuid", nullable = false, updatable = false, length = 60)
     @Size(max = 60)
     @NotNull
-    private String uuid;
+    private String uuid = UUID.randomUUID().toString();
 
     /**
      * @deprecated As of version 5.0, replaced by {@link AccountingCode}
@@ -638,19 +636,8 @@ public class Provider extends AuditableEntity implements ICustomFieldEntity, ISe
         this.paymentMethods = paymentMethods;
     }
 
-    /**
-     * setting uuid if null
-     */
-    @PrePersist
-    public void setUUIDIfNull() {
-    	if (uuid == null) {
-    		uuid = UUID.randomUUID().toString();
-    	}
-    }
-    
     @Override
     public String getUuid() {
-    	setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
         return uuid;
     }
 

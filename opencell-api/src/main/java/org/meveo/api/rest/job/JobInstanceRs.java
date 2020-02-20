@@ -32,8 +32,8 @@ public interface JobInstanceRs extends IBaseRs {
      * @param postData The job instance's data
      * @return Request processing status
      */
-    @POST
     @Path("/create")
+    @POST
     ActionStatus create(JobInstanceDto postData);
 
     /**
@@ -42,8 +42,8 @@ public interface JobInstanceRs extends IBaseRs {
      * @param postData The job instance's data
      * @return Request processing status
      */
-    @POST
     @Path("/update")
+    @POST
     ActionStatus update(JobInstanceDto postData);
 
     /**
@@ -52,18 +52,18 @@ public interface JobInstanceRs extends IBaseRs {
      * @param postData The job instance's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(JobInstanceDto postData);
 
     /**
      * Find a job instance with a given code
      * 
      * @param jobInstanceCode The job instance's code
-     * @return Job Instance Response data
+     * @return
      */
-    @GET
     @Path("/")
+    @GET
     JobInstanceResponseDto find(@QueryParam("jobInstanceCode") String jobInstanceCode);
 
     /**
@@ -72,8 +72,8 @@ public interface JobInstanceRs extends IBaseRs {
      * @param jobInstanceCode The job instance's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/{jobInstanceCode}")
+    @DELETE
     ActionStatus remove(@PathParam("jobInstanceCode") String jobInstanceCode);
 
     /**

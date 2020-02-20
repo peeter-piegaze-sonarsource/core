@@ -25,9 +25,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Utils for multithreading.
  * 
@@ -36,7 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ThreadUtils {
 
-    private final static Logger log = LoggerFactory.getLogger(ThreadUtils.class);
     private static final ScheduledThreadPoolExecutor taskExec = new ScheduledThreadPoolExecutor(5);
 
     /**
@@ -65,19 +61,6 @@ public class ThreadUtils {
             task.cancel(true);
         }
         return null;
-    }
-
-    /**
-     * Try to sleep safely the Thread , using timeUnit and time params
-     * @param timeUnit
-     * @param time
-     */
-    public static void sleepSafe(TimeUnit timeUnit, long time) {
-        try {
-            timeUnit.sleep(time);
-        } catch (InterruptedException e) {
-            log.error(" Error on sleepSafe : timeUnit = {} , time = {} ", timeUnit, time, e);
-        }
     }
 
 }

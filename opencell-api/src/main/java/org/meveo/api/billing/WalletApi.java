@@ -36,7 +36,6 @@ import org.meveo.model.billing.Tax;
 import org.meveo.model.billing.UserAccount;
 import org.meveo.model.billing.WalletInstance;
 import org.meveo.model.billing.WalletOperation;
-import org.meveo.model.billing.WalletOperationStatusEnum;
 import org.meveo.model.catalog.Calendar;
 import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.WalletTemplate;
@@ -423,9 +422,6 @@ public class WalletApi extends BaseApi {
         if (StringUtils.isBlank(postData.getCurrency())) {
             missingParameters.add("currency");
         }
-        if (StringUtils.isBlank(postData.getTaxCode()) && postData.getTaxPercent() == null) {
-            missingParameters.add("taxCode or taxPercent");
-        }
 
         handleMissingParameters();
 
@@ -496,13 +492,11 @@ public class WalletApi extends BaseApi {
         }
 
         Tax tax = null;
-        if (!StringUtils.isBlank(postData.getTaxCode())) {
+        if (postData.getTaxCode() != null) {
             tax = taxService.findByCode(postData.getTaxCode());
             if (tax == null) {
                 throw new EntityDoesNotExistsException(Tax.class, postData.getTaxCode());
             }
-        } else {
-            tax = taxService.findTaxByPercent(postData.getTaxPercent());
         }
 
         WalletOperation walletOperation = new WalletOperation();
@@ -518,10 +512,11 @@ public class WalletApi extends BaseApi {
         walletOperation.setWallet(walletInstance);
         walletOperation.setChargeInstance(chargeInstance);
         walletOperation.setType(postData.getType());
+        walletOperation.setStatus(postData.getStatus());
         walletOperation.setCounter(null);
         walletOperation.setRatingUnitDescription(postData.getRatingUnitDescription());
         walletOperation.setTax(tax);
-        walletOperation.setTaxPercent(tax.getPercent());
+        walletOperation.setTaxPercent(postData.getTaxPercent());
         walletOperation.setUnitAmountTax(postData.getUnitAmountTax());
         walletOperation.setUnitAmountWithoutTax(postData.getUnitAmountWithoutTax());
         walletOperation.setUnitAmountWithTax(postData.getUnitAmountWithTax());
@@ -559,11 +554,7 @@ public class WalletApi extends BaseApi {
             }
         }
 
-        if (postData.getStatus() != WalletOperationStatusEnum.OPEN) {
-            walletOperation.setStatus(postData.getStatus());
-        }
         walletOperationService.create(walletOperation);
-
         return walletOperation;
 
     }

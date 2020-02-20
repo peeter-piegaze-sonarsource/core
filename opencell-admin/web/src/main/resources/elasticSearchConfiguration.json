@@ -144,8 +144,8 @@
             "endAgreementDate": "endAgreementDate"
         },
         "org.meveo.model.payments.AccountOperation": {
-            "code": "code",
-            "description": "description",
+            "occCode": "occCode",
+            "occDescription": "occDescription",
             "transactionType": "type",
             "amount": "amount",
             "transactionCategory": "transactionCategory",

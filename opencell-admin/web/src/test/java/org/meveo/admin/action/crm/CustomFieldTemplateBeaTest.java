@@ -1,15 +1,11 @@
 package org.meveo.admin.action.crm;
 
-import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.meveo.model.BusinessEntity;
-import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.service.custom.CustomizedEntity;
 import org.meveo.service.custom.CustomizedEntityService;
 import org.mockito.InjectMocks;
@@ -17,17 +13,18 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.reflections.Reflections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomFieldTemplateBeaTest {
     @Mock
     private CustomizedEntityService customizedEntityService;
-    
-    @Mock
-    private CustomEntityTemplateService customEntityTemplateService;
 
     @InjectMocks
     private CustomFieldTemplateBean CustomFieldTemplateBean;

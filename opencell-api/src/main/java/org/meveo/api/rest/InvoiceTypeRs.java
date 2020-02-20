@@ -33,8 +33,8 @@ public interface InvoiceTypeRs extends IBaseRs {
      * @param invoiceTypeDto invoice type to be created
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(InvoiceTypeDto invoiceTypeDto);
 
     /**
@@ -43,8 +43,8 @@ public interface InvoiceTypeRs extends IBaseRs {
      * @param invoiceTypeDto invoice type to be updated
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(InvoiceTypeDto invoiceTypeDto);
 
     /**
@@ -53,8 +53,8 @@ public interface InvoiceTypeRs extends IBaseRs {
      * @param invoiceTypeCode invoice type's code
      * @return invoice type
      */
-    @GET
     @Path("/")
+    @GET
     GetInvoiceTypeResponse find(@QueryParam("invoiceTypeCode") String invoiceTypeCode);
 
     /**
@@ -63,8 +63,8 @@ public interface InvoiceTypeRs extends IBaseRs {
      * @param invoiceTypeCode invoice type's code
      * @return action status
      */
-    @DELETE
     @Path("/{invoiceTypeCode}")
+    @DELETE
     ActionStatus remove(@PathParam("invoiceTypeCode") String invoiceTypeCode);
 
     /**
@@ -73,8 +73,8 @@ public interface InvoiceTypeRs extends IBaseRs {
      * @param invoiceTypeDto The invoiceType's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(InvoiceTypeDto invoiceTypeDto);
 
     /**
@@ -82,7 +82,7 @@ public interface InvoiceTypeRs extends IBaseRs {
      * 
      * @return A list of invoiceType
      */
-    @GET
     @Path("/list")
+    @GET
     GetInvoiceTypesResponse list();
 }

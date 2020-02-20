@@ -88,43 +88,51 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         return super.update(pp);
     }
 
-    @SuppressWarnings("deprecation")
     private String getCellAsString(Cell cell) {
         switch (cell.getCellType()) {
-        case Cell.CELL_TYPE_BOOLEAN:
-            return cell.getBooleanCellValue() + "";
-        case Cell.CELL_TYPE_ERROR:
-        case Cell.CELL_TYPE_BLANK:
-        case Cell.CELL_TYPE_FORMULA:
-            return null;
-        case Cell.CELL_TYPE_NUMERIC:
+        case BLANK:
+            return "";
+        case BOOLEAN:
+            return "" + cell.getBooleanCellValue();
+        case ERROR:
+            return "";
+        case FORMULA:
+            return "";
+        case NUMERIC:
             return "" + cell.getNumericCellValue();
-        default:
+        case STRING:
             return cell.getStringCellValue();
+        case _NONE:
+            return "";
+        default:
+            return "";
         }
     }
 
-    @SuppressWarnings("deprecation")
     private Date getCellAsDate(Cell cell) {
         switch (cell.getCellType()) {
-        case Cell.CELL_TYPE_ERROR:
-        case Cell.CELL_TYPE_BLANK:
-        case Cell.CELL_TYPE_FORMULA:
+        case BLANK:
+        case BOOLEAN:
+        case ERROR:
+        case FORMULA:
             return null;
-        case Cell.CELL_TYPE_NUMERIC:
+        case NUMERIC:
             return DateUtil.getJavaDate(cell.getNumericCellValue());
         default:
             try {
                 return cell.getDateCellValue();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat(paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy"));
                     return sdf.parse(cell.getStringCellValue());
-                } catch (ParseException e1) {
+                }
+                catch (ParseException e1) {
                     return null;
                 }
             }
         }
+
     }
 
     @JpaAmpNewTx
@@ -145,11 +153,14 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
         if (pricePlans == null || pricePlans.size() == 0) {
             pricePlan = new PricePlanMatrix();
-        } else if (pricePlans.size() == 1) {
-            pricePlan = pricePlans.get(0);
-        } else {
-            throw new BusinessException("More than one priceplan in line=" + rowIndex + "with code=" + pricePlanCode);
         }
+        else
+            if (pricePlans.size() == 1) {
+                pricePlan = pricePlans.get(0);
+            }
+            else {
+                throw new BusinessException("More than one priceplan in line=" + rowIndex + "with code=" + pricePlanCode);
+            }
 
         String pricePlanDescription = getCellAsString((Cell) cellsObj[i++]);
         String eventCode = getCellAsString((Cell) cellsObj[i++]);
@@ -158,15 +169,19 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         String currencyCode = getCellAsString((Cell) cellsObj[i++]);
         try {
             pricePlan.setStartSubscriptionDate(getCellAsDate((Cell) cellsObj[i++]));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new BusinessException("Invalid startAppli in line=" + rowIndex + " expected format:"
-                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy") + ", you may change the property excelImport.dateFormat.");
+                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy")
+                    + ", you may change the property excelImport.dateFormat.");
         }
         try {
             pricePlan.setEndSubscriptionDate(getCellAsDate((Cell) cellsObj[i++]));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new BusinessException("Invalid endAppli in line=" + rowIndex + " expected format:"
-                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy") + ", you may change the property excelImport.dateFormat.");
+                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy")
+                    + ", you may change the property excelImport.dateFormat.");
         }
         String offerCode = getCellAsString((Cell) cellsObj[i++]);
         String priority = getCellAsString((Cell) cellsObj[i++]);
@@ -182,27 +197,32 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         String criteriaEL = getCellAsString((Cell) cellsObj[i++]);
         try {
             pricePlan.setStartRatingDate(getCellAsDate((Cell) cellsObj[i++]));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new BusinessException("Invalid startRating in line=" + rowIndex + " expected format:"
-                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy") + ", you may change the property excelImport.dateFormat.");
+                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy")
+                    + ", you may change the property excelImport.dateFormat.");
         }
         try {
             pricePlan.setEndRatingDate(getCellAsDate((Cell) cellsObj[i++]));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new BusinessException("Invalid endRating in line=" + rowIndex + " expected format:"
-                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy") + ", you may change the property excelImport.dateFormat.");
+                    + paramBeanFactory.getInstance().getProperty("excelImport.dateFormat", "dd/MM/yyyy")
+                    + ", you may change the property excelImport.dateFormat.");
         }
         String minSubAge = getCellAsString((Cell) cellsObj[i++]);
         String maxSubAge = getCellAsString((Cell) cellsObj[i++]);
         String validityCalendarCode = getCellAsString((Cell) cellsObj[i++]);
         log.debug(
-            "priceplanCode={}, priceplanDescription= {}, chargeCode={} sellerCode={}, countryCode={}, currencyCode={},"
-                    + " startSub={}, endSub={}, offerCode={}, priority={}, amountWOTax={}, amountWithTax={},amountWOTaxEL={}, amountWithTaxEL={},"
-                    + " minQuantity={}, maxQuantity={}, criteria1={}, criteria2={}, criteria3={}, criteriaEL={},"
-                    + " startRating={}, endRating={}, minSubAge={}, maxSubAge={}, validityCalendarCode={}",
-            new Object[] { pricePlanCode, pricePlanDescription, eventCode, sellerCode, countryCode, currencyCode, pricePlan.getStartSubscriptionDate(),
-                    pricePlan.getEndSubscriptionDate(), offerCode, priority, amountWOTax, amountWithTax, amountWOTaxEL, amountWithTaxEL, minQuantity, maxQuantity, criteria1,
-                    criteria2, criteria3, criteriaEL, pricePlan.getStartRatingDate(), pricePlan.getEndRatingDate(), minSubAge, maxSubAge, validityCalendarCode });
+                "priceplanCode={}, priceplanDescription= {}, chargeCode={} sellerCode={}, countryCode={}, currencyCode={},"
+                        + " startSub={}, endSub={}, offerCode={}, priority={}, amountWOTax={}, amountWithTax={},amountWOTaxEL={}, amountWithTaxEL={},"
+                        + " minQuantity={}, maxQuantity={}, criteria1={}, criteria2={}, criteria3={}, criteriaEL={},"
+                        + " startRating={}, endRating={}, minSubAge={}, maxSubAge={}, validityCalendarCode={}",
+                new Object[] { pricePlanCode, pricePlanDescription, eventCode, sellerCode, countryCode, currencyCode,
+                        pricePlan.getStartSubscriptionDate(), pricePlan.getEndSubscriptionDate(), offerCode, priority, amountWOTax, amountWithTax,
+                        amountWOTaxEL, amountWithTaxEL, minQuantity, maxQuantity, criteria1, criteria2, criteria3, criteriaEL,
+                        pricePlan.getStartRatingDate(), pricePlan.getEndRatingDate(), minSubAge, maxSubAge, validityCalendarCode });
 
         if (!StringUtils.isBlank(eventCode)) {
             qb = new QueryBuilder(ChargeTemplate.class, "p");
@@ -212,11 +232,14 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
             List<Seller> charges = qb.getQuery(em).getResultList();
             if (charges.size() == 0) {
                 throw new BusinessException("cannot find charge in line=" + rowIndex + " with code=" + eventCode);
-            } else if (charges.size() > 1) {
-                throw new BusinessException("more than one charge in line=" + rowIndex + " with code=" + eventCode);
             }
+            else
+                if (charges.size() > 1) {
+                    throw new BusinessException("more than one charge in line=" + rowIndex + " with code=" + eventCode);
+                }
             pricePlan.setEventCode(eventCode);
-        } else {
+        }
+        else {
             throw new BusinessException("Empty chargeCode in line=" + rowIndex + ", code=" + eventCode);
         }
 
@@ -235,7 +258,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
             seller = sellers.get(0);
             pricePlan.setSeller(seller);
-        } else {
+        }
+        else {
             pricePlan.setSeller(null);
         }
 
@@ -254,7 +278,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
             tradingCountry = countries.get(0);
             pricePlan.setTradingCountry(tradingCountry);
-        } else {
+        }
+        else {
             pricePlan.setTradingCountry(null);
         }
 
@@ -273,19 +298,22 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
             tradingCurrency = currencies.get(0);
             pricePlan.setTradingCurrency(tradingCurrency);
-        } else {
+        }
+        else {
             pricePlan.setTradingCurrency(null);
         }
 
         if (!StringUtils.isBlank(pricePlanCode)) {
             pricePlan.setCode(pricePlanCode);
-        } else {
+        }
+        else {
             throw new BusinessException("Invalid priceplan code in line=" + rowIndex + ", code=" + offerCode);
         }
 
         if (!StringUtils.isBlank(pricePlanDescription)) {
             pricePlan.setDescription(pricePlanDescription);
-        } else {
+        }
+        else {
             pricePlan.setDescription(pricePlanCode);
         }
 
@@ -304,7 +332,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
             offer = offers.get(0);
             pricePlan.setOfferTemplate(offer);
-        } else {
+        }
+        else {
             pricePlan.setOfferTemplate(null);
         }
 
@@ -322,7 +351,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
             calendar = calendars.get(0);
             pricePlan.setValidityCalendar(calendar);
-        } else {
+        }
+        else {
             pricePlan.setValidityCalendar(null);
         }
 
@@ -330,10 +360,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(priority)) {
             try {
                 pricePlan.setPriority(Integer.parseInt(priority));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid priority in line=" + rowIndex + ", priority=" + priority);
             }
-        } else {
+        }
+        else {
             pricePlan.setPriority(1);
         }
 
@@ -341,10 +373,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(amountWOTax)) {
             try {
                 pricePlan.setAmountWithoutTax(new BigDecimal(amountWOTax));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid amount wo tax in line=" + rowIndex + ", amountWOTax=" + amountWOTax);
             }
-        } else {
+        }
+        else {
             throw new BusinessException("Amount wo tax in line=" + rowIndex + " should not be empty");
         }
 
@@ -352,32 +386,38 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(amountWithTax)) {
             try {
                 pricePlan.setAmountWithTax(new BigDecimal(amountWithTax));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid amount wo tax in line=" + rowIndex + ", amountWithTax=" + amountWithTax);
             }
-        } else {
+        }
+        else {
             pricePlan.setAmountWithTax(null);
         }
 
         if (!StringUtils.isBlank(amountWOTaxEL)) {
             pricePlan.setAmountWithoutTaxEL(amountWOTaxEL);
-        } else {
+        }
+        else {
             pricePlan.setAmountWithoutTaxEL(null);
         }
 
         if (!StringUtils.isBlank(amountWithTaxEL)) {
             pricePlan.setAmountWithTaxEL(amountWithTaxEL);
-        } else {
+        }
+        else {
             pricePlan.setAmountWithTaxEL(null);
         }
         // minQuantity
         if (!StringUtils.isBlank(minQuantity)) {
             try {
                 pricePlan.setMinQuantity(new BigDecimal(minQuantity));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid minQuantity in line=" + rowIndex + ", minQuantity=" + minQuantity);
             }
-        } else {
+        }
+        else {
             pricePlan.setMinQuantity(null);
         }
 
@@ -385,10 +425,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(maxQuantity)) {
             try {
                 pricePlan.setMaxQuantity(new BigDecimal(maxSubAge));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid maxQuantity in line=" + rowIndex + ", maxQuantity=" + maxQuantity);
             }
-        } else {
+        }
+        else {
             pricePlan.setMaxQuantity(null);
         }
 
@@ -396,10 +438,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(criteria1)) {
             try {
                 pricePlan.setCriteria1Value(criteria1);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid criteria1 in line=" + rowIndex + ", criteria1=" + criteria1);
             }
-        } else {
+        }
+        else {
             pricePlan.setCriteria1Value(null);
         }
 
@@ -407,10 +451,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(criteria2)) {
             try {
                 pricePlan.setCriteria2Value(criteria2);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid criteria2 in line=" + rowIndex + ", criteria2=" + criteria2);
             }
-        } else {
+        }
+        else {
             pricePlan.setCriteria2Value(null);
         }
 
@@ -418,22 +464,25 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(criteria3)) {
             try {
                 pricePlan.setCriteria3Value(criteria3);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid criteria3 in line=" + rowIndex + ", criteria3=" + criteria3);
             }
-        } else {
+        }
+        else {
             pricePlan.setCriteria3Value(null);
         }
 
         // CriteriaEL
         if (!StringUtils.isBlank(criteriaEL)) {
             try {
-                pricePlan.setCriteriaEL(criteriaEL);
-                ;
-            } catch (Exception e) {
+                pricePlan.setCriteriaEL(criteriaEL);;
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid criteriaEL in line=" + rowIndex + ", criteriaEL=" + criteriaEL);
             }
-        } else {
+        }
+        else {
             pricePlan.setCriteriaEL(null);
         }
 
@@ -441,10 +490,12 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(minSubAge)) {
             try {
                 pricePlan.setMinSubscriptionAgeInMonth(Long.parseLong(minSubAge));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid minSubAge in line=" + rowIndex + ", minSubAge=" + minSubAge);
             }
-        } else {
+        }
+        else {
             pricePlan.setMinSubscriptionAgeInMonth(0L);
         }
 
@@ -452,16 +503,19 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         if (!StringUtils.isBlank(maxSubAge)) {
             try {
                 pricePlan.setMaxSubscriptionAgeInMonth(Long.parseLong(maxSubAge));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new BusinessException("Invalid maxSubAge in line=" + rowIndex + ", maxSubAge=" + maxSubAge);
             }
-        } else {
+        }
+        else {
             pricePlan.setMaxSubscriptionAgeInMonth(9999L);
         }
 
         if (pricePlan.getId() == null) {
             create(pricePlan);
-        } else {
+        }
+        else {
             updateNoCheck(pricePlan);
         }
     }
@@ -473,7 +527,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
         try {
             return (List<PricePlanMatrix>) qb.getQuery(getEntityManager()).getResultList();
-        } catch (NoResultException e) {
+        }
+        catch (NoResultException e) {
             log.warn("failed to find pricePlanMatrix By offerTemplate", e);
             return null;
         }
@@ -493,9 +548,11 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
                     priceplansByOffer.add(pricePlan);
                 }
 
-            } else if (pricePlan.getOfferTemplate() != null && pricePlan.getOfferTemplate().getCode().equals(offerTemplateCode)) {
-                priceplansByOffer.add(pricePlan);
             }
+            else
+                if (pricePlan.getOfferTemplate() != null && pricePlan.getOfferTemplate().getCode().equals(offerTemplateCode)) {
+                    priceplansByOffer.add(pricePlan);
+                }
         }
 
         return priceplansByOffer;
@@ -515,7 +572,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
 
         try {
             return (List<PricePlanMatrix>) qb.getQuery(getEntityManager()).getResultList();
-        } catch (NoResultException e) {
+        }
+        catch (NoResultException e) {
             return null;
         }
     }
@@ -527,7 +585,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
      * @return A list of applicable price plans matching a charge code and ordered by priority
      */
     public List<PricePlanMatrix> getActivePricePlansByChargeCode(String chargeCode) {
-        return getEntityManager().createNamedQuery("PricePlanMatrix.getActivePricePlansByChargeCode", PricePlanMatrix.class).setParameter("chargeCode", chargeCode).getResultList();
+        return getEntityManager().createNamedQuery("PricePlanMatrix.getActivePricePlansByChargeCode", PricePlanMatrix.class)
+                .setParameter("chargeCode", chargeCode).getResultList();
     }
 
     public Long getLastPricePlanSequenceByChargeCode(String chargeCode) {
@@ -536,7 +595,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
         try {
             Long result = (Long) qb.getQuery(getEntityManager()).getSingleResult();
             return result == null ? 0L : result;
-        } catch (NoResultException e) {
+        }
+        catch (NoResultException e) {
             return null;
         }
     }
@@ -549,7 +609,8 @@ public class PricePlanMatrixService extends BusinessService<PricePlanMatrix> {
                 PricePlanMatrix existed = findByCode(entity.getCode());
                 if (existed != null) {
                     throw new BusinessException("Price plan " + entity.getCode() + " is existed!");
-                } else {
+                }
+                else {
                     pricePlanMatrix.setCode(entity.getCode());
                     result = true;
                 }

@@ -28,8 +28,8 @@ public interface ChannelRs extends IBaseRs {
      * @param postData The channel's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(ChannelDto postData);
 
     /**
@@ -38,8 +38,8 @@ public interface ChannelRs extends IBaseRs {
      * @param postData The channel's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(ChannelDto postData);
 
     /**
@@ -58,8 +58,8 @@ public interface ChannelRs extends IBaseRs {
      * @param channelCode The channel's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/")
+    @DELETE
     ActionStatus delete(@QueryParam("channelCode") String channelCode);
 
     /**
@@ -68,8 +68,8 @@ public interface ChannelRs extends IBaseRs {
      * @param postData The channel's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(ChannelDto postData);
 
     /**

@@ -26,9 +26,6 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.ImportInvoiceException;
@@ -40,7 +37,6 @@ import org.meveo.model.billing.BillingAccount;
 import org.meveo.model.billing.BillingRun;
 import org.meveo.model.billing.CategoryInvoiceAgregate;
 import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.InvoiceType;
 import org.meveo.model.billing.SubCategoryInvoiceAgregate;
 import org.meveo.model.order.Order;
 import org.meveo.model.payments.CustomerAccount;
@@ -60,8 +56,8 @@ import org.meveo.service.billing.impl.InvoiceAgregateService;
  * 
  * @author Edward P. Legaspi
  * @author anasseh
- * @author melyoussoufi
- * @lastModifiedVersion 7.3.0
+ * @author Mounir Bahije
+ * @lastModifiedVersion 5.2.1
  */
 @Stateless
 public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> {
@@ -132,48 +128,26 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
 
     /**
      * @param reference invoice reference
-     * @param invoiceType 
      * @return true if recored invoice exist
      */
-    public boolean isRecordedInvoiceExist(String reference, InvoiceType invoiceType) {
-        RecordedInvoice recordedInvoice = getRecordedInvoice(reference,invoiceType);
-        if(recordedInvoice==null) {
-        	return false;
-        }
-        return true;
+    public boolean isRecordedInvoiceExist(String reference) {
+        RecordedInvoice recordedInvoice = getRecordedInvoice(reference);
+        return recordedInvoice != null;
     }
 
     /**
-     * @param invoiceNumber invoice's reference.
-     * @param invoiceType invoice's type.
+     * @param reference invoice's reference.
      * @return instance of RecoredInvoice.
      */
-    public RecordedInvoice getRecordedInvoice(String invoiceNumber, InvoiceType invoiceType){
+    public RecordedInvoice getRecordedInvoice(String reference) {
         RecordedInvoice recordedInvoice = null;
         try {
-            String qlString = "from " + RecordedInvoice.class.getSimpleName() + " where reference =:reference  and invoice.invoiceType=:invoiceType";
-			Query query = getEntityManager().createQuery(qlString).setParameter("reference", invoiceNumber).setParameter("invoiceType", invoiceType);
-			recordedInvoice = (RecordedInvoice) query.getSingleResult();
+            recordedInvoice = (RecordedInvoice) getEntityManager().createQuery("from " + RecordedInvoice.class.getSimpleName() + " where reference =:reference ")
+                .setParameter("reference", reference).getSingleResult();
         } catch (Exception e) {
-        	log.warn("exception trying to get recordedInvoice for reference "+invoiceNumber+": "+e.getMessage());
         }
         return recordedInvoice;
     }
-    
-    /**
-     * @param invoiceNumber invoice's reference.
-     * @return list of RecoredInvoice.
-     */
-	public List<RecordedInvoice> getRecordedInvoice(String invoiceNumber) {
-    	List<RecordedInvoice> recordedInvoices = null;
-        try {
-            String qlString = "from " + RecordedInvoice.class.getSimpleName() + " where reference =:reference";
-            recordedInvoices = (List<RecordedInvoice>)getEntityManager().createQuery(qlString).setParameter("reference", invoiceNumber).getResultList();
-        } catch (Exception e) {
-        	log.warn("exception trying to get recordedInvoice for reference "+invoiceNumber+": "+e.getMessage());
-        }
-        return recordedInvoices;
-	}
 
     /**
      * @param customerAccount customer account
@@ -334,6 +308,9 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
                     occTemplate = invoice.getInvoiceType().getOccTemplateNegative();
                 }
 
+                if (occTemplate == null) {
+                    throw new ImportInvoiceException("Cant find negative OccTemplate");
+                }
             } else {
                 String occTemplateCode = evaluateStringExpression(invoice.getInvoiceType().getOccTemplateCodeEl(), invoice, invoice.getBillingRun());
                 if (!StringUtils.isBlank(occTemplateCode)) {
@@ -342,11 +319,11 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
 
                 if (occTemplate == null) {
                     occTemplate = invoice.getInvoiceType().getOccTemplate();
-                    if (occTemplate == null) {
-                        return;
-                    }
                 }
-                
+
+                if (occTemplate == null) {
+                    throw new ImportInvoiceException("Cant find OccTemplate");
+                }
             }
 
             RecordedInvoice recordedInvoice = createRecordedInvoice(remainingAmountWithoutTaxForRecordedIncoice, remainingAmountWithTaxForRecordedIncoice,
@@ -371,9 +348,8 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
     private <T extends RecordedInvoice> T createRecordedInvoice(BigDecimal amountWithoutTax, BigDecimal amountWithTax, BigDecimal amountTax, BigDecimal netToPay, Invoice invoice,
             OCCTemplate occTemplate, boolean isRecordedIvoince) throws InvoiceExistException, ImportInvoiceException, BusinessException {
 
-        InvoiceType invoiceType = invoice.getInvoiceType();
-		if (isRecordedInvoiceExist((isRecordedIvoince ? "" : "IC_") + invoice.getInvoiceNumber(), invoiceType)) {
-            throw new InvoiceExistException("Invoice number " + invoice.getInvoiceNumber() + " with type "+invoiceType.getCode()+ " already exist");
+        if (isRecordedInvoiceExist((isRecordedIvoince ? "" : "IC_") + invoice.getInvoiceNumber())) {
+            throw new InvoiceExistException("Invoice id " + invoice.getId() + " already exist");
         }
 
         CustomerAccount customerAccount = null;
@@ -399,7 +375,6 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
         }
 
         recordedInvoice.setReference((isRecordedIvoince ? "" : "IC_") + invoice.getInvoiceNumber());
-        recordedInvoice.setInvoice(invoice);
         try {
             customerAccount = billingAccount.getCustomerAccount();
             recordedInvoice.setCustomerAccount(customerAccount);
@@ -425,8 +400,8 @@ public class RecordedInvoiceService extends PersistenceService<RecordedInvoice> 
         }
 
         recordedInvoice.setAccountingCode(occTemplate.getAccountingCode());
-        recordedInvoice.setCode(occTemplate.getCode());
-        recordedInvoice.setDescription(occTemplate.getDescription());
+        recordedInvoice.setOccCode(occTemplate.getCode());
+        recordedInvoice.setOccDescription(occTemplate.getDescription());
         recordedInvoice.setTransactionCategory(occTemplate.getOccCategory());
         recordedInvoice.setAccountCodeClientSide(occTemplate.getAccountCodeClientSide());
 

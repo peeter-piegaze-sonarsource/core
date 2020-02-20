@@ -1,7 +1,5 @@
 package org.meveo.service.custom;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -67,25 +65,10 @@ public class CustomEntityInstanceService extends BusinessService<CustomEntityIns
         	qb.addBooleanCriterion("disabled", !active);
         }
         try {
-            return (List<CustomEntityInstance>) qb.getQuery(getEntityManager()).getResultList();
+            return (List<CustomEntityInstance>) qb.getQuery(getEntityManager()).getSingleResult();
         } catch (NoResultException e) {
             log.warn("No CustomEntityInstances by cetCode {} found", cetCode);
-            return Collections.emptyList();
+            return null;
         }
-    }
-
-    public HashMap<String, Object> customEntityInstanceAsMap(CustomEntityInstance c) {
-        return new HashMap<String, Object>() {{
-            put("id", c.getId());
-            put("code", c.getCode());
-            put("description", c.getDescription());
-
-        }};
-    }
-
-    public HashMap<String, Object> customEntityInstanceAsMapWithCfValues(CustomEntityInstance c) {
-        HashMap<String, Object> map = customEntityInstanceAsMap(c);
-        map.put("cfValues", c.getCfValuesNullSafe());
-        return map;
     }
 }

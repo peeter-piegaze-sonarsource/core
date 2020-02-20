@@ -93,12 +93,4 @@ public interface PaymentScriptInterface extends ScriptInterface {
      */
     void checkMandat(Map<String, Object> methodContext) throws BusinessException;
     
-    /**
-     * get HostedCheckoutUrl.
-     *
-     * @param methodContext the method context
-     * @throws BusinessException the business exception
-     */
-    void getHostedCheckoutUrl(Map<String, Object> methodContext) throws BusinessException;
-    
     }

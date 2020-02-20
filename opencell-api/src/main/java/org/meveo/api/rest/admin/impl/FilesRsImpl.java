@@ -15,8 +15,7 @@ import org.meveo.api.rest.impl.BaseRs;
 /**
  * @author Edward P. Legaspi
  * @author Youssef IZEM
- * @author Abdellatif BARI
- * @lastModifiedVersion 7.3.0
+ * @lastModifiedVersion 5.4
  */
 @RequestScoped
 @Interceptors({ WsRestApiInterceptor.class })
@@ -121,7 +120,7 @@ public class FilesRsImpl extends BaseRs implements FilesRs {
         ActionStatus result = new ActionStatus();
 
         try {
-            filesApi.uploadFile(form.getData(), form.getFilename(), form.getFileFormat());
+            filesApi.uploadFile(form.getData(), form.getFilename());
         } catch (Exception e) {
             processException(e, result);
         }

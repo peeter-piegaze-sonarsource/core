@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +50,6 @@ import org.meveo.model.catalog.WalletTemplate;
  */
 @Entity
 @ObservableEntity
-@Cacheable
 @ExportIdentifier({ "code", "userAccount.code" })
 @Table(name = "billing_wallet", uniqueConstraints = @UniqueConstraint(columnNames = { "code", "user_account_id" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -72,7 +71,7 @@ public class WalletInstance extends BusinessEntity {
     /**
      * User account wallet is associated to
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_account_id")
     private UserAccount userAccount;
 
@@ -107,13 +106,13 @@ public class WalletInstance extends BusinessEntity {
     /**
      * Operations against this wallet
      */
-    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<WalletOperation> operations;
 
     /**
      * Rated transactions against this wallet
      */
-    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<RatedTransaction> ratedTransactions;
 
     /**
@@ -236,12 +235,5 @@ public class WalletInstance extends BusinessEntity {
             return true;
         }
         return (other.getCode().equals(this.code));
-    }
-
-    /**
-     * @return Is this a prepaid wallet instance
-     */
-    public boolean isPrepaid() {
-        return walletTemplate != null;
     }
 }

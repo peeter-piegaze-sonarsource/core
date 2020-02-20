@@ -26,8 +26,6 @@ import java.util.Map;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -75,9 +73,8 @@ import org.meveo.model.finance.RevenueRecognitionRule;
 @Table(name = "cat_charge_template", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "cat_charge_template_seq"), })
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "charge_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class ChargeTemplate extends EnableBusinessCFEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class ChargeTemplate extends EnableBusinessCFEntity {
 
     private static final long serialVersionUID = -6619927605555822610L;
 
@@ -161,20 +158,6 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
     @Column(name = "description_i18n", columnDefinition = "text")
     protected Map<String, String> descriptionI18n;
 
-    /**
-     * Expression to determine if charge applies
-     */
-    @Column(name = "filter_expression", length = 2000)
-    @Size(max = 2000)
-    protected String filterExpression = null;
-
-    /**
-     * Expression to determine if charge matches - for Spark
-     */
-    @Column(name = "filter_el_sp", length = 2000)
-    @Size(max = 2000)
-    private String filterExpressionSpark = null;
-
     // Calculated values
     @Transient
     private boolean roundingValuesComputed;
@@ -184,8 +167,6 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
 
     @Transient
     private int roundingEdrNbDecimal = BaseEntity.NB_DECIMALS;
-
-    public abstract String getChargeType();
 
     public OperationTypeEnum getType() {
         return type;
@@ -279,6 +260,10 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
         this.revenueRecognitionRule = revenueRecognitionRule;
     }
 
+    public String getChargeType() {
+        return null;
+    }
+
     public Map<String, String> getDescriptionI18n() {
         return descriptionI18n;
     }
@@ -298,34 +283,6 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
             descriptionI18n = new HashMap<>();
         }
         return descriptionI18n;
-    }
-
-    /**
-     * @return The EL expression if charge applies
-     */
-    public String getFilterExpression() {
-        return filterExpression;
-    }
-
-    /**
-     * @param filterExpression The EL expression if charge applies
-     */
-    public void setFilterExpression(String filterExpression) {
-        this.filterExpression = filterExpression;
-    }
-
-    /**
-     * @return Expression to determine if charge applies - for Spark
-     */
-    public String getFilterExpressionSpark() {
-        return filterExpressionSpark;
-    }
-
-    /**
-     * @param filterExpressionSpark Expression to determine if charge applies - for Spark
-     */
-    public void setFilterExpressionSpark(String filterExpressionSpark) {
-        this.filterExpressionSpark = filterExpressionSpark;
     }
 
     private void computeRoundingValues() {
@@ -355,5 +312,4 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
         computeRoundingValues(); // See if this can be computed only once upon entity load or upon value change
         return roundingUnityNbDecimal;
     }
-
 }

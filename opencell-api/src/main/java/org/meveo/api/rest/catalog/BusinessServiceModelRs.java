@@ -32,8 +32,8 @@ public interface BusinessServiceModelRs extends IBaseRs {
      * @param postData The business service model's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(BusinessServiceModelDto postData);
 
     /**
@@ -42,8 +42,8 @@ public interface BusinessServiceModelRs extends IBaseRs {
      * @param postData The business service model's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(BusinessServiceModelDto postData);
 
     /**
@@ -52,8 +52,8 @@ public interface BusinessServiceModelRs extends IBaseRs {
      * @param businessServiceModelCode The business service model's code
      * @return A business servie model
      */
-    @GET
     @Path("/")
+    @GET
     GetBusinessServiceModelResponseDto find(@QueryParam("businessServiceModelCode") String businessServiceModelCode);
 
     /**
@@ -62,8 +62,8 @@ public interface BusinessServiceModelRs extends IBaseRs {
      * @param businessServiceModelCode The business service model's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/{businessServiceModelCode}")
+    @DELETE
     ActionStatus remove(@PathParam("businessServiceModelCode") String businessServiceModelCode);
 
     /**
@@ -72,8 +72,8 @@ public interface BusinessServiceModelRs extends IBaseRs {
      * @param postData The business service model's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(BusinessServiceModelDto postData);
 
     /**

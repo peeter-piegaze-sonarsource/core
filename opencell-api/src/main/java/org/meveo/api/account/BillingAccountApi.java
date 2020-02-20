@@ -37,7 +37,6 @@ import org.meveo.model.billing.BillingCycle;
 import org.meveo.model.billing.CounterInstance;
 import org.meveo.model.billing.DiscountPlanInstance;
 import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.SubscriptionTerminationReason;
 import org.meveo.model.billing.TradingCountry;
 import org.meveo.model.billing.TradingLanguage;
@@ -60,7 +59,6 @@ import org.meveo.service.billing.impl.TradingCountryService;
 import org.meveo.service.billing.impl.TradingLanguageService;
 import org.meveo.service.billing.impl.WalletOperationService;
 import org.meveo.service.catalog.impl.DiscountPlanService;
-import org.meveo.service.catalog.impl.InvoiceSubCategoryService;
 import org.meveo.service.communication.impl.EmailTemplateService;
 import org.meveo.service.crm.impl.SubscriptionTerminationReasonService;
 import org.meveo.service.payments.impl.CustomerAccountService;
@@ -119,9 +117,6 @@ public class BillingAccountApi extends AccountEntityApi {
 
     @Inject
     private EmailTemplateService emailTemplateService;
-    
-    @Inject
-    private InvoiceSubCategoryService invoiceSubCategoryService;
 
     public BillingAccount create(BillingAccountDto postData) throws MeveoApiException, BusinessException {
         return create(postData, true);
@@ -179,7 +174,7 @@ public class BillingAccountApi extends AccountEntityApi {
         if (tradingLanguage == null) {
             throw new EntityDoesNotExistsException(TradingLanguage.class, postData.getLanguage());
         }
-        
+
         MailingTypeEnum mailingType = null;
         if (postData.getMailingType() != null) {
             mailingType = MailingTypeEnum.getByLabel(postData.getMailingType());
@@ -193,15 +188,9 @@ public class BillingAccountApi extends AccountEntityApi {
             }
         }
 
+
+
         BillingAccount billingAccount = new BillingAccount();
-        
-        if(postData.getMinimumInvoiceSubCategory() != null) {
-            InvoiceSubCategory minimumInvoiceSubCategory = invoiceSubCategoryService.findByCode(postData.getMinimumInvoiceSubCategory());
-            if (minimumInvoiceSubCategory == null) {
-                throw new EntityDoesNotExistsException(InvoiceSubCategory.class, postData.getMinimumInvoiceSubCategory());
-            }
-            billingAccount.setMinimumInvoiceSubCategory(minimumInvoiceSubCategory);
-        }
         
         if (!StringUtils.isBlank(postData.getPhone())) {
         	postData.getContactInformation().setPhone(postData.getPhone());
@@ -322,13 +311,6 @@ public class BillingAccountApi extends AccountEntityApi {
                 throw new EntityDoesNotExistsException(EmailTemplate.class, postData.getEmailTemplate());
             }
         }
-        
-        if(postData.getMinimumInvoiceSubCategory() != null) {
-            InvoiceSubCategory invoiceSubCategory = invoiceSubCategoryService.findByCode(postData.getMinimumInvoiceSubCategory());
-            if (invoiceSubCategory == null) {
-                throw new EntityDoesNotExistsException(InvoiceSubCategory.class, postData.getMinimumInvoiceSubCategory());
-            }
-        }
 
         if (postData.getCustomerAccount() != null) {
             CustomerAccount customerAccount = customerAccountService.findByCode(postData.getCustomerAccount());
@@ -370,14 +352,6 @@ public class BillingAccountApi extends AccountEntityApi {
                 throw new EntityDoesNotExistsException(TradingLanguage.class, postData.getLanguage());
             }
             billingAccount.setTradingLanguage(tradingLanguage);
-        }
-        
-        if(postData.getMinimumInvoiceSubCategory() != null) {
-            InvoiceSubCategory minimumInvoiceSubCategory = invoiceSubCategoryService.findByCode(postData.getMinimumInvoiceSubCategory());
-            if (minimumInvoiceSubCategory == null) {
-                throw new EntityDoesNotExistsException(InvoiceSubCategory.class, postData.getMinimumInvoiceSubCategory());
-            }
-            billingAccount.setMinimumInvoiceSubCategory(minimumInvoiceSubCategory);
         }
 
         if (postData.getExternalRef1() != null) {

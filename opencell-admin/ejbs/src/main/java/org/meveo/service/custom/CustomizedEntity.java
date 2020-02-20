@@ -15,12 +15,7 @@ public class CustomizedEntity {
     private Long customEntityId;
 
     private String description;
-    
-    public CustomizedEntity(String entityCode, Class entityClass) {
-        this.entityCode = entityCode;
-        this.entityClass = entityClass;
-    }
-    
+
     @SuppressWarnings("rawtypes")
     public CustomizedEntity(Class entityClass) {
         super();

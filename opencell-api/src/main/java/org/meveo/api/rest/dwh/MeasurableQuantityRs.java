@@ -29,8 +29,6 @@ import org.meveo.model.dwh.MeasurementPeriodEnum;
 public interface MeasurableQuantityRs extends IBaseRs {
 
     /**
-     * Create a Measurable quantity.
-     *
      * @param postData posted data to API
      * @return action status.
      */
@@ -52,15 +50,14 @@ public interface MeasurableQuantityRs extends IBaseRs {
      * Get Measurable quantity from a given code.
      * 
      * @param code Measureable quantity's code
-     * @return Measurable Quantity Response data
+     * @return
      */
     @GET
     @Path("/")
     GetMeasurableQuantityResponse find(@QueryParam("code") String code);
 
     /**
-     * Find a Measurable value during a period of date and period
-     *
+     * 
      * @param code code of mesurable value.
      * @param fromDate format yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd
      * @param toDate format yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd
@@ -79,8 +76,8 @@ public interface MeasurableQuantityRs extends IBaseRs {
      * @param code Measurable quantity's code
      * @return action status.
      */
-    @DELETE
     @Path("/{code}")
+    @DELETE
     ActionStatus remove(@PathParam("code") String code);
 
     /**
@@ -88,8 +85,8 @@ public interface MeasurableQuantityRs extends IBaseRs {
      * 
      * @return A list of measurable quantities
      */
-    @GET
     @Path("/list")
+    @GET
     GetListMeasurableQuantityResponse list();
 
     /**

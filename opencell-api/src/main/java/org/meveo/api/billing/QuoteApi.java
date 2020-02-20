@@ -41,7 +41,6 @@ import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
 import org.meveo.model.crm.custom.CustomFieldTypeEnum;
 import org.meveo.model.crm.custom.CustomFieldValue;
-import org.meveo.model.order.Order;
 import org.meveo.model.order.OrderItemActionEnum;
 import org.meveo.model.quote.Quote;
 import org.meveo.model.quote.QuoteItem;
@@ -190,7 +189,9 @@ public class QuoteApi extends BaseApi {
         if (productQuote.getBillingAccount() != null && !productQuote.getBillingAccount().isEmpty()) {
             String billingAccountId = productQuote.getBillingAccount().get(0).getId();
             if (!StringUtils.isEmpty(billingAccountId)) {
-                quoteLevelUserAccount = userAccountService.findByCode(billingAccountId);
+                // quoteLevelUserAccount = userAccountService.findByCode(billingAccountId);
+                quoteLevelUserAccount = (UserAccount) userAccountService.getEntityManager().createNamedQuery("UserAccount.findByCode").setParameter("code", billingAccountId)
+                    .getSingleResult();
                 if (quoteLevelUserAccount == null) {
                     throw new EntityDoesNotExistsException(UserAccount.class, billingAccountId);
                 }
@@ -204,7 +205,8 @@ public class QuoteApi extends BaseApi {
                 String billingAccountId = productQuoteItem.getBillingAccount().get(0).getId();
                 if (!StringUtils.isEmpty(billingAccountId)) {
                     // itemLevelUserAccount = userAccountService.findByCode(billingAccountId);
-                    itemLevelUserAccount = userAccountService.findByCode(billingAccountId);
+                    itemLevelUserAccount = (UserAccount) userAccountService.getEntityManager().createNamedQuery("UserAccount.findByCode").setParameter("code", billingAccountId)
+                        .getSingleResult();
                     if (itemLevelUserAccount == null) {
                         throw new EntityDoesNotExistsException(UserAccount.class, billingAccountId);
                     }
@@ -900,10 +902,6 @@ public class QuoteApi extends BaseApi {
     public void deleteQuote(String quoteId) throws EntityDoesNotExistsException, ActionForbiddenException, BusinessException {
 
         Quote quote = quoteService.findByCode(quoteId);
-        
-        if(quote == null) {
-            throw new EntityDoesNotExistsException(Quote.class, quoteId);
-        }
 
         if (quote.getStatus() == QuoteStatusEnum.IN_PROGRESS || quote.getStatus() == QuoteStatusEnum.PENDING) {
             quoteService.remove(quote);
@@ -1019,14 +1017,6 @@ public class QuoteApi extends BaseApi {
         productOrder.setRequestedStartDate(quote.getFulfillmentStartDate());
         productOrder.setDescription(quote.getDescription());
         productOrder.setOrderItem(new ArrayList<ProductOrderItem>());
-        if(quote.getOrder() != null) {
-        	Order order = quote.getOrder();
-        	productOrder.setMailingType(order.getMailingType() != null ? order.getMailingType().getLabel() : null);
-        	productOrder.setEmailTemplate(order.getEmailTemplate() != null ? order.getEmailTemplate().getCode() : null);
-        	productOrder.setCcedEmails(order.getCcedEmails());
-        	productOrder.setEmail(order.getEmail());
-        	productOrder.setElectronicBilling(order.getElectronicBilling());
-        }
 
         for (QuoteItem quoteItem : quote.getQuoteItems()) {
             ProductQuoteItem productQuoteItem = ProductQuoteItem.deserializeQuoteItem(quoteItem.getSource());

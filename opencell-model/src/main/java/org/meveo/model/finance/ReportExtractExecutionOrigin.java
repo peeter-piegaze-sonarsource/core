@@ -12,6 +12,6 @@ public enum ReportExtractExecutionOrigin {
     API, JOB, GUI;
 
     public String getLabel() {
-        return "enum.ReportExtractExecutionOrigin." + name();
+        return name();
     }
 }

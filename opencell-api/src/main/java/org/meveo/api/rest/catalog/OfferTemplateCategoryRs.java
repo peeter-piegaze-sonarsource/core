@@ -28,8 +28,8 @@ public interface OfferTemplateCategoryRs extends IBaseRs {
      * @param postData The offer template category's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(OfferTemplateCategoryDto postData);
 
     /**
@@ -38,8 +38,8 @@ public interface OfferTemplateCategoryRs extends IBaseRs {
      * @param postData The offer template category's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(OfferTemplateCategoryDto postData);
 
     /**
@@ -48,8 +48,8 @@ public interface OfferTemplateCategoryRs extends IBaseRs {
      * @param offerTemplateCategoryCode The offer template category's code
      * @return Return offerTemplateCategoryCodeDto containing offerTemplateCategoryCode
      */
-    @GET
     @Path("/")
+    @GET
     GetOfferTemplateCategoryResponseDto find(@QueryParam("offerTemplateCategoryCode") String offerTemplateCategoryCode);
 
     /**
@@ -58,8 +58,8 @@ public interface OfferTemplateCategoryRs extends IBaseRs {
      * @param offerTemplateCategoryCode The offer template category's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/")
+    @DELETE
     ActionStatus delete(@QueryParam("offerTemplateCategoryCode") String offerTemplateCategoryCode);
 
     /**
@@ -68,8 +68,8 @@ public interface OfferTemplateCategoryRs extends IBaseRs {
      * @param postData The offer template category's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(OfferTemplateCategoryDto postData);
 
     /**

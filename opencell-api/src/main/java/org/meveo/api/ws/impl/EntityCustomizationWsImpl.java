@@ -432,11 +432,11 @@ public class EntityCustomizationWsImpl extends BaseWs implements EntityCustomiza
     }
 
     @Override
-    public EntityCustomizationResponseDto listELFiltered(String appliesTo, String entityCode, Long entityId) {
+    public EntityCustomizationResponseDto listELFiltered(String appliesTo, String entityCode) {
         EntityCustomizationResponseDto result = new EntityCustomizationResponseDto();
 
         try {
-            result.setEntityCustomization(customEntityTemplateApi.listELFiltered(appliesTo, entityCode, entityId));
+            result.setEntityCustomization(customEntityTemplateApi.listELFiltered(appliesTo, entityCode));
 
         } catch (Exception e) {
             processException(e, result.getActionStatus());

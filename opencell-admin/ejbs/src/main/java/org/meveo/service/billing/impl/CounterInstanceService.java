@@ -48,6 +48,7 @@ import org.meveo.jpa.MeveoJpa;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.CounterValueChangeInfo;
 import org.meveo.model.ICounterEntity;
+import org.meveo.model.IEntity;
 import org.meveo.model.billing.BillingAccount;
 import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.CounterInstance;
@@ -55,16 +56,11 @@ import org.meveo.model.billing.CounterPeriod;
 import org.meveo.model.billing.ServiceInstance;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.billing.UserAccount;
-import org.meveo.model.catalog.Calendar;
-import org.meveo.model.catalog.CounterTemplate;
-import org.meveo.model.catalog.CounterTemplateLevel;
-import org.meveo.model.catalog.CounterTemplateLevelAnnotation;
-import org.meveo.model.catalog.CounterTypeEnum;
+import org.meveo.model.catalog.*;
 import org.meveo.model.notification.Notification;
 import org.meveo.service.base.BusinessService;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.ValueExpressionWrapper;
-import org.meveo.service.catalog.impl.CalendarService;
 
 /**
  * 
@@ -79,12 +75,9 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     @Inject
     @MeveoJpa
     private EntityManagerWrapper emWrapper;
-
+    
     @Inject
     private UserAccountService userAccountService;
-
-    @Inject
-    private CalendarService calendarService;
 
     @Inject
     private BillingAccountService billingAccountService;
@@ -100,7 +93,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
 
     @EJB
     private UsageChargeInstanceService usageChargeInstanceService;
-
+    
     @Inject
     private Event<CounterPeriodEvent> counterPeriodEvent;
 
@@ -135,7 +128,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     /**
      * @param serviceInstance a service instance
      * @param counterTemplate a counter template
-     * @param isVirtual is virtual
+     * @param isVirtual       is virtual
      * @return a counter instance
      * @throws BusinessException
      * @throws NoSuchMethodException
@@ -155,7 +148,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     /**
      * @param serviceInstance a service instance
      * @param counterTemplate a counter template
-     * @param isVirtual is vertual
+     * @param isVirtual       is vertual
      * @return a counter instance
      * @throws BusinessException
      * @throws NoSuchMethodException
@@ -175,7 +168,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     /**
      * @param serviceInstance a service instance
      * @param counterTemplate a counter template
-     * @param isVirtual is vertual
+     * @param isVirtual       is vertual
      * @return a counter instance
      * @throws BusinessException
      * @throws NoSuchMethodException
@@ -191,7 +184,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     /**
      * @param serviceInstance a service instance
      * @param counterTemplate a counter template
-     * @param isVirtual is vertual
+     * @param isVirtual       is vertual
      * @return a counter instance
      * @throws BusinessException
      * @throws NoSuchMethodException
@@ -205,11 +198,11 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
     }
 
     /**
-     * @param service the business service
-     * @param entity the business entity
-     * @param clazz the class of the business entity
+     * @param service         the business service
+     * @param entity          the business entity
+     * @param clazz           the class of the business entity
      * @param counterTemplate the counter template
-     * @param isVirtual is virtual
+     * @param isVirtual       is virtual
      * @return a counter instance
      * @throws BusinessException
      * @throws NoSuchMethodException
@@ -230,7 +223,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             entity.getCounters().put(counterTemplate.getCode(), result);
 
             if (!isVirtual) {
-                service.update((BusinessEntity) entity);
+                service.update((BusinessEntity)entity);
             }
         } else {
             result = entity.getCounters().get(counterTemplate.getCode());
@@ -294,14 +287,11 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             CounterTemplate counterTemplate = counterInstance.getCounterTemplate();
 
             counterPeriod = instantiateCounterPeriod(counterTemplate, chargeDate, initDate, chargeInstance, serviceInstance);
+            counterPeriod.setCounterInstance(counterInstance);
+            counterPeriodService.create(counterPeriod);
 
-            if (counterPeriod != null) {
-                counterPeriod.setCounterInstance(counterInstance);
-                counterPeriodService.create(counterPeriod);
-
-                counterInstance.getCounterPeriods().add(counterPeriod);
-                counterInstance.updateAudit(currentUser);
-            }
+            counterInstance.getCounterPeriods().add(counterPeriod);
+            counterInstance.updateAudit(currentUser);
         }
 
         return counterPeriod;
@@ -318,25 +308,23 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
      * @return a counter period.
      * @throws BusinessException the business exception
      */
-    public CounterPeriod instantiateCounterPeriod(CounterTemplate counterTemplate, Date chargeDate, Date initDate, ChargeInstance chargeInstance, ServiceInstance serviceInstance)
-            throws BusinessException {
+    public CounterPeriod instantiateCounterPeriod(CounterTemplate counterTemplate, Date chargeDate, Date initDate, ChargeInstance chargeInstance, 
+            ServiceInstance serviceInstance) throws BusinessException {
 
         CounterPeriod counterPeriod = new CounterPeriod();
         Calendar cal = counterTemplate.getCalendar();
-        if (!StringUtils.isBlank(counterTemplate.getCalendarCodeEl())) {
-            cal = getCalendarFromEl(counterTemplate.getCalendarCodeEl(), chargeInstance, serviceInstance, chargeInstance.getSubscription());
-        }
         cal.setInitDate(initDate);
         Date startDate = cal.previousCalendarDate(chargeDate);
         if (startDate == null) {
-            log.warn("cannot create counter for the date {} (not in calendar)", chargeDate);
+            log.info("cannot create counter for the date {} (not in calendar)", chargeDate);
             return null;
         }
         Date endDate = cal.nextCalendarDate(startDate);
         BigDecimal initialValue = counterTemplate.getCeiling();
-        log.debug("create counter period from {} to {}", startDate, endDate);
+        log.info("create counter period from {} to {}", startDate, endDate);
         if (!StringUtils.isBlank(counterTemplate.getCeilingExpressionEl()) && chargeInstance != null) {
-            initialValue = evaluateCeilingElExpression(counterTemplate.getCeilingExpressionEl(), chargeInstance, serviceInstance, chargeInstance.getSubscription());
+            initialValue = evaluateCeilingElExpression(counterTemplate.getCeilingExpressionEl(), chargeInstance, serviceInstance,
+                chargeInstance.getSubscription());
         }
         counterPeriod.setPeriodStartDate(startDate);
         counterPeriod.setPeriodEndDate(endDate);
@@ -351,7 +339,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
 
         return counterPeriod;
     }
-
+    
     /**
      * trigger counter period event
      * 
@@ -371,7 +359,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             }
         }
     }
-
+    
     /**
      * trigger counter period event
      * 
@@ -389,15 +377,16 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             }
         }
     }
-
-    private CounterPeriod getCounterPeriodByDate(CounterInstance counterInstance, Date date) throws NoResultException {
+    
+    private CounterPeriod getCounterPeriodByDate(CounterInstance counterInstance, Date date)
+            throws NoResultException {
         Query query = getEntityManager().createNamedQuery("CounterPeriod.findByPeriodDate");
         query.setParameter("counterInstance", counterInstance);
         query.setParameter("date", date, TemporalType.TIMESTAMP);
 
         return (CounterPeriod) query.getSingleResult();
     }
-
+    
     /**
      * Find a counter period for a given date.
      * 
@@ -417,6 +406,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             return null;
         }
     }
+    
 
     /**
      * Find or create a counter period for a given date.
@@ -535,10 +525,11 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
             counterValueInfo = new CounterValueChangeInfo(previousValue, deducedQuantity, counterPeriod.getValue());
 
             if (!isVirtual) {
-                log.debug("Counter period {} was changed {}", counterPeriod.getId(), counterValueInfo);
                 counterPeriod = counterPeriodService.update(counterPeriod);
             }
         }
+
+        log.debug("Counter period {} was changed {}", counterPeriod.getId(), counterValueInfo);
 
         return counterValueInfo;
     }
@@ -548,55 +539,6 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
         QueryBuilder qb = new QueryBuilder(CounterInstance.class, "c");
         qb.addCriterionEntity("counterTemplate", counterTemplate);
         return qb.find(getEntityManager());
-    }
-
-    /**
-     * Gets the calendar from EL
-     *
-     * @param calendarCodeEl the calendar code EL
-     * @param chargeInstance
-     * @param serviceInstance
-     * @param subscription
-     * @return
-     * @throws BusinessException
-     */
-    public Calendar getCalendarFromEl(String calendarCodeEl, ChargeInstance chargeInstance, ServiceInstance serviceInstance, Subscription subscription) throws BusinessException {
-        String calendarCode = evaluateCalendarElExpression(calendarCodeEl, chargeInstance, serviceInstance, subscription);
-        Calendar calendar = calendarService.findByCode(calendarCode);
-        if (calendar == null) {
-            throw new BusinessException("Cant found calendar by code:" + calendarCode);
-        }
-        return calendar;
-    }
-
-    public String evaluateCalendarElExpression(String expression, ChargeInstance chargeInstance, ServiceInstance serviceInstance, Subscription subscription)
-            throws BusinessException {
-
-        String result = null;
-        if (StringUtils.isBlank(expression)) {
-            return result;
-        }
-
-        Map<Object, Object> userMap = new HashMap<Object, Object>();
-        if (expression.indexOf("charge") >= 0 || expression.indexOf("ci") >= 0) {
-            userMap.put("charge", chargeInstance);
-            userMap.put("ci", chargeInstance);
-        }
-        if (expression.indexOf("service") >= 0 || expression.indexOf("serviceInstance") >= 0) {
-            userMap.put("service", serviceInstance);
-            userMap.put("serviceInstance", serviceInstance);
-        }
-        if (expression.indexOf("sub") >= 0) {
-            userMap.put("sub", subscription);
-        }
-
-        Object res = ValueExpressionWrapper.evaluateExpression(expression, userMap, String.class);
-        try {
-            result = (String) res;
-        } catch (Exception e) {
-            throw new BusinessException("Expression " + expression + " do not evaluate to String but " + res);
-        }
-        return result;
     }
 
     public BigDecimal evaluateCeilingElExpression(String expression, ChargeInstance chargeInstance, ServiceInstance serviceInstance, Subscription subscription)
@@ -617,7 +559,7 @@ public class CounterInstanceService extends PersistenceService<CounterInstance> 
         if (expression.indexOf("sub") >= 0) {
             userMap.put("sub", subscription);
         }
-
+        
         BigDecimal result = ValueExpressionWrapper.evaluateExpression(expression, userMap, BigDecimal.class);
         result = result.setScale(chargeInstance.getChargeTemplate().getUnitNbDecimal(), chargeInstance.getChargeTemplate().getRoundingMode().getRoundingMode());
 

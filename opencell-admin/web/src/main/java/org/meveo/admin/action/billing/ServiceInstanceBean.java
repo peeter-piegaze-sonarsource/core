@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.model.DataModel;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,15 +30,11 @@ import org.jboss.seam.international.status.builder.BundleKey;
 import org.meveo.admin.action.BaseBean;
 import org.meveo.admin.action.CustomFieldBean;
 import org.meveo.admin.exception.BusinessException;
-import org.meveo.admin.util.pagination.EntityListDataModelPF;
 import org.meveo.admin.web.interceptor.ActionMethod;
 import org.meveo.commons.utils.ParamBeanFactory;
-import org.meveo.model.billing.CounterInstance;
 import org.meveo.model.billing.InstanceStatusEnum;
 import org.meveo.model.billing.ServiceInstance;
-import org.meveo.model.order.OrderHistory;
 import org.meveo.service.base.local.IPersistenceService;
-import org.meveo.service.billing.impl.CounterInstanceService;
 import org.meveo.service.billing.impl.ServiceInstanceService;
 import org.omnifaces.cdi.Param;
 
@@ -59,19 +54,12 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
     @Inject
     private ServiceInstanceService serviceInstanceService;
 
-    @Inject
-    private CounterInstanceService counterInstanceService;
-
-    private DataModel<OrderHistory> orderHistoryModel;
-
     /**
      * Offer Id passed as a parameter. Used when creating new Service from Offer window, so default offer will be set on newly created service.
      */
     @Inject
     @Param
     private Long offerInstanceId;
-
-    private CounterInstance selectedCounterInstance;
 
     /**
      * Constructor. Invokes super constructor and provides class type of this bean for {@link BaseBean}.
@@ -92,7 +80,6 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
         if (offerInstanceId != null) {
             // entity.setOfferInstance(offerInstanceService.findById(offerInstanceId.get());
         }
-        selectedCounterInstance = entity.getCounters() != null && entity.getCounters().size() > 0 ? entity.getCounters().values().iterator().next() : null;
 
         return entity;
     }
@@ -186,7 +173,7 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
         }
         return null;
     }
-
+    
     public String suspendService() {
         log.info("suspendService serviceInstanceId:" + entity.getId());
 
@@ -206,7 +193,7 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
     }
 
     protected List<String> getFormFieldsToFetch() {
-        return Arrays.asList("chargeInstances");
+        return Arrays.asList("recurringChargeInstances");
     }
 
     @Override
@@ -223,18 +210,18 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
 
         return outcome;
     }
-
+    
     /**
      * Update subscribedTillDate field in service
      */
     public void updateSubscribedTillDate() {
         entity.updateSubscribedTillAndRenewalNotifyDates();
     }
-
+    
     /**
      * Auto update end of engagement date.
      */
-    public void autoUpdateEndOfEngagementDate() {
+    public void  autoUpdateEndOfEngagementDate() {
         entity.autoUpdateEndOfEngagementDate();
     }
 
@@ -258,34 +245,5 @@ public class ServiceInstanceBean extends CustomFieldBean<ServiceInstance> {
         serviceInstanceService.refresh(entity);
         messages.info(new BundleKey("messages", "termination.cancelTerminationSuccessful"));
 
-    }
-
-    public CounterInstance getSelectedCounterInstance() {
-        if (entity == null) {
-            initEntity();
-        }
-        return selectedCounterInstance;
-    }
-
-    public void setSelectedCounterInstance(CounterInstance selectedCounterInstance) {
-        if (selectedCounterInstance != null) {
-            this.selectedCounterInstance = counterInstanceService.refreshOrRetrieve(selectedCounterInstance);
-        } else {
-            this.selectedCounterInstance = null;
-        }
-    }
-
-    /**
-     * Get a data model for order history information
-     * 
-     * @return Data model for order history information
-     */
-    public DataModel<OrderHistory> getOrderHistoryModel() {
-
-        if (orderHistoryModel == null) {
-            orderHistoryModel = new EntityListDataModelPF<OrderHistory>(entity.getOrderHistories());
-        }
-
-        return orderHistoryModel;
     }
 }

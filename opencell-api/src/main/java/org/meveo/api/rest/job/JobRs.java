@@ -61,8 +61,8 @@ public interface JobRs extends IBaseRs {
      * @param postData The job instance's data
      * @return request processing status
      */
-    @POST
     @Path("/create")
+    @POST
     ActionStatus create(JobInstanceDto postData);
 
     /**
@@ -71,8 +71,8 @@ public interface JobRs extends IBaseRs {
      * @param postData The job instance's data
      * @return request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(JobInstanceDto postData);
 
     /**
@@ -128,8 +128,8 @@ public interface JobRs extends IBaseRs {
      * @param postData The timer entity's data
      * @return request processing status
      */
-    @POST
     @Path("/timer/")
+    @POST
     ActionStatus createTimer(TimerEntityDto postData);
 
     /**
@@ -138,8 +138,8 @@ public interface JobRs extends IBaseRs {
      * @param postData The timer entity's data
      * @return request processing status
      */
-    @PUT
     @Path("/timer/")
+    @PUT
     ActionStatus updateTimer(TimerEntityDto postData);
 
     /**
@@ -148,8 +148,8 @@ public interface JobRs extends IBaseRs {
      * @param postData The timer entity's data
      * @return request processing status
      */
-    @POST
     @Path("/timer/createOrUpdate/")
+    @POST
     ActionStatus createOrUpdateTimer(TimerEntityDto postData);
 
     /**

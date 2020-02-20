@@ -22,7 +22,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -41,31 +40,11 @@ public abstract class BusinessCFEntity extends BusinessEntity implements ICustom
 
     /**
      * Unique identifier UUID
-     * 
-     * Initializing uuid field value like this "private String uuid = UUID.randomUUID().toString();"
-     * is leading to performances issues and threads blocking ...
-     * 
-     *   Indeed,  if initialized then this method UUID.randomUUID() will be invoked for each instantiation of BusinessCFEntity's subclasses
-     *   e.g Subscription & ServiceInstaces, and some times this will be fore free and not needed.
-     *   
-     *   => E.g : During services searching Entities (Subscription for example) from database, once the results are found 
-     *            a new BusinessCFEntity instances will be created to set these results and the initialized value of uuid 
-     *            will be overridden by the value coming from DB ..
      */
     @Column(name = "uuid", nullable = false, updatable = false, length = 60)
     @Size(max = 60)
     @NotNull
-    private String uuid;
-    
-    /**
-     * setting uuid if null
-     */
-    @PrePersist
-    public void setUUIDIfNull() {
-    	if (uuid == null) {
-    		uuid = UUID.randomUUID().toString();
-    	}
-    }
+    protected String uuid = UUID.randomUUID().toString();
 
     /**
      * Custom field values in JSON format
@@ -83,7 +62,6 @@ public abstract class BusinessCFEntity extends BusinessEntity implements ICustom
 
     @Override
     public String getUuid() {
-    	setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
         return uuid;
     }
 

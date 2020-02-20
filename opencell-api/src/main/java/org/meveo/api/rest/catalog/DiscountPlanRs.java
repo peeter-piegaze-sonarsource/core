@@ -29,8 +29,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * @param postData The discount plan's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(DiscountPlanDto postData);
 
     /**
@@ -39,8 +39,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * @param postData The discount plan's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(DiscountPlanDto postData);
 
     /**
@@ -49,8 +49,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * @param discountPlanCode The discount plan's code
      * @return Return discount plan
      */
-    @GET
     @Path("/")
+    @GET
     GetDiscountPlanResponseDto find(@QueryParam("discountPlanCode") String discountPlanCode);
 
     /**
@@ -59,8 +59,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * @param discountPlanCode The discount plan's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/")
+    @DELETE
     ActionStatus remove(@QueryParam("discountPlanCode") String discountPlanCode);
 
     /**
@@ -69,8 +69,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * @param postData The discount plan's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(DiscountPlanDto postData);
 
     /**
@@ -78,8 +78,8 @@ public interface DiscountPlanRs extends IBaseRs {
      * 
      * @return A list of discount plans
      */
-    @GET
     @Path("/list")
+    @GET
     GetDiscountPlansResponseDto list();
 
     /**

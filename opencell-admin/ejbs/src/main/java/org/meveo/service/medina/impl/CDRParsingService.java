@@ -1,45 +1,38 @@
 package org.meveo.service.medina.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.Singleton;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.parse.csv.CDR;
-import org.meveo.admin.parse.csv.CdrParser;
-import org.meveo.admin.parse.csv.MEVEOCdrParser;
+import org.meveo.admin.parse.csv.CdrParserProducer;
 import org.meveo.event.qualifier.RejectedCDR;
-import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.BaseEntity;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.mediation.Access;
 import org.meveo.model.rating.EDR;
+import org.meveo.model.rating.EDRStatusEnum;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.billing.impl.EdrService;
 
 /**
  * Takes care of parsing and converting CDRS to EDR records
- * 
  * @lastModifiedVersion willBeSetLater
  * 
  * @author Andrius Karpavicius
  */
-@Stateless
+@Singleton
 public class CDRParsingService extends PersistenceService<EDR> {
+
+    private CSVCDRParser cdrParser;
 
     @Inject
     private EdrService edrService;
@@ -52,40 +45,27 @@ public class CDRParsingService extends PersistenceService<EDR> {
     private Event<Serializable> rejectededCdrEventProducer;
 
     @Inject
-    private BeanManager beanManager;
+    private CdrParserProducer cdrParserProducer;
 
     /**
-     * The default parser.
+     * Indicates that CDR came via API
      */
-    @Inject
-    private MEVEOCdrParser meveoCdrParser;
+    public static final String CDR_ORIGIN_API = "API";
 
     /**
-     * Source of CDR record
+     * Indicates that CDR was read from a file
      */
-    public enum CDR_ORIGIN_ENUM {
-        /**
-         * Indicates that CDR came via API
-         */
-        API,
-        /**
-         * Indicates that CDR was read from a file
-         */
-        JOB
-    }
+    public static final String CDR_ORIGIN_JOB = "JOB";
 
     /**
      * Initiate CDR file processing from a file
      * 
-     * @param cdrFile CDR file to process
-     * @return CDR csv file parser
+     * @param CDRFile CDR file to process
      * @throws BusinessException General business exception
-     * @throws FileNotFoundException File was not found exception
      */
-    public CSVCDRParser getCDRParser(File cdrFile) throws BusinessException, FileNotFoundException {
-        CSVCDRParser cdrParser = getParser();
-        cdrParser.init(cdrFile);
-        return cdrParser;
+    public void init(File CDRFile) throws BusinessException {
+        cdrParser = cdrParserProducer.getParser();
+        cdrParser.init(CDRFile);
     }
 
     /**
@@ -93,55 +73,44 @@ public class CDRParsingService extends PersistenceService<EDR> {
      * 
      * @param username Username
      * @param ip Ip address
-     * @return CDR csv file parser
      * @throws BusinessException General business exception
      */
-    public CSVCDRParser getCDRParser(String username, String ip) throws BusinessException {
-        CSVCDRParser cdrParser = getParser();
+    public void initByApi(String username, String ip) throws BusinessException {
+        cdrParser = cdrParserProducer.getParser();
         cdrParser.initByApi(username, ip);
-        return cdrParser;
     }
 
     /**
-     * Creates the edr.
-     *
-     * @throws CDRParsingException the CDR parsing exception
-     * @throws BusinessException the business exception
+     * Get a source of CDR record
+     * 
+     * @param origin Origin of CDR record
+     * @return A source of CDR record
      */
-    @JpaAmpNewTx
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void createEdrs(CDR cdr) throws CDRParsingException, BusinessException {
-        List<EDR> edrs = getEDRList(cdr);
-        if (edrs != null && edrs.size() > 0) {
-            for (EDR edr : edrs) {
-                createEdr(edr);
-            }
-        }
+    public String getOriginBatch(String origin) {
+        return cdrParser.getOriginBatch().get(origin);
     }
 
-    /**
-     * Creates the edr.
-     *
-     * @param edr the edr
-     * @throws BusinessException the business exception
+    /*
+     * public void resetAccessPointCache(Access access) { List<Access> accesses = null; if (MeveoCacheContainerProvider.getAccessCache().containsKey(access.getAccessUserId())) {
+     * accesses = MeveoCacheContainerProvider.getAccessCache().get(access.getAccessUserId()); boolean found = false; for (Access cachedAccess : accesses) { if
+     * ((access.getSubscription().getId() != null && access.getSubscription().getId() .equals(cachedAccess.getSubscription().getId())) || (cachedAccess.getSubscription().getCode()
+     * != null && cachedAccess.getSubscription() .getCode().equals(access.getSubscription().getCode()))) { cachedAccess.setStartDate(access.getStartDate());
+     * cachedAccess.setEndDate(access.getEndDate()); found = true; break; } } if (!found) { accesses.add(access); } } else { accesses = new ArrayList<Access>();
+     * accesses.add(access); MeveoCacheContainerProvider.getAccessCache().put(access.getAccessUserId(), accesses); } }
      */
-    @JpaAmpNewTx
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void createEdr(EDR edr) throws BusinessException {
-        edrService.create(edr);
-    }
 
     /**
      * Convert a single CDR line to a list of EDRs
      * 
-     * @param cdr CDR to convert
+     * @param line Line to convert
+     * @param origin Source of CDR record
      * @return A list of EDRs
      * @throws CDRParsingException Any parsing exception
      */
-    public List<EDR> getEDRList(CDR cdr) throws CDRParsingException {
-
+    public List<EDR> getEDRList(String line, String origin) throws CDRParsingException {
+        List<EDR> result = new ArrayList<EDR>();
+        CDR cdr = cdrParser.getCDR(line, origin);
         deduplicate(cdr);
-        List<EDR> edrs = new ArrayList<EDR>();
         List<Access> accessPoints = accessPointLookup(cdr);
 
         boolean foundMatchingAccess = false;
@@ -151,7 +120,7 @@ public class CDRParsingService extends PersistenceService<EDR> {
                     && (accessPoint.getEndDate() == null || accessPoint.getEndDate().getTime() > cdr.getTimestamp().getTime())) {
                 foundMatchingAccess = true;
                 EDR edr = cdrToEdr(cdr, accessPoint, null);
-                edrs.add(edr);
+                result.add(edr);
             }
         }
 
@@ -159,19 +128,21 @@ public class CDRParsingService extends PersistenceService<EDR> {
             throw new InvalidAccessException(cdr);
         }
 
-        return edrs;
+        return result;
     }
 
     /**
-     * Convert a CDR to an EDR record, linked to a subscription
+     * Convert a single CDR line to an EDR record, linked to a subscription
      * 
-     * @param cdr CDR record
+     * @param line CDR line
+     * @param origin Source of CDR record
      * @param subscription Subscription to link to
      * @return An EDR record
      * @throws CDRParsingException Any parsing exception
      */
-    public EDR getEDRForVirtual(CDR cdr, Subscription subscription) throws CDRParsingException {
+    public EDR getEDRForVirtual(String line, String origin, Subscription subscription) throws CDRParsingException {
 
+        CDR cdr = cdrParser.getCDR(line, origin);
         EDR edr = cdrToEdr(cdr, null, subscription);
 
         return edr;
@@ -210,7 +181,8 @@ public class CDRParsingService extends PersistenceService<EDR> {
         edr.setDecimalParam3(cdr.getDecimalParam3() != null ? cdr.getDecimalParam3().setScale(BaseEntity.NB_DECIMALS, RoundingMode.HALF_UP) : null);
         edr.setDecimalParam4(cdr.getDecimalParam4() != null ? cdr.getDecimalParam4().setScale(BaseEntity.NB_DECIMALS, RoundingMode.HALF_UP) : null);
         edr.setDecimalParam5(cdr.getDecimalParam5() != null ? cdr.getDecimalParam5().setScale(BaseEntity.NB_DECIMALS, RoundingMode.HALF_UP) : null);
-        edr.setQuantity(cdr.getQuantity().setScale(BaseEntity.NB_DECIMALS, RoundingMode.HALF_UP));       
+        edr.setQuantity(cdr.getQuantity().setScale(BaseEntity.NB_DECIMALS, RoundingMode.HALF_UP));
+        edr.setStatus(EDRStatusEnum.OPEN);
         edr.setExtraParameter(cdr.getExtraParam());
 
         if (accessPoint != null) {
@@ -230,7 +202,7 @@ public class CDRParsingService extends PersistenceService<EDR> {
      * @throws DuplicateException CDR was processed already
      */
     private void deduplicate(CDR cdr) throws DuplicateException {
-        if (edrService.isDuplicateFound(cdr.getOriginBatch(), cdr.getOriginRecord())) {
+        if (edrService.isDuplicateFound(cdrParser.getOriginBatch().get(CDR_ORIGIN_JOB), cdr.getOriginRecord())) {
             throw new DuplicateException(cdr);
         }
     }
@@ -243,8 +215,8 @@ public class CDRParsingService extends PersistenceService<EDR> {
      * @throws InvalidAccessException No Access point was matched
      */
     private List<Access> accessPointLookup(CDR cdr) throws InvalidAccessException {
-
-        List<Access> accesses = accessService.getActiveAccessByUserId(cdr.getAccess_id());
+        String accessUserId = cdrParser.getAccessUserId(cdr);
+        List<Access> accesses = accessService.getActiveAccessByUserId(accessUserId);
         if (accesses == null || accesses.size() == 0) {
             rejectededCdrEventProducer.fire(cdr);
             throw new InvalidAccessException(cdr);
@@ -252,27 +224,23 @@ public class CDRParsingService extends PersistenceService<EDR> {
         return accesses;
     }
 
-    @SuppressWarnings({ "unchecked", "serial" })
-    private CSVCDRParser getParser() throws BusinessException {
-        Set<Bean<?>> parsers = beanManager.getBeans(CSVCDRParser.class, new AnnotationLiteral<CdrParser>() {
-        });
+    /**
+     * Construct a line from an original CDR line plus a failure reason
+     * 
+     * @param cdr CDR
+     * @param reason Failure reason to append
+     * @return A CDR line
+     */
+    public String getCDRLine(CDR cdr, String reason) {
+        return cdrParser.getCDRLine(cdr, reason);
+    }
 
-        if (parsers.size() > 1) {
-            log.error("Multiple custom csv parsers encountered.");
-            throw new BusinessException("Multiple custom csv parsers encountered.");
-
-        } else if (parsers.size() == 1) {
-            Bean<CSVCDRParser> bean = (Bean<CSVCDRParser>) parsers.toArray()[0];
-            log.debug("Found custom cdr parser={}", bean.getBeanClass());
-            try {
-                CSVCDRParser parser = (CSVCDRParser) bean.getBeanClass().newInstance();
-                return parser;
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new BusinessException("Cannot instantiate custom cdr parser class=" + bean.getBeanClass().getName() + ".");
-            }
-        } else {
-            log.debug("Use default cdr parser={}", meveoCdrParser.getClass());
-            return meveoCdrParser;
-        }
+    /**
+     * Get a CDR parser implementation
+     * 
+     * @return CDR parser implementation
+     */
+    public CSVCDRParser getCdrParser() {
+        return cdrParser;
     }
 }

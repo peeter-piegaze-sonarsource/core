@@ -228,7 +228,7 @@
 
                                                 
                                                 
-                                    <hftl:formField label="#{messages['name.title']}" field="name" childField="title" valueLabelField="descriptionI18n" valueLabelField2="descriptionNotNull" required="false"
+                                    <hftl:formField label="#{messages['name.title']}" field="name" childField="title" valueLabelField="descriptionI18n" required="false"
                                         listBean="#{titleBean}" listenerUpdate=":parentTab:formId:childTab:userNamePanel" styleClass="clearLeft"/>
 
                                     <h:panelGroup id="userNamePanel" layout="block">
@@ -246,17 +246,16 @@
                                  	<hftl:formField label="#{messages[appProvider.entreprise?'billingAccount.minimumAmountWithoutTaxEl':'billingAccount.minimumAmountWithTaxEl']}" field="minimumAmountEl" textArea="true" rows="1" maxlength="2000" componentWidth="50" />
                                  	<hftl:formField label="#{messages['billingAccount.minimumLabelElSpark']}" field="minimumLabelElSpark" textArea="true" rows="1" maxlength="2000" componentWidth="50" newLine="true"/>   
                                  	<hftl:formField label="#{messages[appProvider.entreprise?'billingAccount.minimumAmountWithoutTaxElSpark':'billingAccount.minimumAmountWithTaxElSpark']}" field="minimumAmountElSpark" textArea="true" rows="1" maxlength="2000" componentWidth="50" />
-                                 	<hftl:formField label="#{messages['billingAccount.minimumInvoiceSubCategory']}" id="invoiceSubCategoryId" field="minimumInvoiceSubCategory" valueLabelField="code" listBean="#{invoiceSubCategoryBean}" /> 
                                  	
                                     <hftl:formField label="#{messages['customer.vatNo']}" field="vatNo" />
 									<hftl:formField label="#{messages['customer.registrationNo']}" field="registrationNo" />
 							     </p:fieldset>		
 							     
-							     <p:fieldset legend="#{messages['invoice.discounts']}" styleClass="clearLeft" rendered="#{not empty billingAccountBean.entity.id}">
+							     <p:fieldset legend="#{messages['invoice.discounts']}" styleClass="clearLeft">
 							     	<p:outputPanel id="discountPanel">
 						     			<p:messages id="discountMessages"></p:messages>
 								     	<h:panelGroup styleClass="form-panel" style="margin-bottom: 10px; width: 100%">
-								     		<hftl:formField displayOneLine="false" listenerUpdate="instantiateDiscountPlanDialog" field="discountPlan" valueLabelField="code" listBean="#{discountPlanBean}" disabled="#{billingAccountBean.entity.id == null}"/>
+								     		<hftl:formField displayOneLine="false" listenerUpdate="instantiateDiscountPlanDialog" field="discountPlan" valueLabelField="code" listBean="#{discountPlanBean}" />
 								     		<p:commandButton style="float: left" rendered="#{billingAccountBean.edit}" value="#{messages['button.instanciateButton']}" type="button" onclick="PF('dlg_instantiateDiscountPlanDialog').show()" disabled="#{billingAccountBean.entity.id == null}"></p:commandButton>
 								     	</h:panelGroup>
 								     	<p:dataTable id="datatable_discountPlanInstances" var="entity" lazy="false" paginator="true" resizableColumns="true" reflow="true"
@@ -335,8 +334,7 @@
                                                 <hftl:formField label="#{messages['address.address3']}" field="address" childField="address3" />
                                                 <hftl:formField label="#{messages['address.zipCode']}" field="address" childField="zipCode" newLine="true" />
                                                 <hftl:formField label="#{messages['address.city']}" field="address" childField="city" />
-												<hftl:formField label="#{messages['address.state']}" id="state" field="address" childField="state" popup="false" />
-												<hftl:formField id="countryPanel" label="#{messages['address.country']}" fkToEntity="false" field="address" childField="country" valueLabelField="description" listBean="#{countryBean}"/>
+                                                <hftl:formField id="countryPanel" label="#{messages['address.country']}" fkToEntity="false" field="address" childField="country" valueLabelField="description" listBean="#{countryBean}"/>
 												
 											</p:fieldset>
 
@@ -547,9 +545,9 @@
 			header="#{messages['discountPlan.instantiation']}"
 			widgetVar="dlg_instantiateDiscountPlanDialog" modal="true" appendTo="@(body)" closeOnEscape="true"
 			width="600">
-          <hftl:formPanel  formId="formDPI" edit="true" backingBean="#{billingAccountBean}" entity="#{billingAccountBean.entity.discountPlan}" styleClass="formPanel" showFormButtons="false">
 			<p:tabView>
 				<p:tab title="#{messages['commons.information']}">
+		            <hftl:formPanel  formId="formDPI" edit="true" backingBean="#{billingAccountBean}" entity="#{billingAccountBean.entity.discountPlan}" styleClass="formPanel" showFormButtons="false">
 						<hftl:formField label="#{messages['discountPlanItem.startDate']}" field="startDate" />
 						<hftl:formField label="#{messages['discountPlanItem.endDate']}" field="endDate" />
 						<hftl:formField label="#{messages['discountPlanItem.defaultDuration']}" field="defaultDuration" />
@@ -561,10 +559,10 @@
 							</p:commandButton>
 							<p:commandButton immediate="true" onclick="PF('dlg_instantiateDiscountPlanDialog').hide()" type="button" value="#{messages['management.close']}" />
 						</p:panel>
+					</hftl:formPanel>
 				</p:tab>
-				<hftl:customFields prefix="dpInstance" backingBean="#{discountPlanInstanceBean}" messagesId=":formDPI:messages" />
+				<hftl:customFields prefix="dpInstance" backingBean="#{discountPlanInstanceBean}" messagesId="formDPI:messages" />
 			</p:tabView>
-		  </hftl:formPanel>
 		</p:dialog>
 	</ui:define>
 </ui:composition>

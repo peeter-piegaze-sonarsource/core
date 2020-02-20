@@ -18,16 +18,26 @@
  */
 package org.meveo.admin.exception;
 
-import org.meveo.model.rating.EDRRejectReasonEnum;
-
 /**
  * @author akadid abdelmounaim
  * @lastModifiedVersion 5.1
  */
-public class WalletNotFoundException extends RatingException {
+public class WalletNotFoundException extends BusinessException {
     private static final long serialVersionUID = 1L;
 
     public WalletNotFoundException() {
-        super(EDRRejectReasonEnum.WALLET_NOT_FOUND);
+        super();
+    }
+
+    public WalletNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public WalletNotFoundException(String message) {
+        super(message);
+    }
+
+    public WalletNotFoundException(Throwable cause) {
+        super(cause);
     }
 }

@@ -33,8 +33,8 @@ public interface CounterTemplateRs extends IBaseRs {
      * @param postData counter template
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(CounterTemplateDto postData);
 
     /**
@@ -43,8 +43,8 @@ public interface CounterTemplateRs extends IBaseRs {
      * @param postData counter template
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(CounterTemplateDto postData);
 
     /**
@@ -53,8 +53,8 @@ public interface CounterTemplateRs extends IBaseRs {
      * @param counterTemplateCode counter temlate's code
      * @return counter template
      */
-    @GET
     @Path("/")
+    @GET
     GetCounterTemplateResponseDto find(@QueryParam("counterTemplateCode") String counterTemplateCode);
 
     /**
@@ -63,18 +63,16 @@ public interface CounterTemplateRs extends IBaseRs {
      * @param counterTemplateCode counter template's code
      * @return action status
      */
-    @DELETE
     @Path("/{counterTemplateCode}")
+    @DELETE
     ActionStatus remove(@PathParam("counterTemplateCode") String counterTemplateCode);
 
     /**
-     * Create or update a counter Template.
-     *
      * @param postData counter template
      * @return action status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(CounterTemplateDto postData);
 
     /**

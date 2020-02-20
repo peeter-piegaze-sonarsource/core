@@ -34,8 +34,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param postData The price plan matrix's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(PricePlanMatrixDto postData);
 
     /**
@@ -44,8 +44,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param postData The price plan matrix's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(PricePlanMatrixDto postData);
 
     /**
@@ -54,8 +54,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param pricePlanCode The price plan's code
      * @return pricePlanMatrixDto Returns pricePlanMatrixDto containing pricePlan
      */
+    @Path("/")
     @GET
-    @Path("/")    
     GetPricePlanResponseDto find(@QueryParam("pricePlanCode") String pricePlanCode);
 
     /**
@@ -64,8 +64,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param pricePlanCode The price plan's code
      * @return Request processing status
      */
+    @Path("/{pricePlanCode}")
     @DELETE
-    @Path("/{pricePlanCode}")    
     ActionStatus remove(@PathParam("pricePlanCode") String pricePlanCode);
 
     /**
@@ -74,8 +74,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param eventCode The charge's code linked to price plan.
      * @return Return pricePlanMatrixes
      */
-    @GET
     @Path("/list")
+    @GET
     PricePlanMatrixesResponseDto listPricePlanByEventCode(@QueryParam("eventCode") String eventCode);
 
     /**
@@ -84,8 +84,8 @@ public interface PricePlanRs extends IBaseRs {
      * @param postData The price plan matrix's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(PricePlanMatrixDto postData);
 
     /**

@@ -28,6 +28,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.AuditableEntity;
 import org.meveo.model.ExportIdentifier;
+import org.meveo.model.IReferenceEntity;
 
 /**
  * Language entity
@@ -46,14 +47,14 @@ public class Language extends AuditableEntity {
     /**
      * Language 3 letter code
      */
-    @Column(name = "language_code", length = 3, unique = true, nullable=false)
+    @Column(name = "language_code", length = 3)
     @Size(max = 3)
     private String languageCode;
 
     /**
      * Description
      */
-    @Column(name = "description_en", length = 100, unique = true, nullable=false)
+    @Column(name = "description_en", length = 100)
     @Size(max = 100)
     private String descriptionEn;
 

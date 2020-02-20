@@ -18,24 +18,19 @@
  */
 package org.meveo.service.script;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
 import org.infinispan.Cache;
@@ -44,8 +39,9 @@ import org.meveo.admin.exception.ElementNotFoundException;
 import org.meveo.admin.exception.InvalidScriptException;
 import org.meveo.cache.CacheKeyStr;
 import org.meveo.cache.CompiledScript;
+import org.meveo.commons.compilation.CompilationException;
+import org.meveo.commons.compilation.JavaSourceCompiler;
 import org.meveo.commons.utils.EjbUtils;
-import org.meveo.commons.utils.FileUtils;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.scripts.ScriptInstanceError;
 import org.meveo.model.scripts.ScriptSourceTypeEnum;
@@ -69,16 +65,14 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      */
     @Resource(lookup = "java:jboss/infinispan/cache/opencell/opencell-script-cache")
     private Cache<CacheKeyStr, CompiledScript> compiledScripts;
-
-    private CharSequenceCompiler<ScriptInterface> compiler;
-
-    private String classpath = "";
+    
+    @Inject
+    private JavaSourceCompiler sourceCompiler;
 
     /**
      * Compile all scriptInstances.
      */
     public void compileAll() {
-
         List<ScriptInstance> scriptInstances = findByType(ScriptSourceTypeEnum.JAVA);
         compile(scriptInstances);
     }
@@ -116,55 +110,13 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
     public List<ScriptInstance> findByType(ScriptSourceTypeEnum type) {
         List<ScriptInstance> result = new ArrayList<ScriptInstance>();
         try {
-            result = (List<ScriptInstance>) getEntityManager().createNamedQuery("CustomScript.getScriptInstanceByTypeActive").setParameter("sourceTypeEnum", type).getResultList();
+            result = (List<ScriptInstance>) getEntityManager().createNamedQuery("CustomScript.getScriptInstanceByTypeActive")
+                                                              .setParameter("sourceTypeEnum", type)
+                                                              .getResultList();
         } catch (NoResultException e) {
 
         }
         return result;
-    }
-
-    /**
-     * Construct classpath for script compilation
-     * 
-     * @throws IOException
-     */
-    private void constructClassPath() throws IOException {
-
-        if (classpath.length() == 0) {
-
-            // Check if deploying an exploded archive or a compressed file
-            String thisClassfile = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-
-            File realFile = new File(thisClassfile);
-
-            // Was deployed as exploded archive
-            if (realFile.exists()) {
-                File deploymentDir = realFile.getParentFile();
-                for (File file : deploymentDir.listFiles()) {
-                    if (file.getName().endsWith(".jar")) {
-                        classpath += file.getCanonicalPath() + File.pathSeparator;
-                    }
-                }
-
-                // War was deployed as compressed archive
-            } else {
-
-                org.jboss.vfs.VirtualFile vFile = org.jboss.vfs.VFS.getChild(thisClassfile);
-                realFile = new File(org.jboss.vfs.VFSUtils.getPhysicalURI(vFile).getPath());
-
-                File deploymentDir = realFile.getParentFile().getParentFile();
-
-                for (File physicalLibDir : deploymentDir.listFiles()) {
-                    if (physicalLibDir.isDirectory()) {
-                        for (File f : FileUtils.listFiles(physicalLibDir, "jar", "*")) {
-                            classpath += f.getCanonicalPath() + File.pathSeparator;
-                        }
-                    }
-                }
-            }
-        }
-        log.info("compileAll classpath={}", classpath);
-
     }
 
     /**
@@ -174,8 +126,6 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      */
     protected void compile(List<ScriptInstance> scripts) {
         try {
-
-            constructClassPath();
 
             for (ScriptInstance script : scripts) {
                 compileScript(script, false);
@@ -196,7 +146,6 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
         } else {
             compileScript(script, false);
         }
-        // detach(script);
     }
 
     /**
@@ -208,14 +157,17 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      */
     public void compileScript(ScriptInstance script, boolean testCompile) {
 
-        List<ScriptInstanceError> scriptErrors = compileScript(script.getCode(), script.getSourceTypeEnum(), script.getScript(), script.isActive(), script.isReuse(), testCompile);
+        List<ScriptInstanceError> scriptErrors = compileScript(script.getCode(), script.getSourceTypeEnum(), 
+                                                               script.getScript(), script.isActive(), 
+                                                               script.isReuse(), testCompile);
 
         script.setError(scriptErrors != null && !scriptErrors.isEmpty());
         script.setScriptErrors(scriptErrors);
     }
 
     /**
-     * Compile script. DOES NOT update script entity status. Successfully compiled script will be instantiated and added to a compiled script cache. Optionally Script.init() method
+     * Compile script. DOES NOT update script entity status. 
+     * Successfully compiled script will be instantiated and added to a compiled script cache. Optionally Script.init() method
      * is called during script instantiation if requested so.
      * 
      * Script is not cached if disabled or in test compilation mode.
@@ -229,46 +181,48 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      * 
      * @return A list of compilation errors if not compiled
      */
-    private List<ScriptInstanceError> compileScript(String scriptCode, ScriptSourceTypeEnum sourceType, String sourceCode, boolean isActive, boolean initialize,
-            boolean testCompile) {
-
-        log.debug("Compile script {}", scriptCode);
+    private List<ScriptInstanceError> compileScript(String scriptCode, ScriptSourceTypeEnum sourceType, String sourceCode,
+                                                    boolean isActive, boolean initialize, boolean testCompile) {
 
         try {
             if (!testCompile) {
                 clearCompiledScripts(scriptCode);
             }
 
-            // For now no need to check source type if (sourceType==ScriptSourceTypeEnum.JAVA){
+            log.debug("Compile Script [{}]", scriptCode);
+
 
             Class<ScriptInterface> compiledScript = compileJavaSource(sourceCode);
+            
+            log.debug("Congratulation script [{}] is compiled !!!!!", scriptCode);
 
             if (!testCompile && isActive) {
-
                 CacheKeyStr cacheKey = new CacheKeyStr(currentUser.getProviderCode(), EjbUtils.getCurrentClusterNode() + "_" + scriptCode);
 
                 ScriptInterface scriptInstance = compiledScript.newInstance();
+                
+                log.debug("Congratulation Script [{}] instancied", scriptCode);
+                
                 if (initialize) {
-                    log.debug("Will initialize script {}", scriptCode);
                     try {
                         scriptInstance.init(null);
                     } catch (Exception e) {
                         log.warn("Failed to initialize script for a cached script instance", e);
                     }
                 }
-                compiledScripts.put(cacheKey, new CompiledScript(compiledScript, scriptInstance));
 
-                log.debug("Compiled script {} added to compiled interface map", scriptCode);
+                compiledScripts.put(cacheKey, new CompiledScript(compiledScript, scriptInstance));
             }
 
             return null;
 
-        } catch (CharSequenceCompilerException e) {
+        } catch (CompilationException e) {
             log.error("Failed to compile script {}. Compilation errors:", scriptCode);
 
             List<ScriptInstanceError> scriptErrors = new ArrayList<>();
 
-            List<Diagnostic<? extends JavaFileObject>> diagnosticList = e.getDiagnostics().getDiagnostics();
+            List<Diagnostic<? extends JavaFileObject>> diagnosticList = e.getDiagnostic().getDiagnostics();
+
             for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticList) {
                 if ("ERROR".equals(diagnostic.getKind().name())) {
                     ScriptInstanceError scriptInstanceError = new ScriptInstanceError();
@@ -276,13 +230,13 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
                     scriptInstanceError.setLineNumber(diagnostic.getLineNumber());
                     scriptInstanceError.setColumnNumber(diagnostic.getColumnNumber());
                     scriptInstanceError.setSourceFile(diagnostic.getSource().toString());
-                    // scriptInstanceError.setScript(scriptInstance);
                     scriptErrors.add(scriptInstanceError);
-                    // scriptInstanceErrorService.create(scriptInstanceError, scriptInstance.getAuditable().getCreator());
-                    log.warn("{} script {} location {}:{}: {}", diagnostic.getKind().name(), scriptCode, diagnostic.getLineNumber(), diagnostic.getColumnNumber(),
-                        diagnostic.getMessage(Locale.getDefault()));
+                    log.warn("{} script {} location {}:{}: {}", diagnostic.getKind().name(), 
+                             scriptCode, diagnostic.getLineNumber(), diagnostic.getColumnNumber(),
+                             diagnostic.getMessage(Locale.getDefault()));
                 }
             }
+
             return scriptErrors;
 
         } catch (Exception e) {
@@ -291,7 +245,6 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
             ScriptInstanceError scriptInstanceError = new ScriptInstanceError();
             scriptInstanceError.setMessage(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
             scriptErrors.add(scriptInstanceError);
-
             return scriptErrors;
         }
     }
@@ -303,60 +256,10 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      * @return Compiled class instance
      * @throws CharSequenceCompilerException char sequence compiler exception.
      */
-    public Class<ScriptInterface> compileJavaSource(String javaSrc) throws CharSequenceCompilerException {
-
-        supplementClassPathWithMissingImports(javaSrc);
-
-        String fullClassName = ScriptUtils.getFullClassname(javaSrc);
-
-        log.trace("Compile JAVA script {} with classpath {}", fullClassName, classpath);
-
-        compiler = new CharSequenceCompiler<ScriptInterface>(this.getClass().getClassLoader(), Arrays.asList(new String[] { "-cp", classpath }));
-        final DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<JavaFileObject>();
-        Class<ScriptInterface> compiledScript = compiler.compile(fullClassName, javaSrc, errs, new Class<?>[] { ScriptInterface.class });
-        return compiledScript;
+    public Class<ScriptInterface> compileJavaSource(String javaSrc) throws CompilationException {
+        return sourceCompiler.compile(javaSrc);
     }
 
-    /**
-     * Supplement classpath with classes needed for the particular script compilation. Solves issue when classes server as jboss modules are referenced in script. E.g.
-     * prg.slf4j.Logger
-     * 
-     * @param javaSrc Java source to compile
-     */
-    @SuppressWarnings("rawtypes")
-    private void supplementClassPathWithMissingImports(String javaSrc) {
-
-        String regex = "import (.*?);";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(javaSrc);
-        while (matcher.find()) {
-            String className = matcher.group(1);
-            try {
-                if ((!className.startsWith("java") || className.startsWith("javax.persistence")) && !className.startsWith("org.meveo")) {
-                    Class clazz = Class.forName(className);
-                    try {
-                        String location = clazz.getProtectionDomain().getCodeSource().getLocation().getFile();
-                        if (location.startsWith("file:")) {
-                            location = location.substring(5);
-                        }
-                        if (location.endsWith("!/")) {
-                            location = location.substring(0, location.length() - 2);
-                        }
-
-                        if (!classpath.contains(location)) {
-                            classpath += File.pathSeparator + location;
-                        }
-
-                    } catch (Exception e) {
-                        log.warn("Failed to find location for class {}", className);
-                    }
-                }
-            } catch (Exception e) {
-                log.warn("Failed to find location for class {}", className);
-            }
-        }
-
-    }
 
     /**
      * Compile the script class for a given script code if it is not compile yet.
@@ -374,7 +277,8 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
     }
 
     /**
-     * Compile the script class for a given script code if it is not compile yet and return its instance. NOTE: Will return the SAME (cached) script class instance for subsequent
+     * Compile the script class for a given script code if it is not compile yet and return its instance. NOTE: 
+     * Will return the SAME (cached) script class instance for subsequent
      * calls. If you need a new instance of a class, use getScriptInterfaceWCompile() and instantiate class yourself.
      * 
      * @param scriptCode Script code
@@ -383,9 +287,7 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
      * @throws ElementNotFoundException Script not found
      */
     public ScriptInterface getScriptInstanceWCompile(String scriptCode) throws ElementNotFoundException, InvalidScriptException {
-
         CompiledScript compiledScript = getOrCompileScript(scriptCode);
-
         return compiledScript.getScriptInstance();
     }
 
@@ -421,6 +323,7 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
             throw new ElementNotFoundException(scriptCode, "ScriptInstance");
         }
 
+        log.debug("ScriptInstance with {} found and instanciated", scriptCode);
         return compiledScript;
     }
 
@@ -456,4 +359,5 @@ public class ScriptCompilerService extends BusinessService<ScriptInstance> {
             compiledScripts.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).remove(elem);
         }
     }
+    
 }

@@ -31,8 +31,8 @@ public interface InvoiceSequenceRs extends IBaseRs {
      * @param invoiceSequenceDto invoice Sequence to be created
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(InvoiceSequenceDto invoiceSequenceDto);
 
     /**
@@ -41,8 +41,8 @@ public interface InvoiceSequenceRs extends IBaseRs {
      * @param invoiceSequenceDto invoice Sequence to be updated
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(InvoiceSequenceDto invoiceSequenceDto);
 
     /**
@@ -51,8 +51,8 @@ public interface InvoiceSequenceRs extends IBaseRs {
      * @param invoiceSequenceCode invoice type's code
      * @return invoice sequence
      */
-    @GET
     @Path("/")
+    @GET
     GetInvoiceSequenceResponse find(@QueryParam("invoiceSequenceCode") String invoiceSequenceCode);
 
     /**
@@ -61,8 +61,8 @@ public interface InvoiceSequenceRs extends IBaseRs {
      * @param invoiceSequenceDto The invoiceSequence's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(InvoiceSequenceDto invoiceSequenceDto);
 
     /**
@@ -70,7 +70,7 @@ public interface InvoiceSequenceRs extends IBaseRs {
      * 
      * @return A list of invoiceSequence
      */
-    @GET
     @Path("/list")
+    @GET
     GetInvoiceSequencesResponse list();
 }

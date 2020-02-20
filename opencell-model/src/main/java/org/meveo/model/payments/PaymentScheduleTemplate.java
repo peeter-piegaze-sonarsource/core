@@ -22,7 +22,6 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.EnableBusinessCFEntity;
-import org.meveo.model.ISearchable;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.InvoiceType;
 import org.meveo.model.catalog.Calendar;
@@ -42,7 +41,7 @@ import org.meveo.model.scripts.ScriptInstance;
 @Table(name = "ar_payment_schedule_tmpl")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "ar_payment_schedule_tmpl_seq"), })
-public class PaymentScheduleTemplate extends EnableBusinessCFEntity implements ISearchable {
+public class PaymentScheduleTemplate extends EnableBusinessCFEntity {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 612388141736383814L;

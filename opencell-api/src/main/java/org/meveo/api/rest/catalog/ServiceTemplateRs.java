@@ -39,8 +39,8 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param postData The service template's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(ServiceTemplateDto postData);
 
     /**
@@ -49,8 +49,8 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param postData The service template's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(ServiceTemplateDto postData);
 
     /**
@@ -60,8 +60,8 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param inheritCF Should inherited custom fields be retrieved. Defaults to INHERIT_NO_MERGE.
      * @return Return serviceTemplate
      */
-    @GET
     @Path("/")
+    @GET
     GetServiceTemplateResponseDto find(@QueryParam("serviceTemplateCode") String serviceTemplateCode,
             @DefaultValue("INHERIT_NO_MERGE") @QueryParam("inheritCF") CustomFieldInheritanceEnum inheritCF);
 
@@ -71,8 +71,8 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param serviceTemplateCode The service template's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/{serviceTemplateCode}")
+    @DELETE
     ActionStatus remove(@PathParam("serviceTemplateCode") String serviceTemplateCode);
 
     /**
@@ -81,8 +81,8 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param postData The service template's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(ServiceTemplateDto postData);
 
     /**
@@ -111,7 +111,7 @@ public interface ServiceTemplateRs extends IBaseRs {
      * @param pagingAndFiltering PagingAndFiltering config.
      * @return Return serviceTemplate list
      */
-    @GET
     @Path("/list")
+    @GET
     GetListServiceTemplateResponseDto list(PagingAndFiltering pagingAndFiltering);
 }

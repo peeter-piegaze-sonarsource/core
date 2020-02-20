@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.meveo.commons.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author melyoussoufi
@@ -15,8 +17,9 @@ import org.meveo.commons.utils.StringUtils;
  *
  */
 public abstract class ScriptUtils {
-	
-	/**
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScriptUtils.class);
+
+    /**
      * Check full class name is existed class path or not.
      * 
      * @param fullClassName full class name
@@ -26,11 +29,12 @@ public abstract class ScriptUtils {
         try {
             Class.forName(fullClassName);
             return true;
-        } catch (ClassNotFoundException ex) {
+        }
+        catch (ClassNotFoundException ex) {
             return false;
         }
     }
-    
+
     /**
      * Find the package name in a source java text.
      * 
@@ -48,11 +52,22 @@ public abstract class ScriptUtils {
      * @return Class name
      */
     public static String getClassName(String src) {
+
         String className = StringUtils.patternMacher("public class (.*) extends", src);
-        if (className == null) {
-            className = StringUtils.patternMacher("public class (.*) implements", src);
+
+        if (className != null) {
+            int pos = className.indexOf('<');
+
+            if (pos != -1) {
+                className = className.substring(0, pos);
+            }
+
+            className = className.trim();
+            LOGGER.warn("Compile class {}", className);
+            return className;
         }
-        return className != null ? className.trim() : null;
+
+        return null;
     }
 
     /**
@@ -66,7 +81,7 @@ public abstract class ScriptUtils {
         String className = getClassName(script);
         return (packageName != null ? packageName.trim() + "." : "") + className;
     }
-    
+
     /**
      * Parse parameters encoded in URL like style param=value&amp;param=value.
      * 
@@ -83,7 +98,8 @@ public abstract class ScriptUtils {
                 String[] paramValueSplit = paramValue.split("=");
                 if (paramValueSplit.length == 2) {
                     parameters.put(paramValueSplit[0], paramValueSplit[1]);
-                } else {
+                }
+                else {
                     parameters.put(paramValueSplit[0], null);
                 }
             }

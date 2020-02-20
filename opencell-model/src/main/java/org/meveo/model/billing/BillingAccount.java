@@ -47,16 +47,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
-import org.meveo.model.AccountEntity;
-import org.meveo.model.BusinessEntity;
-import org.meveo.model.CustomFieldEntity;
-import org.meveo.model.ExportIdentifier;
-import org.meveo.model.IBillableEntity;
-import org.meveo.model.ICounterEntity;
-import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.IDiscountable;
-import org.meveo.model.IWFEntity;
-import org.meveo.model.WorkflowedEntity;
+import org.meveo.model.*;
 import org.meveo.model.catalog.DiscountPlan;
 import org.meveo.model.communication.email.EmailTemplate;
 import org.meveo.model.communication.email.MailingTypeEnum;
@@ -64,7 +55,7 @@ import org.meveo.model.payments.CustomerAccount;
 
 /**
  * Billing account
- *
+ * 
  * @author Edward P. Legaspi
  * @author Khalid HORRI
  * @author Abdellatif BARI
@@ -76,11 +67,8 @@ import org.meveo.model.payments.CustomerAccount;
 @ExportIdentifier({ "code" })
 @Table(name = "billing_billing_account")
 @DiscriminatorValue(value = "ACCT_BA")
-@NamedQueries({ @NamedQuery(name = "BillingAccount.listIdsByBillingRunId", query = "SELECT b.id FROM BillingAccount b where b.billingRun.id=:billingRunId order by b.id"),
-        @NamedQuery(name = "BillingAccount.listByBillingRun", query = "select b from BillingAccount b where b.billingRun.id=:billingRunId order by b.id"),
-        @NamedQuery(name = "BillingAccount.PreInv", query = "SELECT b FROM BillingAccount b left join fetch b.customerAccount ca left join fetch ca.paymentMethods where b.billingRun.id=:billingRunId"),
-        @NamedQuery(name = "BillingAccount.getMimimumRTUsed", query = "select ba.minimumAmountEl from BillingAccount ba where ba.minimumAmountEl is not null"),
-})
+@NamedQueries({ @NamedQuery(name = "BillingAccount.listIdsByBillingRunId", query = "SELECT b.id FROM BillingAccount b where b.billingRun.id=:billingRunId"),
+        @NamedQuery(name = "BillingAccount.PreInv", query = "SELECT b FROM BillingAccount b left join fetch b.customerAccount ca left join fetch ca.paymentMethods where b.billingRun.id=:billingRunId") })
 public class BillingAccount extends AccountEntity implements IBillableEntity, IWFEntity, IDiscountable, ICounterEntity {
 
     public static final String ACCOUNT_TYPE = ((DiscriminatorValue) BillingAccount.class.getAnnotation(DiscriminatorValue.class)).value();
@@ -226,6 +214,12 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
     @JoinColumn(name = "termin_reason_id")
     private SubscriptionTerminationReason terminationReason;
 
+    /**
+     * A list of rated transactions
+     */
+    @OneToMany(mappedBy = "billingAccount", fetch = FetchType.LAZY)
+    private List<RatedTransaction> ratedTransactions;
+
     // TODO : Add orphanRemoval annotation.
     // @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     // key is the counter template code
@@ -269,11 +263,6 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
     @Column(name = "minimum_label_el_sp", length = 2000)
     @Size(max = 2000)
     private String minimumLabelElSpark;
-    
-    /** Corresponding invoice subcategory */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "minimum_invoice_sub_category_id")
-    private InvoiceSubCategory minimumInvoiceSubCategory;
 
     /**
      * A list of rated transactions
@@ -330,12 +319,6 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
     @Column(name = "cced_emails", length = 2000)
     @Size(max = 2000)
     private String ccedEmails;
-
-    /**
-     * A flag to indicate that account is exonerated from taxes
-     */
-    @Transient
-    private Boolean exoneratedFromtaxes;
 
     public BillingAccount() {
         accountType = ACCOUNT_TYPE;
@@ -504,6 +487,14 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
         this.brAmountWithTax = brAmountWithTax;
     }
 
+    public List<RatedTransaction> getRatedTransactions() {
+        return ratedTransactions;
+    }
+
+    public void setRatedTransactions(List<RatedTransaction> ratedTransactions) {
+        this.ratedTransactions = ratedTransactions;
+    }
+
     public Map<String, CounterInstance> getCounters() {
         return counters;
     }
@@ -604,8 +595,8 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
     public void anonymize(String code) {
         super.anonymize(code);
         if (isNotEmpty(this.usersAccounts)) {
-            this.usersAccounts.forEach(ua -> ua.anonymize(code));
-        }
+			this.usersAccounts.forEach(ua -> ua.anonymize(code));
+		}
     }
 
     public void setMinRatedTransactions(List<RatedTransaction> ratedTransactions) {
@@ -671,7 +662,7 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Gets Email Template.
-     *
+     * 
      * @return Email Template.
      */
     public EmailTemplate getEmailTemplate() {
@@ -680,7 +671,7 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Sets Email template.
-     *
+     * 
      * @param emailTemplate the Email template.
      */
     public void setEmailTemplate(EmailTemplate emailTemplate) {
@@ -689,7 +680,7 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Gets Mailing Type.
-     *
+     * 
      * @return Mailing Type.
      */
     public MailingTypeEnum getMailingType() {
@@ -698,7 +689,7 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Sets Mailing Type
-     *
+     * 
      * @param mailingType mailing type
      */
     public void setMailingType(MailingTypeEnum mailingType) {
@@ -707,7 +698,7 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Gets cc Emails
-     *
+     * 
      * @return CC emails
      */
     public String getCcedEmails() {
@@ -716,38 +707,10 @@ public class BillingAccount extends AccountEntity implements IBillableEntity, IW
 
     /**
      * Sets cc Emails
-     *
+     * 
      * @param ccedEmails Cc Emails
      */
     public void setCcedEmails(String ccedEmails) {
         this.ccedEmails = ccedEmails;
-    }
-
-    /**
-     * @return A flag to indicate that account is exonerated from taxes
-     */
-    public Boolean isExoneratedFromtaxes() {
-        return exoneratedFromtaxes;
-    }
-
-    /**
-     * @param exoneratedFromtaxes A flag to indicate that account is exonerated from taxes
-     */
-    public void setExoneratedFromtaxes(Boolean exoneratedFromtaxes) {
-        this.exoneratedFromtaxes = exoneratedFromtaxes;
-    }
-
-    /**
-     * @return the minimumInvoiceSubCategory
-     */
-    public InvoiceSubCategory getMinimumInvoiceSubCategory() {
-        return minimumInvoiceSubCategory;
-    }
-
-    /**
-     * @param minimumInvoiceSubCategory the minimumInvoiceSubCategory to set
-     */
-    public void setMinimumInvoiceSubCategory(InvoiceSubCategory minimumInvoiceSubCategory) {
-        this.minimumInvoiceSubCategory = minimumInvoiceSubCategory;
     }
 }

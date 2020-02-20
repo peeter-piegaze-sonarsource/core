@@ -28,7 +28,6 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
-import org.meveo.model.ISearchable;
 import org.meveo.model.billing.AccountingCode;
 
 /**
@@ -43,7 +42,7 @@ import org.meveo.model.billing.AccountingCode;
 @Table(name = "crm_customer_category", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "crm_customer_category_seq"), })
-public class CustomerCategory extends BusinessCFEntity implements ISearchable {
+public class CustomerCategory extends BusinessCFEntity {
 
     private static final long serialVersionUID = 1L;
 

@@ -34,8 +34,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return Request processing status
      */
     @POST
-    @Path("/") 
-    ActionStatus create(BusinessAccountModelDto postData);
+    @Path("/") ActionStatus create(BusinessAccountModelDto postData);
 
     /**
      * Update an existing business account model.
@@ -44,8 +43,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return Request processing status
      */
     @PUT
-    @Path("/") 
-    ActionStatus update(BusinessAccountModelDto postData);
+    @Path("/") ActionStatus update(BusinessAccountModelDto postData);
 
     /**
      * Search for a business account model.
@@ -54,8 +52,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return business account model response.
      */
     @GET
-    @Path("/") 
-    BusinessAccountModelResponseDto find(@QueryParam("businessAccountModelCode") String bamCode);
+    @Path("/") BusinessAccountModelResponseDto find(@QueryParam("businessAccountModelCode") String bamCode);
 
     /**
      * Remove business account model with a given business account model code.
@@ -64,8 +61,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return Request processing status
      */
     @DELETE
-    @Path("/{businessAccountModelCode}") 
-    ActionStatus remove(@PathParam("businessAccountModelCode") String bamCode);
+    @Path("/{businessAccountModelCode}") ActionStatus remove(@PathParam("businessAccountModelCode") String bamCode);
 
     /**
      * Return meveo's modules.
@@ -73,8 +69,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return meveo module response
      */
     @GET
-    @Path("/list")
-    MeveoModuleDtosResponse list();
+    @Path("/list") MeveoModuleDtosResponse list();
 
     
     /**
@@ -84,8 +79,7 @@ public interface BusinessAccountModelRs extends IBaseRs {
      * @return Request processing status
      */
     @PUT
-    @Path("/install") 
-    ActionStatus install(BusinessAccountModelDto moduleDto);
+    @Path("/install") ActionStatus install(BusinessAccountModelDto moduleDto);
 
     /**
      * Find parent entities based on account hierarchy code.

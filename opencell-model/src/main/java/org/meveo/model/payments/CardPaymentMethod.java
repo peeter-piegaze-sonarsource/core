@@ -13,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.shared.DateUtils;
@@ -36,18 +37,21 @@ public class CardPaymentMethod extends PaymentMethod {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "card_type")
+    @NotNull
     private CreditCardTypeEnum cardType;
 
     /**
      * Owner as printed on the card
      */
     @Column(name = "owner")
+    @NotNull
     private String owner;
 
     /**
      * Expiration month
      */
     @Column(name = "month_expiration")
+    @NotNull
     @Min(1)
     @Max(12)
     private Integer monthExpiration;
@@ -56,6 +60,7 @@ public class CardPaymentMethod extends PaymentMethod {
      * Expiration year
      */
     @Column(name = "year_expiration")
+    @NotNull
     @Min(0)
     @Max(99)
     private Integer yearExpiration;
@@ -64,6 +69,7 @@ public class CardPaymentMethod extends PaymentMethod {
      * Card number last 4 digits
      */
     @Column(name = "card_number")
+    @NotNull
     private String hiddenCardNumber;
 
     /**
@@ -183,11 +189,7 @@ public class CardPaymentMethod extends PaymentMethod {
     }
 
     public String getExpirationMonthAndYear() {
-        if(monthExpiration != null && yearExpiration != null) {
-            return (monthExpiration != null && monthExpiration < 10 ? "0" : "") + monthExpiration + "/" + yearExpiration;
-        }
-        
-        return "";
+        return (monthExpiration != null && monthExpiration < 10 ? "0" : "") + monthExpiration + "/" + yearExpiration;
     }
 
     @Override
@@ -226,12 +228,10 @@ public class CardPaymentMethod extends PaymentMethod {
      * @return True is expiration date is beyond a given date
      */
     public boolean isValidForDate(Date date) {
-        if(yearExpiration != null && monthExpiration != null) {
-            int year = new Integer(DateUtils.getYearFromDate(date).toString().substring(2, 4));
-            int month = DateUtils.getMonthFromDate(new Date());
-            return yearExpiration.intValue() > year || (yearExpiration.intValue() == year && monthExpiration >= month);
-        }
-        return true;
+
+        int year = new Integer(DateUtils.getYearFromDate(date).toString().substring(2, 4));
+        int month = DateUtils.getMonthFromDate(new Date());
+        return yearExpiration.intValue() > year || (yearExpiration.intValue() == year && monthExpiration >= month);
     }
 
     @Override

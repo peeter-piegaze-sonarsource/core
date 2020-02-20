@@ -18,18 +18,26 @@
  */
 package org.meveo.admin.exception;
 
-import org.meveo.model.rating.EDRRejectReasonEnum;
-
 /**
- * No tax was matched during rating
- * 
  * @author akadid abdelmounaim
  * @lastModifiedVersion 5.1
  */
-public class NoTaxException extends RatingException {
+public class NoTaxException extends BusinessException {
     private static final long serialVersionUID = 1L;
 
     public NoTaxException() {
-        super(EDRRejectReasonEnum.NO_TAX);
+        super();
+    }
+
+    public NoTaxException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NoTaxException(String message) {
+        super(message);
+    }
+
+    public NoTaxException(Throwable cause) {
+        super(cause);
     }
 }

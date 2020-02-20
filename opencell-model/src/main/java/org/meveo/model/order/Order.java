@@ -16,8 +16,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,12 +33,9 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.IBillableEntity;
-import org.meveo.model.ISearchable;
 import org.meveo.model.IWFEntity;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.WorkflowedEntity;
-import org.meveo.model.audit.AuditChangeTypeEnum;
-import org.meveo.model.audit.AuditTarget;
 import org.meveo.model.billing.BillingCycle;
 import org.meveo.model.billing.BillingRun;
 import org.meveo.model.billing.Invoice;
@@ -69,8 +64,7 @@ import org.meveo.model.shared.Address;
 @Table(name = "ord_order", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "ord_order_seq"), })
-@NamedQueries({ @NamedQuery(name = "Order.listByBillingRun", query = "select o from Order o where o.billingRun.id=:billingRunId order by o.id") })
-public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntity, ISearchable {
+public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntity {
 
     private static final long serialVersionUID = -9060067698650286828L;
 
@@ -157,7 +151,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20, nullable = false)
     @NotNull
-    @AuditTarget(type = AuditChangeTypeEnum.STATUS, history = true, notif = true)
     private OrderStatusEnum status = OrderStatusEnum.IN_CREATION;
 
     /**
@@ -543,7 +536,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Gets Email Template.
-     * 
      * @return Email Template.
      */
     public EmailTemplate getEmailTemplate() {
@@ -552,7 +544,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Sets Email template.
-     * 
      * @param emailTemplate the Email template.
      */
     public void setEmailTemplate(EmailTemplate emailTemplate) {
@@ -561,7 +552,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Gets Mailing Type.
-     * 
      * @return Mailing Type.
      */
     public MailingTypeEnum getMailingType() {
@@ -570,7 +560,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Sets Mailing Type
-     * 
      * @param mailingType mailing type
      */
     public void setMailingType(MailingTypeEnum mailingType) {
@@ -579,7 +568,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Gets cc Emails
-     * 
      * @return CC emails
      */
     public String getCcedEmails() {
@@ -588,7 +576,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Sets cc Emails
-     * 
      * @param ccedEmails Cc Emails
      */
     public void setCcedEmails(String ccedEmails) {
@@ -597,7 +584,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Gets Email address.
-     * 
      * @return The Email address
      */
     public String getEmail() {
@@ -606,7 +592,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Sets Email
-     * 
      * @param email the Email address
      */
     public void setEmail(String email) {
@@ -615,7 +600,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Check id electronic billing is enabled.
-     * 
      * @return True if enabled, false else
      */
     public boolean getElectronicBilling() {
@@ -624,7 +608,6 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
 
     /**
      * Sets the electronic billing
-     * 
      * @param electronicBilling True or False
      */
     public void setElectronicBilling(boolean electronicBilling) {

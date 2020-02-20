@@ -30,8 +30,8 @@ public interface BillingCycleRs extends IBaseRs {
      * @param postData billing cycle dto
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     public ActionStatus create(BillingCycleDto postData);
 
     /**
@@ -40,8 +40,8 @@ public interface BillingCycleRs extends IBaseRs {
      * @param postData billing cycle
      * @return actioon result
      */
-    @PUT
     @Path("/")
+    @PUT
     public ActionStatus update(BillingCycleDto postData);
 
     /**
@@ -50,8 +50,8 @@ public interface BillingCycleRs extends IBaseRs {
      * @param billingCycleCode The billing cycle's code
      * @return billing cycle if exists
      */
-    @GET
     @Path("/")
+    @GET
     public GetBillingCycleResponse find(@QueryParam("billingCycleCode") String billingCycleCode);
 
     /**
@@ -60,8 +60,8 @@ public interface BillingCycleRs extends IBaseRs {
      * @param billingCycleCode The billing cycle's code
      * @return action result
      */
-    @DELETE
     @Path("/{billingCycleCode}")
+    @DELETE
     public ActionStatus remove(@PathParam("billingCycleCode") String billingCycleCode);
 
     /**

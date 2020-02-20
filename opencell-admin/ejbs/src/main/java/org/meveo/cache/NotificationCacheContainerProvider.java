@@ -1,5 +1,18 @@
 package org.meveo.cache;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.infinispan.Cache;
 import org.infinispan.context.Flag;
 import org.meveo.commons.utils.ParamBean;
@@ -19,29 +32,14 @@ import org.meveo.security.MeveoUser;
 import org.meveo.service.notification.GenericNotificationService;
 import org.slf4j.Logger;
 
-import javax.annotation.Resource;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Provides cache related services (loading, update) for event notification related operations
  * 
  * @author Andrius Karpavicius
  * @author Wassim Drira
  * @author Abdellatif BARI
- * @author Mounir BAHIJE
  * @lastModifiedVersion 7.0
- *
+ * 
  */
 @Stateless
 public class NotificationCacheContainerProvider implements Serializable { // CacheContainerProvider, Serializable {
@@ -62,7 +60,7 @@ public class NotificationCacheContainerProvider implements Serializable { // Cac
      * Contains association between event type, entity class and notifications. Key format: &lt;eventTypeFilter&gt;-&lt;entity class&gt;
      */
     @Resource(lookup = "java:jboss/infinispan/cache/opencell/opencell-notification-cache")
-    private Cache<CacheKeyStr, Set<Notification>> eventNotificationCache;
+    private Cache<CacheKeyStr, List<Notification>> eventNotificationCache;
 
     @Inject
     @CurrentUser
@@ -129,13 +127,13 @@ public class NotificationCacheContainerProvider implements Serializable { // Cac
 
         try {
 
-            Set<Notification> notificationsOld = eventNotificationCache.getAdvancedCache().withFlags(Flag.FORCE_WRITE_LOCK).get(cacheKey);
+            List<Notification> notificationsOld = eventNotificationCache.getAdvancedCache().withFlags(Flag.FORCE_WRITE_LOCK).get(cacheKey);
 
-            Set<Notification> notifications = new HashSet<Notification>();
-            notifications.add(notif);
+            List<Notification> notifications = new ArrayList<Notification>();
             if (notificationsOld != null) {
                 notifications.addAll(notificationsOld);
             }
+            notifications.add(notif);
             eventNotificationCache.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).put(cacheKey, notifications);
 
         } catch (Exception e) {
@@ -158,10 +156,10 @@ public class NotificationCacheContainerProvider implements Serializable { // Cac
 
         log.trace("Removing notification {} from notification cache under key {}", notif.getId(), cacheKey);
 
-        Set<Notification> notifsOld = eventNotificationCache.getAdvancedCache().withFlags(Flag.FORCE_WRITE_LOCK).get(cacheKey);
+        List<Notification> notifsOld = eventNotificationCache.getAdvancedCache().withFlags(Flag.FORCE_WRITE_LOCK).get(cacheKey);
 
         if (notifsOld != null && !notifsOld.isEmpty()) {
-            Set<Notification> notifs = new HashSet<>(notifsOld);
+            List<Notification> notifs = new ArrayList<>(notifsOld);
             boolean removed = notifs.remove(notif);
             if (removed) {
                 // Remove cached value altogether if no value are left in the list
@@ -296,7 +294,7 @@ public class NotificationCacheContainerProvider implements Serializable { // Cac
 
         CacheKeyStr cacheKey = getCacheKey(eventType, entity.getClass());
         if (!eventNotificationCache.getAdvancedCache().containsKey(cacheKey)) {
-            eventNotificationCache.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).put(cacheKey, new HashSet<Notification>());
+            eventNotificationCache.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).put(cacheKey, new ArrayList<Notification>());
         }
     }
 

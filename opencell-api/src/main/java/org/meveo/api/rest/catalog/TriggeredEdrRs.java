@@ -31,8 +31,8 @@ public interface TriggeredEdrRs extends IBaseRs {
      * @param postData The triggered edr. template's data
      * @return Request processing status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(TriggeredEdrTemplateDto postData);
 
     /**
@@ -41,8 +41,8 @@ public interface TriggeredEdrRs extends IBaseRs {
      * @param postData The triggered edr. template's data
      * @return Request processing status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(TriggeredEdrTemplateDto postData);
 
     /**
@@ -51,8 +51,8 @@ public interface TriggeredEdrRs extends IBaseRs {
      * @param triggeredEdrCode The triggered edr's code
      * @return Returns triggeredEdrTemplate
      */
-    @GET
     @Path("/")
+    @GET
     GetTriggeredEdrResponseDto find(@QueryParam("triggeredEdrCode") String triggeredEdrCode);
 
     /**
@@ -61,8 +61,8 @@ public interface TriggeredEdrRs extends IBaseRs {
      * @param triggeredEdrCode The triggered edr's code
      * @return Request processing status
      */
-    @DELETE
     @Path("/{triggeredEdrCode}")
+    @DELETE
     ActionStatus remove(@PathParam("triggeredEdrCode") String triggeredEdrCode);
 
     /**
@@ -71,7 +71,7 @@ public interface TriggeredEdrRs extends IBaseRs {
      * @param postData The triggered edr template's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(TriggeredEdrTemplateDto postData);
 }

@@ -44,6 +44,8 @@ import org.meveo.model.billing.UserAccount;
 import org.meveo.model.shared.DateUtils;
 import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.ValueExpressionWrapper;
+import org.meveo.service.catalog.impl.InvoiceSubCategoryService;
+import org.meveo.service.catalog.impl.TaxService;
 
 /**
  * Service for Invoice subcategory country entity management and applicable tax determination
@@ -54,7 +56,13 @@ import org.meveo.service.base.ValueExpressionWrapper;
 public class InvoiceSubCategoryCountryService extends PersistenceService<InvoiceSubcategoryCountry> {
 
     @Inject
+    private InvoiceSubCategoryService invoiceSubCategoryService;
+
+    @Inject
     private ResourceBundle resourceBundle;
+
+    @Inject
+    private TaxService taxService;
 
     @Override
     public void create(InvoiceSubcategoryCountry invoiceSubcategoryCountry) throws BusinessException {
@@ -99,11 +107,6 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
         // get all the taxes of an invoice sub category
         List<InvoiceSubcategoryCountry> invoiceSubcategoryCountries = listByInvoiceSubCategoryAndCountryWithValidityDates(invoiceSubcategoryCountry.getInvoiceSubCategory(),
             invoiceSubcategoryCountry.getSellingCountry(), invoiceSubcategoryCountry.getTradingCountry(), null, null, null);
-        return checkValidityDateFromList(invoiceSubcategoryCountry, invoiceSubcategoryCountries);
-    }
-
-    public InvoiceSubcategoryCountry checkValidityDateFromList(InvoiceSubcategoryCountry invoiceSubcategoryCountry, List<InvoiceSubcategoryCountry> invoiceSubcategoryCountries)
-            throws BusinessException {
         if (invoiceSubcategoryCountries != null) {
             InvoiceSubcategoryCountry invoiceSubcategoryCountryFound = null;
             // check for overlap
@@ -137,6 +140,7 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
 
             invoiceSubcategoryCountry.setPriority(getNextPriority(invoiceSubcategoryCountries));
         }
+
         return invoiceSubcategoryCountry;
     }
 
@@ -298,8 +302,8 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
 
         InvoiceSubcategoryCountry invoiceSubcategoryCountry = findByInvoiceSubCategoryAndCountry(invoiceSubCategory, sellersCountry, buyersCountry, date);
         if (invoiceSubcategoryCountry == null) {
-            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + ", seller's trading country: "
-                    + (sellersCountry != null ? sellersCountry.getId() : null) + ", buyer's trading country: " + buyersCountry.getId());
+            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + "/"
+                    + (sellersCountry != null ? sellersCountry.getId() : null) + "/" + buyersCountry.getId());
         }
 
         Tax tax = null;
@@ -338,8 +342,8 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
             if (ignoreNoTax) {
                 return null;
             }
-            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + ", seller's trading country: "
-                    + (sellersCountry != null ? sellersCountry.getId() : null) + ", buyer's trading country: " + buyersCountry.getId());
+            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + "/"
+                    + (sellersCountry != null ? sellersCountry.getId() : null) + "/" + buyersCountry.getId());
         }
 
         Tax tax = null;
@@ -380,8 +384,8 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
             if (ignoreNoTax) {
                 return null;
             }
-            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + ", seller's trading country: "
-                    + (sellersCountry != null ? sellersCountry.getId() : null) + ", buyer's trading country: " + buyersCountry.getId());
+            throw new IncorrectChargeTemplateException("No invoiceSubcategoryCountry exists for invoiceSubCategory " + invoiceSubCategory.getId() + "/"
+                    + (sellersCountry != null ? sellersCountry.getId() : null) + "/" + buyersCountry.getId());
         }
 
         Tax tax = null;
@@ -402,7 +406,6 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
         return tax;
     }
 
-    @SuppressWarnings("deprecation")
     private Tax evaluateTaxCodeEL(String expression, UserAccount userAccount, BillingAccount billingAccount, Invoice invoice) throws BusinessException {
         Tax result = null;
         if (StringUtils.isBlank(expression)) {
@@ -443,11 +446,7 @@ public class InvoiceSubCategoryCountryService extends PersistenceService<Invoice
         if (taxCode == null) {
             throw new BusinessException("Expression " + expression + " evaluates to null  ");
         } else {
-            try {
-                result = getEntityManager().createNamedQuery("Tax.getTaxByCode", Tax.class).setParameter("code", taxCode).setMaxResults(1).getSingleResult();
-            } catch (NoResultException e) {
-                log.debug("No Tax of code {} found", taxCode);
-            }
+            result = taxService.findByCode(taxCode);
         }
 
         return result;

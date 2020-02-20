@@ -94,6 +94,6 @@ public interface CustomTableRs extends IBaseRs {
      * @return Request processing status
      */
     @POST
-    @Path("/disable")
+    @Path("/enable")
     ActionStatus disable(CustomTableDataDto dto);
 }

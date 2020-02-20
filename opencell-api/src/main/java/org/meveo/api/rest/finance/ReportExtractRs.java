@@ -64,8 +64,7 @@ public interface ReportExtractRs extends IBaseRs {
     ActionStatus createOrUpdate(ReportExtractDto postData);
 
     /**
-     * Delete a Report Extract with a given code. 
-     *
+     * 
      * @param reportExtractCode code of the ReportExtract
      * @return status of the call
      */

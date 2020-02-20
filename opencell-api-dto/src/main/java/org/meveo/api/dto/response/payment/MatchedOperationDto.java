@@ -19,8 +19,6 @@ import org.meveo.model.payments.OperationCategoryEnum;
  * Represents matched account operations.
  *
  * @author Andrius Karpavicius
- * @author melyoussoufi
- * @lastModifiedVersion 7.3.0
  */
 @XmlRootElement(name = "MatchedOperation")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,10 +43,10 @@ public class MatchedOperationDto extends BaseEntityDto {
     private Long accountOperationId;
 
     /** Account operation type code. */
-    private String code;
+    private String occCode;
 
     /** Account operation type description. */
-    private String description;
+    private String occDescription;
 
     /** Account operation date. */
     private Date transactionDate;
@@ -91,8 +89,8 @@ public class MatchedOperationDto extends BaseEntityDto {
         AccountOperation ao = matchingAmount.getAccountOperation();
 
         accountOperationId = ao.getId();
-        code = ao.getCode();
-        description = ao.getDescription();
+        occCode = ao.getOccCode();
+        occDescription = ao.getOccDescription();
         transactionDate = ao.getTransactionDate();
         transactionCategory = ao.getTransactionCategory();
         dueDate = ao.getDueDate();
@@ -196,8 +194,8 @@ public class MatchedOperationDto extends BaseEntityDto {
      *
      * @return the occ code
      */
-    public String getCode() {
-        return code;
+    public String getOccCode() {
+        return occCode;
     }
 
     /**
@@ -205,8 +203,8 @@ public class MatchedOperationDto extends BaseEntityDto {
      *
      * @param occCode the new occ code
      */
-    public void setCode(String occCode) {
-        this.code = occCode;
+    public void setOccCode(String occCode) {
+        this.occCode = occCode;
     }
 
     /**
@@ -214,8 +212,8 @@ public class MatchedOperationDto extends BaseEntityDto {
      *
      * @return the occ description
      */
-    public String getDescription() {
-        return description;
+    public String getOccDescription() {
+        return occDescription;
     }
 
     /**
@@ -223,8 +221,8 @@ public class MatchedOperationDto extends BaseEntityDto {
      *
      * @param occDescription the new occ description
      */
-    public void setDescription(String occDescription) {
-        this.description = occDescription;
+    public void setOccDescription(String occDescription) {
+        this.occDescription = occDescription;
     }
 
     /**
@@ -338,7 +336,7 @@ public class MatchedOperationDto extends BaseEntityDto {
     @Override
     public String toString() {
         return "MatchedOperationDto [matchingId=" + matchingId + ", matchingType=" + matchingType + ", matchingDate=" + matchingDate + ", matchingAmount=" + matchingAmount
-                + ", accountOperationId=" + accountOperationId + ", occCode=" + code + ", occDescription=" + description + ", transactionDate=" + transactionDate
+                + ", accountOperationId=" + accountOperationId + ", occCode=" + occCode + ", occDescription=" + occDescription + ", transactionDate=" + transactionDate
                 + ", transactionCategory=" + transactionCategory + ", dueDate=" + dueDate + ", transactionAmount=" + transactionAmount + ", matchedTransactionAmount="
                 + matchedTransactionAmount + "]";
     }

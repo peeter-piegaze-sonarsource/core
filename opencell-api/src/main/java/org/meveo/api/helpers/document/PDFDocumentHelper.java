@@ -3,6 +3,7 @@ package org.meveo.api.helpers.document;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +97,7 @@ public class PDFDocumentHelper {
         }
         File templateFile = new File(templatePath);
         try (PDDocument templateDoc = PDDocument.load(templateFile)) {
-            pdfBuilder.withFormFieds(templateDto.getTemplateFields()).withBarcodeFieds(templateDto.getBarCodeFields()).withTemplate(templateDoc).buildAndAppendToMainTemplate(
-                    postData.isFlattened());
+            pdfBuilder.withFormFieds(templateDto.getTemplateFields()).withBarcodeFieds(templateDto.getBarCodeFields()).withTemplate(templateDoc).buildAndAppendToMainTemplate();
         }
     }
 

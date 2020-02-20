@@ -18,31 +18,26 @@
  */
 package org.meveo.admin.exception;
 
-import org.meveo.model.rating.EDRRejectReasonEnum;
-
 /**
- * Failed to communicate or send CDRs to a remote Opencell instance
- * 
  * @author akadid abdelmounaim
  * @lastModifiedVersion 5.1
  */
-public class ChargingEdrOnRemoteInstanceErrorException extends RatingException {
+public class ChargingEdrOnRemoteInstanceErrorException extends BusinessException {
+    private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 7048199432468647599L;
-
-    /**
-     * Constructor
-     */
     public ChargingEdrOnRemoteInstanceErrorException() {
-        super(EDRRejectReasonEnum.CHARGING_EDR_ON_REMOTE_INSTANCE_ERROR);
+        super();
     }
 
-    /**
-     * Constructor
-     * 
-     * @param message Error message
-     */
+    public ChargingEdrOnRemoteInstanceErrorException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public ChargingEdrOnRemoteInstanceErrorException(String message) {
-        super(EDRRejectReasonEnum.CHARGING_EDR_ON_REMOTE_INSTANCE_ERROR, message);
+        super(message);
+    }
+
+    public ChargingEdrOnRemoteInstanceErrorException(Throwable cause) {
+        super(cause);
     }
 }

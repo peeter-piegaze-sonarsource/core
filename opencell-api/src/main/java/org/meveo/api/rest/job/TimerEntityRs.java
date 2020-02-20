@@ -31,8 +31,8 @@ public interface TimerEntityRs extends IBaseRs {
      * @param postData The timer schedule's data
      * @return Request processing status
      */
-    @POST
     @Path("/create")
+    @POST
     ActionStatus create(TimerEntityDto postData);
 
     /**
@@ -41,8 +41,8 @@ public interface TimerEntityRs extends IBaseRs {
      * @param postData The timer schedule's data
      * @return Request processing status
      */
-    @POST
     @Path("/update")
+    @POST
     ActionStatus update(TimerEntityDto postData);
 
     /**
@@ -51,8 +51,8 @@ public interface TimerEntityRs extends IBaseRs {
      * @param postData The timer schedule's data
      * @return Request processing status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(TimerEntityDto postData);
 
     /**
@@ -61,8 +61,8 @@ public interface TimerEntityRs extends IBaseRs {
      * @param timerEntityCode The timer schedule's code
      * @return Return timerEntity
      */
-    @GET
     @Path("/")
+    @GET
     GetTimerEntityResponseDto find(@QueryParam("timerEntityCode") String timerEntityCode);
 
     /**

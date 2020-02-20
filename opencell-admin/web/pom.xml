@@ -4,14 +4,14 @@
 		<artifactId>opencell-admin</artifactId>
 		<groupId>com.opencellsoft</groupId>
 		<relativePath>../pom.xml</relativePath>
-		<version>7.6.1-SNAPSHOT</version>
+		<version>7.5.2-JMS-SNAPSHOT</version>
 	</parent>
 	<artifactId>opencell-admin-web</artifactId>
 	<name>Opencell Admin Web Application - Web Module</name>
 	<packaging>war</packaging>
 
 	<build>
-		<finalName>opencell</finalName>
+		<finalName>opencell-admin-web-${project.version}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -84,7 +84,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.3</version>
 				<executions>
 					<execution>
 						<phase>validate</phase>
@@ -151,35 +150,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.4</version>
 				<configuration>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
-
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<phase>clean</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>meveo</groupId>
-							<artifactId>opencell-fonts</artifactId>
-							<version>1.0</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/../lib/opencell-fonts.jar</file>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			 -->
-
 		</plugins>
 
 	</build>
@@ -191,25 +165,52 @@
 		<dependency>
 			<groupId>com.opencellsoft</groupId>
 			<artifactId>opencell-model</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.opencellsoft</groupId>
 			<artifactId>opencell-admin-ejbs</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.opencellsoft</groupId>
 			<artifactId>opencell-api</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.opencellsoft</groupId>
 			<artifactId>opencell-client</artifactId>
+			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.opencellsoft</groupId>
+			<artifactId>opencell-jms</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
 
 		<!-- Libraries included in JBoss -->
 
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -257,6 +258,12 @@
 			<!-- <artifactId>jsf-api</artifactId> -->
 			<groupId>org.jboss.spec.javax.faces</groupId>
 			<artifactId>jboss-jsf-api_2.2_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-vfs</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -366,7 +373,8 @@
 		</dependency>
 
 
-		<!-- <dependency> <groupId>net.sf.flexjson</groupId> <artifactId>flexjson</artifactId> <version>2.0</version> </dependency> -->
+		<!-- <dependency> <groupId>net.sf.flexjson</groupId> <artifactId>flexjson</artifactId> 
+			<version>2.0</version> </dependency> -->
 
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -390,16 +398,11 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.hibernate.javax.persistence</groupId>
-		    <artifactId>hibernate-jpa-2.1-api</artifactId>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>meveo</groupId>
-			<artifactId>opencell-fonts</artifactId>
-			<version>1.0</version>
-		</dependency>
-		 -->
+		<!-- <dependency> <groupId>meveo</groupId> <artifactId>opencell-fonts</artifactId> 
+			<version>1.0</version> </dependency> -->
 
 		<!-- Primefaces Theme -->
 		<!-- <dependency> -->
@@ -407,35 +410,33 @@
 		<!-- <artifactId>humanity</artifactId> -->
 		<!-- <version>1.0.10</version> -->
 		<!-- </dependency> -->
-		
-		
-		
+
+
+
 		<dependency>
 			<groupId>org.jboss.spec.javax.ws.rs</groupId>
 			<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>23.0</version>
-		</dependency>		
-		
-		<dependency>
-		    <groupId>org.apache.tika</groupId>
-		    <artifactId>tika-core</artifactId>
-		    <version>1.19</version>
 		</dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.23.0</version>
-            <scope>test</scope>
-        </dependency>
+
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>1.19</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.24.0-GA</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -474,8 +475,10 @@
 		</profile>
 
 		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in your JBoss AS instance -->
-			<!-- This profile will start a new JBoss AS instance, and execute the test, shutting it down when done -->
+			<!-- An optional Arquillian testing profile that executes tests in your 
+				JBoss AS instance -->
+			<!-- This profile will start a new JBoss AS instance, and execute the 
+				test, shutting it down when done -->
 			<!-- Run with: mvn clean test -Parq-jbossas-managed -->
 			<id>arq-jbossas-managed</id>
 			<dependencies>

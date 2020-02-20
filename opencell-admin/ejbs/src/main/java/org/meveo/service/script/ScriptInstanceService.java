@@ -44,6 +44,7 @@ import org.meveo.admin.exception.InvalidScriptException;
 import org.meveo.admin.util.ResourceBundle;
 import org.meveo.cache.CacheKeyStr;
 import org.meveo.cache.CompiledScript;
+import org.meveo.commons.compilation.CompilationException;
 import org.meveo.commons.utils.EjbUtils;
 import org.meveo.commons.utils.ReflectionUtils;
 import org.meveo.event.monitoring.ClusterEventDto.CrudActionEnum;
@@ -85,8 +86,9 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
      * @return list of custom script.
      */
     public List<ScriptInstance> getScriptInstancesWithError() {
-        return ((List<ScriptInstance>) getEntityManager().createNamedQuery("CustomScript.getScriptInstanceOnError", ScriptInstance.class).setParameter("isError", Boolean.TRUE)
-            .getResultList());
+        return ((List<ScriptInstance>) getEntityManager().createNamedQuery("CustomScript.getScriptInstanceOnError", ScriptInstance.class)
+                                                         .setParameter("isError", Boolean.TRUE)
+                                                         .getResultList());
     }
 
     /**
@@ -95,12 +97,13 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
      * @return number of script instances with error.
      */
     public long countScriptInstancesWithError() {
-        return ((Long) getEntityManager().createNamedQuery("CustomScript.countScriptInstanceOnError", Long.class).setParameter("isError", Boolean.TRUE).getSingleResult());
+        return ((Long) getEntityManager().createNamedQuery("CustomScript.countScriptInstanceOnError", Long.class)
+                                         .setParameter("isError", Boolean.TRUE).getSingleResult());
     }
 
     /**
-     * Only users having a role in executionRoles can execute the script, not having the role should throw an InvalidPermission exception that extends businessException. A script
-     * with no executionRoles can be executed by any user.
+     * Only users having a role in executionRoles can execute the script, not having the role should throw an InvalidPermission exception that extends
+     * businessException. A script with no executionRoles can be executed by any user.
      *
      * @param scriptInstance instance of script
      * @throws InvalidPermissionException invalid permission exception.
@@ -153,7 +156,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
             Method method = null;
             if (parameters.length < 1) {
                 method = workerClass.getDeclaredMethod(methodName);
-            } else {
+            }
+            else {
                 String className = null;
                 Object parameter = null;
                 Class<?>[] parameterTypes = new Class<?>[parameters.length];
@@ -166,10 +170,12 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
             }
             method.setAccessible(true);
             method.invoke(worker, parameters);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (e.getCause() != null) {
                 throw new BusinessException(e.getCause());
-            } else {
+            }
+            else {
                 throw new BusinessException(e);
             }
         }
@@ -248,7 +254,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
      * @throws ElementNotFoundException Script not found
      * @throws BusinessException General execution exception
      */
-    public Map<String, Object> execute(String scriptCode, Map<String, Object> context) throws InvalidPermissionException, ElementNotFoundException, BusinessException {
+    public Map<String, Object> execute(String scriptCode, Map<String, Object> context)
+            throws InvalidPermissionException, ElementNotFoundException, BusinessException {
 
         ScriptInstance scriptInstance = findByCode(scriptCode);
         // Check access to the script
@@ -308,7 +315,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
     }
 
     /**
-     * Execute action on an entity/event. Reuse an existing, earlier initialized script interface. Does not call init() nor finalize() methods of the script.
+     * Execute action on an entity/event. Reuse an existing, earlier initialized script interface. Does not call init() nor finalize() methods of the
+     * script.
      * 
      * @param entityOrEvent Entity or event to execute action on. Will be added to context under Script.CONTEXT_ENTITY key.
      * @param scriptCode Script to execute, identified by a code. Will be added to context under Script.CONTEXT_ACTION key.
@@ -330,7 +338,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
     }
 
     /**
-     * Execute action on an entity/event. Reuse an existing, earlier initialized script interface. Does not call init() nor finalize() methods of the script.
+     * Execute action on an entity/event. Reuse an existing, earlier initialized script interface. Does not call init() nor finalize() methods of the
+     * script.
      * 
      * @param scriptCode Script to execute, identified by a code. Will be added to context under Script.CONTEXT_ACTION key.
      * @param context Additional parameters
@@ -370,7 +379,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
      * @throws InvalidPermissionException Insufficient access to run the script
      * @throws BusinessException Any execution exception
      */
-    public Map<String, Object> executeWInitAndFinalize(Object entityOrEvent, String scriptCode, Map<String, Object> context) throws BusinessException {
+    public Map<String, Object> executeWInitAndFinalize(Object entityOrEvent, String scriptCode, Map<String, Object> context)
+            throws BusinessException {
 
         if (context == null) {
             context = new HashMap<>();
@@ -459,40 +469,48 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
             String logMessages = scriptClassInstance.getLogMessages();
             return logMessages;
 
-        } catch (CharSequenceCompilerException e) {
+        }
+        catch (CompilationException e) {
             log.error("Failed to compile script {}. Compilation errors:", scriptInstance.getCode());
 
             List<ScriptInstanceError> scriptErrors = new ArrayList<>();
 
-            List<Diagnostic<? extends JavaFileObject>> diagnosticList = e.getDiagnostics().getDiagnostics();
-            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticList) {
-                if ("ERROR".equals(diagnostic.getKind().name())) {
-                    ScriptInstanceError scriptInstanceError = new ScriptInstanceError();
-                    scriptInstanceError.setMessage(diagnostic.getMessage(Locale.getDefault()));
-                    scriptInstanceError.setLineNumber(diagnostic.getLineNumber());
-                    scriptInstanceError.setColumnNumber(diagnostic.getColumnNumber());
-                    scriptInstanceError.setSourceFile(diagnostic.getSource().toString());
-                    // scriptInstanceError.setScript(scriptInstance);
-                    scriptErrors.add(scriptInstanceError);
-                    // scriptInstanceErrorService.create(scriptInstanceError, scriptInstance.getAuditable().getCreator());
-                    log.warn("{} script {} location {}:{}: {}", diagnostic.getKind().name(), scriptInstance.getCode(), diagnostic.getLineNumber(), diagnostic.getColumnNumber(),
-                        diagnostic.getMessage(Locale.getDefault()));
+            if (e.getDiagnostic() != null) {
+
+                for (Diagnostic<? extends JavaFileObject> diagnostic : e.getDiagnostic().getDiagnostics()) {
+                    if ("ERROR".equals(diagnostic.getKind().name())) {
+                        ScriptInstanceError scriptInstanceError = new ScriptInstanceError();
+                        scriptInstanceError.setMessage(diagnostic.getMessage(Locale.getDefault()));
+                        scriptInstanceError.setLineNumber(diagnostic.getLineNumber());
+                        scriptInstanceError.setColumnNumber(diagnostic.getColumnNumber());
+                        scriptInstanceError.setSourceFile(diagnostic.getSource().toString());
+                        scriptErrors.add(scriptInstanceError);
+                        log.warn("{} script {} location {}:{}: {}", diagnostic.getKind().name(), scriptInstance.getCode(), diagnostic.getLineNumber(),
+                                diagnostic.getColumnNumber(), diagnostic.getMessage(Locale.getDefault()));
+                    }
                 }
+              
+            } else {
+                 ScriptInstanceError error = new ScriptInstanceError();
+                 error.setMessage(e.getMessage());
+                 scriptErrors.add(error);
             }
+            
             scriptInstance.setError(scriptErrors != null && !scriptErrors.isEmpty());
             scriptInstance.setScriptErrors(scriptErrors);
 
             return "Compilation errors";
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Script test failed", e);
             return ExceptionUtils.getStackTrace(e);
         }
     }
 
     /**
-     * Compile script, a and update script entity status with compilation errors. Successfully compiled script is added to a compiled script cache if active and not in test
-     * compilation mode. Pass-through to ScriptCompilerService.compileScript().
+     * Compile script, a and update script entity status with compilation errors. Successfully compiled script is added to a compiled script cache if
+     * active and not in test compilation mode. Pass-through to ScriptCompilerService.compileScript().
      * 
      * @param script Script entity to compile
      * @param testCompile Is it a compilation for testing purpose. Won't clear nor overwrite existing compiled script cache.
@@ -535,7 +553,8 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
             ScriptInterface script = scriptClass.newInstance();
             return script;
 
-        } catch (InstantiationException | IllegalAccessException e) {
+        }
+        catch (InstantiationException | IllegalAccessException e) {
             log.error("Failed to instantiate script {}", scriptCode, e);
             throw new InvalidScriptException(scriptCode, getEntityClass().getName());
         }
@@ -600,4 +619,5 @@ public class ScriptInstanceService extends BusinessService<ScriptInstance> {
             scriptCompilerService.compileAll();
         }
     }
+
 }

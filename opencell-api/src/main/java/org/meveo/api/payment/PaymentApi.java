@@ -62,8 +62,7 @@ import org.primefaces.model.SortOrder;
 /**
  * @author Edward P. Legaspi
  * @author Youssef IZEM
- * @author melyoussoufi
- * @lastModifiedVersion 7.3.0
+ * @lastModifiedVersion 5.0.15
  **/
 @Stateless
 @Interceptors(SecuredBusinessEntityMethodInterceptor.class)
@@ -136,8 +135,8 @@ public class PaymentApi extends BaseApi {
         payment.setUnMatchingAmount(paymentDto.getAmount());
         payment.setMatchingAmount(BigDecimal.ZERO);
         payment.setAccountingCode(occTemplate.getAccountingCode());
-        payment.setCode(occTemplate.getCode());
-        payment.setDescription(StringUtils.isBlank(paymentDto.getDescription()) ? occTemplate.getDescription() : paymentDto.getDescription());
+        payment.setOccCode(occTemplate.getCode());
+        payment.setOccDescription(StringUtils.isBlank(paymentDto.getDescription()) ? occTemplate.getDescription() : paymentDto.getDescription());
         payment.setTransactionCategory(occTemplate.getOccCategory());
         payment.setAccountCodeClientSide(occTemplate.getAccountCodeClientSide());
         payment.setCustomerAccount(customerAccount);
@@ -162,8 +161,22 @@ public class PaymentApi extends BaseApi {
 
         paymentService.create(payment);
 
+        int nbOccMatched = 0;
         if (paymentDto.isToMatching()) {
-            matchPayment(paymentDto, customerAccount, payment);
+            List<Long> listReferenceToMatch = new ArrayList<Long>();
+            if (paymentDto.getListOCCReferenceforMatching() != null) {
+                nbOccMatched = paymentDto.getListOCCReferenceforMatching().size();
+                for (int i = 0; i < nbOccMatched; i++) {
+                    RecordedInvoice accountOperationToMatch = recordedInvoiceService.getRecordedInvoice(paymentDto.getListOCCReferenceforMatching().get(i));
+                    if (accountOperationToMatch == null) {
+                        throw new BusinessApiException("Cannot find account operation with reference:" + paymentDto.getListOCCReferenceforMatching().get(i));
+                    }
+                    listReferenceToMatch.add(accountOperationToMatch.getId());
+                }
+                listReferenceToMatch.add(payment.getId());
+                matchingCodeService.matchOperations(null, customerAccount.getCode(), listReferenceToMatch, null, MatchingTypeEnum.A);
+            }
+
         } else {
             log.info("no matching created ");
         }
@@ -172,26 +185,6 @@ public class PaymentApi extends BaseApi {
         return payment.getId();
 
     }
-
-	private void matchPayment(PaymentDto paymentDto, CustomerAccount customerAccount, Payment payment)
-			throws BusinessApiException, BusinessException, NoAllOperationUnmatchedException, UnbalanceAmountException {
-		List<Long> listReferenceToMatch = new ArrayList<Long>();
-		if (paymentDto.getListAoIdsForMatching()!=null && !paymentDto.getListAoIdsForMatching().isEmpty() ) {
-			listReferenceToMatch.addAll(paymentDto.getListAoIdsForMatching());
-		} else if (paymentDto.getListOCCReferenceforMatching() != null) {
-		    for (String Reference: paymentDto.getListOCCReferenceforMatching()) {
-		        List<RecordedInvoice> accountOperationToMatch = recordedInvoiceService.getRecordedInvoice(Reference);
-		        if (accountOperationToMatch == null || accountOperationToMatch.isEmpty()) {
-		            throw new BusinessApiException("Cannot find account operation with reference:" + Reference );
-		        } else if (accountOperationToMatch.size() > 1) {
-		            throw new BusinessApiException("More than one account operation with reference:" + Reference +". Please use ListAoIdsForMatching instead of ListOCCReferenceforMatching");
-		        }
-		        listReferenceToMatch.add(accountOperationToMatch.get(0).getId());
-		    }
-		}
-		listReferenceToMatch.add(payment.getId());
-		matchingCodeService.matchOperations(null, customerAccount.getCode(), listReferenceToMatch, null, MatchingTypeEnum.A);
-	}
 
     /**
      * Get payment list by customer account code
@@ -211,6 +204,8 @@ public class PaymentApi extends BaseApi {
         if (customerAccount == null) {
             throw new EntityDoesNotExistsException(CustomerAccount.class, customerAccountCode);
         }
+
+        customerAccountService.getEntityManager().refresh(customerAccount);
 
         if (pagingAndFiltering == null) {
             pagingAndFiltering = new PagingAndFiltering();
@@ -234,7 +229,7 @@ public class PaymentApi extends BaseApi {
                 paymentDto.setType(p.getType());
                 paymentDto.setAmount(p.getAmount());
                 paymentDto.setDueDate(p.getDueDate());
-                paymentDto.setOccTemplateCode(p.getCode());
+                paymentDto.setOccTemplateCode(p.getOccCode());
                 paymentDto.setPaymentMethod(p.getPaymentMethod());
                 paymentDto.setReference(p.getReference());
                 paymentDto.setTransactionDate(p.getTransactionDate());
@@ -253,10 +248,10 @@ public class PaymentApi extends BaseApi {
                 OtherCreditAndCharge occ = (OtherCreditAndCharge) op;
                 PaymentDto paymentDto = new PaymentDto();
                 paymentDto.setType(occ.getType());
-                paymentDto.setDescription(op.getDescription());
+                paymentDto.setDescription(op.getOccDescription());
                 paymentDto.setAmount(occ.getAmount());
                 paymentDto.setDueDate(occ.getDueDate());
-                paymentDto.setOccTemplateCode(occ.getCode());
+                paymentDto.setOccTemplateCode(occ.getOccCode());
                 paymentDto.setReference(occ.getReference());
                 paymentDto.setTransactionDate(occ.getTransactionDate());
                 result.addPaymentDto(paymentDto);

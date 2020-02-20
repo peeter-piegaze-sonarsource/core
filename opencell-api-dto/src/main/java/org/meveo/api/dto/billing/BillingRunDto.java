@@ -15,8 +15,6 @@ import org.meveo.model.billing.BillingRun;
 import org.meveo.model.billing.BillingRunStatusEnum;
 import org.meveo.model.billing.ReferenceDateEnum;
 
-import io.swagger.v3.oas.annotations.Hidden;
-
 /**
  * The Class BillingRunDto.
  * 
@@ -589,7 +587,6 @@ public class BillingRunDto extends AuditableEntityDto {
      *
      * @param billingRunEntity the new from entity
      */
-    @Hidden
     public void setFromEntity(BillingRun billingRunEntity) {
         setAuditable(billingRunEntity);
         setProcessDate(billingRunEntity.getProcessDate());

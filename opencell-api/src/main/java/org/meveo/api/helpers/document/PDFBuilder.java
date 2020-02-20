@@ -148,10 +148,9 @@ public class PDFBuilder {
      * Builds the and append to main template.
      *
      * @throws Exception the exception
-     * @param flattened to flatten (make it read-only) to document
      */
-    public void buildAndAppendToMainTemplate(boolean flattened) throws Exception {
-        this.build(flattened);
+    public void buildAndAppendToMainTemplate() throws Exception {
+        this.build();
         this.appendToMainTemplate();
     }
     
@@ -159,18 +158,15 @@ public class PDFBuilder {
      * Builds the.
      *
      * @throws IOException Signals that an I/O exception has occurred.
-     * @param flattened to flatten (make it read-only) to document
      */
-    private void build(boolean flattened) throws IOException  {
+    private void build() throws IOException  {
         PDDocumentCatalog docCatalog = currentTemplateDoc.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
+
         if (MapUtils.isNotEmpty(this.mapFormFields)) {
             for (String key : this.mapFormFields.keySet()) {
                 setFieldValue(acroForm, key, this.mapFormFields.get(key));
             }
-        }
-        if(flattened && acroForm != null) {
-            acroForm.flatten();
         }
     }
 

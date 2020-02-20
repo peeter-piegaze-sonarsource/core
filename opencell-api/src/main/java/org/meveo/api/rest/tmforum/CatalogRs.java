@@ -59,8 +59,6 @@ public interface CatalogRs extends IBaseRs {
     /**
      * Get a list of product offerings optionally filtering by some criteria
      * 
-     * @param validFrom valid From option criteria date
-     * @param validTo valid To option criteria date
      * @param info Http request context
      * @return A list of product offerings matching search criteria
      */
@@ -110,7 +108,7 @@ public interface CatalogRs extends IBaseRs {
      * Create offer from BOM definition
      * 
      * @param postData BOM offer information
-     * @return Response of the create offer BOM
+     * @return
      */
     @POST
     @Path("/createOfferFromBOM")
@@ -120,18 +118,13 @@ public interface CatalogRs extends IBaseRs {
      * Create service from BSM definition
      * 
      * @param postData BSM service information
-     * @return Response of the create Service BSM
+     * @return
      */
+
     @POST
     @Path("/createServiceFromBSM")
     public Response createServiceFromBSM(BsmServiceDto postData);
-  
-    /**
-     * Create product from BPM definition
-     * 
-     * @param postData BPM service information
-     * @return Response of the create Service BPM
-     */
+
     @POST
     @Path("/createProductFromBPM")
     public Response createProductFromBPM(BpmProductDto postData);
@@ -152,7 +145,7 @@ public interface CatalogRs extends IBaseRs {
      * Create product template
      * 
      * @param postData product template information
-     * @return Response of the create Product Template
+     * @return
      */
     @POST
     @Path("/productTemplate")
@@ -162,7 +155,7 @@ public interface CatalogRs extends IBaseRs {
      * Create or update product template
      * 
      * @param postData product template information
-     * @return Response of the create Product Template
+     * @return
      */
     @POST
     @Path("/productTemplate/createOrUpdate")
@@ -172,7 +165,7 @@ public interface CatalogRs extends IBaseRs {
      * Update product template
      * 
      * @param postData product template information
-     * @return Response of the update Product Template
+     * @return
      */
     @PUT
     @Path("/productTemplate")
@@ -184,7 +177,7 @@ public interface CatalogRs extends IBaseRs {
      * @param code productTemplate code
      * @param validFrom Product template validity range - from date
      * @param validTo Procuct template validity range - to date
-     * @return Response of the remove action
+     * @return
      */
     @DELETE
     @Path("/productTemplate/{code}")
@@ -243,7 +236,7 @@ public interface CatalogRs extends IBaseRs {
      * Create product charge template
      * 
      * @param postData product charge template information
-     * @return Response of the create Product Charge Template
+     * @return
      */
     @POST
     @Path("/productChargeTemplate")
@@ -253,7 +246,7 @@ public interface CatalogRs extends IBaseRs {
      * Create or update product charge template
      * 
      * @param postData product charge template information
-     * @return Response of the create or update Product Charge Template
+     * @return
      */
     @POST
     @Path("/productChargeTemplate/createOrUpdate")
@@ -263,7 +256,7 @@ public interface CatalogRs extends IBaseRs {
      * Update product charge template
      * 
      * @param postData product charge template information
-     * @return Response of the update Product Charge Template
+     * @return
      */
     @PUT
     @Path("/productChargeTemplate")
@@ -273,7 +266,7 @@ public interface CatalogRs extends IBaseRs {
      * Delete a single productChargeTemplate by its code
      * 
      * @param code productChargeTemplate code
-     * @return Response of the delete action
+     * @return
      */
     @DELETE
     @Path("/productChargeTemplate/{code}")
@@ -282,7 +275,7 @@ public interface CatalogRs extends IBaseRs {
     /**
      * List all productChargeTemplates
      * 
-     * @return List of charge template
+     * @return
      */
     @GET
     @Path("/productChargeTemplate/list")

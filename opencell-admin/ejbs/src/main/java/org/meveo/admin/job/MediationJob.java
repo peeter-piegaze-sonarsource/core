@@ -2,14 +2,20 @@ package org.meveo.admin.job;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.meveo.admin.async.MediationAsync;
+import org.meveo.admin.async.SubListCreator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.commons.utils.FileUtils;
 import org.meveo.commons.utils.ParamBean;
@@ -19,6 +25,7 @@ import org.meveo.model.crm.custom.CustomFieldTypeEnum;
 import org.meveo.model.jobs.JobCategoryEnum;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
+import org.meveo.security.MeveoUser;
 import org.meveo.service.job.Job;
 
 /**
@@ -32,12 +39,14 @@ import org.meveo.service.job.Job;
 @Stateless
 public class MediationJob extends Job {
 
+    /** The mediation async. */
     @Inject
-    private MediationJobBean mediationJobBean;
+    private MediationAsync mediationAsync;
 
     @Inject
     private ParamBeanFactory paramBeanFactory;
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
     protected void execute(JobExecutionResultImpl result, JobInstance jobInstance) throws BusinessException {
@@ -47,7 +56,7 @@ public class MediationJob extends Job {
             nbRuns = (long) Runtime.getRuntime().availableProcessors();
         }
         Long waitingMillis = (Long) this.getParamOrCFValue(jobInstance, "waitingMillis", 0L);
-        Boolean oneFilePerJob = (Boolean) this.getParamOrCFValue(jobInstance, "oneFilePerJob", Boolean.FALSE);
+
         try {
 
             ParamBean parambean = paramBeanFactory.getInstance();
@@ -62,57 +71,42 @@ public class MediationJob extends Job {
             if (!f.exists()) {
                 f.mkdirs();
             }
-
-            String outputDir = meteringDir + "output";
-            String rejectDir = meteringDir + "reject";
-            String archiveDir = meteringDir + "archive";
-
-            f = new File(outputDir);
-            if (!f.exists()) {
-                log.debug("outputDir {} not exist", outputDir);
-                f.mkdirs();
-                log.debug("outputDir {} creation ok", outputDir);
-            }
-            f = new File(rejectDir);
-            if (!f.exists()) {
-                log.debug("rejectDir {} not exist", rejectDir);
-                f.mkdirs();
-                log.debug("rejectDir {} creation ok", rejectDir);
-            }
-            f = new File(archiveDir);
-            if (!f.exists()) {
-                log.debug("archiveDir {} not exist", archiveDir);
-                f.mkdirs();
-                log.debug("archiveDir {} creation ok", archiveDir);
-            }
-
             File[] files = FileUtils.listFiles(inputDir, cdrExtensions);
             if (files == null || files.length == 0) {
-                log.debug("There is no file in {} with extension {} to by processed by Mediation {} job", inputDir, cdrExtensions, result.getJobInstance().getCode());
                 return;
             }
+            SubListCreator subListCreator = new SubListCreator(Arrays.asList(files), nbRuns.intValue());
 
-            for (File file : files) {
-                if (!jobExecutionService.isJobRunningOnThis(result.getJobInstance().getId())) {
-                    break;
-                }
-
-                String fileName = file.getName();
-                mediationJobBean.execute(result, inputDir, outputDir, archiveDir, rejectDir, file, jobInstance.getParametres(), nbRuns, waitingMillis);
-
-                result.addReport("Processed file: " + fileName);
-                if (oneFilePerJob) {
-                    break;
+            List<Future<String>> futures = new ArrayList<Future<String>>();
+            MeveoUser lastCurrentUser = currentUser.unProxy();
+            String scriptCode = (String) this.getParamOrCFValue(jobInstance, "scriptJob");
+            while (subListCreator.isHasNext()) {
+                futures.add(mediationAsync.launchAndForget((List<File>) subListCreator.getNextWorkSet(), result, jobInstance.getParametres(), lastCurrentUser, scriptCode));
+                if (subListCreator.isHasNext()) {
+                    try {
+                        Thread.sleep(waitingMillis.longValue());
+                    } catch (InterruptedException e) {
+                        log.error("", e);
+                    }
                 }
             }
+            // Wait for all async methods to finish
+            for (Future<String> future : futures) {
+                try {
+                    future.get();
 
-            // Process one file at a time
-            if (oneFilePerJob && files.length > 1) {
-                result.setDone(false);
+                } catch (InterruptedException e) {
+                    // It was cancelled from outside - no interest
+
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    result.registerError(cause.getMessage());
+                    log.error("Failed to execute async method", cause);
+                }
             }
 
         } catch (Exception e) {
-            log.error("Failed to run mediation job", e);
+            log.error("Failed to run mediation", e);
             result.registerError(e.getMessage());
         }
     }
@@ -134,7 +128,6 @@ public class MediationJob extends Job {
         nbRuns.setFieldType(CustomFieldTypeEnum.LONG);
         nbRuns.setDefaultValue("-1");
         nbRuns.setValueRequired(false);
-        nbRuns.setGuiPosition("tab:Configuration:0;field:0");
         result.put("nbRuns", nbRuns);
 
         CustomFieldTemplate waitingMillis = new CustomFieldTemplate();
@@ -145,19 +138,19 @@ public class MediationJob extends Job {
         waitingMillis.setFieldType(CustomFieldTypeEnum.LONG);
         waitingMillis.setDefaultValue("0");
         waitingMillis.setValueRequired(false);
-        waitingMillis.setGuiPosition("tab:Configuration:0;field:1");
         result.put("waitingMillis", waitingMillis);
 
-        CustomFieldTemplate oneFilePerJob = new CustomFieldTemplate();
-        oneFilePerJob.setCode("oneFilePerJob");
-        oneFilePerJob.setAppliesTo("JobInstance_MediationJob");
-        oneFilePerJob.setActive(true);
-        oneFilePerJob.setDescription(resourceMessages.getString("jobExecution.oneFilePerJob"));
-        oneFilePerJob.setFieldType(CustomFieldTypeEnum.BOOLEAN);
-        oneFilePerJob.setDefaultValue("false");
-        oneFilePerJob.setValueRequired(false);
-        oneFilePerJob.setGuiPosition("tab:Configuration:0;field:2");
-        result.put("oneFilePerJob", oneFilePerJob);
+        CustomFieldTemplate scriptJob = new CustomFieldTemplate();
+        scriptJob.setCode("scriptJob");
+        scriptJob.setAppliesTo("JobInstance_MediationJob");
+        scriptJob.setActive(true);
+        scriptJob.setAllowEdit(true);
+        scriptJob.setMaxValue(Long.MAX_VALUE);
+        scriptJob.setDescription(resourceMessages.getString("jobExecution.scriptJob"));
+        scriptJob.setFieldType(CustomFieldTypeEnum.STRING);
+        scriptJob.setValueRequired(false);
+        scriptJob.setDefaultValue("");
+        result.put("scriptJob", scriptJob);
 
         return result;
     }

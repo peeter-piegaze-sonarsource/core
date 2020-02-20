@@ -59,6 +59,18 @@ public class OneShotChargeTemplateService extends ChargeTemplateService<OneShotC
 		return query.getResultList();
 	}
 
+	public int getNbrOneShotWithNotPricePlan() {
+		return ((Long) getEntityManager()
+				.createNamedQuery("oneShotChargeTemplate.getNbrOneShotWithNotPricePlan", Long.class)
+				.getSingleResult()).intValue();
+	}
+
+	public List<OneShotChargeTemplate> getOneShotChrgWithNotPricePlan() {
+		return (List<OneShotChargeTemplate>) getEntityManager()
+				.createNamedQuery("oneShotChargeTemplate.getOneShotWithNotPricePlan", OneShotChargeTemplate.class)
+				.getResultList();
+	}
+
 	public int getNbrSubscriptionChrgNotAssociated() {
 		return ((Long) getEntityManager()
 				.createNamedQuery("oneShotChargeTemplate.getNbrSubscriptionChrgNotAssociated", Long.class)

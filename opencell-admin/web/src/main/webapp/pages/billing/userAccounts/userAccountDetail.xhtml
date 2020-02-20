@@ -148,7 +148,7 @@
                                         <hftl:formField label="#{messages['accountEntity.externalRef1']}" field="externalRef1" validateUnique="false" newLine="true" />
                                         <hftl:formField label="#{messages['accountEntity.externalRef2']}" field="externalRef2" />
 
-                                        <hftl:formField label="#{messages['name.title']}" field="name" childField="title" valueLabelField="descriptionI18n" valueLabelField2="descriptionNotNull" required="false"
+                                        <hftl:formField label="#{messages['name.title']}" field="name" childField="title" valueLabelField="descriptionI18n" required="false"
                                             listBean="#{titleBean}" listenerUpdate=":parentTab:userAccountFormId:userAccountTab:userNamePanel" styleClass="clearLeft" />
 
                                         <h:panelGroup id="userNamePanel" layout="block">
@@ -190,8 +190,7 @@
                                         <hftl:formField label="#{messages['address.address3']}" field="address" childField="address3" />
                                         <hftl:formField label="#{messages['address.zipCode']}" field="address" childField="zipCode" newLine="true" />
                                         <hftl:formField label="#{messages['address.city']}" field="address" childField="city"/>
-                                        <hftl:formField label="#{messages['address.state']}" id="state" field="address" childField="state" popup="false" />
-                                        <hftl:formField id="countryPanel" label="#{messages['address.country']}" field="address" childField="country" valueLabelField="description" valueField="countryCode" listBean="#{countryBean}" />
+                                   <hftl:formField id="countryPanel" label="#{messages['address.country']}" field="address" childField="country" valueLabelField="description" valueField="countryCode" listBean="#{countryBean}" />
                                     </p:fieldset>
                                 </p:tab>
 
@@ -355,11 +354,12 @@
 
                     <p:tab title="#{messages['counterPeriod.title']}" id="tab#{3+userAccountBean.entity.prepaidWallets.size()}" rendered="#{userAccountBean.entity.id!=null}">
                         <hftl:formPanel formId="counterAccountInfo" backingBean="#{userAccountBean}" showFormButtons="false" edit="false" showMessages="false">
-                            <hftl:formField label="#{messages['businessEntity.code']}" field="code" componentWidth="40" />
-                            <hftl:formField label="#{messages['billingAccount.status']}" field="status" componentWidth="10" />
-                            <hftl:formField label="#{messages['serviceInstance.statusDate']}" field="statusDate" componentWidth="10" />
-                            <hftl:formField label="#{messages['billingAccount.subscriptionDate']}" field="subscriptionDate" componentWidth="20" />
-                            <hftl:formField label="#{messages['billingAccount.terminationDate']}" field="terminationDate" componentWidth="20" />
+                            <hftl:formField label="#{messages['businessEntity.code']}" field="code" />
+                            <hftl:formField label="#{messages['billingAccount.status']}" field="status" />
+                            <hftl:formField label="#{messages['serviceInstance.statusDate']}" field="statusDate" />
+                            <hftl:formField id="customerAccountSelectId" label="#{messages['userAccount.billingAccount']}" field="billingAccount" valueLabelField="code" />
+                            <hftl:formField label="#{messages['billingAccount.subscriptionDate']}" field="subscriptionDate" />
+                            <hftl:formField label="#{messages['billingAccount.terminationDate']}" field="terminationDate" />
                         </hftl:formPanel>
 
                         <hftl:decorateFormPanel formId="counters" edit="false" showMessages="false">

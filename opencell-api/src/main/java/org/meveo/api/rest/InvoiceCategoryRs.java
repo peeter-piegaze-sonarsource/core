@@ -32,8 +32,8 @@ public interface InvoiceCategoryRs extends IBaseRs {
      * @param postData invoice category to be created
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(InvoiceCategoryDto postData);
 
     /**
@@ -42,8 +42,8 @@ public interface InvoiceCategoryRs extends IBaseRs {
      * @param postData invoice category to be updated
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(InvoiceCategoryDto postData);
 
     /**
@@ -52,8 +52,8 @@ public interface InvoiceCategoryRs extends IBaseRs {
      * @param invoiceCategoryCode invoice category code
      * @return invoice category
      */
-    @GET
     @Path("/")
+    @GET
     GetInvoiceCategoryResponse find(@QueryParam("invoiceCategoryCode") String invoiceCategoryCode);
 
     /**
@@ -62,8 +62,8 @@ public interface InvoiceCategoryRs extends IBaseRs {
      * @param invoiceCategoryCode invoice category code
      * @return action status
      */
-    @DELETE
     @Path("/{invoiceCategoryCode}")
+    @DELETE
     ActionStatus remove(@PathParam("invoiceCategoryCode") String invoiceCategoryCode);
 
     /**
@@ -72,8 +72,8 @@ public interface InvoiceCategoryRs extends IBaseRs {
      * @param postData invoice category
      * @return action status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(InvoiceCategoryDto postData);
 
 }

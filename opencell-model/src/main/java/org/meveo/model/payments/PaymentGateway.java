@@ -22,7 +22,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.EnableBusinessCFEntity;
-import org.meveo.model.ISearchable;
 import org.meveo.model.ModuleItem;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.billing.BankCoordinates;
@@ -49,7 +48,7 @@ import org.meveo.model.scripts.ScriptInstance;
 @Table(name = "ar_payment_gateway", uniqueConstraints = @UniqueConstraint(columnNames = { "payment_method", "country_id", "trading_currency_id" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "ar_payment_gateway_seq"), })
-public class PaymentGateway extends EnableBusinessCFEntity implements ISearchable {
+public class PaymentGateway extends EnableBusinessCFEntity {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 697688141736383814L;

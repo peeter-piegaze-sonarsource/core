@@ -180,6 +180,8 @@ public interface CustomerRs extends IBaseRs {
      * 
      * @param categoryCode The customer category's code
      * @return The customer category's data
+     * @author akadid abdelmounaim
+     * @lastModifiedVersion 5.0
      */
     @GET
     @Path("/category/{categoryCode}")

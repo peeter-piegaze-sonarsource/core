@@ -1,22 +1,9 @@
 package org.meveo.api.billing;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.IncorrectServiceInstanceException;
 import org.meveo.admin.exception.IncorrectSusbcriptionException;
-import org.meveo.admin.exception.RatingException;
 import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.api.BaseApi;
 import org.meveo.api.account.AccessApi;
@@ -24,8 +11,6 @@ import org.meveo.api.dto.CustomFieldsDto;
 import org.meveo.api.dto.account.AccessDto;
 import org.meveo.api.dto.account.ApplyOneShotChargeInstanceRequestDto;
 import org.meveo.api.dto.account.ApplyProductRequestDto;
-import org.meveo.api.dto.account.FilterProperty;
-import org.meveo.api.dto.account.FilterResults;
 import org.meveo.api.dto.billing.ActivateServicesRequestDto;
 import org.meveo.api.dto.billing.ChargeInstanceOverrideDto;
 import org.meveo.api.dto.billing.DiscountPlanInstanceDto;
@@ -62,10 +47,6 @@ import org.meveo.api.exception.EntityNotAllowedException;
 import org.meveo.api.exception.InvalidParameterException;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.exception.MissingParameterException;
-import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethod;
-import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
-import org.meveo.api.security.filter.ListFilter;
-import org.meveo.api.security.filter.ObjectFilter;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.jpa.JpaAmpNewTx;
@@ -77,7 +58,6 @@ import org.meveo.model.billing.DiscountPlanInstance;
 import org.meveo.model.billing.DueDateDelayEnum;
 import org.meveo.model.billing.InstanceStatusEnum;
 import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.InvoiceType;
 import org.meveo.model.billing.OneShotChargeInstance;
 import org.meveo.model.billing.ProductInstance;
@@ -120,7 +100,6 @@ import org.meveo.service.billing.impl.UserAccountService;
 import org.meveo.service.billing.impl.WalletTemplateService;
 import org.meveo.service.catalog.impl.CalendarService;
 import org.meveo.service.catalog.impl.DiscountPlanService;
-import org.meveo.service.catalog.impl.InvoiceSubCategoryService;
 import org.meveo.service.catalog.impl.OfferTemplateService;
 import org.meveo.service.catalog.impl.OneShotChargeTemplateService;
 import org.meveo.service.catalog.impl.ProductTemplateService;
@@ -128,6 +107,16 @@ import org.meveo.service.catalog.impl.ServiceTemplateService;
 import org.meveo.service.communication.impl.EmailTemplateService;
 import org.meveo.service.crm.impl.CustomerService;
 import org.meveo.service.order.OrderService;
+
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Edward P. Legaspi
@@ -141,7 +130,6 @@ import org.meveo.service.order.OrderService;
  * @lastModifiedVersion 7.0
  */
 @Stateless
-@Interceptors(SecuredBusinessEntityMethodInterceptor.class)
 public class SubscriptionApi extends BaseApi {
 
     /**
@@ -202,9 +190,6 @@ public class SubscriptionApi extends BaseApi {
 
     @Inject
     private BillingCycleService billingCycleService;
-    
-    @Inject
-    private InvoiceSubCategoryService invoiceSubCategoryService;
 
     @Inject
     private SellerService sellerService;
@@ -398,14 +383,6 @@ public class SubscriptionApi extends BaseApi {
         subscription.setSubscriptionRenewal(subscriptionRenewal);
 
         setSubscriptionFutureTermination(postData, subscription);
-        
-        if (!StringUtils.isBlank(postData.getMinimumInvoiceSubCategory())) {
-            InvoiceSubCategory minimumInvoiceSubCategory = invoiceSubCategoryService.findByCode(postData.getMinimumInvoiceSubCategory());
-            if (minimumInvoiceSubCategory == null) {
-                throw new EntityDoesNotExistsException(InvoiceSubCategory.class, postData.getMinimumInvoiceSubCategory());
-            }
-            subscription.setMinimumInvoiceSubCategory(minimumInvoiceSubCategory);
-        }
 
         if (postData.getMinimumAmountEl() != null) {
             subscription.setMinimumAmountEl(postData.getMinimumAmountEl());
@@ -897,16 +874,9 @@ public class SubscriptionApi extends BaseApi {
             oneShotChargeInstanceService.oneShotChargeApplication(subscription, (OneShotChargeTemplate) oneShotChargeTemplate, postData.getWallet(), postData.getOperationDate(),
                 postData.getAmountWithoutTax(), postData.getAmountWithTax(), postData.getQuantity(), postData.getCriteria1(), postData.getCriteria2(), postData.getCriteria3(),
                 postData.getDescription(), subscription.getOrderNumber(), true);
-
-        } catch (RatingException e) {
-            log.trace("Failed to apply one shot charge {}: {}", oneShotChargeTemplate.getCode(), e.getRejectionReason());
-            throw new MeveoApiException(e.getMessage());
-
         } catch (BusinessException e) {
-            log.error("Failed to apply one shot charge {}: {}", oneShotChargeTemplate.getCode(), e.getMessage(), e);
-            throw e;
+            throw new MeveoApiException(e.getMessage());
         }
-
     }
 
     /**
@@ -1094,9 +1064,6 @@ public class SubscriptionApi extends BaseApi {
      * @return instance of SubscriptionsListDto which contains list of Subscription DTO
      * @throws MeveoApiException meveo api exception
      */
-    @SecuredBusinessEntityMethod(resultFilter = ListFilter.class)
-    @FilterResults(propertyToFilter = "subscription", itemPropertiesToFilter = { @FilterProperty(property = "seller", entityClass = Seller.class),
-			@FilterProperty(property = "userAccount", entityClass = UserAccount.class)})
     public SubscriptionsDto listByUserAccount(String userAccountCode, boolean mergedCF, String sortBy, SortOrder sortOrder) throws MeveoApiException {
 
         if (StringUtils.isBlank(userAccountCode)) {
@@ -1135,9 +1102,6 @@ public class SubscriptionApi extends BaseApi {
         return list(pagingAndFiltering, CustomFieldInheritanceEnum.getInheritCF(true, merge));
     }
 
-    @SecuredBusinessEntityMethod(resultFilter = ListFilter.class)
-    @FilterResults(propertyToFilter = "subscriptions.subscription", itemPropertiesToFilter = { @FilterProperty(property = "seller", entityClass = Seller.class),
-			@FilterProperty(property = "userAccount", entityClass = UserAccount.class)})
     public SubscriptionsListResponseDto list(PagingAndFiltering pagingAndFiltering, CustomFieldInheritanceEnum inheritCF) throws MeveoApiException {
 
         String sortBy = DEFAULT_SORT_ORDER_ID;
@@ -1191,9 +1155,6 @@ public class SubscriptionApi extends BaseApi {
      * @return instance of SubscriptionsListDto which contains list of Subscription DTO
      * @throws MeveoApiException meveo api exception
      */
-    @SecuredBusinessEntityMethod(resultFilter = ObjectFilter.class)
-    @FilterResults( itemPropertiesToFilter = { @FilterProperty(property = "seller", entityClass = Seller.class),
-			@FilterProperty(property = "userAccount", entityClass = UserAccount.class)})
     public SubscriptionDto findSubscription(String subscriptionCode, boolean mergedCF, CustomFieldInheritanceEnum inheritCF) throws MeveoApiException {
         SubscriptionDto result = new SubscriptionDto();
 
@@ -2184,21 +2145,12 @@ public class SubscriptionApi extends BaseApi {
             }
             subscription.setBillingCycle(billingCycle);
         }
-        
-        if (!StringUtils.isBlank(postData.getMinimumInvoiceSubCategory())) {
-            InvoiceSubCategory minimumInvoiceSubCategory = invoiceSubCategoryService.findByCode(postData.getMinimumInvoiceSubCategory());
-            if (minimumInvoiceSubCategory == null) {
-                throw new EntityDoesNotExistsException(InvoiceSubCategory.class, postData.getMinimumInvoiceSubCategory());
-            }
-            subscription.setMinimumInvoiceSubCategory(minimumInvoiceSubCategory);
-        }
         subscription.setSubscriptionDate(postData.getSubscriptionDate());
-        
         //subscription.setTerminationDate(postData.getTerminationDate());
 
         SubscriptionRenewal subscriptionRenewal = null;
         if (postData.getRenewalRule() == null) {
-            subscriptionRenewal = subscriptionRenewalFromDto(offerTemplate.getSubscriptionRenewal().copy(), null, false);
+            subscriptionRenewal = subscriptionRenewalFromDto(offerTemplate.getSubscriptionRenewal(), null, false);
         } else {
             subscriptionRenewal = subscriptionRenewalFromDto(null, postData.getRenewalRule(), false);
         }
@@ -2224,10 +2176,7 @@ public class SubscriptionApi extends BaseApi {
         subscription.setMinimumLabelEl(postData.getMinimumLabelEl());
         subscription.setMinimumLabelElSpark(postData.getMinimumLabelElSpark());
         subscription.setRatingGroup(postData.getRatingGroup());
-        
-        // populate Electronic Billing Fields
-        populateElectronicBillingFields(postData, subscription);
-        
+
         // populate customFields
         try {
             populateCustomFields(postData.getCustomFields(), subscription, true);

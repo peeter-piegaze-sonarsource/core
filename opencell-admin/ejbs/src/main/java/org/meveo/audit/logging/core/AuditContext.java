@@ -1,12 +1,10 @@
 package org.meveo.audit.logging.core;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.commons.io.IOUtils;
 import org.meveo.audit.logging.configuration.AuditConfiguration;
 import org.meveo.audit.logging.dto.ClassAndMethods;
 import org.meveo.audit.logging.handler.Handler;

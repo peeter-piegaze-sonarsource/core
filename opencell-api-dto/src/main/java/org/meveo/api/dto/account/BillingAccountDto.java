@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -106,11 +107,6 @@ public class BillingAccountDto extends AccountDto {
      * Expression to determine rated transaction description to reach minimum amount value - for Spark
      */
     private String minimumLabelElSpark;
-    
-    /**
-     * Minimum Invoice SubCategory
-     */
-    private String minimumInvoiceSubCategory;
 
     /**
      * Field was deprecated in 4.6 version. Use 'paymentMethods' field on CustomerAccount entity instead.
@@ -213,10 +209,6 @@ public class BillingAccountDto extends AccountDto {
             setPhone(contactInfos.getPhone());
             setEmail(contactInfos.getEmail());
         }
-        
-        setMailingType(e.getMailingType() != null ? e.getMailingType().getLabel() : null);
-        setEmailTemplate(e.getEmailTemplate() != null ? e.getEmailTemplate().getCode() : null);
-        setCcedEmails(e.getCcedEmails());
 
         // Start compatibility with pre-4.6 versions
 
@@ -736,19 +728,5 @@ public class BillingAccountDto extends AccountDto {
      */
     public void setCcedEmails(String ccedEmails) {
         this.ccedEmails = ccedEmails;
-    }
-
-    /**
-     * @return the minimumInvoiceSubCategory
-     */
-    public String getMinimumInvoiceSubCategory() {
-        return minimumInvoiceSubCategory;
-    }
-
-    /**
-     * @param minimumInvoiceSubCategory the minimumInvoiceSubCategory to set
-     */
-    public void setMinimumInvoiceSubCategory(String minimumInvoiceSubCategory) {
-        this.minimumInvoiceSubCategory = minimumInvoiceSubCategory;
     }
 }

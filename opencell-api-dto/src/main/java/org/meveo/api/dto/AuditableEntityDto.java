@@ -11,9 +11,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.Hidden;
-
 /**
  * Equivalent of AuditableEntity in DTO
  *
@@ -23,19 +20,17 @@ import io.swagger.v3.oas.annotations.Hidden;
  */
 @XmlRootElement(name = "AuditableEntity")
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract @Hidden class AuditableEntityDto extends BaseEntityDto {
+public abstract class AuditableEntityDto extends BaseEntityDto {
 
     /**
      * serial version uid.
      */
     private static final long serialVersionUID = 1040133977061424749L;
 
-    @Schema(hidden=true)
     private AuditableDto auditable;
 
     @XmlElementWrapper(name = "auditableFields")
     @XmlElement(name = "auditableField")
-    @Schema(hidden=true)
     private List<AuditableFieldDto> auditableFields;
 
     public AuditableEntityDto() {
@@ -53,13 +48,13 @@ public abstract @Hidden class AuditableEntityDto extends BaseEntityDto {
             auditableFields = null;
         }
     }
-    @Schema(hidden=true)
+
     public void setAuditable(AuditableEntity e) {
         if (e != null && e.getAuditable() != null) {
             auditable = new AuditableDto(e.getAuditable());
         }
     }
-    @Schema(hidden=true)
+
     public AuditableDto getAuditableNullSafe() {
         if (auditable == null) {
             auditable = new AuditableDto();

@@ -27,7 +27,6 @@ import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 
 import org.meveo.admin.exception.BusinessException;
-import org.meveo.admin.exception.RatingException;
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.model.billing.ProductChargeInstance;
 import org.meveo.model.billing.Subscription;
@@ -82,10 +81,11 @@ public class ProductChargeInstanceService extends BusinessService<ProductChargeI
      * @param isVirtual indicates that it is virtual operation
      * @return list of wallet operations
      * @throws BusinessException business exception.
-     * @throws RatingException Failed to rate a charge due to lack of funds, data validation, inconsistency or other rating related failure
+     * 
+     * @author akadid abdelmounaim
      * @lastModifiedVersion 5.1 Candidate
      */
-    public List<WalletOperation> applyProductChargeInstance(ProductChargeInstance productChargeInstance, boolean isVirtual) throws BusinessException, RatingException {
+    public List<WalletOperation> applyProductChargeInstance(ProductChargeInstance productChargeInstance, boolean isVirtual) throws BusinessException {
 
         List<WalletOperation> walletOperations = null;
         ProductChargeTemplate chargeTemplate = productChargeInstance.getProductChargeTemplate();

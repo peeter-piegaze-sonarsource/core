@@ -30,16 +30,7 @@ public enum EDRStatusEnum {
         }
         return null;
     }
-    public static EDRStatusEnum getByLabel(String label) {
-        if (label != null) {
-            for (EDRStatusEnum status : values()) {
-                if (label.equals(status.getLabel())) {
-                    return status;
-                }
-            }
-        }
-        return null;
-    }
+
     public String toString() {
         return name();
     }

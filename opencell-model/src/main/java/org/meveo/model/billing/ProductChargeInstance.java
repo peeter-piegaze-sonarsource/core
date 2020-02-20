@@ -21,12 +21,14 @@ package org.meveo.model.billing;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.meveo.model.catalog.ProductChargeTemplate;
 
 /**
@@ -35,7 +37,9 @@ import org.meveo.model.catalog.ProductChargeTemplate;
  * @author Andrius Karpavicius
  */
 @Entity
-@DiscriminatorValue("P")
+@Table(name = "billing_product_charge_inst")
+@GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+        @Parameter(name = "sequence_name", value = "billing_product_chrg_inst_seq"), })
 public class ProductChargeInstance extends ChargeInstance {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +48,7 @@ public class ProductChargeInstance extends ChargeInstance {
      * Charge template/definition that charge was instantiated from
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "charge_template_id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_chrg_tmpl_id")
     private ProductChargeTemplate productChargeTemplate;
 
     /**
@@ -96,16 +100,10 @@ public class ProductChargeInstance extends ChargeInstance {
         this.productInstance = productInstance;
     }
 
-    /**
-     * @return Quantity purchased
-     */
     public BigDecimal getQuantity() {
         return quantity;
     }
 
-    /**
-     * @param quantity Quantity purchased
-     */
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }

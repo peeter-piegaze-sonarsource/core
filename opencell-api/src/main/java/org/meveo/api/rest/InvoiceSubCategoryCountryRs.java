@@ -34,8 +34,8 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param postData invoice sub category to be created
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(InvoiceSubCategoryCountryDto postData);
 
     /**
@@ -44,8 +44,8 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param postData invoice sub category to be updated
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(InvoiceSubCategoryCountryDto postData);
 
     /**
@@ -56,8 +56,8 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param country Buyer's country
      * @return invoice sub category if exists for given codes.
      */
-    @GET
     @Path("/")
+    @GET
     GetInvoiceSubCategoryCountryResponse find(@QueryParam("invoiceSubCategoryCode") String invoiceSubCategoryCode, @QueryParam("sellersCountry") String sellersCountry,
             @QueryParam("country") String country);
 
@@ -69,8 +69,8 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param country Buyer's country
      * @return action status
      */
-    @DELETE
     @Path("/{invoiceSubCategoryCode}/{sellersCountry:.*}/{country:.*}")
+    @DELETE
     ActionStatus remove(@PathParam("invoiceSubCategoryCode") String invoiceSubCategoryCode, @PathParam("sellersCountry") String sellersCountry,
             @PathParam("country") String country);
 
@@ -82,8 +82,8 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param buyerCountryCode Buyer's country
      * @return action status
      */
-    @DELETE
     @Path("/{invoiceSubCategoryCode}/{country}")
+    @DELETE
     ActionStatus remove(@PathParam("invoiceSubCategoryCode") String invoiceSubCategoryCode, @PathParam("country") String buyerCountryCode);
 
     /**
@@ -92,7 +92,7 @@ public interface InvoiceSubCategoryCountryRs extends IBaseRs {
      * @param postData invoice sub category to be created or updated
      * @return action status
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(InvoiceSubCategoryCountryDto postData);
 }

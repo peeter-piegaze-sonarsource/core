@@ -1,0 +1,6 @@
+.factorypath
+.classpath
+.project
+.settings/
+target/
+**_IS_UNDEFINED**

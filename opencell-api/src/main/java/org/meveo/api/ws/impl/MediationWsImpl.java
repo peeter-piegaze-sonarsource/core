@@ -9,7 +9,6 @@ import org.meveo.api.billing.MediationApi;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
 import org.meveo.api.dto.billing.CdrListDto;
-import org.meveo.api.dto.billing.ChargeCDRDto;
 import org.meveo.api.dto.billing.PrepaidReservationDto;
 import org.meveo.api.dto.response.billing.CdrReservationResponseDto;
 import org.meveo.api.logging.WsRestApiInterceptor;
@@ -52,8 +51,7 @@ public class MediationWsImpl extends BaseWs implements MediationWs {
         ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
 
         try {
-            ChargeCDRDto chargeCDRDto = new ChargeCDRDto(cdr, getHttpServletRequest().getRemoteAddr(), false, false, false, 1);
-            mediationApi.chargeCdr(chargeCDRDto);
+            mediationApi.chargeCdr(cdr, getHttpServletRequest().getRemoteAddr());
         } catch (Exception e) {
             processException(e, result);
         }

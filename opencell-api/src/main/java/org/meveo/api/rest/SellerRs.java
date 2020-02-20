@@ -36,8 +36,8 @@ public interface SellerRs extends IBaseRs {
      * @param postData posted data to API containing information of seller
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(SellerDto postData);
 
     /**
@@ -46,8 +46,8 @@ public interface SellerRs extends IBaseRs {
      * @param postData posted data
      * @return action status.
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(SellerDto postData);
 
     /**
@@ -57,8 +57,8 @@ public interface SellerRs extends IBaseRs {
      * @param inheritCF Should inherited custom fields be retrieved. Defaults to INHERIT_NO_MERGE.
      * @return found seller.
      */
-    @GET
     @Path("/")
+    @GET
     GetSellerResponse find(@QueryParam("sellerCode") String sellerCode, @DefaultValue("INHERIT_NO_MERGE") @QueryParam("inheritCF") CustomFieldInheritanceEnum inheritCF);
 
     /**
@@ -67,8 +67,8 @@ public interface SellerRs extends IBaseRs {
      * @param sellerCode code of seller
      * @return action status.
      */
-    @DELETE
     @Path("/{sellerCode}")
+    @DELETE
     ActionStatus remove(@PathParam("sellerCode") String sellerCode);
 
     /**
@@ -76,27 +76,23 @@ public interface SellerRs extends IBaseRs {
      * 
      * @return list of seller
      */
-    @GET
     @Path("/list")
+    @GET
     SellerResponseDto list();
 
     /**
-     * Search for all seller's code.
-     *
      * @return list of seller's code.
      */
-    @GET
     @Path("/listSellerCodes")
+    @GET
     SellerCodesResponseDto listSellerCodes();
 
     /**
-     * Create or update a seller.
-     *
      * @param postData posted data
      * @return created or updated seller.
      */
-    @POST
     @Path("/createOrUpdate")
+    @POST
     ActionStatus createOrUpdate(SellerDto postData);
 
 }

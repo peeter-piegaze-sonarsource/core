@@ -95,17 +95,15 @@ public class ScriptInstance extends EnableBusinessEntity {
      * Does script currently have compilation errors
      */
     @Type(type = "numeric_boolean")
-    @Column(name = "is_error", nullable = false)
-    @NotNull
-    protected boolean error = false;
+    @Column(name = "is_error")
+    protected Boolean error = false;
 
     /**
      * Shall same script instance be utilized in repeated calls
      */
     @Type(type = "numeric_boolean")
-    @Column(name = "reuse", nullable = false)
-    @NotNull
-    protected boolean reuse = false;
+    @Column(name = "reuse")
+    protected Boolean reuse = false;
 
     /**
      * Script category
@@ -177,42 +175,42 @@ public class ScriptInstance extends EnableBusinessEntity {
     /**
      * @return the error
      */
-    public boolean isError() {
+    public Boolean isError() {
         return error;
     }
 
     /**
      * @return the error
      */
-    public boolean getError() {
+    public Boolean getError() {
         return error;
     }
 
     /**
      * @param error the error to set
      */
-    public void setError(boolean error) {
+    public void setError(Boolean error) {
         this.error = error;
     }
 
     /**
      * @return Shall same script instance be utilized in repeated calls
      */
-    public boolean getReuse() {
+    public Boolean getReuse() {
         return reuse;
     }
 
     /**
      * @return Shall same script instance be utilized in repeated calls
      */
-    public boolean isReuse() {
+    public Boolean isReuse() {
         return reuse;
     }
 
     /**
      * @param reuse Shall same script instance be utilized in repeated calls
      */
-    public void setReuse(boolean reuse) {
+    public void setReuse(Boolean reuse) {
         this.reuse = reuse;
     }
 

@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -451,26 +450,10 @@ public class CatalogHierarchyBuilderService {
 
     }
     private void duplicateCharges(ServiceTemplate entity) {
-        entity.setServiceRecurringCharges(new ArrayList<>(entity.getServiceRecurringCharges()));
-        entity.getServiceRecurringCharges().forEach(sctRecurring -> {
-            serviceChargeTemplateRecurringService.detach(sctRecurring);
-            linkAnExistingChargeToNewServiceTemplate(entity, sctRecurring);
-        });
-        entity.setServiceSubscriptionCharges(new ArrayList<>(entity.getServiceSubscriptionCharges()));
-        entity.getServiceSubscriptionCharges().forEach(sctSubscription -> {
-            serviceChargeTemplateSubscriptionService.detach(sctSubscription);
-            linkAnExistingChargeToNewServiceTemplate(entity, sctSubscription);
-        });
-        entity.setServiceTerminationCharges(new ArrayList<>(entity.getServiceTerminationCharges()));
-        entity.getServiceTerminationCharges().forEach(sctTermination -> {
-            serviceChargeTemplateTerminationService.detach(sctTermination);
-            linkAnExistingChargeToNewServiceTemplate(entity, sctTermination);
-        });
-        entity.setServiceUsageCharges(new ArrayList<>(entity.getServiceUsageCharges()));
-        entity.getServiceUsageCharges().forEach(sctUsageCharge -> {
-            serviceChargeTemplateUsageService.detach(sctUsageCharge);
-            linkAnExistingChargeToNewServiceTemplate(entity, sctUsageCharge);
-        });
+        entity.getServiceRecurringCharges().forEach(sctRecurring -> linkAnExistingChargeToNewServiceTemplate(entity, sctRecurring));
+        entity.getServiceSubscriptionCharges().forEach(sctSubscription -> linkAnExistingChargeToNewServiceTemplate(entity, sctSubscription));
+        entity.getServiceTerminationCharges().forEach(sctTermination -> linkAnExistingChargeToNewServiceTemplate(entity, sctTermination));
+        entity.getServiceUsageCharges().forEach(sctUsageCharge -> linkAnExistingChargeToNewServiceTemplate(entity, sctUsageCharge));
     }
 
     private void linkAnExistingChargeToNewServiceTemplate(ServiceTemplate entity, ServiceChargeTemplate termination) {

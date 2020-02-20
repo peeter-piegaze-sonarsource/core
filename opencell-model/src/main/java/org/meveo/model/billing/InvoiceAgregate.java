@@ -28,13 +28,11 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.meveo.commons.utils.NumberUtils;
 import org.meveo.model.AuditableEntity;
 
 /**
@@ -47,7 +45,6 @@ import org.meveo.model.AuditableEntity;
 @Table(name = "billing_invoice_agregate")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
-@NamedQuery(name = "InvoiceAgregate.deleteByBR", query = "delete from InvoiceAgregate ia where ia.billingRun.id=:billingRunId")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "billing_invoice_agregate_seq"), })
 public abstract class InvoiceAgregate extends AuditableEntity {
@@ -196,14 +193,6 @@ public abstract class InvoiceAgregate extends AuditableEntity {
 
     public void setItemNumber(Integer itemNumber) {
         this.itemNumber = itemNumber;
-    }
-
-    public void addItemNumber(Integer numberToAdd) {
-        if (itemNumber == null) {
-            itemNumber = numberToAdd;
-        } else {
-            itemNumber = itemNumber.intValue() + numberToAdd.intValue();
-        }
     }
 
     public String getDescription() {

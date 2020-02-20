@@ -44,7 +44,7 @@ public enum DDRequestOpEnum {
     public static DDRequestOpEnum getValue(Integer id) {
         if (id != null) {
             for (DDRequestOpEnum value : values()) {
-            	if ( id.equals(value.getId()) ) {
+                if (value.getId() == id) {
                     return value;
                 }
             }

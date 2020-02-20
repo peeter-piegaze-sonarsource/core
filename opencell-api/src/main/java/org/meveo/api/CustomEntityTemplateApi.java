@@ -102,10 +102,9 @@ public class CustomEntityTemplateApi extends BaseCrudApi<CustomEntityTemplate, C
 
                 if (cftDto.getStorageType() != CustomFieldStorageTypeEnum.SINGLE || (cftDto.getFieldType() != CustomFieldTypeEnum.DATE
                         && cftDto.getFieldType() != CustomFieldTypeEnum.DOUBLE && cftDto.getFieldType() != CustomFieldTypeEnum.LIST
-                        && cftDto.getFieldType() != CustomFieldTypeEnum.LONG && cftDto.getFieldType() != CustomFieldTypeEnum.STRING
-                        && cftDto.getFieldType() != CustomFieldTypeEnum.BOOLEAN)
+                        && cftDto.getFieldType() != CustomFieldTypeEnum.LONG && cftDto.getFieldType() != CustomFieldTypeEnum.STRING)
                         || (cftDto.isVersionable() != null && cftDto.isVersionable())) {
-                    throw new InvalidParameterException("Custom table supports only unversioned and simple Date, Double, Long, Boolean, String and Select from list type fields");
+                    throw new InvalidParameterException("Custom table supports only unversioned and simple Date, Double, Long, String and Select from list type fields");
                 }
             }
         }
@@ -168,10 +167,9 @@ public class CustomEntityTemplateApi extends BaseCrudApi<CustomEntityTemplate, C
 
                 if (cftDto.getStorageType() != CustomFieldStorageTypeEnum.SINGLE || (cftDto.getFieldType() != CustomFieldTypeEnum.DATE
                         && cftDto.getFieldType() != CustomFieldTypeEnum.DOUBLE && cftDto.getFieldType() != CustomFieldTypeEnum.LIST
-                        && cftDto.getFieldType() != CustomFieldTypeEnum.LONG && cftDto.getFieldType() != CustomFieldTypeEnum.STRING
-                        && cftDto.getFieldType() != CustomFieldTypeEnum.BOOLEAN)
+                        && cftDto.getFieldType() != CustomFieldTypeEnum.LONG && cftDto.getFieldType() != CustomFieldTypeEnum.STRING)
                         || (cftDto.isVersionable() != null && cftDto.isVersionable())) {
-                    throw new InvalidParameterException("Custom table supports only unversioned and simple Date, Double, Long, Boolean, String and Select from list type fields");
+                    throw new InvalidParameterException("Custom table supports only unversioned and simple Date, Double, Long, String and Select from list type fields");
                 }
             }
         }
@@ -384,15 +382,14 @@ public class CustomEntityTemplateApi extends BaseCrudApi<CustomEntityTemplate, C
      * @throws MissingParameterException when there is a missing parameter
      * @throws BusinessException business logic is violated
      */
-    public EntityCustomizationDto listELFiltered(String appliesTo, String entityCode, Long entityId)
-            throws MissingParameterException, BusinessException {
+    public EntityCustomizationDto listELFiltered(String appliesTo, String entityCode) throws MissingParameterException, BusinessException {
         EntityCustomizationDto result = new EntityCustomizationDto();
         log.debug("IPIEL: listELFiltered");
 
         if (StringUtils.isBlank(appliesTo)) {
             missingParameters.add("appliesTo");
         }
-        if (StringUtils.isBlank(entityCode) && entityId == null) {
+        if (StringUtils.isBlank(entityCode)) {
             missingParameters.add("entityCode");
         }
 
@@ -411,10 +408,7 @@ public class CustomEntityTemplateApi extends BaseCrudApi<CustomEntityTemplate, C
         }
 
         // search for custom field entity filtered by type and code
-        String key=entityId!=null ? "id" : "code";
-        Object value=entityId!=null?entityId:entityCode;
-        // search for custom field entity filtered by type and code
-        ICustomFieldEntity entityInstance = customEntityTemplateService.findByClassAndKeyValue(entityClass, key, value);
+        ICustomFieldEntity entityInstance = customEntityTemplateService.findByClassAndCode(entityClass, entityCode);
 
         // custom fields that applies to an entity type, eg. OfferTemplate
         Map<String, CustomFieldTemplate> cetFields = customFieldTemplateService.findByAppliesTo(appliesTo);

@@ -1,20 +1,5 @@
 package org.meveo.api.admin;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.meveo.admin.util.FlatFileValidator;
-import org.meveo.api.BaseApi;
-import org.meveo.api.dto.admin.FileDto;
-import org.meveo.api.dto.admin.FileRequestDto;
-import org.meveo.api.exception.BusinessApiException;
-import org.meveo.api.exception.MeveoApiException;
-import org.meveo.commons.utils.FileUtils;
-import org.meveo.commons.utils.StringUtils;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,18 +10,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
+import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.meveo.api.BaseApi;
+import org.meveo.api.dto.admin.FileDto;
+import org.meveo.api.dto.admin.FileRequestDto;
+import org.meveo.api.exception.BusinessApiException;
+import org.meveo.api.exception.MeveoApiException;
+import org.meveo.commons.utils.FileUtils;
+import org.meveo.commons.utils.StringUtils;
+
 /**
  * @author Edward P. Legaspi
  * @author Wassim Drira
  * @author Youssef IZEM
- * @author Abdellatif BARI
- * @lastModifiedVersion 7.3.0
+ * @lastModifiedVersion 5.4
+ * 
  */
 @Stateless
 public class FilesApi extends BaseApi {
-
-    @Inject
-    private FlatFileValidator flatFileValidator;
 
     public String getProviderRootDir() {
         return paramBeanFactory.getChrootDir();
@@ -111,10 +107,9 @@ public class FilesApi extends BaseApi {
     /**
      * @param data array of bytes as data uploaded
      * @param filename file name
-     * @param fileFormat file format
      * @throws BusinessApiException business api exeption.
      */
-    public void uploadFile(byte[] data, String filename, String fileFormat) throws BusinessApiException {
+    public void uploadFile(byte[] data, String filename) throws BusinessApiException {
         File file = new File(getProviderRootDir() + File.separator + filename);
         FileOutputStream fop = null;
         try {
@@ -132,10 +127,6 @@ public class FilesApi extends BaseApi {
                 // get parent dir
                 String parentDir = file.getParent();
                 FileUtils.unzipFile(parentDir, new FileInputStream(file));
-            }
-
-            if (!StringUtils.isBlank(fileFormat)) {
-                flatFileValidator.validateAndLogFile(file, filename, fileFormat, null);
             }
 
         } catch (Exception e) {

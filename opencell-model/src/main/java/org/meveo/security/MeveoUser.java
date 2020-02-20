@@ -131,13 +131,13 @@ public abstract class MeveoUser implements Serializable {
         return locale;
     }
 
-    public String toStringLong() {
+    @Override
+    public String toString() {
         return "MeveoUser [" + " auth=" + authenticated + ", forced=" + forcedAuthentication + ", sub=" + subject + ", userName=" + userName + ", fullName=" + fullName
                 + ", provider=" + providerCode + ", roles " + roles + "]";
     }
 
-    @Override
-    public String toString() {
+    public Object toStringShort() {
         return "MeveoUser [forced=" + forcedAuthentication + ", sub=" + subject + ", userName=" + userName + ", provider=" + providerCode + "]";
     }
 

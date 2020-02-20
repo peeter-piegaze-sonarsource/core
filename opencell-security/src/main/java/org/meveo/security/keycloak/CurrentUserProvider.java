@@ -174,12 +174,12 @@ public class CurrentUserProvider {
         // getCurrentTenant());
         supplementOrCreateUserInApp(user, em);
 
-        log.trace("Current user is {}", user.toStringLong());
+        log.trace("Current user is {}", user);
         return user;
     }
 
     /**
-     * Register a user in application if accessing for the first time with that username
+     * Register a user in application if accesing for the first time with that username
      * 
      * @param currentUser Authenticated current user
      */

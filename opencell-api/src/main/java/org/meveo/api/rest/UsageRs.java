@@ -30,21 +30,19 @@ public interface UsageRs extends IBaseRs {
      * @param toDate to date
      * @return usage
      */
-    @GET
     @Path("/")
+    @GET
     UsageResponseDto find(@QueryParam("userAccountCode") String userAccountCode, @QueryParam("fromDate") @RestDateParam Date fromDate,
             @QueryParam("toDate") @RestDateParam Date toDate);
 
     /**
-     * Search for charge aggregate isage from a user account code during a period of time.
-     *
      * @param userAccountCode user account's code
      * @param fromDate from date
      * @param toDate to date
      * @return usage charge aggregate
      */
-    @GET
     @Path("/chargeAggregate")
+    @GET
     UsageChargeAggregateResponseDto chargeAggregate(@QueryParam("userAccountCode") String userAccountCode, @QueryParam("fromDate") @RestDateParam Date fromDate,
             @QueryParam("toDate") @RestDateParam Date toDate);
 

@@ -3,7 +3,6 @@ package org.meveo.api.dto.catalog;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,10 +29,6 @@ public class CounterTemplateDto extends EnableBusinessDto implements Serializabl
     @XmlAttribute(required = true)
     private String calendar;
 
-    /** The calendar code El. */
-    @Size(max = 2000)
-    private String calendarCodeEl;
-
     /** The unity. */
     private String unity;
 
@@ -47,7 +42,6 @@ public class CounterTemplateDto extends EnableBusinessDto implements Serializabl
     private CounterTemplateLevel counterLevel;
 
     /** The ceiling expression el. */
-    @Size(max = 2000)
     private String ceilingExpressionEl;
 
     /** The notification levels. */
@@ -70,7 +64,6 @@ public class CounterTemplateDto extends EnableBusinessDto implements Serializabl
         type = counterTemplate.getCounterType();
         ceiling = counterTemplate.getCeiling();
         calendar = counterTemplate.getCalendar().getCode();
-        calendarCodeEl = counterTemplate.getCalendarCodeEl();
         counterLevel = counterTemplate.getCounterLevel();
         ceilingExpressionEl = counterTemplate.getCeilingExpressionEl();
         notificationLevels = counterTemplate.getNotificationLevels();
@@ -149,20 +142,6 @@ public class CounterTemplateDto extends EnableBusinessDto implements Serializabl
     }
 
     /**
-     * @return the calendarCodeEl
-     */
-    public String getCalendarCodeEl() {
-        return calendarCodeEl;
-    }
-
-    /**
-     * @param calendarCodeEl the calendarCodeEl to set
-     */
-    public void setCalendarCodeEl(String calendarCodeEl) {
-        this.calendarCodeEl = calendarCodeEl;
-    }
-
-    /**
      * Gets the counter level.
      *
      * @return the counter level
@@ -238,11 +217,11 @@ public class CounterTemplateDto extends EnableBusinessDto implements Serializabl
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return String.format(
-            "CounterTemplateDto [code=%s, description=%s, calendar=%s, calendarCodeEl=%s, unity=%s, type=%s, ceiling=%s, disabled=%s, counterLevel=%s, ceilingExpressionEl=%s, notificationLevels=%s]",
-            getCode(), getDescription(), calendar, calendarCodeEl, unity, type, ceiling, isDisabled(), counterLevel, ceilingExpressionEl, notificationLevels);
-    }
+            "CounterTemplateDto [code=%s, description=%s, calendar=%s, unity=%s, type=%s, ceiling=%s, disabled=%s, counterLevel=%s, ceilingExpressionEl=%s, notificationLevels=%s]",
+            getCode(), getDescription(), calendar, unity, type, ceiling, isDisabled(), counterLevel, ceilingExpressionEl, notificationLevels);
+    }    
 }

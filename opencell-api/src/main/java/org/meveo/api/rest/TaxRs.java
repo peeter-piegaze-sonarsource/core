@@ -33,8 +33,8 @@ public interface TaxRs extends IBaseRs {
      * @param postData tax to be created
      * @return action status
      */
-    @POST
     @Path("/")
+    @POST
     ActionStatus create(TaxDto postData);
 
     /**
@@ -43,8 +43,8 @@ public interface TaxRs extends IBaseRs {
      * @param postData tax to be updated
      * @return action status
      */
-    @PUT
     @Path("/")
+    @PUT
     ActionStatus update(TaxDto postData);
 
     /**
@@ -53,8 +53,8 @@ public interface TaxRs extends IBaseRs {
      * @param taxCode tax's
      * @return tax if exists
      */
-    @GET
     @Path("/")
+    @GET
     GetTaxResponse find(@QueryParam("taxCode") String taxCode);
 
     /**
@@ -63,26 +63,20 @@ public interface TaxRs extends IBaseRs {
      * @param taxCode tax's code
      * @return action status
      */
-    @DELETE
     @Path("/{taxCode}")
+    @DELETE
     ActionStatus remove(@PathParam("taxCode") String taxCode);
 
     /**
-     * Create or uptadate a tax. 
-     *
      * @param postData tax to be created or updated
      * @return action status
      */
-    @POST 
     @Path("/createOrUpdate")
-    ActionStatus createOrUpdate(TaxDto postData);
+    @POST ActionStatus createOrUpdate(TaxDto postData);
 
     /**
-     * Search for the list of taxes.
-     *
      * @return list of all taxes.
      */
-    @GET 
     @Path("/list")
-    GetTaxesResponse list();
+    @GET GetTaxesResponse list();
 }

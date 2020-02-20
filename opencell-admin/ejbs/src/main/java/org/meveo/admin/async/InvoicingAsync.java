@@ -9,7 +9,6 @@ import java.util.concurrent.Future;
 
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -55,31 +54,23 @@ public class InvoicingAsync {
     @Inject
     private CurrentUserProvider currentUserProvider;
 
-    @EJB
-    private InvoicingAsync invoicingNewTransaction;
-
     /**
-     * Calculate amounts to invoice, link with Billing run and update Billing account with amount to invoice (if it is a billable entity). One billable entity at a time in a
-     * separate transaction.
+     * Update billing account total amounts async. One billing account at a time in a separate transaction.
      *
-     * @param entities Entities to invoice
+     * @param entities Entities
      * @param billingRun The billing run
      * @param jobInstanceId Job instance id
-     * @param instantiateMinRtsForService Should rated transactions to reach minimum invoicing amount be checked and instantiated on service level.
-     * @param instantiateMinRtsForSubscription Should rated transactions to reach minimum invoicing amount be checked and instantiated on subscription level.
-     * @param instantiateMinRtsForBA Should rated transactions to reach minimum invoicing amount be checked and instantiated on Billing account level.
      * @param lastCurrentUser Current user. In case of multitenancy, when user authentication is forced as result of a fired trigger (scheduled jobs, other timed event
      *        expirations), current user might be lost, thus there is a need to reestablish.
-     * @return The future with a list of entities to invoice and amount to invoice.
+     * @return the future
      * @throws BusinessException the business exception
      */
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Future<List<IBillableEntity>> calculateBillableAmountsAsync(List<IBillableEntity> entities, BillingRun billingRun, Long jobInstanceId,
-            boolean instantiateMinRtsForService, boolean instantiateMinRtsForSubscription, boolean instantiateMinRtsForBA, MeveoUser lastCurrentUser) throws BusinessException {
+    public Future<List<IBillableEntity>> updateBillingAccountTotalAmountsAsync(List<IBillableEntity> entities, BillingRun billingRun, Long jobInstanceId, MeveoUser lastCurrentUser)
+            throws BusinessException {
 
         currentUserProvider.reestablishAuthentication(lastCurrentUser);
-
         List<IBillableEntity> billableEntities = new ArrayList<IBillableEntity>();
         int i = 0;
         for (IBillableEntity entity : entities) {
@@ -87,8 +78,7 @@ public class InvoicingAsync {
             if (jobInstanceId != null && i % JobExecutionService.CHECK_IS_JOB_RUNNING_EVERY_NR == 0 && !jobExecutionService.isJobRunningOnThis(jobInstanceId)) {
                 break;
             }
-            IBillableEntity billableEntity = ratedTransactionService.updateEntityTotalAmountsAndLinkToBR(entity, billingRun, instantiateMinRtsForService,
-                instantiateMinRtsForSubscription, instantiateMinRtsForBA);
+            IBillableEntity billableEntity = ratedTransactionService.updateEntityTotalAmounts(entity, billingRun);
             if (billableEntity != null) {
                 billableEntities.add(billableEntity);
             }
@@ -97,72 +87,33 @@ public class InvoicingAsync {
     }
 
     /**
-     * Calculate amounts to invoice, link with Billing run and update Billing account with amount to invoice (if it is a billable entity). One billable entity at a time in a
-     * separate transaction.
-     *
-     * @param entitiesAndAmounts Entities (ids) and amounts to invoice
-     * @param billingRun The billing run
-     * @param jobInstanceId Job instance id
-     * @param lastCurrentUser Current user. In case of multitenancy, when user authentication is forced as result of a fired trigger (scheduled jobs, other timed event
-     *        expirations), current user might be lost, thus there is a need to reestablish.
-     * @return The future with a list of entities to invoice and amount to invoice.
-     * @throws BusinessException the business exception
-     */
-    @Asynchronous
-    @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Future<List<IBillableEntity>> calculateBillableAmountsAsync(List<AmountsToInvoice> entitiesAndAmounts, BillingRun billingRun, Long jobInstanceId,
-            MeveoUser lastCurrentUser) throws BusinessException {
-
-        currentUserProvider.reestablishAuthentication(lastCurrentUser);
-
-        List<IBillableEntity> billableEntities = new ArrayList<IBillableEntity>();
-        int i = 0;
-        for (AmountsToInvoice amountsToInvoice : entitiesAndAmounts) {
-            i++;
-            if (jobInstanceId != null && i % JobExecutionService.CHECK_IS_JOB_RUNNING_EVERY_NR == 0 && !jobExecutionService.isJobRunningOnThis(jobInstanceId)) {
-                break;
-            }
-            IBillableEntity billableEntity = ratedTransactionService.updateEntityTotalAmountsAndLinkToBR(amountsToInvoice.getEntityToInvoiceId(), billingRun,
-                amountsToInvoice.getAmountsToInvoice());
-            if (billableEntity != null) {
-                billableEntities.add(billableEntity);
-            }
-        }
-        return new AsyncResult<List<IBillableEntity>>(billableEntities);
-    }
-
-    /**
-     * Creates the aggregates and invoice async. One entity at a time in a separate transaction.
+     * Creates the agregates and invoice async. One entity at a time in a separate transaction.
      *
      * @param entities the entity objects
      * @param billingRun the billing run
      * @param jobInstanceId the job instance id
-     * @param instantiateMinRtsForService Should rated transactions to reach minimum invoicing amount be checked and instantiated on service level.
-     * @param instantiateMinRtsForSubscription Should rated transactions to reach minimum invoicing amount be checked and instantiated on subscription level.
-     * @param instantiateMinRtsForBA Should rated transactions to reach minimum invoicing amount be checked and instantiated on Billing account level.
      * @param lastCurrentUser Current user. In case of multitenancy, when user authentication is forced as result of a fired trigger (scheduled jobs, other timed event
      *        expirations), current user might be lost, thus there is a need to reestablish.
      * @return the future
      */
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Future<String> createAgregatesAndInvoiceAsync(List<? extends IBillableEntity> entities, BillingRun billingRun, Long jobInstanceId, boolean instantiateMinRtsForService,
-            boolean instantiateMinRtsForSubscription, boolean instantiateMinRtsForBA, MeveoUser lastCurrentUser) {
+    public Future<String> createAgregatesAndInvoiceAsync(List<? extends IBillableEntity> entities, BillingRun billingRun, Long jobInstanceId, MeveoUser lastCurrentUser) {
 
         currentUserProvider.reestablishAuthentication(lastCurrentUser);
 
-        for (IBillableEntity entityToInvoice : entities) {
-            if (jobInstanceId != null && !jobExecutionService.isJobRunningOnThis(jobInstanceId)) {
+        int i = 0;
+        for (IBillableEntity entity : entities) {
+            i++;
+            if (jobInstanceId != null && i % JobExecutionService.CHECK_IS_JOB_RUNNING_EVERY_NR == 0 && !jobExecutionService.isJobRunningOnThis(jobInstanceId)) {
                 break;
             }
             try {
-                invoiceService.createAgregatesAndInvoiceInNewTransaction(entityToInvoice, billingRun, null, null, null, null, instantiateMinRtsForService,
-                    instantiateMinRtsForSubscription, instantiateMinRtsForBA, false);
-            } catch (Exception e1) {
-                log.error("Failed to create invoices for entity {}/{}", entityToInvoice.getClass().getSimpleName(), entityToInvoice.getId(), e1);
+                invoiceService.createAgregatesAndInvoice(entity, billingRun, null, null, null, null, entity.getMinRatedTransactions(), false, false);
+            } catch (Exception e) {
+                log.error("Error for entity {}/{}", entity.getClass().getSimpleName(), entity.getId(), e);
             }
         }
-
         return new AsyncResult<String>("OK");
     }
 

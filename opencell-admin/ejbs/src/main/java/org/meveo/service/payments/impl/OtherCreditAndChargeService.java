@@ -39,8 +39,7 @@ import org.meveo.service.base.PersistenceService;
  * OtherCreditAndCharge service implementation.
  * 
  * @author Edward P. Legaspi
- * @author melyoussoufi
- * @lastModifiedVersion 7.3.0
+ * @lastModifiedVersion 5.0
  */
 @Stateless
 public class OtherCreditAndChargeService extends
@@ -92,13 +91,13 @@ public class OtherCreditAndChargeService extends
 
 		OtherCreditAndCharge otherCreditAndCharge = new OtherCreditAndCharge();
 		otherCreditAndCharge.setCustomerAccount(customerAccount);
-		otherCreditAndCharge.setCode(occTemplate.getCode());
+		otherCreditAndCharge.setOccCode(occTemplate.getCode());
 		if (descToAppend != null) {
-			otherCreditAndCharge.setDescription(occTemplate.getDescription()
+			otherCreditAndCharge.setOccDescription(occTemplate.getDescription()
 					+ " " + descToAppend);
 		} else {
 			otherCreditAndCharge
-					.setDescription(occTemplate.getDescription());
+					.setOccDescription(occTemplate.getDescription());
 		}
 		otherCreditAndCharge.setAccountingCode(occTemplate.getAccountingCode());
 		otherCreditAndCharge.setAccountCodeClientSide(occTemplate

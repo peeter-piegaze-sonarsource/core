@@ -119,7 +119,7 @@ public interface ChartRs extends IBaseRs {
      * Find a chart with a given code
      * 
      * @param chartCode The chart's code
-     * @return Get Chart Response
+     * @return
      */
     @GET
     @Path("/")

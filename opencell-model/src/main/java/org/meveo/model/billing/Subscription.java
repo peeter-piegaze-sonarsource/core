@@ -18,41 +18,6 @@
  */
 package org.meveo.model.billing;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import org.apache.commons.lang3.BooleanUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -62,12 +27,11 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.IBillableEntity;
-import org.meveo.model.ICounterEntity;
 import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.IDiscountable;
 import org.meveo.model.IWFEntity;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.WorkflowedEntity;
+import org.meveo.model.*;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.audit.AuditChangeTypeEnum;
 import org.meveo.model.audit.AuditTarget;
@@ -83,6 +47,37 @@ import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.rating.EDR;
 import org.meveo.model.shared.DateUtils;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * Subscription
  * 
@@ -95,7 +90,6 @@ import org.meveo.model.shared.DateUtils;
 @Entity
 @WorkflowedEntity
 @ObservableEntity
-@Cacheable
 @CustomFieldEntity(cftCodePrefix = "Subscription", inheritCFValuesFrom = { "offer", "userAccount" })
 @ExportIdentifier({ "code" })
 @Table(name = "billing_subscription", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
@@ -104,15 +98,9 @@ import org.meveo.model.shared.DateUtils;
 @NamedQueries({
         @NamedQuery(name = "Subscription.getExpired", query = "select s.id from Subscription s where s.subscribedTillDate is not null and s.subscribedTillDate<=:date and s.status in (:statuses)"),
         @NamedQuery(name = "Subscription.getToNotifyExpiration", query = "select s.id from Subscription s where s.subscribedTillDate is not null and s.renewalNotifiedDate is null and s.notifyOfRenewalDate is not null and s.notifyOfRenewalDate<=:date and :date < s.subscribedTillDate and s.status in (:statuses)"),
-        @NamedQuery(name = "Subscription.getIdsByUsageChargeTemplate", query = "select ci.serviceInstance.subscription.id from UsageChargeInstance ci where ci.chargeTemplate=:chargeTemplate"),
-        @NamedQuery(name = "Subscription.listByBillingRun", query = "select s from Subscription s where s.billingRun.id=:billingRunId order by s.id"),
-        @NamedQuery(name = "Subscription.getMimimumRTUsed", query = "select s.minimumAmountEl from Subscription s where s.minimumAmountEl is not null"),
-        @NamedQuery(name = "Subscription.getSubscriptionsWithMinAmountBySubscription", query = "select s from Subscription s where s.minimumAmountEl is not null AND s.status = org.meveo.model.billing.SubscriptionStatusEnum.ACTIVE AND s=:subscription"),
-        @NamedQuery(name = "Subscription.getSubscriptionsWithMinAmountByBA", query = "select s from Subscription s where s.minimumAmountEl is not null AND s.status = org.meveo.model.billing.SubscriptionStatusEnum.ACTIVE AND s.userAccount.billingAccount=:billingAccount"),
-        @NamedQuery(name = "Subscription.getSellersByBA", query = "select distinct s.seller from Subscription s where s.userAccount.billingAccount=:billingAccount") 
+        @NamedQuery(name = "Subscription.getIdsByUsageChargeTemplate", query = "select ci.serviceInstance.subscription.id from UsageChargeInstance ci where ci.chargeTemplate=:chargeTemplate") })
 
-})
-public class Subscription extends BusinessCFEntity implements IBillableEntity, IWFEntity, IDiscountable, ICounterEntity {
+public class Subscription extends BusinessCFEntity implements IBillableEntity, IWFEntity, IDiscountable,ICounterEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -281,11 +269,6 @@ public class Subscription extends BusinessCFEntity implements IBillableEntity, I
     @Column(name = "minimum_label_el_sp", length = 2000)
     @Size(max = 2000)
     private String minimumLabelElSpark;
-    
-    /** Corresponding to minimum invoice subcategory */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "minimum_invoice_sub_category_id")
-    private InvoiceSubCategory minimumInvoiceSubCategory;
 
     /**
      * Optional billing cycle for invoicing by subscription
@@ -389,21 +372,6 @@ public class Subscription extends BusinessCFEntity implements IBillableEntity, I
      */
     @Column(name = "initial_renewal", columnDefinition = "text")
     private String initialSubscriptionRenewal;
-
-    /**
-     * This method is called implicitly by hibernate, used to enable
-	 * encryption for custom fields of this entity
-     */
-    @PrePersist
-	@PreUpdate
-	public void preUpdate() {
-		if (cfValues != null) {
-			cfValues.setEncrypted(true);
-		}
-		if (cfAccumulatedValues != null) {
-			cfAccumulatedValues.setEncrypted(true);
-		}
-	}
 
     public Date getEndAgreementDate() {
         return endAgreementDate;
@@ -1004,10 +972,8 @@ public class Subscription extends BusinessCFEntity implements IBillableEntity, I
     public void setInitialSubscriptionRenewal(String initialSubscriptionRenewal) {
         this.initialSubscriptionRenewal = initialSubscriptionRenewal;
     }
-
     /**
      * Gets counters
-     * 
      * @return a map of counters
      */
     public Map<String, CounterInstance> getCounters() {
@@ -1016,24 +982,9 @@ public class Subscription extends BusinessCFEntity implements IBillableEntity, I
 
     /**
      * Sets counters
-     * 
      * @param counters a map of counters
      */
     public void setCounters(Map<String, CounterInstance> counters) {
         this.counters = counters;
-    }
-
-    /**
-     * @return the minimumInvoiceSubCategory
-     */
-    public InvoiceSubCategory getMinimumInvoiceSubCategory() {
-        return minimumInvoiceSubCategory;
-    }
-
-    /**
-     * @param minimumInvoiceSubCategory the minimumInvoiceSubCategory to set
-     */
-    public void setMinimumInvoiceSubCategory(InvoiceSubCategory minimumInvoiceSubCategory) {
-        this.minimumInvoiceSubCategory = minimumInvoiceSubCategory;
     }
 }

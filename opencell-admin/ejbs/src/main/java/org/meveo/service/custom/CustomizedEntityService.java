@@ -18,7 +18,6 @@ import org.meveo.model.jobs.JobInstance;
 import org.meveo.service.job.Job;
 import org.meveo.service.job.JobInstanceService;
 import org.meveo.util.EntityCustomizationUtils;
-import org.primefaces.component.log.Log;
 import org.reflections.Reflections;
 
 public class CustomizedEntityService implements Serializable {
@@ -80,13 +79,11 @@ public class CustomizedEntityService implements Serializable {
 
             if (includeParentClassesOnly) {
                 annotation = cfClass.getDeclaredAnnotation(CustomFieldEntity.class);
-                // Will ignore that class is abstract - covers cases like ChargeTemplate where all charge templates are customized the same way (appliesTo value is same for all
-                // subclasses)
             } else {
                 annotation = cfClass.getAnnotation(CustomFieldEntity.class);
             }
 
-            boolean isSkipped = annotation == null || JobInstance.class.isAssignableFrom(cfClass)
+            boolean isSkipped = annotation == null || JobInstance.class.isAssignableFrom(cfClass) || Modifier.isAbstract(cfClass.getModifiers())
                     || (entityName != null && !cfClass.getSimpleName().toLowerCase().contains(entityName.toLowerCase()))
                     || (!includeNonManagedEntities && !annotation.isManuallyManaged());
 

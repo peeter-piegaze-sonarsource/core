@@ -164,9 +164,7 @@ public class JobExecutionResultImpl extends BaseEntity {
      * @param error Message to log
      */
     public synchronized void registerError(String error) {
-        if (jobInstance.isVerboseReport() && !StringUtils.isBlank(error)) {
-            errors.add(error);
-        }
+        errors.add(error);
         nbItemsProcessedWithError++;
     }
 
@@ -289,7 +287,7 @@ public class JobExecutionResultImpl extends BaseEntity {
      * 
      * @param nbItemsToProcess Number to increment by
      */
-    public synchronized void addNbItemsToProcess(long nbItemsToProcess) {
+    public void addNbItemsToProcess(long nbItemsToProcess) {
         this.nbItemsToProcess += nbItemsToProcess;
     }
 
@@ -313,7 +311,7 @@ public class JobExecutionResultImpl extends BaseEntity {
      * 
      * @param incrementBy Number to increment by
      */
-    public synchronized void addNbItemsCorrectlyProcessed(long incrementBy) {
+    public void addNbItemsCorrectlyProcessed(long incrementBy) {
         this.nbItemsCorrectlyProcessed += incrementBy;
     }
 
@@ -336,7 +334,7 @@ public class JobExecutionResultImpl extends BaseEntity {
      * 
      * @param incrementBy Number to increment by
      */
-    public synchronized void addNbItemsProcessedWithWarning(long incrementBy) {
+    public void addNbItemsProcessedWithWarning(long incrementBy) {
         this.nbItemsProcessedWithWarning += incrementBy;
     }
 
@@ -359,17 +357,8 @@ public class JobExecutionResultImpl extends BaseEntity {
      * 
      * @param incrementBy Number to increment by
      */
-    public synchronized void addNbItemsProcessedWithError(long incrementBy) {
+    public void addNbItemsProcessedWithError(long incrementBy) {
         this.nbItemsProcessedWithError += incrementBy;
-    }
-
-    /**
-     * Get a total number of items processed.
-     * 
-     * @return A sum of items processed correctly, with error and with warning.
-     */
-    public long getNbItemsProcessed() {
-        return nbItemsCorrectlyProcessed + nbItemsProcessedWithError + nbItemsProcessedWithWarning;
     }
 
     /**
@@ -426,8 +415,10 @@ public class JobExecutionResultImpl extends BaseEntity {
      * @param messageToAppend A message to append
      */
 
-    public synchronized void addReport(String messageToAppend) {
-        this.report = (this.report == null ? "" : (this.report + " \n ")) + messageToAppend;
+    public void addReport(String messageToAppend) {
+		if (jobInstance.isVerboseReport() && !StringUtils.isBlank(messageToAppend)) {
+			this.report = (this.report == null ? "" : (this.report + " \n ")) + messageToAppend;
+		}
     }
 
     /**

@@ -79,7 +79,7 @@ public class XLSFile implements Serializable {
 
 				contexts.add(strs);
 			}
-		} catch (InvalidFormatException e) {
+		} catch (Exception e) {
 			log.error("invalid file format ",e);
 		}
 	}

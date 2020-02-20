@@ -27,7 +27,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.ExportIdentifier;
-import org.meveo.model.ISearchable;
 
 /**
  * Customer brand
@@ -40,7 +39,7 @@ import org.meveo.model.ISearchable;
 @Table(name = "crm_customer_brand", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "crm_customer_brand_seq"), })
-public class CustomerBrand extends BusinessEntity implements ISearchable {
+public class CustomerBrand extends BusinessEntity {
 
     private static final long serialVersionUID = 4284972526441749139L;
 }

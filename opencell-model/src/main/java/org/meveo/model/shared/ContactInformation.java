@@ -21,11 +21,8 @@ package org.meveo.model.shared;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
-
-import org.meveo.commons.encryption.PersonnalDataEncryptor;
 
 /**
  * Contact information
@@ -42,7 +39,6 @@ public class ContactInformation implements Serializable, Cloneable {
     /**
      * Email
      */
-    @Convert(converter=PersonnalDataEncryptor.class)
     @Column(name = "email", length = 100)
     @Size(max = 100)
     protected String email;
@@ -50,17 +46,15 @@ public class ContactInformation implements Serializable, Cloneable {
     /**
      * Phone number
      */
-    @Convert(converter=PersonnalDataEncryptor.class)
-    @Column(name = "phone", length = 100)
-    @Size(max = 100)
+    @Column(name = "phone", length = 50)
+    @Size(max = 50)
     protected String phone;
 
     /**
      * Mobile phone number
      */
-    @Convert(converter=PersonnalDataEncryptor.class)
-    @Column(name = "mobile", length = 100)
-    @Size(max = 100)
+    @Column(name = "mobile", length = 50)
+    @Size(max = 50)
     protected String mobile;
 
     /**

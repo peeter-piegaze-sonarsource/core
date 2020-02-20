@@ -9,6 +9,7 @@ import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.util.List;
+import org.meveo.apiv2.models.ImmutableResource;
 
 @Value.Immutable
 @Value.Style(jdkOnly=true)

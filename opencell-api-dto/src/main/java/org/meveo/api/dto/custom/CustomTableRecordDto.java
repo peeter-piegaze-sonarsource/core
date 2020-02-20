@@ -18,9 +18,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class CustomTableRecordDto implements Serializable {
 
     private static final long serialVersionUID = -1209601309024979418L;
-    private static final String ID_KEY = "id";
-    
-    private Long id;
 
     private LinkedHashMap<String, Object> values;
 
@@ -29,8 +26,7 @@ public class CustomTableRecordDto implements Serializable {
     }
 
     public CustomTableRecordDto(Map<String, Object> values) {
-        this.values = new LinkedHashMap<>(values);
-        this.id = Long.valueOf(values.getOrDefault(ID_KEY, 0L).toString());
+        this.values = (LinkedHashMap<String, Object>) values;
     }
 
     /**
@@ -45,17 +41,5 @@ public class CustomTableRecordDto implements Serializable {
      */
     public void setValues(LinkedHashMap<String, Object> values) {
         this.values = values;
-    }
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String display(){
-        return values.toString();
     }
 }

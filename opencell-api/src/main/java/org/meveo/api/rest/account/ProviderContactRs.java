@@ -69,7 +69,7 @@ public interface ProviderContactRs extends IBaseRs {
      */
     @DELETE
     @Path("/{code}")
-    ActionStatus remove(@PathParam("code") String providerContactCode);
+    ActionStatus remove(@PathParam("providerContactCode") String providerContactCode);
 
     /**
      * List of provider contacts

@@ -18,7 +18,25 @@
  */
 package org.meveo.admin.action;
 
-import com.lapis.jsfexporter.csv.CSVExportOptions;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.enterprise.context.Conversation;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -31,6 +49,7 @@ import org.meveo.admin.web.interceptor.ActionMethod;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.commons.utils.ReflectionUtils;
+import org.meveo.model.AccountEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.IEntity;
 import org.meveo.model.ModuleItem;
@@ -61,22 +80,7 @@ import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.Conversation;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.lapis.jsfexporter.csv.CSVExportOptions;
 
 /**
  * Base GUI bean class. Used as a backing bean foundation for both detail and searchable list pages. Provides a brigde between xhtml pages and service level classes.
@@ -126,7 +130,7 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
     private ElasticClient elasticClient;
 
     /** Search filters. */
-    protected Map<String, Object> filters = new HashMap<>();
+    protected Map<String, Object> filters = new HashMap<String, Object>();
 
     /** Entity to edit/view. */
     protected T entity;
@@ -301,9 +305,10 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
                 // FIXME: If entity is Auditable, set here the creator and
                 // creation time
             } catch (InstantiationException e) {
-                log.error("Could not instantiate a class, abstract class", e);
+                log.error("Unexpected error!", e);
+                throw new IllegalStateException("could not instantiate a class, abstract class");
             } catch (IllegalAccessException e) {
-                log.error("Could not instantiate a class, constructor not accessible", e);
+                log.error("Unexpected error!", e);
                 throw new IllegalStateException("could not instantiate a class, constructor not accessible");
             }
         }
@@ -519,7 +524,7 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
      */
     public List<T> listAll() {
         if (clazz != null && BusinessEntity.class.isAssignableFrom(clazz)) {
-            return getPersistenceService().list(new PaginationConfiguration("code", SortOrder.ASCENDING));
+            return getPersistenceService().list(new PaginationConfiguration("description", SortOrder.ASCENDING));
         } else {
             return getPersistenceService().list();
         }
@@ -537,21 +542,16 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
     }
 
     /**
-     * Returns translation value for i18n map field, else the value itself or default value
-     *
+     * Returns translation value for i18n map field, else the value itself
+     * 
      * @author akadid abdelmounaim
-     * @author Amine BEN AICHA
      * @lastModifiedVersion 5.0
      */
-    public String getTranslation(Object fieldValue, String defaultValue) {
+    @SuppressWarnings("unchecked")
+    public String getTranslation(Object fieldValue) {
         if (fieldValue instanceof Map<?, ?>) {
             String lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getISO3Language().toUpperCase();
             Map<String, String> translationMap = (Map<String, String>) fieldValue;
-
-            if (translationMap.isEmpty() || StringUtils.isBlank(translationMap.get(lang))) {
-                return defaultValue;
-            }
-
             return translationMap.get(lang);
         }
         return (String) fieldValue;
@@ -765,7 +765,7 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
      */
     public Map<String, Object> getFilters() {
         if (filters == null) {
-            filters = new HashMap<>();
+            filters = new HashMap<String, Object>();
         }
         return filters;
     }
@@ -775,7 +775,7 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
      */
     public void clean() {
         dataModel = null;
-        filters = new HashMap<>();
+        filters = new HashMap<String, Object>();
         listFilter = null;
     }
 
@@ -932,7 +932,7 @@ public abstract class BaseBean<T extends IEntity> implements Serializable {
                 @Override
                 protected Map<String, Object> getSearchCriteria(Map<String, Object> customFilters) {
                     // Omit empty or null values
-                    Map<String, Object> cleanFilters = new HashMap<>();
+                    Map<String, Object> cleanFilters = new HashMap<String, Object>();
 
                     cleanupFilters(filters, cleanFilters);
                     cleanupFilters(MapUtils.emptyIfNull(customFilters), cleanFilters);

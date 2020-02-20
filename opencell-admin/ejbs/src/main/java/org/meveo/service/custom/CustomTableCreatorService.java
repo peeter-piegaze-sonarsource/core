@@ -1,5 +1,26 @@
 package org.meveo.service.custom;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
+import org.hibernate.Session;
+import org.meveo.jpa.EntityManagerProvider;
+import org.meveo.jpa.EntityManagerWrapper;
+import org.meveo.jpa.MeveoJpa;
+import org.meveo.model.crm.CustomFieldTemplate;
+import org.meveo.model.crm.custom.CustomFieldTypeEnum;
+import org.slf4j.Logger;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -24,25 +45,6 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.statement.SequenceNextValueFunction;
-import org.hibernate.Session;
-import org.meveo.jpa.EntityManagerProvider;
-import org.meveo.jpa.EntityManagerWrapper;
-import org.meveo.jpa.MeveoJpa;
-import org.meveo.model.crm.CustomFieldTemplate;
-import org.meveo.model.crm.custom.CustomFieldTypeEnum;
-import org.slf4j.Logger;
-
-import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -65,7 +67,7 @@ public class CustomTableCreatorService implements Serializable {
 
     /**
      * Create a table with a single 'id' field. Value is autoincremented for mysql or taken from sequence for Postgress databases.
-     *
+     * 
      * @param dbTableName DB table name
      */
     public void createTable(String dbTableName) {
@@ -136,14 +138,14 @@ public class CustomTableCreatorService implements Serializable {
                     log.error("Failed to create a custom table {}", dbTableName, e);
                     throw new SQLException(e);
                 }
-                
+
             }
         });
     }
 
     /**
      * Add a field to a db table. Creates a liquibase changeset to add a field to a table and executes it
-     *
+     * 
      * @param dbTableName DB Table name
      * @param cft Field definition
      */
@@ -165,9 +167,23 @@ public class CustomTableCreatorService implements Serializable {
             constraints.setNullable(false);
             column.setConstraints(constraints);
         }
-        setColumnType(cft, column);
-        if (cft.getFieldType() == CustomFieldTypeEnum.STRING || cft.getFieldType() == CustomFieldTypeEnum.LIST) {
-            
+
+        if (cft.getFieldType() == CustomFieldTypeEnum.DATE) {
+            column.setType("datetime");
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+            column.setType("numeric(23, 12)");
+            if (cft.getDefaultValue() != null) {
+                column.setDefaultValueNumeric(cft.getDefaultValue());
+            }
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.LONG) {
+            column.setType("bigInt");
+            if (cft.getDefaultValue() != null) {
+                column.setDefaultValueNumeric(cft.getDefaultValue());
+            }
+
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.STRING || cft.getFieldType() == CustomFieldTypeEnum.LIST) {
+            column.setType("varchar(" + (cft.getMaxValue() == null ? CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING : cft.getMaxValue()) + ")");
+
             if (cft.getDefaultValue() != null) {
                 column.setDefaultValue(cft.getDefaultValue());
             }
@@ -181,31 +197,30 @@ public class CustomTableCreatorService implements Serializable {
         EntityManager em = entityManagerProvider.getEntityManagerWoutJoinedTransactions();
 
         Session hibernateSession = em.unwrap(Session.class);
-        
-        hibernateSession.doWork(connection -> {
-            
-            Database database;
-            try {
-                database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-                
-                Liquibase liquibase = new Liquibase(dbLog, new ClassLoaderResourceAccessor(), database);
-                liquibase.update(new Contexts(), new LabelExpression());
-                
-            } catch (Exception e) {
-                log.error("Failed to add a field {} to a custom table {}", dbTableName, dbFieldname, e);
-                throw new SQLException(e);
+
+        hibernateSession.doWork(new org.hibernate.jdbc.Work() {
+
+            @Override
+            public void execute(Connection connection) throws SQLException {
+
+                Database database;
+                try {
+                    database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+
+                    Liquibase liquibase = new liquibase.Liquibase(dbLog, new ClassLoaderResourceAccessor(), database);
+                    liquibase.update(new Contexts(), new LabelExpression());
+
+                } catch (Exception e) {
+                    log.error("Failed to add a field {} to a custom table {}", dbTableName, dbFieldname, e);
+                    throw new SQLException(e);
+                }
             }
         });
     }
-    
-     void setColumnType(CustomFieldTemplate cft, AddColumnConfig column) {
-        column.setType(cft.getFieldType().getDataType()
-                .replaceAll("%length", cft.getMaxValueOrDefault(CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING).toString()));
-    }
-    
+
     /**
      * Add a field to a db table. Creates a liquibase changeset to add a field to a table and executes it
-     *
+     * 
      * @param dbTableName DB Table name
      * @param cft Field definition
      */
@@ -222,9 +237,17 @@ public class CustomTableCreatorService implements Serializable {
         DropNotNullConstraintChange dropNotNullChange = new DropNotNullConstraintChange();
         dropNotNullChange.setTableName(dbTableName);
         dropNotNullChange.setColumnName(dbFieldname);
-        dropNotNullChange.setColumnDataType(cft.getFieldType().getDataType()
-                .replaceAll("%length", cft.getMaxValueOrDefault(CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING).toString()));
-        
+
+        if (cft.getFieldType() == CustomFieldTypeEnum.DATE) {
+            dropNotNullChange.setColumnDataType("datetime");
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+            dropNotNullChange.setColumnDataType("numeric(23, 12)");
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.LONG) {
+            dropNotNullChange.setColumnDataType("bigInt");
+        } else if (cft.getFieldType() == CustomFieldTypeEnum.STRING || cft.getFieldType() == CustomFieldTypeEnum.LIST) {
+            dropNotNullChange.setColumnDataType("varchar(" + (cft.getMaxValue() == null ? CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING : cft.getMaxValue()) + ")");
+        }
+
         changeSet.addChange(dropNotNullChange);
         dbLog.addChangeSet(changeSet);
 
@@ -235,9 +258,17 @@ public class CustomTableCreatorService implements Serializable {
 
             addNotNullChange.setTableName(dbTableName);
             addNotNullChange.setColumnName(dbFieldname);
-            addNotNullChange.setColumnDataType(cft.getFieldType().getDataType()
-                    .replaceAll("%length", cft.getMaxValueOrDefault(CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING).toString()));
-            
+
+            if (cft.getFieldType() == CustomFieldTypeEnum.DATE) {
+                addNotNullChange.setColumnDataType("datetime");
+            } else if (cft.getFieldType() == CustomFieldTypeEnum.DOUBLE) {
+                addNotNullChange.setColumnDataType("numeric(23, 12)");
+            } else if (cft.getFieldType() == CustomFieldTypeEnum.LONG) {
+                addNotNullChange.setColumnDataType("bigInt");
+            } else if (cft.getFieldType() == CustomFieldTypeEnum.STRING || cft.getFieldType() == CustomFieldTypeEnum.LIST) {
+                addNotNullChange.setColumnDataType("varchar(" + (cft.getMaxValue() == null ? CustomFieldTemplate.DEFAULT_MAX_LENGTH_STRING : cft.getMaxValue()) + ")");
+            }
+
             changeSet.addChange(addNotNullChange);
             dbLog.addChangeSet(changeSet);
 
@@ -306,26 +337,30 @@ public class CustomTableCreatorService implements Serializable {
         EntityManager em = entityManagerProvider.getEntityManagerWoutJoinedTransactions();
 
         Session hibernateSession = em.unwrap(Session.class);
-        
-        hibernateSession.doWork(connection -> {
-            
-            Database database;
-            try {
-                database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-                
-                Liquibase liquibase = new Liquibase(dbLog, new ClassLoaderResourceAccessor(), database);
-                liquibase.update(new Contexts(), new LabelExpression());
-                
-            } catch (Exception e) {
-                log.error("Failed to update a field {} in a custom table {}", dbTableName, dbFieldname, e);
-                throw new SQLException(e);
+
+        hibernateSession.doWork(new org.hibernate.jdbc.Work() {
+
+            @Override
+            public void execute(Connection connection) throws SQLException {
+
+                Database database;
+                try {
+                    database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+
+                    Liquibase liquibase = new liquibase.Liquibase(dbLog, new ClassLoaderResourceAccessor(), database);
+                    liquibase.update(new Contexts(), new LabelExpression());
+
+                } catch (Exception e) {
+                    log.error("Failed to update a field {} in a custom table {}", dbTableName, dbFieldname, e);
+                    throw new SQLException(e);
+                }
             }
         });
     }
 
     /**
      * Remove a field from a table
-     *
+     * 
      * @param dbTableName Db table name to remove from
      * @param cft Field definition
      */
@@ -372,7 +407,7 @@ public class CustomTableCreatorService implements Serializable {
 
     /**
      * Remove a table from DB
-     *
+     * 
      * @param dbTableName Db table name to remove from
      */
     public void removeTable(String dbTableName) {
