@@ -101,4 +101,6 @@ public interface PaymentScriptInterface extends ScriptInterface {
      */
     void getHostedCheckoutUrl(Map<String, Object> methodContext) throws BusinessException;
     
+    void createInvoice(Map<String, Object> methodContext) throws BusinessException;
+    
     }
