@@ -464,6 +464,18 @@ public class CustomerAccount extends AccountEntity implements IWFEntity {
         }
         return paypalPaymentMethods;
     }
+    
+    public List<StripePaymentMethod> getStripePaymentMethods() {
+        List<StripePaymentMethod> stripePaymentMethods = new ArrayList<>();
+        if (getPaymentMethods() != null) {
+            for (PaymentMethod paymentMethod : getPaymentMethods()) {
+                if (paymentMethod instanceof StripePaymentMethod) {
+                	stripePaymentMethods.add((StripePaymentMethod) paymentMethod);
+                }
+            }
+        }
+        return stripePaymentMethods;
+    }
 
     /**
      * Get a list of card type payment methods

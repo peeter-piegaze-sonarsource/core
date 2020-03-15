@@ -22,6 +22,7 @@ import org.meveo.model.payments.DDPaymentMethod;
 import org.meveo.model.payments.PaymentMethod;
 import org.meveo.model.payments.PaymentMethodEnum;
 import org.meveo.model.payments.PaypalPaymentMethod;
+import org.meveo.model.payments.StripePaymentMethod;
 import org.meveo.model.payments.WirePaymentMethod;
 import org.meveo.security.MeveoUser;
 
@@ -293,6 +294,9 @@ public class PaymentMethodDto extends BaseEntityDto implements IEnableDto, IEnti
             break;
         case PAYPAL:
             pmEntity = new PaypalPaymentMethod(disabledBool, alias, preferred, customerAccount,userId);
+            break;
+        case STRIPE:
+            pmEntity = new StripePaymentMethod(disabledBool, alias, preferred, customerAccount,userId);
             break;
         default:
             break;
