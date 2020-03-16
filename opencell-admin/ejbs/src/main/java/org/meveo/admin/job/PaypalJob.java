@@ -15,6 +15,7 @@ import org.meveo.model.filter.Filter;
 import org.meveo.model.jobs.JobCategoryEnum;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
+import org.meveo.model.jobs.MeveoJobCategoryEnum;
 import org.meveo.service.job.Job;
 
 
@@ -38,7 +39,7 @@ public class PaypalJob extends Job {
 
     @Override
     public JobCategoryEnum getJobCategory() {
-        return JobCategoryEnum.ACCOUNT_RECEIVABLES;
+        return MeveoJobCategoryEnum.ACCOUNT_RECEIVABLES;
     }
 
     @Override

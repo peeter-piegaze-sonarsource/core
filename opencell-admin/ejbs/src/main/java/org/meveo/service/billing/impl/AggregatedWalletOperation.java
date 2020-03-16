@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.Tax;
-import org.meveo.model.tax.TaxClass;
 
 /**
  * Aggregated wallet operation.
@@ -96,11 +95,6 @@ public class AggregatedWalletOperation {
 	 * The order number.
 	 */
 	private String orderNumber;
-	
-	/**
-	 * Tax class
-	 */
-	private TaxClass taxClass;
 
 	/**
 	 * List of wallet operations.
@@ -109,7 +103,7 @@ public class AggregatedWalletOperation {
 
 	public AggregatedWalletOperation(String walletOpsIds, Long sellerId, Integer year, Integer month, Integer day, Tax tax,
 			InvoiceSubCategory invoiceSubCategory, Object id, BigDecimal amountWithTax, BigDecimal amountWithoutTax,
-			BigDecimal amountTax, TaxClass taxClass, BigDecimal quantity, String orderNumber, String parameter1, String parameter2, String parameter3,
+			BigDecimal amountTax, BigDecimal quantity, String orderNumber, String parameter1, String parameter2, String parameter3,
 			String parameterExtra) {
 		String[] stringIds = walletOpsIds.split(",");
 		List<Long> ids = Arrays.asList(stringIds).stream().map(x-> new Long(x)).collect(Collectors.toList());
@@ -125,7 +119,6 @@ public class AggregatedWalletOperation {
 		this.amountWithoutTax = amountWithoutTax;
 		this.amountTax = amountTax;
 		this.quantity = quantity;
-		this.taxClass = taxClass;
 		this.orderNumber = orderNumber;
 		this.parameter1 = parameter1;
 		this.parameter2 = parameter2;
@@ -293,20 +286,6 @@ public class AggregatedWalletOperation {
 	 */
 	public void setWalletOperationsIds(List<Long> walletOperationsIds) {
 		this.walletOperationsIds = walletOperationsIds;
-	}
-
-	/**
-	 * @return the taxClass
-	 */
-	public TaxClass getTaxClass() {
-		return taxClass;
-	}
-
-	/**
-	 * @param taxClass the taxClass to set
-	 */
-	public void setTaxClass(TaxClass taxClass) {
-		this.taxClass = taxClass;
 	}
 
 }
