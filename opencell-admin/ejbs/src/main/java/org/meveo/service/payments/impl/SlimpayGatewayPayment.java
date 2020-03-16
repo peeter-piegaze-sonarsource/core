@@ -14,6 +14,7 @@ import org.meveo.api.dto.payment.PaymentResponseDto;
 import org.meveo.commons.utils.EjbUtils;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.billing.Invoice;
 import org.meveo.model.payments.CardPaymentMethod;
 import org.meveo.model.payments.CreditCardTypeEnum;
 import org.meveo.model.payments.CustomerAccount;
@@ -393,5 +394,11 @@ public class SlimpayGatewayPayment implements GatewayPaymentInterface {
         this.paymentGateway = paymentGateway;
         
     }
+
+	@Override
+	public String createInvoice(Invoice invoice) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -6,6 +6,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.dto.payment.HostedCheckoutInput;
 import org.meveo.api.dto.payment.MandatInfoDto;
 import org.meveo.api.dto.payment.PaymentResponseDto;
+import org.meveo.model.billing.Invoice;
 import org.meveo.model.payments.CardPaymentMethod;
 import org.meveo.model.payments.CreditCardTypeEnum;
 import org.meveo.model.payments.CustomerAccount;
@@ -14,10 +15,11 @@ import org.meveo.model.payments.DDRequestLOT;
 import org.meveo.model.payments.PaymentGateway;
 import org.meveo.model.payments.PaymentMethodEnum;
 
+
 /**
  * @author anasseh
  * @author Mounir Bahije
- * @lastModifiedVersion 5.2
+ * @lastModifiedVersion 9.2
  *
  */
 public interface GatewayPaymentInterface {
@@ -178,4 +180,6 @@ public interface GatewayPaymentInterface {
      * @author Mounir Bahije
      */
     public String getHostedCheckoutUrl(HostedCheckoutInput hostedCheckoutInput)  throws BusinessException;
+    
+    public String createInvoice(Invoice invoice)  throws BusinessException;
 }

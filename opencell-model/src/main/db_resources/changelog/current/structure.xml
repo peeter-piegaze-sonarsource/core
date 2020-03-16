@@ -2442,5 +2442,10 @@ END $$;]]>
 	     <sql>update ${db.schema.adapted}meveo_job_instance set job_category = 'PAYMENT' where job_template = 'CheckPaymentScheduleCallbackJob'</sql>
     </changeSet>
 
+    <changeSet id="#4924_20200219" author="anasseh">
+        <addColumn tableName="billing_invoice">
+            <column name="external_ref" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
