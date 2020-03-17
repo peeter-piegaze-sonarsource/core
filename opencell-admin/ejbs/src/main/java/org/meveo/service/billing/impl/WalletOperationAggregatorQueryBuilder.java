@@ -153,7 +153,6 @@ public class WalletOperationAggregatorQueryBuilder {
 				+ ", o.invoiceSubCategory" //
 				+ ", " + id //
 				+ ", SUM(o.amountWithTax), SUM(o.amountWithoutTax), SUM(o.amountTax)" //
-				+ ", o.taxClass" //
 				+ ", SUM(o.quantity)" //
 				+ ", " + getOrderNumberField() //
 				+ ", " + getParameter1Field() //
@@ -162,7 +161,7 @@ public class WalletOperationAggregatorQueryBuilder {
 				+ ", " + getParameterExtraField() //
 				+ ")" + " FROM WalletOperation o " //
 				+ " WHERE (o.invoicingDate is NULL or o.invoicingDate<:invoicingDate) AND o.status='OPEN' " //
-				+ " GROUP BY o.seller.id, o.tax, o.taxClass, o.invoiceSubCategory, " + groupBy;
+				+ " GROUP BY o.seller.id, o.tax, o.invoiceSubCategory, " + groupBy;
 	}
 
 	public String getGroupBy() {
