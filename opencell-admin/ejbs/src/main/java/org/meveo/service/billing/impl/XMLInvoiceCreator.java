@@ -1362,7 +1362,7 @@ public class XMLInvoiceCreator extends PersistenceService<Invoice> {
                     lebel.appendChild(lebelTxt);
     
                     Element lineUnitAmountWithoutTax = doc.createElement("unitAmountWithoutTax");
-                    Text lineUnitAmountWithoutTaxTxt = doc.createTextNode(ratedTransaction.getUnitAmountWithoutTax().toPlainString());
+                    Text lineUnitAmountWithoutTaxTxt = doc.createTextNode(ratedTransaction.getUnitAmountWithoutTax() == null ? "" : ratedTransaction.getUnitAmountWithoutTax().toPlainString());
                     lineUnitAmountWithoutTax.appendChild(lineUnitAmountWithoutTaxTxt);
                     line.appendChild(lineUnitAmountWithoutTax);
     
