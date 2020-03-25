@@ -1,0 +1,4 @@
+{
+    "code": "RS_FULL_611_FilterCustomFields_PricePlanMatrix_Age",
+    "inputXml":"<parameters>\n   <!--Zero or more repetitions:-->\n   <entry>\n      <!--Optional:-->\n      <key>MIN_SUBSCR_AGE</key>\n      <!--Optional:-->\n      <value>cfLong:6</value>\n   </entry>\n   <entry>\n      <!--Optional:-->\n      <key>MAX_SUBSCR_AGE</key>\n      <!--Optional:-->\n      <value>cfLong:12</value>\n   </entry>\n</parameters>"
+}

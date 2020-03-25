@@ -1,0 +1,4 @@
+{
+    "code": "RS_FULL_611_FilterCustomFields_RCT_Prorata",
+    "inputXml": "<parameters>\n   <entry>\n      <key>PRICE_PLAN_START_RATING_DATE</key>\n      <value>cfDate:2016-06-01</value>\n   </entry>\n    <entry>\n      <key>PRICE_PLAN_END_RATING_DATE</key>\n      <value>cfDate:2016-06-30</value>\n   </entry>\n</parameters>"
+}

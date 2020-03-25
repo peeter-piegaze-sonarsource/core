@@ -1,0 +1,12 @@
+{
+    "code": "RS_BASE_TEST_USAGE1",
+    "description": "RS_BASE_TEST_USAGE1",
+    "eventCode": "RS_BASE_USAGE1",
+    "amountWithoutTax": "9",
+    "amountWithTax": "14",
+    "startRatingDate": "2016-06-15",
+    "endRatingDate": "2016-06-30",
+    "priority": "1",
+    "minSubscriptionAgeInMonth": "12",
+    "maxSubscriptionAgeInMonth": "24"
+}

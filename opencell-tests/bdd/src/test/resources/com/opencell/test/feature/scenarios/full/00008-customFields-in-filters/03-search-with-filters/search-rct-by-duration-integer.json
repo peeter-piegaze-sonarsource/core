@@ -1,0 +1,4 @@
+{
+    "code": "RS_FULL_611_FilterCustomFields_RCT_Duration",
+    "inputXml": "<parameters>\n   <!--Zero or more repetitions:-->\n   <entry>\n      <!--Optional:-->\n      <key>DURATION</key>\n      <!--Optional:-->\n      <value>cfInteger:10</value>\n   </entry>\n</parameters>"
+}

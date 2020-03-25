@@ -1,0 +1,4 @@
+{
+    "code": "RS_FULL_611_FilterCustomFields_PricePlanMatrix_Amount",
+    "inputXml": "<parameters>\n   <!--Zero or more repetitions:-->\n   <entry>\n      <!--Optional:-->\n      <key>AMOUNT</key>\n      <!--Optional:-->\n      <value>cfDecimal:10</value>\n   </entry>\n</parameters>"
+}

@@ -1,0 +1,4 @@
+{
+    "code": "RS_FULL_611_FilterCustomFields_PricePlanMatrix",
+    "inputXml": "<parameters>\n   <!--Zero or more repetitions:-->\n   <entry>\n      <!--Optional:-->\n      <key>PRICE_PLAN_CODE</key>\n      <!--Optional:-->\n      <value>cfString:${#Project#baseEntityPrefix}_TEST_REC1</value>\n   </entry>\n</parameters>"
+}
