@@ -2,7 +2,7 @@
     "code": "TEST",
     "description": "Test payment schedule template",
     "calendarCode": "NOT_EXIST",
-    "serviceTemplateCode": "SE_REC_FLAT_REBATE",
+    "serviceTemplateCode": "SE_REC_FLAT",
     "paymentDayInMonth": "1",
     "amount": "100",
     "paymentLabel": "Test Label",
