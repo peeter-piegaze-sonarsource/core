@@ -28,6 +28,9 @@
 						<hftl:formField label="#{messages['name.firstName']}" field="name" childField="firstName" />
 						<hftl:formField label="#{messages['name.lastName']}" field="name" childField="lastName" />
 					</p:outputPanel>
+					<hftl:decorateFormField label="#{messages['user.enabled']}" fieldId="enabled">
+						<p:selectBooleanCheckbox id="enabled" value="#{userBean.enabled}" />
+					</hftl:decorateFormField>
 
 					<hftl:decorateFormField fieldId=":userFormId:tabView:userGroupLevel" label="#{messages['user.userGroupLevel']}" newLine="true">
 						<p:tree id="userGroupLevel" value="#{userBean.userGroupRootNode}" var="groupLevel" propagateSelectionUp="false" propagateSelectionDown="false" selectionMode="single"

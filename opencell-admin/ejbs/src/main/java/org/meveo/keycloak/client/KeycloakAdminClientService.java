@@ -285,6 +285,7 @@ public class KeycloakAdminClientService {
             userRepresentation.setFirstName(postData.getFirstName());
             userRepresentation.setLastName(postData.getLastName());
             userRepresentation.setEmail(postData.getEmail());
+            userRepresentation.setEnabled(postData.isEnabled());
 
             // find realm roles and assign to the newly create user
             List<RoleRepresentation> rolesToAdd = new ArrayList<>();
@@ -434,6 +435,25 @@ public class KeycloakAdminClientService {
         }
 
         return userRepresentation;
+    }
+
+    public UserDto findUserBy(HttpServletRequest httpServletRequest, String userName) {
+        KeycloakSecurityContext session = (KeycloakSecurityContext) httpServletRequest.getAttribute(KeycloakSecurityContext.class.getName());
+        KeycloakAdminClientConfig keycloakAdminClientConfig = loadConfig();
+        Keycloak keycloak = getKeycloakClient(session, keycloakAdminClientConfig);
+
+        RealmResource realmResource = keycloak.realm(keycloakAdminClientConfig.getRealm());
+        UsersResource usersResource = realmResource.users();
+        UserRepresentation userRepresentation = getUserRepresentationByUsername(usersResource, userName);
+
+        UserDto userDto = new UserDto();
+        userDto.setEnabled(userRepresentation.isEnabled());
+        userDto.setUsername(userRepresentation.getUsername());
+        userDto.setFirstName(userRepresentation.getFirstName());
+        userDto.setLastName(userRepresentation.getLastName());
+        userDto.setEmail(userRepresentation.getEmail());
+        userDto.setRoles(userRepresentation.getRealmRoles());
+        return userDto;
     }
 
     /**

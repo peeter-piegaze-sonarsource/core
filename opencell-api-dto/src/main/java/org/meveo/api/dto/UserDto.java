@@ -103,6 +103,8 @@ public class UserDto extends AuditableEntityDto {
     @XmlElement(name = "permission")
     private List<String> permissions;
 
+    private boolean enabled;
+
     /**
      * Instantiates a new user dto.
      */
@@ -391,6 +393,14 @@ public class UserDto extends AuditableEntityDto {
      */
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
