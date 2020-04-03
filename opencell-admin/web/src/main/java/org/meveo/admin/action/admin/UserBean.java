@@ -17,6 +17,8 @@
  */
 package org.meveo.admin.action.admin;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,11 +39,13 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
+import javax.faces.context.ExternalContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -52,9 +56,11 @@ import org.meveo.admin.action.CustomFieldBean;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.util.FlatFileValidator;
 import org.meveo.admin.web.interceptor.ActionMethod;
+import org.meveo.api.dto.UserDto;
 import org.meveo.commons.utils.FileUtils;
 import org.meveo.commons.utils.ReflectionUtils;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.keycloak.client.KeycloakAdminClientService;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.admin.DetailedSecuredEntity;
 import org.meveo.model.admin.FileFormat;
@@ -121,6 +127,9 @@ public class UserBean extends CustomFieldBean<User> {
     @Inject
     private FlatFileValidator flatFileValidator;
 
+    @Inject
+    private KeycloakAdminClientService keycloakAdminClientService;
+
 
     private DualListModel<Role> rolesDM;
 
@@ -140,6 +149,7 @@ public class UserBean extends CustomFieldBean<User> {
     private Map<String, BaseBean<? extends BusinessEntity>> accountBeanMap;
     private BusinessEntity selectedEntity;
     private BaseBean<?> selectedAccountBean;
+    private boolean enabled;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
@@ -176,6 +186,11 @@ public class UserBean extends CustomFieldBean<User> {
             entity.setName(new Name());
         }
 
+        try {
+            userDataSync();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
         return entity;
     }
 
@@ -232,8 +247,44 @@ public class UserBean extends CustomFieldBean<User> {
 
         getEntity().getRoles().clear();
         getEntity().getRoles().addAll(roleService.refreshOrRetrieve(rolesDM.getTarget()));
+        try {
+            updateKcData(entity);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
 
         return super.saveOrUpdate(killConversation);
+    }
+
+    private void updateKcData(User user) {
+        ExternalContext context = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+
+        UserDto userData = new UserDto();
+        userData.setUsername(user.getUserName());
+        userData.setEmail(user.getEmail());
+        userData.setLastName(user.getName().getLastName());
+        userData.setFirstName(user.getName().getFirstName());
+        List<String> roles = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(toList());
+        userData.setRoles(roles);
+        userData.setEnabled(enabled);
+        keycloakAdminClientService.updateUser(request, userData);
+    }
+
+    private void userDataSync() {
+        ExternalContext context = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+
+        UserDto userDto = keycloakAdminClientService.findUserBy(request, entity.getUserName());
+        Name name = new Name();
+        name.setFirstName(userDto.getFirstName());
+        name.setLastName(userDto.getLastName());
+        enabled = userDto.isEnabled();
+        entity.setName(name);
+        entity.setEmail(userDto.getEmail());
     }
 
     /**
@@ -810,4 +861,11 @@ public class UserBean extends CustomFieldBean<User> {
         this.fileFormat = (FileFormat) event.getNewValue();
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
