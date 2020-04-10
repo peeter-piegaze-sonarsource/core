@@ -158,18 +158,24 @@
 
         <p:panel width="100">
             <h:form id="ctForm">
-                <p:dataTable id="ctSearchResults" value="#{customTableBean.dataModel}" var="entity" lazy="true" widgetVar="ctTable"
+                <p:dataTable id="ctSearchResults" value="#{customTableBean.dataModel}" var="entity" lazy="true" widgetVar="ctTable" tableStyle="table-layout:auto"
                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" paginator="true" rows="10"
-                    rowsPerPageTemplate="10,15,20,50" resizableColumns="true" styleClass="custom-grid" reflow="true" editable="#{customTableBean.edit}" editMode="cell"
-                    selection="#{customTableBean.selectedValues}" sortBy="id">
+                    rowsPerPageTemplate="10,15,20,50" resizableColumns="true" reflow="true" editable="#{customTableBean.edit}" editMode="cell"
+                    selection="#{customTableBean.selectedValues}" sortBy="id" scrollable="true" scrollWidth="100%"   >
                     <p:ajax event="cellEdit" listener="#{customTableBean.onCellEdit}" update="@form" partialSubmit="true" partialSubmitFilter=":not([name*='addNewFields'])" />/>
                     <p:ajax event="cellEditCancel"  partialSubmit="true" partialSubmitFilter=":not([name*='addNewFields'])" />/>
 
-                    <p:column id="multiSelect" selectionMode="multiple" width="4%" exportable="false" toggleable="false" />
-                    <p:column headerText="id" sortBy="#{id}">
+                    <p:column id="multiSelect" selectionMode="multiple" exportable="false" toggleable="false" width="2%" />
+                    <p:column headerText="#{messages['commons.actions']}" exportable="false" width="4%">
+                        <p:commandButton id="deletelink" icon="ui-icon-trash" action="#{customTableBean.delete(entity['id'])}" rendered="#{customTableBean.edit}"
+                            update=":ctForm:ctSearchResults" process="@this" immediate="true">
+                            <p:confirm header="#{messages['commons.confirmationHeader']}" message="#{messages['commons.confirmDelete']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                    <p:column headerText="id" sortBy="#{id}" width="auto">
                         <h:outputText value="#{entity['id']}" />
                     </p:column>
-                    <p:columns value="#{customTableBean.fields}" var="field" headerText="#{field.getDescription(customTableBean.currentLocale.ISO3Language)}" sortBy="#{field.dbFieldname}">
+                    <p:columns value="#{customTableBean.fields}" var="field" headerText="#{field.getDescription(customTableBean.currentLocale.ISO3Language)}" sortBy="#{field.dbFieldname}" >
                         <p:cellEditor>
                             <f:facet name="output">
                                 <h:outputText id="#{entity[field.dbFieldname]}_out_date" value="#{entity[field.dbFieldname]}" styleClass="field-value"
@@ -247,12 +253,6 @@
                             </f:facet>
                         </p:cellEditor>
                     </p:columns>
-                    <p:column headerText="#{messages['commons.actions']}" exportable="false">
-                        <p:commandButton id="deletelink" icon="ui-icon-trash" action="#{customTableBean.delete(entity['id'])}" rendered="#{customTableBean.edit}"
-                            update=":ctForm:ctSearchResults" process="@this" immediate="true">
-                            <p:confirm header="#{messages['commons.confirmationHeader']}" message="#{messages['commons.confirmDelete']}" icon="ui-icon-alert" />
-                        </p:commandButton>
-                    </p:column>
 
                     <c:if test="#{customTableBean.edit}">
                         <f:facet name="footer" layout="block">
