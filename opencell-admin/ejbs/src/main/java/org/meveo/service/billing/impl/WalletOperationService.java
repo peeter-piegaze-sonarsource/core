@@ -465,7 +465,7 @@ public class WalletOperationService extends PersistenceService<WalletOperation> 
                 chargeInstance.getRecurringChargeTemplate());
         }
         
-        cancelWONotBilled(chargeInstance, isApplyInAdvance);
+        cancelWOAndRatedTransactionNotBilled(chargeInstance, isApplyInAdvance);
 
         log.debug("Will apply reimbursment for charge {}, chargeCode {}, quantity {}, termination date {}, charge was applied untill {}", chargeInstance.getId(), chargeInstance.getCode(), chargeInstance.getQuantity(),
             chargeInstance.getTerminationDate(), chargeInstance.getNextChargeDate());
@@ -550,18 +550,35 @@ public class WalletOperationService extends PersistenceService<WalletOperation> 
         }
     }
 
+    /**
+     * Check if the charge is already billed
+     *
+     * @param chargeInstance     the charge instance
+     * @param previousChargeDate previous Charge Date
+     * @param nextChargeDate     next Charge Date
+     * @param isApplyAdvance     the charge is applied in Advance
+     * @return true if the charge is already billed
+     */
     private boolean isChargeAlreadyBilled(RecurringChargeInstance chargeInstance, Date previousChargeDate, Date nextChargeDate, Boolean isApplyAdvance) {
         nextChargeDate = DateUtils.addSecondsToDate(nextChargeDate, 1);
         if (isApplyAdvance) {
             previousChargeDate = DateUtils.addSecondsToDate(previousChargeDate, -1);
         }
-        Boolean b = getEntityManager().createNamedQuery("RatedTransaction.isAlreadyInvoicedBySubScription", Boolean.class)
-                .setParameter("chargeInstance", chargeInstance).setParameter("previousChargeDate", previousChargeDate)
-                .setParameter("nextChargeDate", nextChargeDate).getSingleResult();
-        return b;
+        
+        return getEntityManager().createNamedQuery("RatedTransaction.isAlreadyInvoicedBySubScription", Boolean.class)
+                .setParameter("chargeInstance", chargeInstance)
+                .setParameter("previousChargeDate", previousChargeDate)
+                .setParameter("nextChargeDate", nextChargeDate)
+                .getSingleResult();
     }
 
-    private void cancelWONotBilled(RecurringChargeInstance chargeInstance, Boolean isApplyInAdvance) {
+    /**
+     * Cancel not billed WO and RTx for a charge instance.
+     *
+     * @param chargeInstance   a charge instance
+     * @param isApplyInAdvance the charge is applied in Advance
+     */
+    private void cancelWOAndRatedTransactionNotBilled(RecurringChargeInstance chargeInstance, Boolean isApplyInAdvance) {        
         log.debug("Will cancel WO for charge {}, chargeCode {}, termination date {}", chargeInstance.getId(), chargeInstance.getCode(), chargeInstance.getTerminationDate());
         Date terminationDate = chargeInstance.getTerminationDate();
         if (isApplyInAdvance) {
