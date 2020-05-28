@@ -95,7 +95,8 @@ import org.meveo.model.shared.DateUtils;
 @Entity
 @WorkflowedEntity
 @ObservableEntity
-@Cacheable
+//TODO infinispan fixes
+/*@Cacheable */
 @CustomFieldEntity(cftCodePrefix = "Subscription", inheritCFValuesFrom = { "offer", "userAccount" })
 @ExportIdentifier({ "code" })
 @Table(name = "billing_subscription", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))

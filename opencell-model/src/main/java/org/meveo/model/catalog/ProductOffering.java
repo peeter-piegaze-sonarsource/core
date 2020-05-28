@@ -55,7 +55,8 @@ import org.meveo.model.scripts.ScriptInstance;
 @ModuleItem
 @ObservableEntity
 @VersionedEntity
-@Cacheable
+//TODO infinispan fixes
+/*@Cacheable*/
 @ExportIdentifier({ "code", "validity.from", "validity.to" })
 @Table(name = "cat_offer_template", uniqueConstraints = @UniqueConstraint(columnNames = { "code", "valid_from", "valid_to" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

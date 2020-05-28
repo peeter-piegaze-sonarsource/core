@@ -73,7 +73,8 @@ import org.meveo.model.shared.ContactInformation;
 @Entity
 @WorkflowedEntity
 @ObservableEntity
-@Cacheable
+//TODO infinispan fixes
+/*@Cacheable*/
 @CustomFieldEntity(cftCodePrefix = "Seller", inheritCFValuesFrom = "seller", inheritFromProvider = true)
 @ExportIdentifier({ "code" })
 @Table(name = "crm_seller", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))

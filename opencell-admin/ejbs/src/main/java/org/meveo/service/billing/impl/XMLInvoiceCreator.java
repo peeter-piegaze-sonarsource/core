@@ -1039,7 +1039,8 @@ public class XMLInvoiceCreator extends PersistenceService<Invoice> {
         
         Element country = doc.createElement("country");
         Element countryName = doc.createElement("countryName");
-        seller = sellerService.refreshOrRetrieve(seller);
+        //TODO infinispan fixes
+        //seller = sellerService.refreshOrRetrieve(seller);
 		if (seller.getAddress() != null && seller.getAddress().getCountry() != null) {
 			Country countryEntity = seller.getAddress().getCountry();
             Text countryTxt = doc.createTextNode(countryEntity != null ? countryEntity.getCountryCode() : "");
