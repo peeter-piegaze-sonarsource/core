@@ -42,7 +42,7 @@ import org.meveo.model.shared.DateUtils;
  * @author Andrius Karpavicius
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @Table(name = "billing_counter")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "billing_counter_instance_seq"), })

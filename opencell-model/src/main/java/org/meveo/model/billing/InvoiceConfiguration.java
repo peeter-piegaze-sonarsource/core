@@ -21,7 +21,7 @@ import org.meveo.model.IEntity;
  **/
 @Entity
 @ExportIdentifier({ "provider" })
-@Cacheable
+/*@Cacheable*/
 @Table(name = "billing_invoice_configuration")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "billing_invoice_configuration_seq"), })

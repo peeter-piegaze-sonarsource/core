@@ -34,7 +34,7 @@ import javax.persistence.Table;
  * @since 8.0.0
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier("code")
 @Table(name = "adm_file_type")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

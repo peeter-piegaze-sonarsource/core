@@ -45,7 +45,7 @@ import org.meveo.model.ExportIdentifier;
  * @since 7.3.0
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier("code")
 @Table(name = "adm_file_format")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

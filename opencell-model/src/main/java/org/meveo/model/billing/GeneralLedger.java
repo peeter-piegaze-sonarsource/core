@@ -45,7 +45,7 @@ import org.meveo.model.payments.OtherTransaction;
  * @lastModifiedVersion 5.3
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @Table(name = "billing_general_ledger", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "billing_general_ledger_seq"), })

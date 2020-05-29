@@ -26,7 +26,7 @@ import org.meveo.model.ExportIdentifier;
  * 
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier({ "calendar.code", "holidayBegin", "holidayEnd" })
 @Table(name = "cat_calendar_holiday")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

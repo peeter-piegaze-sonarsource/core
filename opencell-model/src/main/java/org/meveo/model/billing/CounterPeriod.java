@@ -43,7 +43,7 @@ import org.meveo.model.catalog.CounterTypeEnum;
  */
 @Entity
 @ObservableEntity
-@Cacheable
+/*@Cacheable*/
 @Table(name = "billing_counter_period", uniqueConstraints = @UniqueConstraint(columnNames = { "counter_instance_id", "period_start_date" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "billing_counter_period_seq"), })

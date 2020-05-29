@@ -30,7 +30,7 @@ import org.meveo.model.ExportIdentifier;
  * @author Andrius Karpavicius
  */
 @Entity
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier({ "meveoModule.code", "appliesTo", "itemClass", "itemCode" })
 @Table(name = "meveo_module_item")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

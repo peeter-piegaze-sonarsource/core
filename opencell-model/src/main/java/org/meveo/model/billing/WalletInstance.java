@@ -50,7 +50,7 @@ import org.meveo.model.catalog.WalletTemplate;
  */
 @Entity
 @ObservableEntity
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier({ "code", "userAccount.code" })
 @Table(name = "billing_wallet", uniqueConstraints = @UniqueConstraint(columnNames = { "code", "user_account_id" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {

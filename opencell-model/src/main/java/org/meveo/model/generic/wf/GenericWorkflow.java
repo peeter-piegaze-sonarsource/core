@@ -53,7 +53,7 @@ import org.meveo.model.filter.Filter;
  */
 @Entity
 @ModuleItem
-@Cacheable
+/*@Cacheable*/
 @ExportIdentifier({ "code" })
 @CustomFieldEntity(cftCodePrefix = "GenericWorkflow")
 @Table(name = "wf_generic_workflow", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))

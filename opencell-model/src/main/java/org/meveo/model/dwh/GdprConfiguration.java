@@ -25,7 +25,7 @@ import org.meveo.model.crm.Provider;
  * @lastModifiedVersion 5.2
  **/
 @Entity
-@Cacheable
+/*@Cacheable*/
 @Table(name = "adm_gdpr_configuration")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", //
         parameters = { @Parameter(name = "sequence_name", value = "adm_gdpr_configuration_seq"), })

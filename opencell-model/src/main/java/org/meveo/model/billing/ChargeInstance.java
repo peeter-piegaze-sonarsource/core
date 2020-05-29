@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @ObservableEntity
-@Cacheable
+/*@Cacheable*/
 @CustomFieldEntity(cftCodePrefix = "ChargeInstance", inheritCFValuesFrom = "chargeTemplate")
 @Table(name = "billing_charge_instance")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
