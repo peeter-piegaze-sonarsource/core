@@ -46,7 +46,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Create a new chart
      * 
-     * @param postData The chart's data
+     * @param postData
+     *            The chart's data
      * @return Request processing status
      */
     @POST
@@ -56,7 +57,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Create a new bar chart
      * 
-     * @param postData The bar chart's data
+     * @param postData
+     *            The bar chart's data
      * @return Request processing status
      */
     @POST
@@ -64,9 +66,21 @@ public interface ChartRs extends IBaseRs {
     ActionStatus createBarChart(BarChartDto postData);
 
     /**
+     * Create or update a new bar chart
+     * 
+     * @param postData
+     *            The bar chart's data
+     * @return Request processing status
+     */
+    @POST
+    @Path("/bar/createOrUpdate")
+    ActionStatus createOrUpdateBarChart(BarChartDto postData);
+
+    /**
      * Update an existing bar chart
      * 
-     * @param postData The bar chart's data
+     * @param postData
+     *            The bar chart's data
      * @return Request processing status
      */
     @PUT
@@ -76,7 +90,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Create a new pie chart
      * 
-     * @param postData The pie chart's data
+     * @param postData
+     *            The pie chart's data
      * @return Request processing status
      */
     @POST
@@ -84,9 +99,21 @@ public interface ChartRs extends IBaseRs {
     ActionStatus createPieChart(PieChartDto postData);
 
     /**
+     * Create or update a new pie chart
+     * 
+     * @param postData
+     *            The pie chart's data
+     * @return Request processing status
+     */
+    @POST
+    @Path("/pie/createOrUpdate")
+    ActionStatus createOrUpdatePieChart(PieChartDto postData);
+
+    /**
      * Update an existing pie chart
      * 
-     * @param postData The pie chart's data
+     * @param postData
+     *            The pie chart's data
      * @return Request processing status
      */
     @PUT
@@ -96,7 +123,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Create a new line chart
      * 
-     * @param postData The line chart's data
+     * @param postData
+     *            The line chart's data
      * @return Request processing status
      */
     @POST
@@ -104,9 +132,21 @@ public interface ChartRs extends IBaseRs {
     ActionStatus createLineChart(LineChartDto postData);
 
     /**
+     * Create or update a new line chart
+     * 
+     * @param postData
+     *            The line chart's data
+     * @return Request processing status
+     */
+    @POST
+    @Path("/line/createOrUpdate")
+    ActionStatus createOrUpdateLineChart(LineChartDto postData);
+
+    /**
      * Update an existing line chart
      * 
-     * @param postData The line chart's data
+     * @param postData
+     *            The line chart's data
      * @return Request processing status
      */
     @PUT
@@ -116,7 +156,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Update an existing chart
      * 
-     * @param postData The chart's data
+     * @param postData
+     *            The chart's data
      * @return Request processing status
      */
     @PUT
@@ -126,7 +167,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Remove an existing chart with a given code
      * 
-     * @param chartCode The chart's code
+     * @param chartCode
+     *            The chart's code
      * @return Request processing status
      */
     @DELETE
@@ -136,7 +178,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Find a chart with a given code
      * 
-     * @param chartCode The chart's code
+     * @param chartCode
+     *            The chart's code
      * @return Get Chart Response
      */
     @GET
@@ -146,7 +189,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Create new or update an existing chart with a given code
      * 
-     * @param postData The chart's data
+     * @param postData
+     *            The chart's data
      * @return Request processing status
      */
     @POST
@@ -156,7 +200,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Enable a Chart with a given code
      * 
-     * @param code Chart code
+     * @param code
+     *            Chart code
      * @return Request processing status
      */
     @POST
@@ -166,7 +211,8 @@ public interface ChartRs extends IBaseRs {
     /**
      * Disable a Chart with a given code
      * 
-     * @param code Chart code
+     * @param code
+     *            Chart code
      * @return Request processing status
      */
     @POST

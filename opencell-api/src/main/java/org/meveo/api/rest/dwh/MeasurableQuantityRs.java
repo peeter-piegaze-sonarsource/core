@@ -57,6 +57,17 @@ public interface MeasurableQuantityRs extends IBaseRs {
     ActionStatus create(MeasurableQuantityDto postData);
 
     /**
+     * Create or update a Measurable quantity.
+     *
+     * @param postData
+     *            posted data to API
+     * @return action status.
+     */
+    @POST
+    @Path("/createOrUpdate")
+    ActionStatus createOrUpdate(MeasurableQuantityDto postData);
+
+    /**
      * Update Measurable quantity from mesearable quantities.
      * 
      * @param postData posted data.

@@ -61,6 +61,19 @@ public class MeasurableQuantityRsImpl extends BaseRs implements MeasurableQuanti
     }
 
     @Override
+    public ActionStatus createOrUpdate(MeasurableQuantityDto postData) {
+        ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+
+        try {
+            measurableQuantityApi.createOrUpdate(postData);
+        } catch (Exception e) {
+            processException(e, result);
+        }
+
+        return result;
+    }
+
+    @Override
     public ActionStatus update(MeasurableQuantityDto postData) {
         ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
 

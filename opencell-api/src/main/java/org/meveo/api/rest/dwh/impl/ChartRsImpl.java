@@ -209,4 +209,43 @@ public class ChartRsImpl extends BaseRs implements ChartRs {
 
         return result;
     }
+
+    @Override
+    public ActionStatus createOrUpdateBarChart(BarChartDto postData) {
+        ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+
+        try {
+            chartApi.createOrUpdate(postData);
+        } catch (Exception e) {
+            processException(e, result);
+        }
+
+        return result;
+    }
+
+    @Override
+    public ActionStatus createOrUpdatePieChart(PieChartDto postData) {
+        ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+
+        try {
+            chartApi.createOrUpdate(postData);
+        } catch (Exception e) {
+            processException(e, result);
+        }
+
+        return result;
+    }
+
+    @Override
+    public ActionStatus createOrUpdateLineChart(LineChartDto postData) {
+        ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
+
+        try {
+            chartApi.createOrUpdate(postData);
+        } catch (Exception e) {
+            processException(e, result);
+        }
+
+        return result;
+    }
 }
