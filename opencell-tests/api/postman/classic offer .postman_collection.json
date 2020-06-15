@@ -18375,10 +18375,6 @@
 									"script": {
 										"id": "ee32fb06-0c0e-4d8f-bd21-e2b8441f5e69",
 										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
-											"tests[\"is.success\"] = jsonData.actionStatus.status === \"SUCCESS\";",
-											"pm.globals.set(\"invoice.id\", jsonData.generateInvoiceResultDto.invoiceId);",
-											"",
 											"pm.test(\"checking response code to be 200\", function () {",
 											"    pm.response.to.not.be.error;",
 											"    pm.expect(pm.response.code).to.equal(200);",
@@ -22803,15 +22799,15 @@
 					"name": "Terminations",
 					"item": [
 						{
-							"name": "Charge CDR 1 UNIT",
+							"name": "Subscription YYYY-01-02 T 02-01",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "942ce900-041c-409f-a77a-8b87384c8e1d",
+										"id": "5fa9487f-db11-4e5f-a603-47e7f2b9fa80",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -22831,59 +22827,44 @@
 											"key": "username",
 											"value": "opencell.admin",
 											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "2017-12-15T01:00:00.000Z;1;ben.ohara;UNIT\r\n",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-01-02\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-02-20\"\r\n}",
 									"options": {
-										"raw": {}
+										"raw": {
+											"language": "json"
+										}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
 										"billing",
-										"mediation",
-										"chargeCdr"
+										"subscription",
+										"terminate"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Charge CDR 5 UNIT",
+							"name": "Subscription YYYY-01-03 T 03-01",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "f6c6ce8d-31ed-49ae-b498-a523b3b2ddc8",
+										"id": "7ad71710-374a-4f3e-900b-a79b2c030d96",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -22903,59 +22884,44 @@
 											"key": "username",
 											"value": "opencell.admin",
 											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "2017-12-15T02:00:00.000Z;5;ben.ohara;UNIT\r\n",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-01-03\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-03-20\"\r\n}",
 									"options": {
-										"raw": {}
+										"raw": {
+											"language": "json"
+										}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
 										"billing",
-										"mediation",
-										"chargeCdr"
+										"subscription",
+										"terminate"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Charge CDR 30 UNIT",
+							"name": "Subscription YYYY-03-02 T 04-01",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "dd2c7176-ab78-4a8f-a4df-4e3078e1b228",
+										"id": "e730069b-f377-43db-a85a-389fdf3da630",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -22975,44 +22941,528 @@
 											"key": "username",
 											"value": "opencell.admin",
 											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
+								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "2017-12-15T03:00:00.000Z;30;ben.ohara;UNIT\r\n",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-03-02\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-04-20\"\r\n}",
 									"options": {
-										"raw": {}
+										"raw": {
+											"language": "json"
+										}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
 										"billing",
-										"mediation",
-										"chargeCdr"
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-03-04 T 09-01",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-03-04\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-09-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-04-01 T 05-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "14ed497e-16c9-4c5c-95b9-66a3a2d8771d",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-04-01\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-05-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-05-01 T 06-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f6f331da-9021-4d9f-a60d-d747085d3ee4",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-05-01\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-06-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-06-03 T 10-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b7c55a53-7ed5-46a4-bf0a-910120d2143c",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-06-03\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-10-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-06-04 T 08-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7e7724b9-1a46-4d54-aaae-8657023e25a2",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-06-04\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-08-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-07-01 T 09-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2ae6ddff-4a22-48ca-942d-3d886623f8d8",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-07-01\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-09-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-09-03 T 11-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "18237db6-afc6-4ddf-ad83-715b18a74a70",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-09-03\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-11-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-09-04 T 10-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "7d86825e-3312-4924-87c5-4d880abc540f",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-09-04\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-10-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscription YYYY-09-05 T 10-01",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f74ef36f-9250-4b3a-b6bf-beb593b05734",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "opencell.admin",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "opencell.admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"subscriptionCode\": \"bob.churn_2018-09-05\",\r\n    \"terminationReason\": \"TR_NONE\",\r\n    \"terminationDate\": \"2018-10-20\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/subscription/terminate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"subscription",
+										"terminate"
 									]
 								}
 							},
@@ -23023,27 +23473,18 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "invoice",
+					"name": "Orders",
 					"item": [
 						{
-							"name": "Generate Previous Invoice",
+							"name": "Order 01",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"id": "b3a1d02e-15dc-4c52-818a-b40cf81d657a",
 										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
-											"tests[\"is.success\"] = jsonData.actionStatus.status === \"SUCCESS\";",
-											"pm.globals.set(\"invoice.id\", jsonData.generateInvoiceResultDto.invoiceId);",
-											"",
-											"pm.test(\"checking response code to be 200\", function () {",
-											"    pm.response.to.not.be.error;",
-											"    pm.expect(pm.response.code).to.equal(200);",
-											"});",
-											"pm.test(\"Get invoice number\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.collectionVariables.set(\"invoiceNumber1\", jsonData.invoiceNumber)",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -23088,485 +23529,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"targetCode\": \"ben.ohara\",\n    \"targetType\": \"BILLINGACCOUNT\",\n    \"invoicingDate\": \"2018-01-01\",\n    \"lastTransactionDate\": \"2018-01-02\",\n    \"generateXML\": true,\n    \"generatePDF\": true,\n    \"generateAO\": true\n}",
+									"raw": "{\n   \n    \"description\": \"ORDER_bob.churn_01\",\n    \"priority\": \"1\",\n    \"state\": \"\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n\n}",
 									"options": {
 										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/invoice/generateInvoice",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"invoice",
-										"generateInvoice"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
-				},
-				{
-					"name": "Charge Usage 2",
-					"item": [
-						{
-							"name": "Charge CDR UNIT 1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "a00cc74e-4356-48d5-8c76-e7ba0ed5a98d",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-01T01:00:00.000Z;1;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Charge CDR UNIT 2",
+							"name": "Order 02",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "b3be8bd1-0e20-44a5-a24b-4617f6dc8a9a",
+										"id": "9a68d04e-f913-4318-8666-16ba4fd4d833",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-02T01:00:00.000Z;2;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 3",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "d6876db9-6b03-44e7-acde-31e3a0ac00ce",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-03T01:00:00.000Z;3;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 4",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "2d225790-1600-47c0-abdc-089ece53a4ad",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-04T01:00:00.000Z;4;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 5",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "1039166b-dae7-4030-9640-38e7b3c10f70",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-05T01:00:00.000Z;5;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 6",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "19bae98b-9c1c-46c1-8799-26523a95a546",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-01-06T01:00:00.000Z;6;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
-				},
-				{
-					"name": "invoice 2",
-					"item": [
-						{
-							"name": "Generate Invoice",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "8495107f-ba3e-475e-bbda-70eceacca27b",
-										"exec": [
-											"pm.test(\"checking response code to be 200\", function () {",
-											"    pm.response.to.not.be.error;",
-											"    pm.expect(pm.response.code).to.equal(200);",
-											"});",
-											"pm.test(\"Get invoice number\", function () {",
-											"    var jsonData = pm.response.json();",
-											"    pm.collectionVariables.set(\"invoiceNumber2\", jsonData.invoiceNumber)",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -23611,502 +23601,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"targetCode\": \"ben.ohara\",\n    \"targetType\": \"BILLINGACCOUNT\",\n    \"invoicingDate\": \"2018-02-01\",\n    \"lastTransactionDate\": \"2018-02-01\",\n    \"generateXML\": true,\n    \"generatePDF\": true,\n    \"generateAO\": true\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_02\",\n    \"priority\": \"1\",\n    \"state\": \"\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_bob.churn}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
 										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/invoice/generateInvoice",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"invoice",
-										"generateInvoice"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
-				},
-				{
-					"name": "Charge Usage 3 (UNBILLED)",
-					"item": [
-						{
-							"name": "Charge CDR UNIT 1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "824bef1e-6e1a-445c-aaf5-1e8d40717d9f",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-01T01:00:00.000Z;1;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Charge CDR UNIT 2",
+							"name": "Order 03",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "642d96d4-4e7f-49d5-981b-5c2e2682d783",
+										"id": "1ea51157-ec93-4d84-93fc-d1583b28e20e",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-02T01:00:00.000Z;2;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 3",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "d6f7b566-b5f5-45ee-9fe7-9f9884e45317",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-03T01:00:00.000Z;3;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 4",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "b6c017a2-c92c-431d-8976-bac55b469dd4",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-04T01:00:00.000Z;4;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 5",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "7684e65e-3c45-42af-be34-c934b2463cc6",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-05T01:00:00.000Z;5;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Charge CDR UNIT 6",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "df3a5f1d-e69e-4424-99d3-386475d4eed1",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "saveHelperData",
-											"value": true,
-											"type": "boolean"
-										},
-										{
-											"key": "showPassword",
-											"value": false,
-											"type": "boolean"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "2018-02-06T01:00:00.000Z;6;ben.ohara;UNIT\r\n",
-									"options": {
-										"raw": {}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/billing/mediation/chargeCdr",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"billing",
-										"mediation",
-										"chargeCdr"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "7d08d0bd-8e4b-4168-bb0e-4e2864e3b3e8",
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"id": "529a836a-88cc-4fcd-adb0-c620e4352a6b",
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
-				},
-				{
-					"name": "Account operations",
-					"item": [
-						{
-							"name": "Create Accounting Code 1",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "642bce74-87b6-47ea-b60f-b34fc48ee9c8",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -24151,35 +23673,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \"code\":\"90590_41115_00000_000_0000_00000000_00000\" ,\n\"description\":\"90590_41115_00000_000_0000_00000000_00000\",\n  \"chartOfAccountTypeEnum\":\"EXPENSE\",\n   \"chartOfAccountViewTypeEnum\":\"REGULAR\",\n\"disabled\":\"false\",\n \"reportingAccount\":\"sales\"\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_03\",\n    \"priority\": \"1\",\n    \"state\": \"Pending\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
 										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/billing/accountingCode/createOrUpdate",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"billing",
-										"accountingCode",
-										"createOrUpdate"
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Create Accounting Code 2",
+							"name": "Order 04",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "a6cefa33-f9ee-4d9f-abaa-18ad3382222d",
+										"id": "3e9572ec-6265-4723-b8e9-21b67cd3ba7b",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -24224,80 +23745,34 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \"code\":\"90590_41115_00000_000_0000_00000000_00000\" ,\n\"description\":\"90590_41115_00000_000_0000_00000000_00000\",\n  \"chartOfAccountTypeEnum\":\"EXPENSE\",\n   \"chartOfAccountViewTypeEnum\":\"REGULAR\",\n\"disabled\":\"false\",\n \"reportingAccount\":\"sales\"\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_04\",\n    \"priority\": \"1\",\n    \"state\": \"Pending\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
 										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/billing/accountingCode/createOrUpdate",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"billing",
-										"accountingCode",
-										"createOrUpdate"
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Payment for invoice 1",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "opencell.admin",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "opencell.admin",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\"customerAccount\":\"ben.ohara\",\r\n\t\t  \"description\" :\"Payment for {{invoiceNumber1}}\",\r\n\t\t  \"amount\":\"89.410000000000\",\r\n\t\t  \"unMatchingAmount\":\"89.410000000000\",\r\n\t\t  \"dueDate\":\"2018-01-01\",\r\n\t\t  \"type\":\"OCC\",\r\n\t\t  \"transactionDate\":\"2018-02-10\",\r\n\t\t  \"transactionCategory\":\"CREDIT\",\r\n\t\t  \"reference\":\"{{invoiceNumber1}}\",\r\n\t\t  \"accountCode\":\"90590_41115_00000_000_0000_00000000_00000\",\r\n\t\t  \"accountCodeClientSide\":\"90590,51214170,00000,000,0000,00000000,00000\",\r\n\t\t  \"code\":\"RG_PLVT\",\r\n\t\t  \"otherCreditAndCharge\":{\r\n              \t\t    \"operationDate\":\"2018-02-10\"\r\n          },\r\n\t\t  \"matchingStatus\":\"O\"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{opencell.url}}/accountOperation ",
-									"host": [
-										"{{opencell.url}}"
-									],
-									"path": [
-										"accountOperation "
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Undue payment 50",
+							"name": "Order 05",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "679726ad-8efb-44db-afc8-6fac268f8616",
+										"id": "bf805ca0-7673-4487-b1d5-3229a8383832",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"pm.test(\"Get AO Id \", function () {\r",
-											"    var jsonData = pm.response.json();\r",
-											"    pm.collectionVariables.set(\"unduePaymentID\", jsonData.message)\r",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -24309,54 +23784,67 @@
 									"type": "basic",
 									"basic": [
 										{
-											"key": "password",
-											"value": "opencell.admin",
+											"key": "username",
+											"value": "{{opencell.username}}",
 											"type": "string"
 										},
 										{
-											"key": "username",
-											"value": "opencell.admin",
+											"key": "password",
+											"value": "{{opencell.password}}",
 											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\"customerAccount\":\"ben.ohara\",\r\n\t\t  \"description\" :\"Undue payment\",\r\n\t\t  \"amount\":\"50\",\r\n\t\t  \"unMatchingAmount\":\"50\",\r\n\t\t  \"type\":\"OCC\",\r\n\t\t  \"transactionDate\":\"2018-02-11\",\r\n\t\t  \"transactionCategory\":\"CREDIT\",\r\n\t\t  \"reference\":\"NO_REF\",\r\n\t\t  \"code\":\"RG_CHQ\",\r\n\t\t  \"otherCreditAndCharge\":{\r\n              \t\t    \"operationDate\":\"2018-02-11\"\r\n          },\r\n\t\t  \"matchingStatus\":\"O\"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_05\",\n    \"priority\": \"1\",\n    \"state\": \"Pending\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
-										"raw": {
-											"language": "json"
-										}
+										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/accountOperation ",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"accountOperation "
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Refund 50",
+							"name": "Order 06",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "d79ffae3-2d0d-42b7-933e-5033724063a6",
+										"id": "df6367c0-c3b5-4d29-b191-f12d4588c47e",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"pm.test(\"Get AO Id \", function () {\r",
-											"    var jsonData = pm.response.json();\r",
-											"    pm.collectionVariables.set(\"refundPaymentID\", jsonData.message)\r",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -24368,53 +23856,68 @@
 									"type": "basic",
 									"basic": [
 										{
-											"key": "password",
-											"value": "opencell.admin",
+											"key": "username",
+											"value": "{{opencell.username}}",
 											"type": "string"
 										},
 										{
-											"key": "username",
-											"value": "opencell.admin",
+											"key": "password",
+											"value": "{{opencell.password}}",
 											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\"customerAccount\":\"ben.ohara\",\r\n\t\t  \"description\" :\"Refund undue payment\",\r\n\t\t  \"amount\":\"50\",\r\n\t\t  \"unMatchingAmount\":\"50\",\r\n\t\t  \"type\":\"OCC\",\r\n\t\t  \"transactionDate\":\"2018-02-12\",\r\n\t\t  \"transactionCategory\":\"DEBIT\",\r\n\t\t  \"reference\":\"NO_REF\",\r\n\t\t  \"code\":\"RG_CHQ\",\r\n\t\t  \"otherCreditAndCharge\":{\r\n              \t\t    \"operationDate\":\"2018-02-12\"\r\n          },\r\n\t\t  \"matchingStatus\":\"O\"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_06\",\n    \"priority\": \"1\",\n    \"state\": \"Cancelled\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
-										"raw": {
-											"language": "json"
-										}
+										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/accountOperation ",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"accountOperation "
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Payment for invoice 2",
+							"name": "Order 07",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
-										"id": "fdb91d57-1b89-4ea2-860b-88e291e37ea3",
+										"id": "16312276-c451-43d4-8cd2-fc70ceaf7589",
 										"exec": [
-											"pm.test(\"checking response code to be 200\", function () {\r",
-											"    pm.response.to.not.be.error;\r",
-											"    pm.expect(pm.response.code).to.equal(200);\r",
-											"});\r",
-											""
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -24425,77 +23928,268 @@
 									"type": "basic",
 									"basic": [
 										{
-											"key": "password",
-											"value": "opencell.admin",
+											"key": "username",
+											"value": "{{opencell.username}}",
 											"type": "string"
 										},
 										{
-											"key": "username",
-											"value": "opencell.admin",
+											"key": "password",
+											"value": "{{opencell.password}}",
 											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\"customerAccount\":\"ben.ohara\",\r\n\t\t  \"description\" :\"Payment for {{invoiceNumber2}}\",\r\n\t\t  \"amount\":\"26.400000000000\",\r\n\t\t  \"unMatchingAmount\":\"26.400000000000\",\r\n\t\t  \"dueDate\":\"2018-01-01\",\r\n\t\t  \"type\":\"OCC\",\r\n\t\t  \"transactionDate\":\"2018-02-10\",\r\n\t\t  \"transactionCategory\":\"CREDIT\",\r\n\t\t  \"reference\":\"{{invoiceNumber2}}\",\r\n\t\t  \"accountCode\":\"90590_41115_00000_000_0000_00000000_00000\",\r\n\t\t  \"accountCodeClientSide\":\"90590,51214170,00000,000,0000,00000000,00000\",\r\n\t\t  \"code\":\"RG_PLVT\",\r\n\t\t  \"otherCreditAndCharge\":{\r\n              \t\t    \"operationDate\":\"2018-02-10\"\r\n          },\r\n\t\t  \"matchingStatus\":\"O\"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_07\",\n    \"priority\": \"1\",\n    \"state\": \"Cancelled\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"${#TestSuite#CUST}\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{emplateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
-										"raw": {
-											"language": "json"
-										}
+										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/accountOperation ",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"accountOperation "
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Match Undue payment and Refund",
+							"name": "Order 08",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "04dbd714-954a-4b0a-9b49-464ba7b92c42",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "basic",
 									"basic": [
 										{
-											"key": "password",
-											"value": "opencell.admin",
+											"key": "username",
+											"value": "{{opencell.username}}",
 											"type": "string"
 										},
 										{
-											"key": "username",
-											"value": "opencell.admin",
+											"key": "password",
+											"value": "{{opencell.password}}",
 											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
 										}
 									]
 								},
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"customerAccountCode\": \"ben.ohara\",\r\n    \"accountOperations\": {\r\n        \"accountOperation\": [\r\n            {\r\n                \"id\": \"{{unduePaymentID}}\"\r\n            },\r\n            {\r\n                \"id\": \"{{refundPaymentID}}\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_08\",\n    \"priority\": \"1\",\n    \"state\": \"Completed\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_2018_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
 									"options": {
-										"raw": {
-											"language": "json"
-										}
+										"raw": {}
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/accountOperation/matchOperations",
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
 									"host": [
 										"{{opencell.url}}"
 									],
 									"path": [
-										"accountOperation",
-										"matchOperations"
+										"orderManagement",
+										"productOrder"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order 09",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a89a90f6-d19a-489f-bb9e-6ccb86258120",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "{{opencell.username}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{opencell.password}}",
+											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_09\",\n    \"priority\": \"1\",\n    \"state\": \"Completed\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"orderManagement",
+										"productOrder"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Order 10",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ac8c9588-24ef-4e61-aa0f-97f68eed4184",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "{{opencell.username}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "{{opencell.password}}",
+											"type": "string"
+										},
+										{
+											"key": "saveHelperData",
+											"type": "any"
+										},
+										{
+											"key": "showPassword",
+											"value": false,
+											"type": "boolean"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"description\": \"ORDER_bob.churn_10\",\n    \"priority\": \"1\",\n    \"state\": \"Completed\",\n    \"orderDate\": \"2018-11-01T00:00:00Z\",\n    \"orderItem\": [\n      {\n        \"id\": \"item01\",\n        \"action\": \"ADD\",\n        \"billingAccount\": [ {\"id\":\"bob.churn\" } ],\n        \"productOffering\": {\n          \"id\": \"PR_{{templateCode}}_DEFAULT\"\n        },\n        \"product\": {\n          \"productCharacteristic\": [\n            {\n              \"name\": \"subscriptionDate\",\n              \"value\": \"2018-11-01\"\n            },\n            {\n              \"name\": \"quantity\",\n              \"value\": \"1\"\n            },\n            {\n              \"name\": \"CF_{{templateCode}}_PRICE_PRD\",\n              \"value\": \"10\"\n            }\n          ]\n        }\n      }\n    ]\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/orderManagement/productOrder",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"orderManagement",
+										"productOrder"
 									]
 								}
 							},
@@ -24533,235 +24227,235 @@
 	],
 	"variable": [
 		{
-			"id": "c4e6638e-2908-4858-95d5-f73881d658b0",
+			"id": "3bb4151b-cb6a-4ecf-9d0d-5be6f0f9df0a",
 			"key": "adminUsername",
 			"value": "opencell.superadmin",
 			"type": "string"
 		},
 		{
-			"id": "8ba44e83-6528-430f-b66f-f853c27a15ca",
+			"id": "83735f6f-74f0-4ba3-9fe3-1bc4aa9a455d",
 			"key": "adminPassword",
 			"value": "opencell.superadmin",
 			"type": "string"
 		},
 		{
-			"id": "9a455860-3bb0-4b26-90e8-b4575f26cd22",
+			"id": "0fc7e518-3371-4a6f-a941-8fa49d877e01",
 			"key": "provideraddrName",
 			"value": "opencell",
 			"type": "string"
 		},
 		{
-			"id": "f727e2e5-a72c-4f6d-90f6-adf02062b7ad",
+			"id": "c63de017-9dd4-428f-8731-a43bd0829b7b",
 			"key": "MMUsername",
 			"value": "opencell.marketingmanager",
 			"type": "string"
 		},
 		{
-			"id": "42968320-baf6-4a61-8b6c-2a8fa50aeb4a",
+			"id": "cae69f53-cdf7-40f1-b6d8-ba056461f825",
 			"key": "MMPassword",
 			"value": "opencell.marketingmanager",
 			"type": "string"
 		},
 		{
-			"id": "1f8ff6a0-9b5f-4435-9206-3d6016a48aad",
+			"id": "e94d9467-34bc-4172-b5d8-ab1d17bcbc0c",
 			"key": "provider",
 			"value": "DEMO",
 			"type": "string"
 		},
 		{
-			"id": "b955ad3e-666a-48a0-ac6f-7f0448310ada",
+			"id": "9d71323b-b45d-4d58-b80c-1fe7efa0bafc",
 			"key": "providerAddrLine1",
 			"value": "14 rue Crespin du Gast",
 			"type": "string"
 		},
 		{
-			"id": "a6a9879c-a19f-4c45-96cd-4b5970af70c3",
+			"id": "3aa9f252-17b5-4fab-83e5-74a3afe5b99c",
 			"key": "providerAddrLine2",
 			"value": "3rd floor",
 			"type": "string"
 		},
 		{
-			"id": "ab075391-5865-44eb-8c4b-fee5125efbcf",
+			"id": "27d84fe5-1e40-455a-8f3f-15a83feed031",
 			"key": "providerAddrZip",
 			"value": "75011",
 			"type": "string"
 		},
 		{
-			"id": "0b06beef-f39e-45ae-b3a5-2fee6182635b",
+			"id": "b11ca3b4-809a-464b-a499-87a463e43dc8",
 			"key": "providerAddrCity",
 			"value": "Paris",
 			"type": "string"
 		},
 		{
-			"id": "e18d79ad-7b57-4d63-b77f-1b6b38ccf973",
+			"id": "b158dfd9-524d-49b0-ae32-08bacda0978a",
 			"key": "providerAddrPhone",
 			"value": "+00 123 456 798",
 			"type": "string"
 		},
 		{
-			"id": "c43c3dbd-deae-49c4-90c6-f78afb5de3db",
+			"id": "352ae66d-0ee2-47aa-b81b-45d6e58f1112",
 			"key": "providerAddrEmail",
 			"value": "contact@opencellsoft.com",
 			"type": "string"
 		},
 		{
-			"id": "18df3528-21c6-4817-a309-61fdb3d4d3b1",
+			"id": "69e0ce89-e090-4668-b620-42d1f53552b7",
 			"key": "CCUsername",
 			"value": "opencell.customercare",
 			"type": "string"
 		},
 		{
-			"id": "1237b8e0-bff2-4e01-a12a-f96d9b7fc02d",
+			"id": "8c00b8b7-3a9e-4fc0-8181-05c45cbf3fab",
 			"key": "CCPassword",
 			"value": "opencell.customercare",
 			"type": "string"
 		},
 		{
-			"id": "327d5971-3371-4f15-852d-02de03f081bb",
+			"id": "e22e799d-d3f9-4e75-a63e-3a2914087973",
 			"key": "SCUsername",
 			"value": "DEMO.CLASSIC",
 			"type": "string"
 		},
 		{
-			"id": "f9ed1a97-4019-4be4-8562-552e30623f2b",
+			"id": "d59d52ae-e09d-4498-bf1f-1a476ddd6bd6",
 			"key": "SCPassword",
 			"value": "DEMO.CLASSIC",
 			"type": "string"
 		},
 		{
-			"id": "8826ee7a-9410-4eff-ac23-8aee88a718f7",
+			"id": "330af8c1-0563-4721-a390-28df1476e487",
 			"key": "CCLastname",
 			"value": "Doe",
 			"type": "string"
 		},
 		{
-			"id": "7935f515-e97b-4efd-b18f-40347b2ede02",
+			"id": "0900672e-71f6-4926-b1e2-dbdba5342682",
 			"key": "CCFirstname",
 			"value": "Jeanette",
 			"type": "string"
 		},
 		{
-			"id": "b73a2120-2cd2-457c-beeb-51842a361eb6",
+			"id": "8662e983-b44e-440a-8f59-543a89821a0d",
 			"key": "SCLastname",
 			"value": "Clive",
 			"type": "string"
 		},
 		{
-			"id": "fc81ed3d-8087-4f03-9890-dbc046bd405e",
+			"id": "71a77eb2-187d-4c4a-b8d3-5d5eb46587ec",
 			"key": "SCFirstname",
 			"value": "Gildarts",
 			"type": "string"
 		},
 		{
-			"id": "6b3ae5fa-d8c6-4718-9b6e-e6c4b2920539",
+			"id": "4a5ccb13-ce59-41fe-b06b-52bb567cf5af",
 			"key": "reseller1",
 			"value": "Reseller1",
 			"type": "string"
 		},
 		{
-			"id": "16064f1d-921b-4ab6-bc4d-e56ddca677f0",
+			"id": "29de0432-d907-416c-96f5-5954e0d9a469",
 			"key": "reseller2",
 			"value": "Reseller2",
 			"type": "string"
 		},
 		{
-			"id": "d54b3d04-a429-4d68-8e01-0dae5e48ecae",
+			"id": "36fcd689-933b-46fc-9635-e38665691a50",
 			"key": "ingenico.merchantId",
 			"value": "XCSmoovetest003",
 			"type": "string"
 		},
 		{
-			"id": "7b1d61e7-0a30-492f-a202-a69a95769c55",
+			"id": "57d1c57f-e99a-4ac3-8e07-5dd69c86f13a",
 			"key": "ingenico.SecretApiKey",
 			"value": "+bEfYyY1YVUP2J/80yZOxD4Jj+/N/j2s/GcoY7F5rAg=",
 			"type": "string"
 		},
 		{
-			"id": "4a92ffc7-5674-4e28-9945-cecf8735dab5",
+			"id": "4e9d1885-6de4-4f38-b077-9d7989c8147d",
 			"key": "ingenico.ApiKeyId",
 			"value": "85c81e73917d806c",
 			"type": "string"
 		},
 		{
-			"id": "e390f5cb-f28a-451f-882c-91841c7aae21",
+			"id": "c96c4b34-e1cb-4ec7-a3da-d0c3df1e55ea",
 			"key": "slimPay.userId",
 			"value": "opencelldev",
 			"type": "string"
 		},
 		{
-			"id": "84cf9e21-ec8b-44aa-93d7-cc6ff88ec64f",
+			"id": "139818bb-22a7-49c7-a895-ef7e4ac4d8f5",
 			"key": "slimPay.secretKey",
 			"value": "OSpPCH4jYWfg7SRT53d5OTNCIcodepvfpfKHULQi",
 			"type": "string"
 		},
 		{
-			"id": "de1f018f-5c9b-4f20-af03-66d552c59c41",
+			"id": "ac37235e-d495-4274-86f0-fd429a7eff97",
 			"key": "templateCode",
 			"value": "CLASSIC",
 			"type": "string"
 		},
 		{
-			"id": "5062baf6-2474-499f-8cb8-c08f5a31a309",
+			"id": "ad7fbdf1-5588-4118-b8e8-b9b7242c047b",
 			"key": "templateLabel",
 			"value": "Generic",
 			"type": "string"
 		},
 		{
-			"id": "d611562d-84cc-44b2-a484-74e9dc508b57",
+			"id": "032ade67-cf97-43ae-a48a-6ab9e792f8bb",
 			"key": "partnerOfferId",
 			"value": "4",
 			"type": "string"
 		},
 		{
-			"id": "bed16fe5-9d0c-4128-807a-0af1c09833ae",
+			"id": "14839db9-8594-4f6b-bd88-0bebeb12003b",
 			"key": "recOfferId",
 			"value": "6",
 			"type": "string"
 		},
 		{
-			"id": "418314e5-08f4-43a1-b374-f2d6a3fa238a",
+			"id": "1554ebfd-5b98-4d8b-977c-69744e9c423f",
 			"key": "billingCycle",
 			"value": "BC_{{templateCode}}_MONTHLY_1ST",
 			"type": "string"
 		},
 		{
-			"id": "b5261ef4-ac35-46fe-9b85-dfe71ec4dbd4",
+			"id": "2b6e2eda-db8f-49d0-b9c0-29f0ca5388c2",
 			"key": "offerCode",
 			"value": "OF_{{templateCode}}_REC",
 			"type": "string"
 		},
 		{
-			"id": "40fcf8c5-467c-4739-b80d-0fbbfb0371a6",
+			"id": "f4b99c20-0b7b-4e7b-b925-f726088068c7",
 			"key": "serviceCode",
 			"value": "{{recOfferId}_SE_{{templateCode}_REC_NO_PRORATA",
 			"type": "string"
 		},
 		{
-			"id": "1d0787c3-a96a-45e4-af4f-e40c37955af8",
+			"id": "d88a5c35-4d8f-4ab7-a5fb-175c1eb9f918",
 			"key": "CUST",
 			"value": "{{provider}}.partner.{{templateCode}",
 			"type": "string"
 		},
 		{
-			"id": "8cd85272-ec3e-44b8-aec1-82d9517ecf37",
+			"id": "d3651187-a589-4dcf-9af0-be66cbfe3b1c",
 			"key": "invoiceNumber1",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "03638ed4-d2e5-409c-afe2-59e62fd46b66",
+			"id": "c55271ed-d6d1-48fd-90b6-07064aa4594b",
 			"key": "invoiceNumber2",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "c6bfe53f-e5ec-4a74-910a-c95c69953216",
+			"id": "0c68ba18-be3f-4736-b922-bd0d9793ef56",
 			"key": "unduePaymentID",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "3762a9c4-14ab-4d00-96f4-d80cd3e85b92",
+			"id": "34dbaa4b-7493-4aa1-9792-005da320b3d2",
 			"key": "refundPaymentID",
 			"value": "",
 			"type": "string"
