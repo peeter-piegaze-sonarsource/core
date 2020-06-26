@@ -16800,6 +16800,30 @@
 					"item": [
 						{
 							"name": "CRM Account Hierarchy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0cd49593-5d44-4433-a113-cd4916f7fd34",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -18637,6 +18661,30 @@
 					"item": [
 						{
 							"name": "CRM Account Hierarchy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1c7de671-bddc-4067-8edd-43cc41855d71",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -23167,9 +23215,29 @@
 									"script": {
 										"id": "2b66fbaa-d6ca-4b5c-8235-55cd3ec35b25",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "5e6febce-e70a-4485-b281-84c34e19f4a5",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
-											"});"
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											"\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -25618,9 +25686,7 @@
 									"script": {
 										"id": "5ad04fa0-ded0-4cd4-9d8d-cf0c71d473e3",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -25695,9 +25761,7 @@
 									"script": {
 										"id": "e8a86b33-dbfc-4f11-8cac-93c187a911c9",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -25794,9 +25858,7 @@
 									"script": {
 										"id": "4857bbe4-7e5e-410a-aed7-5a598758a3ae",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -25893,9 +25955,7 @@
 									"script": {
 										"id": "c6a0a1d7-5a8e-4cd7-9bb4-58568d5fcc17",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -25992,9 +26052,7 @@
 									"script": {
 										"id": "080f0a14-7359-42f4-8468-7716d8aafd32",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -26076,6 +26134,2315 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Customer Orange",
+			"item": [
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "CRM Account Hierarchy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "22d912fe-a35b-40eb-ade3-6adabb2c6b3a",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "7bfeb25c-e3e6-4dc5-acd0-31fb998d976e",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"sellers\": {\n      \"seller\": [\n         {\n            \"code\": \"{{reseller2}}\",\n            \"currencyCode\": \"EUR\",\n            \"countryCode\": \"FR\",\n            \"languageCode\": \"FRA\",\n            \"customers\": {\n               \"customer\": [\n                  {\n                     \"code\": \"orange\",\n                     \"description\": \"Orange S.A.\",\n                     \"name\": {\n                        \"title\": \"MR\",\n                        \"firstName\": \"Stéphane\",\n                        \"lastName\": \"Richard\"\n                     },\n                     \"address\": {\n                        \"address1\": \"78 Rue Olivier de Serres\",\n                        \"address2\": \"\",\n                        \"address3\": \"\",\n                        \"zipCode\": \"75015\",\n                        \"city\": \"Paris\",\n                        \"country\": \"France\"\n                     },\n                     \"customerCategory\": \"CLIENT\",\n                     \"customerBrand\": \"{{templateCode}}\",\n                     \"customerAccounts\": {\n                        \"customerAccount\": [\n                           {\n                              \"code\": \"orange\",\n                              \"description\": \"Orange S.A.\",\n                              \"name\": {\n                                 \"title\": \"MR\",\n                                 \"firstName\": \"Stéphane\",\n                                 \"lastName\": \"Richard\"\n                              },\n                              \"address\": {\n                                 \"address1\": \"78 Rue Olivier de Serres\",\n                                 \"address2\": \"\",\n                                 \"address3\": \"\",\n                                 \"zipCode\": \"75015\",\n                                 \"city\": \"Paris\",\n                                 \"country\": \"France\"\n                              },\n                              \"currency\": \"EUR\",\n                              \"language\": \"FRA\",\n                              \"paymentMethod\": \"WIRETRANSFER\",\n                              \"billingAccounts\": {\n                                 \"billingAccount\": [\n                                    {\n                                       \"code\": \"orange\",\n                                       \"description\": \"Orange S.A.\",\n                                       \"name\": {\n                                          \"title\": \"MR\",\n                                          \"firstName\": \"Stéphane\",\n                                          \"lastName\": \"Richard\"\n                                       },\n                                       \"address\": {\n                                          \"address1\": \"78 Rue Olivier de Serres\",\n                                          \"address2\": \"\",\n                                          \"address3\": \"\",\n                                          \"zipCode\": \"75015\",\n                                          \"city\": \"Paris\",\n                                          \"country\": \"France\"\n                                       },\n                                       \"billingCycle\": \"{{billingCycle}}\",\n                                       \"country\": \"FR\",\n                                       \"language\": \"FRA\",\n                                       \"electronicBilling\": \"true\",\n                                       \"email\": \"{{reseller1}}@opencellsoft.com\",\n                                       \"userAccounts\": {\n                                          \"userAccount\": [\n                                             {\n                                                \"code\": \"orange\",\n                                                \"description\": \"Orange S.A.\",\n                                                \"name\": {\n                                                   \"title\": \"MR\",\n                                                   \"firstName\": \"Stéphane\",\n                                                   \"lastName\": \"Richard\"\n                                                },\n                                                \"address\": {\n                                                   \"address1\": \"78 Rue Olivier de Serres\",\n                                                   \"address2\": \"\",\n                                                   \"address3\": \"\",\n                                                   \"zipCode\": \"75015\",\n                                                   \"city\": \"Paris\",\n                                                   \"country\": \"France\"\n                                                }\n                                             }\n                                          ]\n                                       }\n                                    }\n                                 ]\n                              }\n                           }\n                        ]\n                     }\n                  }\n               ]\n            }\n         }\n      ]\n   }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/account/accountHierarchy/customerHierarchyUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"account",
+										"accountHierarchy",
+										"customerHierarchyUpdate"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e0754418-3562-430e-b024-3ccfe88cc4b6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2e250396-0145-4424-b83a-1371e0548b47",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Card / Sepa Payment",
+			"item": [
+				{
+					"name": "Setup Data",
+					"item": [
+						{
+							"name": "Create accountingCode 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "87d2e15e-5cc9-4648-80ab-279815c35465",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"111.222.333.445\",\r\n    \"description\": \"111.222.333.445\",\r\n    \"chartOfAccountTypeEnum\": \"ASSETS\",\r\n    \"chartOfAccountViewTypeEnum\": \"REGULAR\",\r\n    \"reportingAccount\": \"sales\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/billing/accountingCode/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"billing",
+										"accountingCode",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create  REJ_CRD Template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b7054543-3246-4c3d-a96c-8f175074ce8a",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"REJ_CRD\",\r\n    \"description\": \"Payment card rejected\",\r\n    \"accountCode\": \"111.222.333.445\",\r\n    \"occCategory\": \"DEBIT\",\r\n    \"accountCodeClientSide\": \"111.222.333.445 client side\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/occTemplate/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"occTemplate",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create  PAY_CRD Template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c12c9796-b4e6-4555-b25d-90d9a4ff4b0b",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"PAY_CRD\",\r\n    \"description\": \"Payment card\",\r\n    \"accountCode\": \"111.222.333.445\",\r\n    \"occCategory\": \"CREDIT\",\r\n    \"accountCodeClientSide\": \"111.222.333.445 client side\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/occTemplate/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"occTemplate",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update ADJ InvoiceType",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "da74d950-345b-4d26-bd6f-8e617b92bc68",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"ADJ\",\r\n    \"description\": \"Adjustement\",\r\n    \"occTemplateCode\": \"INV_CRN\",\r\n    \"sequenceDto\": {\r\n        \"prefixEL\": \"adj_\",\r\n        \"sequenceSize\": \"3\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/invoiceType/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"invoiceType",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8e9c79de-0a82-47b6-8df0-4733433b7c70",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.apiURL\",\r\n    \"value\": \"https://api.preprod.slimpay.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "162e87e2-993e-4bff-bdb5-b440c3049b46",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.checkMandatBeforePayment\",\r\n    \"value\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "845894d1-b47d-4af6-b356-dccd0ec194ec",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.profile\",\r\n    \"value\": \"https://api.slimpay.net/alps/v1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d4b80dbe-cdf8-4d0f-b8c1-a25756f247d7",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.relns\",\r\n    \"value\": \"https://api.slimpay.net/alps#\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1765f645-ccaa-48e6-b964-ad4ec2558a3f",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.scheme\",\r\n    \"value\": \"SEPA.DIRECT_DEBIT.CORE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty6",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8d99f3bd-13d8-47d7-8142-1e5c95301e27",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.scope\",\r\n    \"value\": \"api\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty7_slimPay.secretKey",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "05c7e04f-6372-4dc6-8f33-e340f7891e1b",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.secretKey\",\r\n    \"value\": \"{{slimPay.secretKey}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty8",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4e262a5d-0ab6-463f-bec5-e225e4f728d7",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.tokenEndPoint\",\r\n    \"value\": \"/oauth/token\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty9_slimPay.userId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "902bc18c-6972-45ea-837c-aec497bf32d9",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"slimPay.userId\",\r\n    \"value\": \"{{slimPay.userId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyA",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cb80a4a2-0616-4a03-aaed-a9e387ba94b8",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.authorizationType\",\r\n    \"value\": \"V1HMAC\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyB",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "dcc24bb1-9c01-4a02-8b11-f28bcdb74b20",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.connectTimeout\",\r\n    \"value\": \"5000\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyC",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9bea2f9f-eb46-4246-a36a-a93135be750e",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.endpoint.host\",\r\n    \"value\": \"eu.preprod.api-ingenico.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyD",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9ff60773-5eb1-4689-a04a-5c3c3ef03f9c",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.endpoint.scheme\",\r\n    \"value\": \"https\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyE",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9e5554d3-ad50-455a-855b-aaccc05c05fa",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.integrator\",\r\n    \"value\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setPropertyF",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c5f2bd60-541c-4e0c-adb8-7e17b4a81721",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"connect.api.socketTimeout\",\r\n    \"value\": \"300000\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty_ingenico.ApiKeyId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4873920e-d29c-4318-929c-b0f6c1566d15",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"ingenico.ApiKeyId\",\r\n    \"value\": \"{{ingenico.ApiKeyId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty_ingenico.SecretApiKey",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "acfbe212-7e6b-4ba6-af03-7bd439d3836c",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"ingenico.SecretApiKey\",\r\n    \"value\": \"{{ingenico.SecretApiKey}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "setProperty_ingenico.merchantId",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "eca1fad3-a046-43e3-9f4e-ff3a9e706e81",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"property\": \"ingenico.merchantId\",\r\n    \"value\": \"{{ingenico.merchantId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/configurations",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Custom API",
+					"item": [
+						{
+							"name": "Create module",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1f3796ba-e43d-4af1-978c-c6a0f6685eef",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"code\": \"__CustomGatewayPaymentModule\",\r\n        \"description\": \"Custom gateway payment module\",\r\n        \"license\": \"GPL\",\r\n        \"moduleItems\": [\r\n            {\r\n                \"script\": {\r\n                    \"code\": \"org.meveo.service.script.smoove.__CustomGatewayPaymentScript\",\r\n                    \"description\": \"CustomGatewayPaymentScript\",\r\n                    \"type\": \"JAVA\",\r\n                    \"script\": \"package org.meveo.service.script.smoove;\\n\\nimport java.io.StringReader;\\nimport java.util.Map;\\n\\nimport javax.xml.xpath.XPath;\\nimport javax.xml.xpath.XPathExpressionException;\\nimport javax.xml.xpath.XPathFactory;\\n\\nimport org.meveo.admin.exception.BusinessException;\\nimport org.meveo.model.payments.CardPaymentMethod;\\nimport org.meveo.model.payments.PaymentStatusEnum;\\nimport org.meveo.service.script.payment.PaymentScript;\\nimport org.slf4j.Logger;\\nimport org.slf4j.LoggerFactory;\\nimport org.xml.sax.InputSource;\\n\\n\\npublic class __CustomGatewayPaymentScript extends PaymentScript{\\n\\n\\tprivate static final Logger log = LoggerFactory.getLogger(__CustomGatewayPaymentScript.class);\\n\\n\\t@Override\\n\\tpublic void createCardToken(Map<String, Object> methodContext) throws BusinessException {\\t\\t\\t\\n\\t\\tmethodContext.put(PaymentScript.RESULT_TOKEN, \\\"7ced0000-3ab2-000d-6a50-08d4b8a6\\\"+(int )(Math.random() * 1000 + 1));\\n\\t}\\n\\n\\t@Override\\n    public void doPaymentToken(Map<String, Object> methodContext) throws BusinessException {\\n\\t    doIt(methodContext, \\\"PAL\\\");\\n\\t}  \\n\\t\\n\\t@Override\\n    public void doRefundToken(Map<String, Object> methodContext) throws BusinessException {\\n\\t    doIt(methodContext, \\\"RFD\\\");\\n    }\\n\\t\\n\\t\\n\\t\\n\\tprivate void doIt(Map<String, Object> methodContext,String operationType) throws BusinessException {\\n\\t\\ttry{\\n\\t\\t\\tlog.debug(\\\"EXECUTE  methodContext {} \\\", methodContext);\\n\\t\\t\\tLong amountCts = (Long)methodContext.get(PaymentScript.CONTEXT_AMOUNT_CTS);\\n\\t\\t\\tif(amountCts == null){\\n\\t\\t\\t\\tthrow new BusinessException(\\\"amountCts is null\\\");\\n\\t\\t\\t}\\n\\t\\t\\tCardPaymentMethod paymentToken = (CardPaymentMethod)methodContext.get(PaymentScript.CONTEXT_TOKEN);\\n\\t\\t\\tif(paymentToken == null){\\n\\t\\t\\t\\tthrow new BusinessException(\\\"paymentMethod is null\\\");\\n\\t\\t\\t}\\n\\n\\t\\t\\tString body  = \\\"{\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"PSPID\\\\\\\" : \\\\\\\"PSPID\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"USERID\\\\\\\" : \\\\\\\"USERID\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"PSWD\\\\\\\" : \\\\\\\"PSWD\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"REFKIND\\\\\\\" :  \\\\\\\"PSPID\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"REFID\\\\\\\" : \\\\\\\"PSPID\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"OPERATION\\\\\\\" : \\\\\\\"\\\"+operationType +\\\"\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"AMOUNT\\\\\\\" : \\\\\\\"\\\"+amountCts.longValue()+\\\"\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"CURRENCY\\\\\\\" : \\\\\\\"\\\"+paymentToken.getCustomerAccount().getTradingCurrency().getCurrencyCode()+\\\"\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"TRANSACTIONID\\\\\\\" : \\\\\\\"\\\"+paymentToken.getTokenId()+\\\"\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" \\\\\\\"SHASIGN\\\\\\\" : \\\\\\\"SHASIGN\\\\\\\" ,\\\";\\n\\t\\t\\tbody  += \\\" }\\\";\\n\\t\\t\\tlog.debug(\\\"request body {} \\\", body);\\n/*\\t\\t\\tApiExecutor apiExecutor = new ApiExecutor(); \\n\\t\\t\\tHttpResponse httpResponse = apiExecutor.executeApi(\\\"/dl/maintenance\\\", \\\"https://ogone.test.v-psp.com\\\", null, null,\\n\\t\\t\\t\\t\\tHttpMethodsEnum.POST,CommonContentTypeEnum.JSON, null, null,\\n\\t\\t\\t\\t\\tbody, null, null); \\n\\t\\t\\tif(httpResponse != null){\\n\\t\\t\\t\\tint responseStatusCode =\\n\\t\\t\\t\\t\\t\\thttpResponse.getStatusLine().getStatusCode(); \\n\\t\\t\\t\\tString paymentResponse = EntityUtils.toString(httpResponse.getEntity());\\n\\t\\t\\t\\tif(responseStatusCode == 200 ){\\n\\t\\t\\t\\t\\tString paymentStatus = getStatus(paymentResponse,\\\"/root/STATUS\\\");\\n\\t\\t\\t\\t\\tif(\\\"92\\\".equals(paymentStatus)){\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_STATUS, PaymentStatusEnum.ACCEPTED);\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_ID, getStatus(paymentResponse,\\\"/root/PAYID\\\"));\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_TRANSACTION_ID, getStatus(paymentResponse,\\\"/root/TRANSACTIONID\\\"));\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_CODE_CLIENT_SIDE, getStatus(paymentResponse,\\\"/root/CRMTOKEN\\\"));\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_BRAND, getStatus(paymentResponse,\\\"/root/BRAND\\\"));\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_BANK_REFERENCE, getStatus(paymentResponse,\\\"/root/ACCEPTANCE\\\")); \\n\\t\\t\\t\\t\\t}else{\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_STATUS, PaymentStatusEnum.REJECTED);\\n\\t\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_ERROR_MSG, getStatus(paymentResponse,\\\"/root/NCERRORPLUS \\\")); \\n\\t\\t\\t\\t\\t}\\n\\t\\t\\t\\t}else{\\n\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_STATUS, PaymentStatusEnum.REJECTED);\\n\\t\\t\\t\\t\\tmethodContext.put(PaymentScript.RESULT_ERROR_MSG, paymentResponse); \\n\\t\\t\\t\\t}\\n\\t\\t\\t}else{ \\n\\t\\t\\t\\tthrow new\\n\\t\\t\\t\\tBusinessException(\\\"Payment gateway response is null\\\");\\n\\t\\t\\t\\t } \\n*/\\n\\t\\t\\tString paymentResponse = \\\"<root>\\\"; \\n\\t\\t\\tpaymentResponse += \\\"<STATUS>92</STATUS>\\\";\\n\\t\\t\\tpaymentResponse += \\\"<PAYID>\\\"+((int )(Math.random() * 100000 + 1))+\\\"</PAYID>\\\"; \\n\\t\\t\\tpaymentResponse += \\\"<TRANSACTIONID>92</TRANSACTIONID>\\\";\\n\\t\\t\\tpaymentResponse += \\\"<CRMTOKEN>clientSide</CRMTOKEN>\\\"; \\n\\t\\t\\tpaymentResponse += \\\"<BRAND>VISA</BRAND>\\\";\\n\\t\\t\\tpaymentResponse += \\\"<ACCEPTENCE>bankRef</ACCEPTENCE>\\\"; \\n\\t\\t\\tpaymentResponse += \\\"</root>\\\";\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_STATUS, PaymentStatusEnum.PENDING);\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_ID, getValue(paymentResponse,\\\"/root/PAYID\\\"));\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_TRANSACTION_ID, getValue(paymentResponse,\\\"/root/TRANSACTIONID\\\"));\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_CODE_CLIENT_SIDE, getValue(paymentResponse,\\\"/root/CRMTOKEN\\\"));\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_PAYMENT_BRAND, getValue(paymentResponse,\\\"/root/BRAND\\\"));\\n\\t\\t\\tmethodContext.put(PaymentScript.RESULT_BANK_REFERENCE, getValue(paymentResponse,\\\"/root/ACCEPTENCE\\\"));\\t\\t\\t\\n\\t\\t} catch (Exception e) {\\n\\t\\t\\te.printStackTrace();\\n\\t\\t\\tthrow new BusinessException(e.getMessage());\\n\\t\\t}\\n\\t}\\t\\n\\n\\tprivate String getValue(String sourceXML,String expression) throws XPathExpressionException{\\t\\t\\n\\t\\tInputSource iSource = new InputSource(new StringReader(sourceXML));\\n\\t\\tXPathFactory xpathFactory = XPathFactory.newInstance();\\n\\t\\tXPath xpath = xpathFactory.newXPath();\\t\\t\\n\\t\\treturn xpath.evaluate(expression, iSource);\\t\\t\\t\\n\\t}\\n}\",\r\n                    \"executionRoles\": [],\r\n                    \"sourcingRoles\": []\r\n                }\r\n            },\r\n            {\r\n                \"script\": {\r\n                    \"code\": \"org.meveo.service.script.smoove.__PaymentCallBackScript\",\r\n                    \"description\": \"Payment CallBack Script\",\r\n                    \"type\": \"JAVA\",\r\n                    \"script\": \"package org.meveo.service.script.smoove;\\n\\nimport java.util.Map;\\n\\nimport org.meveo.admin.exception.BusinessException;\\nimport org.meveo.model.payments.PaymentStatusEnum;\\nimport org.meveo.service.payments.impl.PaymentService;\\nimport org.meveo.service.script.Script;\\nimport org.slf4j.Logger;\\nimport org.slf4j.LoggerFactory;\\n\\n/**\\n * \\n * @author anasseh\\n *\\n *         Script executed after a payment callBack (inbound request), if the payment is rejected , the invoice matching is removed and a new is created with a the new reject\\n *         payment account operation\\n *\\n */\\n\\npublic class __PaymentCallBackScript extends Script {\\n\\n    private static final Logger log = LoggerFactory.getLogger(__PaymentCallBackScript.class);\\n    private PaymentService paymentService = (PaymentService) getServiceInterface(\\\"PaymentService\\\");\\n\\n    @Override\\n    public void execute(Map<String, Object> methodContext) throws BusinessException {\\n        log.debug(\\\"EXECUTE  methodContext {} \\\", methodContext);\\n        @SuppressWarnings(\\\"unchecked\\\")\\n        Map<String, String> params = (Map<String, String>) methodContext.get(\\\"params\\\");\\n        log.info(\\\"params:\\\" + params);\\n        if (params.get(\\\"STATUS\\\") == null) {\\n            throw new BusinessException(\\\"Parameter STATUS is required\\\");\\n        }\\n        if (params.get(\\\"PAYID\\\") == null) {\\n            throw new BusinessException(\\\"Parameter PAYID is required\\\");\\n        }\\n        PaymentStatusEnum paymentStatus = PaymentStatusEnum.ACCEPTED;\\n        if (!\\\"9\\\".equals(params.get(\\\"STATUS\\\"))) {\\n            paymentStatus = PaymentStatusEnum.REJECTED;\\n        }\\n        paymentService.paymentCallback(params.get(\\\"PAYID\\\"), paymentStatus, params.get(\\\"NCERROR\\\"), params.get(\\\"NCERROR\\\"));\\n    }\\n\\n}\",\r\n                    \"executionRoles\": [],\r\n                    \"sourcingRoles\": []\r\n                }\r\n            },\r\n            {\r\n                \"paymentGateway\": {\r\n                    \"code\": \"customGateway\",\r\n                    \"description\": \"A customGateway\",\r\n                    \"type\": \"CUSTOM\",\r\n                    \"paymentMethodType\": \"CARD\",\r\n                    \"scriptInstanceCode\": \"org.meveo.service.script.smoove.__CustomGatewayPaymentScript\",\r\n                    \"applicationEL\": \"#{customerAccount.code eq \\\"ben.ohara\\\"}\",\r\n                    \"sellerCode\":\"CLASSIC\",\r\n                    \"bankCoordinates\": {\r\n                        \"bankCode\": null,\r\n                        \"branchCode\": null,\r\n                        \"accountNumber\": null,\r\n                        \"key\": null,\r\n                        \"iban\": null,\r\n                        \"bic\": null,\r\n                        \"accountOwner\": null,\r\n                        \"bankName\": null,\r\n                        \"bankId\": null,\r\n                        \"issuerNumber\": null,\r\n                        \"issuerName\": null,\r\n                        \"ics\": null\r\n                    }\r\n                }\r\n            },\r\n            {\r\n                \"notification\": {\r\n                    \"code\": \"__PaymentCallBack\",\r\n                    \"classNameFilter\": \"org.meveo.model.notification.InboundRequest\",\r\n                    \"eventTypeFilter\": \"INBOUND_REQ\",\r\n                    \"elFilter\": \"#{event.pathInfo.startsWith(\\\"/DEMO/custom_payment-callback?\\\")}\",\r\n                    \"scriptInstanceCode\": \"org.meveo.service.script.smoove.__PaymentCallBackScript\",\r\n                    \"scriptParams\": {\r\n                        \"params\": \"#{event.getParameters()}\"\r\n                    },\r\n                    \"priority\": 0,\r\n                    \"runAsync\": false,\r\n                    \"saveSuccessfulNotifications\": true\r\n                }\r\n            },\r\n            {\r\n                \"timerEntity\": {\r\n                    \"code\": \"Monthly\",\r\n                    \"description\": \"Monthly\",\r\n                    \"hour\": \"23\",\r\n                    \"minute\": \"59\",\r\n                    \"second\": \"59\",\r\n                    \"year\": \"*\",\r\n                    \"month\": \"*\",\r\n                    \"dayOfMonth\": \"Last\",\r\n                    \"dayOfWeek\": \"*\"\r\n                }\r\n            },\r\n            {\r\n                \"jobInstance\": {\r\n                    \"code\": \"PaymentCard_Job\",\r\n                    \"jobCategory\": \"PAYMENT\",\r\n                    \"jobTemplate\": \"PaymentJob\",\r\n                    \"active\": false,\r\n                    \"customFields\": {\r\n                        \"customField\": [\r\n                            {\r\n                                \"code\": \"PaymentJob_createAO\",\r\n                                \"stringValue\": \"YES\"\r\n                            },\r\n                            {\r\n                                \"code\": \"PaymentJob_matchingAO\",\r\n                                \"stringValue\": \"YES\"\r\n                            },\r\n                            {\r\n                                \"code\": \"PaymentJob_creditOrDebit\",\r\n                                \"stringValue\": \"Credit\"\r\n                            }\r\n                        ]\r\n                    },\r\n                    \"verboseReport\": true\r\n                }\r\n            },\r\n            {\r\n                \"jobInstance\": {\r\n                    \"code\": \"RefundCard_Job\",\r\n                    \"jobCategory\": \"PAYMENT\",\r\n                    \"jobTemplate\": \"PaymentJob\",\r\n                    \"active\": false,\r\n                    \"customFields\": {\r\n                        \"customField\": [\r\n                            {\r\n                                \"code\": \"PaymentJob_createAO\",\r\n                                \"stringValue\": \"YES\"\r\n                            },\r\n                            {\r\n                                \"code\": \"PaymentJob_matchingAO\",\r\n                                \"stringValue\": \"YES\"\r\n                            },\r\n                            {\r\n                                \"code\": \"PaymentJob_creditOrDebit\",\r\n                                \"stringValue\": \"Debit\"\r\n                            }\r\n                        ]\r\n                    },\r\n                    \"verboseReport\": true\r\n                }\r\n            }\r\n        ]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/module/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"module",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Install module",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "914c9776-2161-4ebd-8bcd-63975b008ee4",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"__CustomGatewayPaymentModule\"\r\n} ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/module/install",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"module",
+										"install"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Customer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6f68d212-0a75-42da-ad25-f8ec148b70d0",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"crmAccountType\": \"Client\",\r\n    \"crmParentCode\": \"{{templateCode}}\",\r\n    \"code\": \"ben.ohara\",\r\n    \"description\": \"Ben Ohara\",\r\n    \"name\": {\r\n        \"title\": \"CIE\",\r\n        \"firstName\": \"Ben\",\r\n        \"lastName\": \"Ohara\"\r\n    },\r\n    \"address\": {\r\n        \"address1\": \"14 rue Crespin du Gast\",\r\n        \"zipCode\": \"75011\",\r\n        \"city\": \"PARIS\",\r\n        \"state\": \"Paris Area\",\r\n        \"country\": \"FR\"\r\n    },\r\n    \"email\": \"ben.ohara@opencellsoft.com\",\r\n    \"contactInformation\": {\r\n        \"email\": \"ben.ohara@opencellsoft.com\"\r\n    },\r\n    \"customFields\": {\r\n        \"customField\": [\r\n            {\r\n                \"code\": \"password\",\r\n                \"stringValue\": \"ben.ohara\"\r\n            }\r\n        ]\r\n    },\r\n    \"methodOfPayment\": [\r\n        {\r\n            \"paymentMethodType\": \"CARD\",\r\n            \"cardType\": \"VISA\",\r\n            \"owner\": \"FirstName LastName\",\r\n            \"monthExpiration\": \"11\",\r\n            \"yearExpiration\": \"16\",\r\n            \"alias\": \"travel\",\r\n            \"preferred\": \"true\",\r\n            \"cardNumber\": \"1234123412341234\"\r\n        },\r\n        {\r\n            \"paymentMethodType\": \"CARD\",\r\n            \"cardType\": \"VISA\",\r\n            \"owner\": \"FirstName LastName\",\r\n            \"monthExpiration\": \"11\",\r\n            \"yearExpiration\": \"22\",\r\n            \"alias\": \"pro\",\r\n            \"preferred\": \"false\",\r\n            \"cardNumber\": \"6789678967896789\"\r\n        },\r\n        {\r\n            \"paymentMethodType\": \"CHECK\"\r\n        }\r\n    ],\r\n    \"language\": \"FRA\",\r\n    \"customerCategory\": \"CLIENT\",\r\n    \"customerBrand\": \"{{templateCode}}\",\r\n    \"currency\": \"EUR\",\r\n    \"billingCycle\": \"BC_{{templateCode}}_MONTHLY_1ST\",\r\n    \"country\": \"FR\",\r\n    \"electronicBilling\": true,\r\n    \"externalRef1\": \"FR 28552046955\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/account/accountHierarchy/createOrUpdateCRMAccountHierarchy",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"account",
+										"accountHierarchy",
+										"createOrUpdateCRMAccountHierarchy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Invoice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e64a23f6-dea4-46d5-afbe-296f986b9183",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"invoiceType\": \"COM\",\r\n    \"billingAccountCode\": \"ben.ohara\",\r\n    \"dueDate\": \"2018-05-01\",\r\n    \"invoiceDate\": \"2018-04-01\",\r\n    \"invoiceMode\": \"AGGREGATED\",\r\n    \"categoryInvoiceAgregate\": [\r\n        {\r\n            \"categoryInvoiceCode\": \"SUBSCRIPTION\",\r\n            \"description\": \"SUBSCRIPTION\",\r\n            \"subCategoryInvoiceAgregateDto\": [\r\n                {\r\n                    \"description\": \"SUB_DATA\",\r\n                    \"invoiceSubCategoryCode\": \"SUB_DATA\",\r\n                    \"amountWithoutTax\": \"100\",\r\n                    \"amountTax\": \"20\",\r\n                    \"amountWithTax\": \"120\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/invoice",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"invoice"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Invoice 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "57ee34e0-b9f7-4442-b9cd-71b17382d00b",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"invoiceType\": \"COM\",\r\n    \"billingAccountCode\": \"ben.ohara\",\r\n    \"dueDate\": \"2018-05-01\",\r\n    \"invoiceDate\": \"2018-05-01\",\r\n    \"invoiceMode\": \"AGGREGATED\",\r\n    \"categoryInvoiceAgregate\": [\r\n        {\r\n            \"categoryInvoiceCode\": \"SUBSCRIPTION\",\r\n            \"description\": \"SUBSCRIPTION\",\r\n            \"subCategoryInvoiceAgregateDto\": [\r\n                {\r\n                    \"description\": \"SUB_DATA\",\r\n                    \"invoiceSubCategoryCode\": \"SUB_DATA\",\r\n                    \"amountWithoutTax\": \"342\",\r\n                    \"amountTax\": \"68.4\",\r\n                    \"amountWithTax\": \"410.4\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/invoice",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"invoice"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create adjustement",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "76bada40-5919-4385-b422-ad73abda2af8",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"invoiceType\": \"ADJ\",\r\n    \"billingAccountCode\": \"ben.ohara\",\r\n    \"dueDate\": \"2018-05-01\",\r\n    \"invoiceDate\": \"2018-05-01\",\r\n    \"invoiceMode\": \"AGGREGATED\",\r\n    \"categoryInvoiceAgregate\": [\r\n        {\r\n            \"categoryInvoiceCode\": \"SUBSCRIPTION\",\r\n            \"description\": \"SUBSCRIPTION\",\r\n            \"subCategoryInvoiceAgregateDto\": [\r\n                {\r\n                    \"description\": \"SUB_DATA\",\r\n                    \"invoiceSubCategoryCode\": \"SUB_DATA\",\r\n                    \"amountWithoutTax\": \"30\",\r\n                    \"amountTax\": \"6\",\r\n                    \"amountWithTax\": \"36\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/invoice",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"invoice"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Negative Invoice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "643dd7d3-9baf-461b-bd55-912a2420efcf",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"invoiceType\": \"COM\",\r\n    \"billingAccountCode\": \"ben.ohara\",\r\n    \"dueDate\": \"2018-05-01\",\r\n    \"invoiceDate\": \"2018-05-01\",\r\n    \"invoiceMode\": \"AGGREGATED\",\r\n    \"categoryInvoiceAgregate\": [\r\n        {\r\n            \"categoryInvoiceCode\": \"SUBSCRIPTION\",\r\n            \"description\": \"SUBSCRIPTION\",\r\n            \"subCategoryInvoiceAgregateDto\": [\r\n                {\r\n                    \"description\": \"SUB_DATA\",\r\n                    \"invoiceSubCategoryCode\": \"SUB_DATA\",\r\n                    \"amountWithoutTax\": \"-200\",\r\n                    \"amountTax\": \"-40\",\r\n                    \"amountWithTax\": \"-240\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/invoice",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"invoice"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Execute AO_Job",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4531930d-7648-4811-8f73-043359aa2dba",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"AO_Job\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/execute",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Execute Payment Job",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fe7c5e4e-6e3d-4f64-87ba-0890e9a55d2a",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"PaymentCard_Job\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/execute",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Execute Refund job",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6a4d41ed-c09c-4607-b210-3cf0a8d7e5ba",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.actionStatus.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"RefundCard_Job\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/execute",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Measurable Quantities",
+			"item": [
+				{
+					"name": "Create Measurable Quantities",
+					"item": [
+						{
+							"name": "create MQ_CHURN_SUB_PER_MONTH",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "892f88f8-7c4b-456a-bbf7-99bf93bff1ca",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_CHURN_SUB_PER_MONTH\",\r\n    \"description\": \"Subscription Churn per month\",\r\n    \"disabled\": false,\r\n    \"dimension1\": \"subscriptions\",\r\n    \"dimension2\": \"terminations\",\r\n    \"dimension3\": \"\",\r\n    \"dimension4\": \"\",\r\n    \"editable\": false,\r\n    \"additive\": false,\r\n    \"sqlQuery\": \"\\nwith  \\nsubscriptions as (\\nselect \\ncount(s.id) as count\\nfrom billing_subscription s\\nwhere \\ndate_trunc('month', s.subscription_date) = date_trunc('month', to_date('#{date}','YYYY-MM-DD'))\\n),\\nterminations as (\\nselect \\ncount(s.id) as count\\nfrom billing_subscription s\\nwhere \\ndate_trunc('month', s.termination_date) = date_trunc('month', to_date('#{date}','YYYY-MM-DD'))\\n)\\nselect\\ns.count-t.count as trend,\\ns.count as subscriptions,\\nt.count as terminations\\nfrom subscriptions s, terminations t\\n\\t\\t  \",\r\n    \"measurementPeriod\": \"MONTHLY\",\r\n    \"lastMeasureDate\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/measurableQuantity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"measurableQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create MQ_ORDER_BY_STATUS",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "678c16c4-9050-4607-a8d1-d7d41e0032aa",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_ORDERS_BY_STATUS\",\r\n    \"description\": \"Order by status\",\r\n    \"disabled\": false,\r\n    \"dimension1\": \"pending\",\r\n    \"dimension2\": \"validated\",\r\n    \"dimension3\": \"cancelled\",\r\n    \"dimension4\": \"null\",\r\n    \"editable\": false,\r\n    \"additive\": false,\r\n    \"sqlQuery\": \"\\nwith\\n       value as (select count(o.id) from ord_order o where status in ('IN_CREATION')),\\n       pending as (select count(o.id) from ord_order o where status in ('ACKNOWLEDGED','IN_PROGRESS','PENDING','PARTIAL','HELD')),\\n       validated as (select count(o.id) from ord_order o where status in ('COMPLETED')),\\n       cancelled as (select count(o.id) from ord_order o where status in ('REJECTED','FAILED','CANCELLED'))\\nselect\\n        value.count as value,\\n        pending.count as pending,\\n        validated.count as validated,\\n        cancelled.count as cancelled\\nfrom\\n        value,\\n        pending,\\n        validated,\\n        cancelled\\n;\\n            \",\r\n    \"measurementPeriod\": \"DAILY\",\r\n    \"lastMeasureDate\":\"2017-12-01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/measurableQuantity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"measurableQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create MQ_MRR_REC_PER_MONTH_PER_OFFER",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c7cdda37-3040-4b42-b23b-e7ea03c01a67",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_MRR_REC_PER_MONTH_PER_OFFER\",\r\n    \"description\": \"MRR per offer (recurring Wallet Operations per month)\",\r\n    \"disabled\": false,\r\n    \"dimension1\": \"offer1\",\r\n    \"dimension2\": \"offer2\",\r\n    \"dimension3\": \"offer3\",\r\n    \"dimension4\": \"offer4\",\r\n    \"editable\": false,\r\n    \"additive\": false,\r\n    \"sqlQuery\": \"\\nwith\\nmrr as\\n(\\n   select\\n       wo.offer_code,\\n       round(sum(wo.amount_without_tax),2) as value\\n   from\\n       billing_wallet_operation wo\\n   where\\n       wo.end_date is not null\\n   and date_trunc('month', wo.operation_date) = date_trunc('month', to_date('#{date}','YYYY-MM-DD'))\\n   group by\\n       wo.offer_code, date_trunc('month', wo.operation_date)\\n)\\nselect\\n   coalesce((select sum(value) from mrr where offer_code not in ('OF_CLASSIC_MAIN','OF_CLASSIC_REC','OF_CLASSIC_TEMPLATE','OF_FUTURE_01')),0) as others,\\n   coalesce((select sum(value) from mrr where offer_code='OF_CLASSIC_MAIN'),0) as offer1,\\n   coalesce((select sum(value) from mrr where offer_code='OF_CLASSIC_REC'),0) as offer2,\\n   coalesce((select sum(value) from mrr where offer_code='OF_CLASSIC_TEMPLATE'),0) as offer3,\\n   coalesce((select sum(value) from mrr where offer_code='OF_FUTURE_01'),0) as offer4\\n        \",\r\n    \"measurementPeriod\": \"MONTHLY\",\r\n    \"lastMeasureDate\":\"2017-01-01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/measurableQuantity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"measurableQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create MQ_MRR_REC_PER_MONTH_SUBS",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "19b317f1-ec39-477d-b79c-613c3f146c4f",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {  \"code\": \"MQ_MRR_REC_PER_MONTH_SUBS1\",\r\n        \"description\": \"MRR per Subscription Status (recurring Wallet Operations per month)\",\r\n        \"disabled\": false,\r\n        \"dimension1\": \"regular\",\r\n        \"dimension2\": \"new\",\r\n        \"dimension3\": \"upsell\",\r\n        \"dimension4\": \"cancelled\",\r\n        \"editable\": false,\r\n        \"additive\": false,\r\n        \"sqlQuery\": \"\\nselect \\n    currmonth.regular + currmonth.new + currmonth.upsell + currmonth.cancelled as curr_total,\\n    currmonth.regular as curr_regular,\\n    currmonth.new as curr_new,\\n    currmonth.upsell as curr_upsell,\\n    currmonth.cancelled as curr_cancelled\\n\\nfrom\\n(\\nwith a as\\n(\\n    SELECT round(sum(wo.amount_without_tax),2) as value ,\\n    date_trunc('month', coalesce(ua.subscription_date, date '2000-01-01')) as ua_creation_month,\\n\\t\\t   date_trunc('month', coalesce(s.subscription_date, date '2000-01-01')) as su_subscription_month,\\n\\t\\t   date_trunc('month', coalesce(s.termination_date, date '3000-01-01')) as su_termination_month,\\n\\t\\t   date_trunc('month', coalesce(wo.operation_date, date '2000-01-01')) as wo_operation_month\\n    FROM\\n        billing_wallet_operation wo\\n        inner join billing_charge_instance ci on ci.id = wo.charge_instance_id\\n        inner join cat_recurring_charge_templ rc on rc.id = ci.charge_template_id\\n        inner join billing_subscription s on s.id = ci.subscription_id\\n        inner join billing_user_account ua on ua.id = s.user_account_id\\n\\n    WHERE \\n    \\tdate_trunc('month', wo.operation_date)=date_trunc('month', to_date('#{date}','YYYY-MM-DD') - interval '1 month')\\n\\t\\tAND wo.end_date is not null\\n\\tand wo.operation_type='W'\\n    GROUP BY\\n     ua_creation_month,\\n\\t   su_subscription_month,\\n\\t   su_termination_month,\\n\\t   wo_operation_month\\n    )\\nselect\\n    coalesce((select sum(a.value) from a),0) as total,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month != a.wo_operation_month) and (a.su_termination_month >= a.wo_operation_month) ),0) as regular,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month = a.wo_operation_month) and (a.su_termination_month != a.wo_operation_month) and (a.ua_creation_month = a.su_subscription_month)),0) as new,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month = a.wo_operation_month) and (a.su_termination_month != a.wo_operation_month) and (a.ua_creation_month != a.su_subscription_month)),0) as upsell,\\n    coalesce((select sum(a.value) from a where (a.su_termination_month = a.wo_operation_month)),0) as cancelled\\n) as pastmonth,\\n(\\nwith a as\\n(\\n    SELECT round(sum(wo.amount_without_tax),2) as value ,\\n\\tdate_trunc('month', coalesce(ua.subscription_date, date '2000-01-01')) as ua_creation_month,\\n\\t\\t   date_trunc('month', coalesce(s.subscription_date, date '2000-01-01')) as su_subscription_month,\\n\\t\\t   date_trunc('month', coalesce(s.termination_date, date '3000-01-01')) as su_termination_month,\\n\\t\\t   date_trunc('month', coalesce(wo.operation_date, date '2000-01-01')) as wo_operation_month\\n    FROM\\n        billing_wallet_operation wo\\n        inner join billing_charge_instance ci on ci.id = wo.charge_instance_id\\n        inner join cat_recurring_charge_templ rc on rc.id = ci.charge_template_id\\n        inner join billing_subscription s on s.id = ci.subscription_id\\n        inner join billing_user_account ua on ua.id = s.user_account_id\\n\\n    WHERE\\n    \\tdate_trunc('month', wo.operation_date)=date_trunc('month', to_date('#{date}','YYYY-MM-DD') )\\n\\tAND wo.end_date is not null\\n\\tand wo.operation_type='W'\\t\\n    GROUP BY\\n\\t\\tua_creation_month,\\n\\t   su_subscription_month,\\n\\t   su_termination_month,\\n\\t   wo_operation_month\\n    )\\nselect\\n    coalesce((select sum(a.value) from a),0) as total,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month != a.wo_operation_month) and (a.su_termination_month >= a.wo_operation_month)),0) as regular,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month = a.wo_operation_month) and (a.su_termination_month != a.wo_operation_month) and (a.ua_creation_month = a.su_subscription_month)),0) as new,\\n    coalesce((select sum(a.value) from a where (a.su_subscription_month = a.wo_operation_month) and (a.su_termination_month != a.wo_operation_month) and (a.ua_creation_month != a.su_subscription_month)),0) as upsell,\\n    coalesce((select sum(a.value) from a where (a.su_termination_month = a.wo_operation_month)),0) as cancelled\\n) as currmonth\\n\",\r\n        \"measurementPeriod\": \"MONTHLY\",\r\n        \"lastMeasureDate\":\"2017-01-01\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/measurableQuantity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"measurableQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create CF_MQ_MRR_OFFER_LABELS",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3115faeb-714d-490b-8fdb-998e82aa5664",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"CF_MQ_MRR_OFFER_LABELS\",\r\n    \"description\": \"MRR Offer Labels\",\r\n    \"fieldType\": \"STRING\",\r\n    \"appliesTo\": \"Provider\",\r\n    \"storageType\": \"SINGLE\",\r\n    \"valueRequired\": \"true\",\r\n    \"maxValue\": \"1000\",\r\n    \"minValue\": \"0\",\r\n    \"defaultValue\": \"Offer 1\\\",\\\"Offer 2\\\",\\\"Offer 3\\\",\\\"Offer 4\\\",\\\"Others\",\r\n    \"versionable\": \"false\",\r\n    \"triggerEndPeriodEvent\": \"false\",\r\n    \"allowEdit\": \"true\",\r\n    \"hideOnNew\": \"false\",\r\n    \"cacheValue\": \"false\",\r\n    \"guiPosition\": \"tab:Measurable Quantities:0;field:0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/customFieldTemplate/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"customFieldTemplate",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update provider",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4ad0424d-ad65-4d6f-b113-804054f5ae0b",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"{{provider}}\",\r\n    \"customFields\": {\r\n        \"customField\": [\r\n            {\r\n                \"code\": \"CF_MQ_MRR_OFFER_LABELS\",\r\n                \"stringValue\": \"Main,Monthly,Classic,Future,Others\"\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/provider",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"provider"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Create Jobs",
+					"item": [
+						{
+							"name": "Create Daily job timer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a4818e04-daf2-4081-82f9-5119260c873d",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"Daily\",\r\n    \"hour\": \"0\",\r\n    \"minute\": \"0\",\r\n    \"second\": \"1\",\r\n    \"year\": \"*\",\r\n    \"month\": \"*\",\r\n    \"dayOfMonth\": \"*\",\r\n    \"dayOfWeek\": \"*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/timer/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"timer",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MQ_CHURN_SUB_PER_MONTH_Job instance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cfc59e04-7423-452d-94dd-b6850596d06e",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_CHURN_SUB_PER_MONTH_Job\",\r\n    \"disabled\": false,\r\n    \"jobCategory\": \"DWH\",\r\n    \"jobTemplate\": \"DWHQueryJob\",\r\n    \"parameter\": \"MQ_CHURN_SUB_PER_MONTH\",\r\n    \"active\": true,\r\n    \"timerCode\": \"Daily\",\r\n    \"limitToSingleNode\": true,\r\n    \"verboseReport\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MQ_ORDERS_BY_STATUS_Job instance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8cfb7481-f142-4215-bbe9-37ca0769f4a7",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_ORDERS_BY_STATUS_Job\",\r\n    \"disabled\": false,\r\n    \"jobCategory\": \"DWH\",\r\n    \"jobTemplate\": \"DWHQueryJob\",\r\n    \"parameter\": \"MQ_ORDERS_BY_STATUS\",\r\n    \"active\": true,\r\n    \"timerCode\": \"Daily\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MQ_MRR_REC_PER_MONTH_PER_OFFER_Job instance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6408ee39-611f-43ce-aea5-3c09f6fdd126",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_MRR_REC_PER_MONTH_PER_OFFER_Job\",\r\n    \"disabled\": false,\r\n    \"jobCategory\": \"DWH\",\r\n    \"jobTemplate\": \"DWHQueryJob\",\r\n    \"parameter\": \"MQ_MRR_REC_PER_MONTH_PER_OFFER\",\r\n    \"active\": true,\r\n    \"timerCode\": \"Daily\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MQ_MRR_REC_PER_MONTH_SUBS_Job instance",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4c75e0b7-7ffd-483a-9d08-98aec98aa3db",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"MQ_MRR_REC_PER_MONTH_SUBS_Job\",\r\n    \"disabled\": false,\r\n    \"jobCategory\": \"DWH\",\r\n    \"jobTemplate\": \"DWHQueryJob\",\r\n    \"parameter\": \"MQ_MRR_REC_PER_MONTH_SUBS\",\r\n    \"active\": true,\r\n    \"timerCode\": \"Daily\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/job/createOrUpdate",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"job",
+										"createOrUpdate"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Ticketing",
+			"item": [
+				{
+					"name": "Create Custom Entities",
+					"item": [
+						{
+							"name": "TICKET_EVENT",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1395bf6c-1d93-43cc-8895-1a805139eb0e",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"TICKET_EVENT\",\r\n    \"description\": \"Ticket event\",\r\n    \"disabled\": false,\r\n    \"name\": \"Event\",\r\n    \"field\": [\r\n        {\r\n            \"code\": \"actionStatus\",\r\n            \"description\": \"Action status\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"defaultValue\": \"\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": false,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"cancelled\": \"Cancelled\",\r\n                \"closed\": \"Closed\",\r\n                \"expired\": \"Expired\",\r\n                \"new\": \"New\",\r\n                \"pending\": \"Pending\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Action:10;field:2\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"actionStatusDate\",\r\n            \"description\": \"Action status date\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"DATE\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": false,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Action:10;field:1\"\r\n        },\r\n        {\r\n            \"code\": \"dueDate\",\r\n            \"description\": \"Action due date\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"DATE\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": false,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Action:10;field:3\"\r\n        },\r\n        {\r\n            \"id\": 186,\r\n            \"code\": \"eventCreator\",\r\n            \"description\": \"Created by\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"STRING\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"maxValue\": 50,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Event:0;field:2\"\r\n        },\r\n        {\r\n            \"code\": \"eventDate\",\r\n            \"description\": \"Event date\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"DATE\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Event:0;field:1\"\r\n        },\r\n        {\r\n            \"code\": \"isAction\",\r\n            \"description\": \"Requires action?\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"defaultValue\": \"no\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"no\": \"No\",\r\n                \"yes\": \"Yes\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Action:10;field:0\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"origin\",\r\n            \"description\": \"Event origin\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET_EVENT\",\r\n            \"appliesTo\": \"CE_TICKET_EVENT\",\r\n            \"defaultValue\": \"email\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"agency_in\": \"Agency\",\r\n                \"email_in\": \"Inbound e-mail\",\r\n                \"email_out\": \"Outbound e-mail\",\r\n                \"internal\": \"Internal reason\",\r\n                \"other\": \"Other (please, explicit in description) \",\r\n                \"phone_in\": \"Inbound phone call\",\r\n                \"phone_out\": \"Outbound phone call\",\r\n                \"postal_in\": \"Inbound postal mail\",\r\n                \"postal_mail_out\": \"Outbound postal mail\",\r\n                \"web_in\": \"Inbound from web form\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Event:0;fieldGroup:Event:0;field:2\",\r\n            \"mapKeyType\": \"STRING\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/entityCustomization/entity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"entityCustomization",
+										"entity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TICKET",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "12fe359b-751c-4440-906c-af6e816b6483",
+										"exec": [
+											"var data = JSON.parse(responseBody);\r",
+											"tests[request.name + \" - Status test\"] = data.status === \"SUCCESS\";\r",
+											"\r",
+											"pm.test(request.name + \" - Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(request.name + \" - Check Message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"TICKET\",\r\n    \"description\": \"Entity used for ticketing system\",\r\n    \"disabled\": false,\r\n    \"name\": \"Ticket\",\r\n    \"field\": [\r\n        {\r\n            \"code\": \"creationDate\",\r\n            \"description\": \"Creation date\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"DATE\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:1\"\r\n        },\r\n        {\r\n            \"code\": \"customer\",\r\n            \"description\": \"Customer user account\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"ENTITY\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"entityClazz\": \"org.meveo.model.billing.UserAccount\",\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:3\"\r\n        },\r\n        {\r\n            \"code\": \"eventHistory\",\r\n            \"description\": \"Events\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"CHILD_ENTITY\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"LIST\",\r\n            \"valueRequired\": false,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"entityClazz\": \"org.meveo.model.customEntities.CustomEntityTemplate - TICKET_EVENT\",\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Event history:2;field:0\",\r\n            \"fieldCode\": [\r\n                \"eventDate\",\r\n                \"origin\",\r\n                \"description\",\r\n                \"isAction\"\r\n            ]\r\n        },\r\n        {\r\n            \"code\": \"longDescription\",\r\n            \"description\": \"Long description\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"TEXT_AREA\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": false,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"maxValue\": 200,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:0\"\r\n        },\r\n        {\r\n            \"code\": \"origin\",\r\n            \"description\": \"Initial contact\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"defaultValue\": \"email\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"agency\": \"Agency\",\r\n                \"email\": \"E-mail\",\r\n                \"internal\": \"Internal\",\r\n                \"phone\": \"Phone call\",\r\n                \"postal\": \"Postal mail\",\r\n                \"web\": \"Web form\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:5\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"priority\",\r\n            \"description\": \"Ticket priority\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"defaultValue\": \"normal\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"high\": \"High\",\r\n                \"low\": \"Low\",\r\n                \"normal\": \"Normal\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:4\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"reason\",\r\n            \"description\": \"Primary reason\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"defaultValue\": \"info\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"bill\": \"Billing issue\",\r\n                \"info\": \"Request information on service\",\r\n                \"order_cancel\": \"Cancel order\",\r\n                \"order_change\": \"Change order\",\r\n                \"order_new\": \"New order\",\r\n                \"order_tracking\": \"Track order\",\r\n                \"other\": \"Other (please, explicit in description)\",\r\n                \"tech\": \"Technical issue\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:4\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"status\",\r\n            \"description\": \"Ticket status\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"LIST\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"defaultValue\": \"new\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"listValues\": {\r\n                \"cancelled\": \"Cancelled\",\r\n                \"closed\": \"Closed\",\r\n                \"expired\": \"Expired\",\r\n                \"new\": \"New\",\r\n                \"pending\": \"Pending\"\r\n            },\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Status:0;field:1\",\r\n            \"mapKeyType\": \"STRING\"\r\n        },\r\n        {\r\n            \"code\": \"statusDate\",\r\n            \"description\": \"Status date\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"DATE\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Status:0;field:2\"\r\n        },\r\n        {\r\n            \"code\": \"ticketCreator\",\r\n            \"description\": \"Created by\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"STRING\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"maxValue\": 50,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:2\"\r\n        },\r\n        {\r\n            \"id\": 196,\r\n            \"code\": \"ticketHandler\",\r\n            \"description\": \"Handled by\",\r\n            \"disabled\": false,\r\n            \"fieldType\": \"STRING\",\r\n            \"accountLevel\": \"CE_TICKET\",\r\n            \"appliesTo\": \"CE_TICKET\",\r\n            \"useInheritedAsDefaultValue\": false,\r\n            \"storageType\": \"SINGLE\",\r\n            \"valueRequired\": true,\r\n            \"uniqueConstraint\": false,\r\n            \"versionable\": false,\r\n            \"triggerEndPeriodEvent\": false,\r\n            \"allowEdit\": true,\r\n            \"hideOnNew\": false,\r\n            \"maxValue\": 50,\r\n            \"guiPosition\": \"tab:Ticket:0;fieldGroup:Ticket:1;field:5\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/entityCustomization/entity",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"entityCustomization",
+										"entity"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -26117,217 +28484,217 @@
 	],
 	"variable": [
 		{
-			"id": "1ccdfae9-a550-4bce-a8b1-c9d9424a26f6",
+			"id": "20b70729-d97e-404f-9511-101cfcb852bb",
 			"key": "adminUsername",
 			"value": "opencell.superadmin"
 		},
 		{
-			"id": "8cd8f1e9-8eeb-430c-94c5-04f3bccb92ef",
+			"id": "4950a0ff-aed6-4d08-ad64-e7dd6e5efc45",
 			"key": "adminPassword",
 			"value": "opencell.superadmin"
 		},
 		{
-			"id": "f78ae63c-5998-4cf9-a064-a454c19d9f99",
+			"id": "f727ad2e-759f-4492-9b4c-f59031860880",
 			"key": "provideraddrName",
 			"value": "opencell"
 		},
 		{
-			"id": "ac8f3a3c-b44b-4123-909b-e4a5e75c473f",
+			"id": "fea61a5d-073b-4a2e-9d44-986c204e5c02",
 			"key": "MMUsername",
 			"value": "opencell.marketingmanager"
 		},
 		{
-			"id": "e76b273a-f2d5-4599-aabb-ee388633f51e",
+			"id": "70c49ad5-b16a-4ad9-949b-05841d0c77a0",
 			"key": "MMPassword",
 			"value": "opencell.marketingmanager"
 		},
 		{
-			"id": "98b6841c-7848-4098-875c-a1790c9032d4",
+			"id": "5749bbee-01fc-45b2-acf3-13820aeab4d5",
 			"key": "provider",
 			"value": "DEMO"
 		},
 		{
-			"id": "1b5dbda3-3db4-4ce8-ba56-c9ca8c673a9d",
+			"id": "6c224a03-8fea-4c2f-8ba6-924901da3788",
 			"key": "providerAddrLine1",
 			"value": "14 rue Crespin du Gast"
 		},
 		{
-			"id": "3e7205be-e06d-404a-98d5-37e1415b0110",
+			"id": "9e6930f8-839d-4cf9-9bba-859e37fd4cb1",
 			"key": "providerAddrLine2",
 			"value": "3rd floor"
 		},
 		{
-			"id": "0ac822ad-4059-43b9-8d2e-b90fba5c4c47",
+			"id": "96837b22-9aed-4ce4-b95b-ce00b5e324e1",
 			"key": "providerAddrZip",
 			"value": "75011"
 		},
 		{
-			"id": "a8926ba2-94bf-437a-965a-37da8647d214",
+			"id": "da41ac4c-e0c1-4e36-aa66-7e5f2ec6d133",
 			"key": "providerAddrCity",
 			"value": "Paris"
 		},
 		{
-			"id": "71acc476-7c23-48cd-91d9-c01df6bd2217",
+			"id": "425a5e67-67e0-481c-b133-8b47b3a6f4f7",
 			"key": "providerAddrPhone",
 			"value": "+00 123 456 798"
 		},
 		{
-			"id": "43fa47d2-d163-47f1-924a-d0fc93cb2f14",
+			"id": "b6c0d28c-7767-428f-a612-75d1ec6f490e",
 			"key": "providerAddrEmail",
 			"value": "contact@opencellsoft.com"
 		},
 		{
-			"id": "928a1ceb-9b05-481f-af86-ebdf0f874fc5",
+			"id": "3a305ce5-47a9-495b-b511-d8832de891c2",
 			"key": "CCUsername",
 			"value": "opencell.customercare"
 		},
 		{
-			"id": "b0081f24-8310-4342-a2b3-fc23818ddbe1",
+			"id": "27f02bcc-3674-4a84-925e-250a136f5a5c",
 			"key": "CCPassword",
 			"value": "opencell.customercare"
 		},
 		{
-			"id": "622a2368-6471-445a-b048-654989617112",
+			"id": "c9cbcc14-32bb-400d-ab13-ecc9604a825e",
 			"key": "SCUsername",
 			"value": "DEMO.CLASSIC"
 		},
 		{
-			"id": "e02bc219-7571-4dc6-8f82-25eb0e6cec76",
+			"id": "cb16f122-8f01-45d4-b5dd-e7eb2a2619c2",
 			"key": "SCPassword",
 			"value": "DEMO.CLASSIC"
 		},
 		{
-			"id": "6583db0c-0511-4717-b976-f8981422975a",
+			"id": "d2cfd365-989b-4c52-a786-4047e7cb546e",
 			"key": "CCLastname",
 			"value": "Doe"
 		},
 		{
-			"id": "05d6219b-6015-4907-a373-a4a5b00cec80",
+			"id": "b5ef5d5a-a120-4f8f-a05f-24c4c30d2943",
 			"key": "CCFirstname",
 			"value": "Jeanette"
 		},
 		{
-			"id": "966f6957-4c2b-4369-b20f-08fe63097a9a",
+			"id": "769f650e-fa12-4147-9300-423b74e4e622",
 			"key": "SCLastname",
 			"value": "Clive"
 		},
 		{
-			"id": "2a9a1416-8ae7-4364-a6bb-866d97d63889",
+			"id": "b9f587b9-5075-42b6-97e7-a74e0ebe29d3",
 			"key": "SCFirstname",
 			"value": "Gildarts"
 		},
 		{
-			"id": "6d90e73e-9dcd-4d87-a41c-2a1365bb0d76",
+			"id": "5ca1c3f3-2124-4b79-b9e1-1d532b444bde",
 			"key": "reseller1",
 			"value": "Reseller1"
 		},
 		{
-			"id": "0876addc-1ec3-43fa-be7d-767e53276e25",
+			"id": "4763b5c8-60ae-45b7-82f3-a5715dfa701c",
 			"key": "reseller2",
 			"value": "Reseller2"
 		},
 		{
-			"id": "b819b521-31b2-4eea-8779-a32a098c7165",
+			"id": "4b36972e-2fe4-46f5-87e7-5a4fad8009dd",
 			"key": "ingenico.merchantId",
 			"value": "XCSmoovetest003"
 		},
 		{
-			"id": "a7cda43d-4b98-4b16-aecd-43b3c82f37d1",
+			"id": "beed0ff8-7b62-4b7e-90da-3cadcf237d42",
 			"key": "ingenico.SecretApiKey",
 			"value": "+bEfYyY1YVUP2J/80yZOxD4Jj+/N/j2s/GcoY7F5rAg="
 		},
 		{
-			"id": "7a0965d2-048b-426d-9d25-819e6cef0169",
+			"id": "9bea8aa5-8d18-4585-b06a-6e986d84fe55",
 			"key": "ingenico.ApiKeyId",
 			"value": "85c81e73917d806c"
 		},
 		{
-			"id": "5324394c-ef2c-4255-aae2-3a9cbd32d99d",
+			"id": "5479d404-e29f-47c9-bb21-20ed22929542",
 			"key": "slimPay.userId",
 			"value": "opencelldev"
 		},
 		{
-			"id": "dc58534b-701a-4b9d-91ea-91c1deee544e",
+			"id": "d18fa7cb-8d31-4b77-acb9-a127c53df127",
 			"key": "slimPay.secretKey",
 			"value": "OSpPCH4jYWfg7SRT53d5OTNCIcodepvfpfKHULQi"
 		},
 		{
-			"id": "c9475503-e94a-4e64-869c-74ad98b7fc57",
+			"id": "6b6e73e1-0e26-4252-ab10-e3ee699c558e",
 			"key": "templateCode",
 			"value": "CLASSIC"
 		},
 		{
-			"id": "f9f639e7-68df-4d98-9eb6-ce805f1462ef",
+			"id": "49c92651-6d32-4955-98cf-0d7938e82504",
 			"key": "templateLabel",
 			"value": "Generic"
 		},
 		{
-			"id": "c03d133f-7498-4198-872e-3952637e2945",
+			"id": "6c27daa2-8133-4be1-97d6-4adfa5ef6ceb",
 			"key": "partnerOfferId",
 			"value": "4"
 		},
 		{
-			"id": "d67f63a1-f9db-41f3-acb3-d888843a718f",
+			"id": "3b99fc25-9fea-47f8-930b-1d5a8fd6d867",
 			"key": "recOfferId",
 			"value": "6"
 		},
 		{
-			"id": "b5adbf91-6c67-4cf7-91af-989fbc72d32e",
+			"id": "f25efaf9-70f2-4851-86b9-40a21efe85ed",
 			"key": "billingCycle",
 			"value": "BC_{{templateCode}}_MONTHLY_1ST"
 		},
 		{
-			"id": "41541555-9544-40c1-89c0-da33b8a46fd1",
+			"id": "e5506d80-ec6e-4e94-a503-10a73b619df7",
 			"key": "offerCode",
 			"value": "OF_{{templateCode}}_REC"
 		},
 		{
-			"id": "08c81ea4-d8e6-4f2f-b36f-2ed793c5ff3a",
+			"id": "a4d8bf46-f7bd-4a2d-a7fd-9c7ef28ce646",
 			"key": "serviceCode",
 			"value": "{{recOfferId}_SE_{{templateCode}_REC_NO_PRORATA"
 		},
 		{
-			"id": "731720fb-d0eb-4efc-a530-ef4f0d1c19fb",
+			"id": "f0e0d18b-c49f-4e47-9947-608a66d5c55b",
 			"key": "CUST",
 			"value": "{{provider}}.partner.{{templateCode}"
 		},
 		{
-			"id": "8096b270-fa19-4d6a-8a67-9139ab1444e2",
+			"id": "801e2ba8-9ea8-42f4-9209-0797c9ce7197",
 			"key": "invoiceNumber1",
 			"value": ""
 		},
 		{
-			"id": "41e1acf7-6e52-41bd-8388-c4c5e530e4d5",
+			"id": "b8fce650-767b-405a-8432-bbc075b6482d",
 			"key": "invoiceNumber2",
 			"value": ""
 		},
 		{
-			"id": "1447d1a6-0f7c-49b4-a771-dd5c95a9a6de",
+			"id": "92607fd6-94ff-4c92-8f89-80b8ef96fe25",
 			"key": "unduePaymentID",
 			"value": ""
 		},
 		{
-			"id": "052e89b6-1214-480b-af9c-1f2fd781fd27",
+			"id": "4a35c05f-7a52-4f0d-a33e-0aba7b15586c",
 			"key": "refundPaymentID",
 			"value": ""
 		},
 		{
-			"id": "f18d9469-00c0-478c-8015-93696f06ddd3",
+			"id": "8ee4c2f6-6b4e-4c48-a28a-1e95fee534d6",
 			"key": "mainOfferId",
 			"value": ""
 		},
 		{
-			"id": "8ec0b368-897d-4ba7-9a17-f475a3cc4ea9",
+			"id": "68caa091-5d25-4283-a65e-89e0e1a9d5fb",
 			"key": "invoiceNumberSC",
 			"value": ""
 		},
 		{
-			"id": "19e411c8-d522-466a-81d6-e13910b1c1e9",
+			"id": "d5bec930-31ce-4d37-bb5c-a6dff47f5f27",
 			"key": "pdfFilename",
 			"value": ""
 		},
 		{
-			"id": "2a16e71e-f9c5-495a-87d4-391777e5a141",
+			"id": "5e6839ac-1f71-41d0-8ed8-148102ffa12c",
 			"key": "xmlFilename",
 			"value": ""
 		}
