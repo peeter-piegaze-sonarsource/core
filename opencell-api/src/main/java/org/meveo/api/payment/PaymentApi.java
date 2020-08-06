@@ -53,6 +53,7 @@ import org.meveo.api.exception.MissingParameterException;
 import org.meveo.api.security.config.annotation.SecuredBusinessEntityMethod;
 import org.meveo.api.security.Interceptor.SecuredBusinessEntityMethodInterceptor;
 import org.meveo.api.security.filter.ListFilter;
+import org.meveo.commons.utils.PersistenceUtils;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.admin.Seller;
 import org.meveo.model.crm.Customer;
@@ -60,6 +61,7 @@ import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
 import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.payments.AutomatedPayment;
 import org.meveo.model.payments.CustomerAccount;
+import org.meveo.model.payments.DDPaymentMethod;
 import org.meveo.model.payments.MatchingAmount;
 import org.meveo.model.payments.MatchingStatusEnum;
 import org.meveo.model.payments.MatchingTypeEnum;
@@ -68,7 +70,9 @@ import org.meveo.model.payments.OtherCreditAndCharge;
 import org.meveo.model.payments.Payment;
 import org.meveo.model.payments.PaymentHistory;
 import org.meveo.model.payments.PaymentMethodEnum;
+import org.meveo.model.payments.PaymentStatusEnum;
 import org.meveo.model.payments.RecordedInvoice;
+import org.meveo.model.payments.Refund;
 import org.meveo.service.payments.impl.AccountOperationService;
 import org.meveo.service.payments.impl.CustomerAccountService;
 import org.meveo.service.payments.impl.MatchingCodeService;
@@ -190,6 +194,11 @@ public class PaymentApi extends BaseApi {
 
         if (paymentDto.isToMatching()) {
             matchPayment(paymentDto, customerAccount, payment);
+            paymentHistoryService.addHistory(customerAccount,
+            		payment,
+    				null, paymentDto.getAmount().multiply(new BigDecimal(100)).longValue(),
+    				PaymentStatusEnum.ACCEPTED, null, null, null, null,
+    				null,null,paymentDto.getListAoIdsForMatching());
         } else {
             log.info("no matching created ");
         }
@@ -221,7 +230,7 @@ public class PaymentApi extends BaseApi {
 
 	/**
 	 * Get payment list by customer account code
-	 * 
+	 *
 	 * @param customerAccountCode customer account code
 	 * @param pagingAndFiltering
 	 * @return list of payment dto
@@ -294,7 +303,7 @@ public class PaymentApi extends BaseApi {
 	/**
 	 * Prepare paginationConfiguration to get only Payment and OtherCreditAndCharge
 	 * operations related to the customerAccount
-	 * 
+	 *
 	 * @param pagingAndFiltering
 	 * @param customerAccount
 	 * @return
@@ -395,7 +404,7 @@ public class PaymentApi extends BaseApi {
 
 	/**
 	 * List payment histories matching filtering and query criteria
-	 * 
+	 *
 	 * @param pagingAndFiltering Paging and filtering criteria.
 	 * @return A list of payment history
 	 * @throws InvalidParameterException invalid parameter exception
@@ -424,7 +433,7 @@ public class PaymentApi extends BaseApi {
 
 	/**
 	 * Return list AO matched with a payment or refund
-	 * 
+	 *
 	 * @param paymentOrRefund
 	 * @return list AO matched
 	 */
@@ -450,7 +459,7 @@ public class PaymentApi extends BaseApi {
 
 	/**
 	 * Build paymentHistory dto from entity
-	 * 
+	 *
 	 * @param paymentHistory payment History
 	 * @return PaymentHistoryDto
 	 */

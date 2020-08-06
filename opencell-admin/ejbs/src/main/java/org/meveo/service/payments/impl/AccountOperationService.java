@@ -118,21 +118,21 @@ public class AccountOperationService extends PersistenceService<AccountOperation
 
         return accountOperations.size() > 0 ? accountOperations.get(0) : null;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<AccountOperation> listByCustomerAccount(CustomerAccount customerAccount, Integer firstRow, Integer numberOfRows) {
         try {
-            
+
             Query query = getEntityManager().createNamedQuery("AccountOperation.listByCustomerAccount");
             query.setParameter("customerAccount", customerAccount);
-            
+
             if (firstRow != null) {
                 query.setFirstResult(firstRow);
             }
             if (numberOfRows != null) {
                 query.setMaxResults(numberOfRows);
             }
-            
+
             return query.getResultList();
         } catch (NoResultException e) {
             log.warn("error while getting list AccountOperation by customerAccount", e);
@@ -183,13 +183,25 @@ public class AccountOperationService extends PersistenceService<AccountOperation
      * @param customerAccountId the customer account id
      * @return the a os to pay
      */
+    //FIXME TODO
     @SuppressWarnings("unchecked")
     public List<AccountOperation> getAOsToPayOrRefundByCA(Date fromDueDate, Date toDueDate, OperationCategoryEnum opCatToProcess,
             Long customerAccountId) {
         try {
             return (List<AccountOperation>) getEntityManager().createNamedQuery("AccountOperation.listAoToPayOrRefundByCA")
-                .setParameter("caIdIN", customerAccountId).setParameter("fromDueDateIN", fromDueDate).setParameter("toDueDateIN", toDueDate)
-                .setParameter("opCatToProcessIN", opCatToProcess).getResultList();
+                    .setParameter("caIdIN", customerAccountId).setParameter("fromDueDateIN", fromDueDate).setParameter("toDueDateIN", toDueDate)
+                    .setParameter("opCatToProcessIN", opCatToProcess).getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    @SuppressWarnings("unchecked")
+    public List<AccountOperation> getAOsToPayOrRefundByCA(PaymentMethodEnum paymentMethodEnum, Date fromDueDate, Date toDueDate, OperationCategoryEnum opCatToProcess,
+            Long customerAccountId) {
+        try {
+            return (List<AccountOperation>) getEntityManager().createNamedQuery("AccountOperation.listAoToPayOrRefund").setParameter("paymentMethodIN", paymentMethodEnum)
+                    .setParameter("caIdIN", customerAccountId).setParameter("fromDueDateIN", fromDueDate).setParameter("toDueDateIN", toDueDate)
+                    .setParameter("opCatToProcessIN", opCatToProcess).getResultList();
         } catch (NoResultException e) {
             return null;
         }

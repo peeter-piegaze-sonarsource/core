@@ -267,26 +267,25 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
      * @return the due date range script
      */
     private DateRangeScript getDueDateRangeScript(DDRequestLotOp ddrequestLotOp) {
-		try {
-			ScriptInstance scriptInstance = ddrequestLotOp.getScriptInstance();
-			scriptInstance = scriptInstanceService.refreshOrRetrieve(scriptInstance);
-			if (scriptInstance != null) {
+        try {
+            ScriptInstance scriptInstance = ddrequestLotOp.getScriptInstance();
+            if (scriptInstance != null) {
 
 				scriptInstance = scriptInstanceService.retrieveIfNotManaged(scriptInstance);
-				final String scriptCode = scriptInstance.getCode();
-				if (scriptCode != null) {
-					log.debug(" looking for ScriptInstance with code :  [{}] ", scriptCode);
-					ScriptInterface si = scriptInstanceService.getScriptInstance(scriptCode);
-					if (si != null && si instanceof DateRangeScript) {
-						return (DateRangeScript) si;
-					}
-				}
-			}
-		} catch (Exception e) {
-			log.error(" Error on getDueDateRangeScript", e);
-		}
-		return null;
-	}
+                final String scriptCode = scriptInstance.getCode();
+                if (scriptCode != null) {
+                    log.debug(" looking for ScriptInstance with code :  [{}] ", scriptCode);
+                    ScriptInterface si = scriptInstanceService.getScriptInstance(scriptCode);
+                    if (si != null && si instanceof DateRangeScript) {
+                        return (DateRangeScript) si;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error(" Error on getDueDateRangeScript : [{}]", e.getMessage());
+        }
+        return null;
+    }
 
     /**
      * Creates a new DDRequestLotOp instance, using the initial one's informations. <br>
@@ -328,8 +327,8 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
 	private List<AccountOperation> filterAoToPayOrRefund(DDRequestBuilderInterface ddRequestBuilderInterface, JobInstance jobInstance, DDRequestLotOp ddRequestLotOp) {
 		AccountOperationFilterScript aoFilterScript = this.getAOScriptInstance(jobInstance);
 		if (aoFilterScript != null) {
-			Map<String, Object> methodContext = new HashMap<>();				
-			 methodContext.put(AccountOperationFilterScript.DD_REQ_OP, ddRequestLotOp);
+			Map<String, Object> methodContext = new HashMap<>();
+			methodContext.put(AccountOperationFilterScript.DD_REQ_OP, ddRequestLotOp);
 			 methodContext.put(AccountOperationFilterScript.FROM_DUE_DATE, ddRequestLotOp.getFromDueDate());
 			 methodContext.put(AccountOperationFilterScript.TO_DUE_DATE, ddRequestLotOp.getToDueDate());
 			 methodContext.put(AccountOperationFilterScript.PAYMENT_METHOD, PaymentMethodEnum.DIRECTDEBIT);
@@ -366,5 +365,4 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
         }
         return null;
     }
-
 }

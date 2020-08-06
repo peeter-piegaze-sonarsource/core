@@ -156,7 +156,7 @@ public class InvoiceApi extends BaseApi {
 
     @Inject
     private RatedTransactionService ratedTransactionService;
-    
+
     @Inject
     private PaymentApi paymentApi;
 
@@ -1117,7 +1117,7 @@ public class InvoiceApi extends BaseApi {
             		recordedInvoiceDto.getPaymentHistories().add(paymentApi.fromEntity(ph,false));
             	}
             }
-            
+
 			DunningDocument dunningDocument = recordedInvoice.getDunningDocument();
 			if(dunningDocument!=null) {
 				dto.setDunningEntryDate(dunningDocument.getAuditable().getCreated());

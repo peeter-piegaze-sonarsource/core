@@ -278,7 +278,8 @@ public class AccountOperationDto extends AuditableEntityDto implements IEntityDt
         if (accountOp.getRejectedPayment() != null) {
             setRejectedPayment(new RejectedPaymentDto(accountOp.getRejectedPayment()));
         }
-        setCollectionDate(accountOp.getCollectionDate());
+
+      setCollectionDate(accountOp.getCollectionDate());
         setCustomFields(customFieldsDto);
     }
 
