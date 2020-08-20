@@ -153,9 +153,9 @@ public class SubscriptionService extends BusinessService<Subscription> {
     }
 
     private void checkSubscriptionPaymentMethod(Subscription subscription, List<PaymentMethod> paymentMethods) {
-        if (Objects.nonNull(subscription.getPaymentMethod()) && (paymentMethods.isEmpty() || paymentMethods.stream()
+        if(Objects.nonNull(subscription.getPaymentMethod()) && (paymentMethods.isEmpty() || paymentMethods.stream()
                 .filter(PaymentMethod::isActive)
-                .noneMatch(paymentMethod -> paymentMethod.getId().equals(subscription.getPaymentMethod().getId())))) {
+                .noneMatch(paymentMethod -> paymentMethod.getId().equals(subscription.getPaymentMethod().getId())))){
             log.error("the payment method should be reference to an active PaymentMethod defined on the CustomerAccount");
             throw new BusinessException("the payment method should be reference to an active PaymentMethod defined on the CustomerAccount");
         }

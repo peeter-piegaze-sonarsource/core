@@ -19,6 +19,7 @@ package org.meveo.admin.action.order;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -1049,5 +1050,16 @@ public class OrderBean extends CustomFieldBean<Order> {
 
     public PaymentMethod getPaymentMethodById(String id) {
         return id.isBlank() ? null : listPaymentMethod().stream().filter(pm -> pm.getId().equals(Long.valueOf(id))).findFirst().get();
+    }
+    /**
+     * Get configured payment method's list
+     * @return list of payment methods
+     */
+    public List<PaymentMethod> listPaymentMethod() {
+        if (Objects.nonNull(selectedOrderItem) && Objects.nonNull(selectedOrderItem.getUserAccount()) ) {
+            UserAccount userAccount = userAccountService.findById(selectedOrderItem.getUserAccount().getId());
+            return userAccount.getBillingAccount().getCustomerAccount().getPaymentMethods();
+        }
+        return Collections.emptyList();
     }
 }

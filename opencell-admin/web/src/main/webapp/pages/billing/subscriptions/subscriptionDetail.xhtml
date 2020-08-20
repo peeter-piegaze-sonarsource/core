@@ -388,6 +388,11 @@
                                             valueLabelField="code" popup="true" componentWidth="30" required="true" allowEdit="false" popupId="sellerPopup" />
                                     </h:panelGroup>
 
+                                    <h:panelGroup id="paymentMethodField">
+                                        <hftl:formField id="paymentMethodSelectId" label="#{messages['paymentMethod']}" field="paymentMethod" disabled="#{subscriptionBean.entity.offer == null}"
+                                            valueLabelField="alias" popup="true" componentWidth="30" required="true" allowEdit="false"/>
+                                    </h:panelGroup>
+
                                     <hftl:decorateFormField fieldId="payment_method"
                                                             label="#{messages['paymentMethod.alias']}"
                                                             required="#{false}" >
@@ -795,7 +800,7 @@
                     <hftl:formField label="#{messages['counterTemplate.title']}" field="counter" valueLabelField="descriptionOrCode" edit="false" />
                     <hftl:formField label="#{messages['serviceInstance.terminationDate']}" field="terminationDate" edit="false" rendered="#{subscriptionBean.recurringChargeInstance.status eq 'TERMINATED'}"/>
                     <hftl:formField label="#{messages['recurringChargeInstance.chargeToDateOnTermination']}" field="chargeToDateOnTermination" edit="false" rendered="#{subscriptionBean.recurringChargeInstance.status eq 'TERMINATED'}"/>
-                    
+
 
                     <ui:param name="buttons" value="true" />
                     <ui:define name="buttons">

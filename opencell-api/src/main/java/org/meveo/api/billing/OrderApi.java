@@ -27,6 +27,7 @@ import java.util.Objects;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -576,11 +577,11 @@ public class OrderApi extends BaseApi {
         subscriptionDto.setRenewalRule(extractSubscriptionRenewalDto(subscriptionProduct));
         subscriptionDto.setCustomFields(extractCustomFields(subscriptionProduct, Subscription.class));
         subscriptionDto.setSeller(subscriptionSeller);
-        String paymentMethodId = (String) getProductCharacteristic(subscriptionProduct, OrderProductCharacteristicEnum.SUBSCRIPTION_PAYMENT_METHOD.getCharacteristicName(),
-                String.class, null);
-        if(Objects.nonNull(paymentMethodId) && !paymentMethodId.isBlank()){
+        Long paymentMethodId = (Long) getProductCharacteristic(subscriptionProduct, OrderProductCharacteristicEnum.SUBSCRIPTION_PAYMENT_METHOD.getCharacteristicName(),
+                Long.class, null);
+        if(Objects.nonNull(paymentMethodId)){
             PaymentMethodDto paymentMethodDto = new PaymentMethodDto();
-            paymentMethodDto.setId(Long.valueOf(paymentMethodId));
+            paymentMethodDto.setId(paymentMethodId);
             subscriptionDto.setPaymentMethod(paymentMethodDto);
         }
         // instantiate and activate services

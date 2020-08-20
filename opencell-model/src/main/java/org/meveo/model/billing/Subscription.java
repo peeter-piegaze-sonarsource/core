@@ -86,7 +86,7 @@ import java.util.Map;
 public class Subscription extends BusinessCFEntity implements IBillableEntity, IWFEntity, IDiscountable, ICounterEntity {
 
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Offer subscribed to
      */
