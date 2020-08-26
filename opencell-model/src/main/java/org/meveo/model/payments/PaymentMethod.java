@@ -273,7 +273,7 @@ public abstract class PaymentMethod extends EnableEntity {
 
         if(obj == null || this.getClass() != obj.getClass()) {
             return false;
-        } 
+        }
 
         if (this == obj) {
             return true;
@@ -286,7 +286,7 @@ public abstract class PaymentMethod extends EnableEntity {
 
             if (thisCardPaymentMethod == other) {
                 return true;
-            } 
+            }
 
             if (thisCardPaymentMethod.getId() != null && other.getId() != null
                     && thisCardPaymentMethod.getId().equals(other.getId())) {
@@ -298,7 +298,7 @@ public abstract class PaymentMethod extends EnableEntity {
                 && thisCardPaymentMethod.getMonthExpiration().equals(other.getMonthExpiration())
                 && thisCardPaymentMethod.getYearExpiration().equals(other.getYearExpiration());
         }
-        
+
         if (this.getClass() == DDPaymentMethod.class) {
 
             DDPaymentMethod thisDDPaymentMethod = (DDPaymentMethod) this;
@@ -306,7 +306,7 @@ public abstract class PaymentMethod extends EnableEntity {
 
             if (thisDDPaymentMethod == other) {
                 return true;
-            } 
+            }
 
             if (thisDDPaymentMethod.getId() != null && other.getId() != null
                     && thisDDPaymentMethod.getId().equals(other.getId())) {
@@ -319,10 +319,10 @@ public abstract class PaymentMethod extends EnableEntity {
             if (thisDDPaymentMethod.getBankCoordinates() != null) {
                 return thisDDPaymentMethod.getBankCoordinates().equals(other.getBankCoordinates());
             }
-            
+
             return false;
         }
-        
+
         return true;
     }
 

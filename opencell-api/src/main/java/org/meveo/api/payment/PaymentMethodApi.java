@@ -108,7 +108,7 @@ public class PaymentMethodApi extends BaseApi {
         }
 
         PaymentMethod paymentMethod = paymentMethodDto.fromDto(customerAccount, document, currentUser);
-        	paymentMethod.setTokenId(paymentMethodDto.getTokenId()); 
+            paymentMethod.setTokenId(paymentMethodDto.getTokenId());
         paymentMethodService.create(paymentMethod);
         return paymentMethod.getId();
     }
@@ -216,21 +216,21 @@ public class PaymentMethodApi extends BaseApi {
         }
         return result;
     }
-    
+
     /**
      * List By Customer Account Code.
-     * 
+     *
      * @param customerAccountCode customerAccountCode
      * @return the payment method tokens dto
      * @throws MeveoApiException the meveo api exception
      */
     public PaymentMethodTokensDto listByCustomerAccountCode(String customerAccountCode, Integer firstRow, Integer numberOfRows) throws MeveoApiException {
-        
+
         if (StringUtils.isBlank(customerAccountCode)) {
             missingParameters.add("customerAccountCode");
             handleMissingParameters();
         }
-        
+
         CustomerAccount customerAccount = customerAccountService.findByCode(customerAccountCode);
         if (customerAccount == null) {
             throw new EntityDoesNotExistsException(CustomerAccount.class, customerAccountCode);
@@ -389,27 +389,27 @@ public class PaymentMethodApi extends BaseApi {
     public String getHostedCheckoutUrl(HostedCheckoutInput hostedCheckoutInput)  throws BusinessException {
         return paymentMethodService.getHostedCheckoutUrl(hostedCheckoutInput);
     }
-    
-   
-    	
+
+
+
     public MandatInfoDto checkMandate(String mandateReference,String mandateId,String customerAccountCode)  throws MissingParameterException, EntityDoesNotExistsException, BusinessException {
     	if (StringUtils.isBlank(mandateReference)) {
     		missingParameters.add("mandateReference");
     	}
     	if (StringUtils.isBlank(customerAccountCode)) {
     		missingParameters.add("customerAccountCode");
-    	} 
-    	handleMissingParameters(); 
+    	}
+    	handleMissingParameters();
     	MandatInfoDto mandateInfoDto=paymentMethodService.checkMandate(mandateReference, mandateId,customerAccountCode);
     	return mandateInfoDto;
 
     }
     public void approveSepaDDMandate(String customerAccountCode,String tokenId)  throws MissingParameterException, EntityDoesNotExistsException, BusinessException {
-    
+
     	if (StringUtils.isBlank(customerAccountCode)) {
     		missingParameters.add("customerAccountCode");
-    	} 
-    	handleMissingParameters(); 
+    	}
+    	handleMissingParameters();
     	paymentMethodService.approveSepaDDMandate(customerAccountCode,tokenId);
 
     }

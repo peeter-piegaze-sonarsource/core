@@ -21,6 +21,7 @@ package org.meveo.api.account;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -55,6 +56,7 @@ import org.meveo.model.billing.TradingLanguage;
 import org.meveo.model.crm.BusinessAccountModel;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
+import org.meveo.model.document.Document;
 import org.meveo.model.intcrm.AddressBook;
 import org.meveo.model.payments.AccountOperation;
 import org.meveo.model.payments.CreditCategory;
