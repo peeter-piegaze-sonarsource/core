@@ -202,6 +202,22 @@
 
                                         <hftl:decorateFormField fieldId="payment_method"
                                                                 label="#{messages['paymentMethod.alias']}"
+                                                                rendered="#{not empty billingAccountBean.entity.customerAccount.paymentMethods and billingAccountBean.edit}" required="#{false}"
+                                                                listenerUpdate=":parentTab:formId:childTab:userNamePanel">
+                                            <p:selectOneMenu id="payment_method"
+                                                             value="#{billingAccountBean.entity.paymentMethod}"
+                                                             required="#{false}"
+                                                             rendered="#{not empty billingAccountBean.entity.customerAccount.paymentMethods}">
+                                                <hftl:objectConverter/>
+                                                <f:selectItem itemLabel="#{billingAccountBean.entity.paymentMethod.alias}" itemValue="#{billingAccountBean.entity.paymentMethod}"
+                                                              rendered="#{billingAccountBean.entity.paymentMethod != null}"/>
+                                                <f:selectItem itemLabel="" itemValue="" rendered="#{billingAccountBean.entity.paymentMethod == null}"/>
+                                                <f:selectItems value="#{billingAccountBean.listPaymentMethod()}" var="elem" itemLabel="#{elem['alias']}"
+                                                               itemValue="#{elem}"/>
+                                            </p:selectOneMenu>
+                                        </hftl:decorateFormField>
+                                        <hftl:decorateFormField fieldId="payment_method"
+                                                                label="#{messages['paymentMethod.alias']}"
                                                                 required="#{false}" >
                                             <p:selectOneMenu id="payment_method"
                                                              value="#{billingAccountBean.entity.paymentMethod}"
@@ -241,7 +257,7 @@
 	                                            listenerUpdate="checkThresholdId" />
 	                                        <hftl:formField label="#{messages['account.checkThreshold']}" field="checkThreshold" id="checkThresholdId" noSelectionLabel="false"
 	                                            disabled="false" required="#{not empty billingAccountBean.entity.invoicingThreshold}" />
-	                                        <p:panelGrid columns="1" styleClass="ui-noborder"> 
+	                                        <p:panelGrid columns="1" styleClass="ui-noborder">
 	                                        	<p:outputLabel for="@next" value="#{messages['invoice.checkthreshold.per']}" cellpadding="5" />
 	                                        	<p:selectBooleanButton  value="${billingAccountBean.entity.thresholdPerEntity}" onLabel="#{messages['invoice.checkthreshold.per.entity']}" offLabel="#{messages['invoice.checkthreshold.per.invoice']}"/>
 	                                        </p:panelGrid>

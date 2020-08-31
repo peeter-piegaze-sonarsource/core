@@ -180,7 +180,7 @@ public class BillingCycle extends BusinessCFEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "check_threshold")
     private ThresholdOptionsEnum checkThreshold;
-    
+
     /**
      * check threshold per entity?
      */
@@ -195,7 +195,7 @@ public class BillingCycle extends BusinessCFEntity {
 	public void setThresholdPerEntity(boolean thresholdPerEntity) {
 		this.thresholdPerEntity = thresholdPerEntity;
 	}
-	
+
     /**
      * if true then subscriptions are grouped by paymentMethod and billed separately.
      */

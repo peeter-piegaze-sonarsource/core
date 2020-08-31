@@ -649,10 +649,6 @@ public class InvoiceService extends PersistenceService<Invoice> {
                         postPaidInvoiceType = determineInvoiceType(false, isDraft, billingCycle, billingRun, billingAccount);
                     }
                 }
-            }else if(entityToInvoice instanceof Subscription) {
-                if (Objects.nonNull(((Subscription)entityToInvoice).getPaymentMethod())) {
-                    paymentMethod = ((Subscription)entityToInvoice).getPaymentMethod();
-                }
             }
             InvoiceType invoiceType = postPaidInvoiceType;
             boolean isPrepaid = rt.isPrepaid();
@@ -663,6 +659,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
             paymentMethod = resolvePaymentMethod(billingAccount, billingCycle, defaultPaymentMethod, rt);
 
             String invoiceKey = billingAccount.getId() + "_" + rt.getSeller().getId() + "_" + invoiceType.getId() + "_" + isPrepaid + ((paymentMethod == null)?"":"_" + paymentMethod.getId());
+
             RatedTransactionGroup rtGroup = rtGroups.get(invoiceKey);
 
             if (rtGroup == null) {
@@ -1226,7 +1223,6 @@ public class InvoiceService extends PersistenceService<Invoice> {
         invoice.setBillingAccount(billingAccount);
         invoice.setInvoiceDate(new Date());
         serviceSingleton.assignInvoiceNumberVirtual(invoice);
-        // todo pay
         PaymentMethod preferedPaymentMethod = invoice.getBillingAccount().getCustomerAccount().getPreferredPaymentMethod();
         if (preferedPaymentMethod != null) {
             invoice.setPaymentMethodType(preferedPaymentMethod.getPaymentType());

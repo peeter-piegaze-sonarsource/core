@@ -157,7 +157,7 @@ public class BillingAccountApi extends AccountEntityApi {
 
     @Inject
     private CustomFieldTemplateService customFieldTemplateService;
-    
+
     public BillingAccount create(BillingAccountDto postData) throws MeveoApiException, BusinessException {
         return create(postData, true);
     }

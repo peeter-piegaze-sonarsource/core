@@ -191,7 +191,7 @@ public class BillingAccountDto extends AccountDto {
      * The option on how to check the threshold.
      */
     private ThresholdOptionsEnum checkThreshold;
-    
+
     /**
      * list of GDPR related to billing account
      */
@@ -202,9 +202,9 @@ public class BillingAccountDto extends AccountDto {
      */
     @XmlElement(name = "paymentMethod")
     private PaymentMethodDto paymentMethod;
-    
+
     /**
-     * 
+     *
      * check the threshold per entity/invoice for BA.
      */
     @XmlElement
@@ -217,7 +217,7 @@ public class BillingAccountDto extends AccountDto {
 	public void setThresholdPerEntity(Boolean thresholdPerEntity) {
 		this.thresholdPerEntity = thresholdPerEntity;
 	}
-	
+
     /**
      * Instantiates a new billing account dto.
      */
@@ -300,14 +300,14 @@ public class BillingAccountDto extends AccountDto {
 
         // End compatibility with pre-4.6 versions
     }
-    
+
     public BillingAccountDto(BillingAccount e, List<GDPRInfoDto> billingAccountGDPR) {
     	this(e);
     	if(billingAccountGDPR != null && !billingAccountGDPR.isEmpty()) {
     		setInfoGdpr(billingAccountGDPR);
     	}
     }
-	
+
 	public void addDiscountPlan(DiscountPlanDto dp) {
 		if (discountPlansForInstantiation == null) {
 			discountPlansForInstantiation = new ArrayList<>();
