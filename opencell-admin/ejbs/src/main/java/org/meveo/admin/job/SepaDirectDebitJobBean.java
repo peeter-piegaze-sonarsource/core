@@ -166,7 +166,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
 			List<DDRequestLotOp> ddrequestOps = dDRequestLotOpService.getDDRequestOps(ddRequestBuilder, seller, paymentOrRefundEnum);
 
 			if (CollectionUtils.isNotEmpty(ddrequestOps)) {
-				log.info("ddrequestOps found:" + ddrequestOps.size());				
+				log.info("ddrequestOps found:" + ddrequestOps.size());
 
 			} else {
 				final String msg = "ddrequestOps IS EMPTY !";
@@ -266,7 +266,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
      * @param ddrequestLotOp the ddrequest lot op
      * @return the due date range script
      */
-	private DateRangeScript getDueDateRangeScript(DDRequestLotOp ddrequestLotOp) {
+    private DateRangeScript getDueDateRangeScript(DDRequestLotOp ddrequestLotOp) {
 		try {
 			ScriptInstance scriptInstance = ddrequestLotOp.getScriptInstance();
 			scriptInstance = scriptInstanceService.refreshOrRetrieve(scriptInstance);
