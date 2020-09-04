@@ -362,6 +362,9 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_history_id")
+    private PaymentHistory paymentHistory;
 
     @ManyToMany
     @JoinTable(
