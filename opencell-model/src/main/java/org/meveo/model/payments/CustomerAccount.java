@@ -81,12 +81,12 @@ import org.meveo.model.intcrm.AddressBook;
 @Table(name = "ar_customer_account")
 @NamedQueries({ @NamedQuery(name = "CustomerAccount.listCAIdsForPayment", query =
         "Select ca.id  from CustomerAccount as ca, AccountOperation as ao,PaymentMethod as pm  where ao.transactionCategory='DEBIT' and "
-        + "                   ao.matchingStatus ='O' and ca.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and ao.customerAccount.id = ca.id and pm.paymentType =:paymentMethodIN  and "
-        + "                   ao.paymentMethod =:paymentMethodIN  and pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  group by ca.id having sum(ao.unMatchingAmount) <> 0"),
+                + "                   (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ca.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and ao.customerAccount.id = ca.id and pm.paymentType =:paymentMethodIN  and "
+                + "                     pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  group by ca.id having sum(ao.unMatchingAmount) <> 0"),
         @NamedQuery(name = "CustomerAccount.listCAIdsForRefund", query =
                 "Select ca.id  from CustomerAccount as ca, AccountOperation as ao,PaymentMethod as pm  where ao.transactionCategory='CREDIT' and "
-                + "                   ao.type not in ('P','AP') and ao.matchingStatus ='O' and ca.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and ao.customerAccount.id = ca.id and "
-                + "                   pm.paymentType =:paymentMethodIN  and ao.paymentMethod =:paymentMethodIN  and pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN group by ca.id having sum(ao.unMatchingAmount) <> 0"),
+                        + "                   ao.type not in ('P','AP') and (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ca.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and ao.customerAccount.id = ca.id and "
+                        + "                   pm.paymentType =:paymentMethodIN   and pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN group by ca.id having sum(ao.unMatchingAmount) <> 0"),
         @NamedQuery(name = "CustomerAccount.getMimimumRTUsed", query = "select ca.minimumAmountEl from CustomerAccount ca where ca.minimumAmountEl is not null"),
         @NamedQuery(name = "CustomerAccount.getCustomerAccountsWithMinAmountELNotNullByBA", query = "select ca from CustomerAccount ca where ca.minimumAmountEl is not null AND ca.status = org.meveo.model.billing.AccountStatusEnum.ACTIVE AND ca=:customerAccount") })
 
@@ -255,7 +255,7 @@ public class CustomerAccount extends AccountEntity implements IWFEntity, ICounte
     @Enumerated(EnumType.STRING)
     @Column(name = "check_threshold")
     private ThresholdOptionsEnum checkThreshold;
-    
+
     /**
      * check threshold per entity?
      */
@@ -291,7 +291,7 @@ public class CustomerAccount extends AccountEntity implements IWFEntity, ICounte
 	public void setThresholdPerEntity(boolean thresholdPerEntity) {
 		this.thresholdPerEntity = thresholdPerEntity;
 	}
-	
+
     public AddressBook getAddressbook() {
         return addressbook;
     }
@@ -646,7 +646,7 @@ public class CustomerAccount extends AccountEntity implements IWFEntity, ICounte
         PaymentMethod paymentMethodMatched = null;
 
         for (PaymentMethod paymentMethod : paymentMethods) {
-            
+
             if(paymentMethod.getClass().getSimpleName().contains("PaymentMethod")) {
                 return null;
             }

@@ -37,6 +37,11 @@ public abstract class AccountOperationFilterScript extends Script {
     public static final String TO_DUE_DATE = "TO_DUE_DATE";
     public static final String PAYMENT_METHOD = "PAYMENT_METHOD";
     public static final String CAT_TO_PROCESS = "CAT_TO_PROCESS";
+    public static final String FROM_DUE_DATE = "FROM_DUE_DATE";
+    public static final String TO_DUE_DATE = "TO_DUE_DATE";
+    public static final String PAYMENT_METHOD = "PAYMENT_METHOD";
+    public static final String CAT_TO_PROCESS = "CAT_TO_PROCESS";
+
 
     public abstract List<AccountOperation> filterAoToPay(Map<String, Object> methodContext);
 

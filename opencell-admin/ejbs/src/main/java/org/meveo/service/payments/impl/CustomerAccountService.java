@@ -28,6 +28,7 @@ import org.meveo.model.billing.InstanceStatusEnum;
 import org.meveo.model.billing.ServiceInstance;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.payments.*;
+import org.meveo.model.payments.RecordedInvoice;
 import org.meveo.service.base.AccountService;
 
 import javax.ejb.Stateless;
@@ -65,12 +66,12 @@ public class CustomerAccountService extends AccountService<CustomerAccount> {
     /** The payment method service. */
     @Inject
     private PaymentMethodService paymentMethodService;
-    
+
    /** The payment gatway service. */
-    
+
     @Inject
     private PaymentGatewayService paymentGatewayService;
-    
+
 
     /**
      * Checks if is customer account with id exists.
@@ -563,11 +564,7 @@ public class CustomerAccountService extends AccountService<CustomerAccount> {
         super.create(entity);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.meveo.service.base.PersistenceService#update(org.meveo.model.IEntity)
-     */
+
     @Override
     public CustomerAccount update(CustomerAccount entity) throws BusinessException {
 
@@ -580,14 +577,14 @@ public class CustomerAccountService extends AccountService<CustomerAccount> {
         for (CardPaymentMethod cardPaymentMethod : entity.getCardPaymentMethods(true)) {
             paymentMethodService.obtainAndSetCardToken(cardPaymentMethod, cardPaymentMethod.getCustomerAccount());
         }
-        
+
         // Register dd payment methods in payment gateway and obtain a token id
         for (DDPaymentMethod ddPaymentMethod : ddPaymentMethods) {
             if(ddPaymentMethod.getTokenId() == null){
                 paymentMethodService.obtainAndSetSepaToken(ddPaymentMethod, entity);
             }
         }
-        
+
 
         entity.ensureOnePreferredPaymentMethod();
         return super.update(entity);
@@ -624,6 +621,19 @@ public class CustomerAccountService extends AccountService<CustomerAccount> {
             log.warn("Customer account {} has no preferred payment method", customerAccountId, e);
             return null;
         }
+    }
+
+    public PaymentMethod getPreferredPaymentMethod(AccountOperation ao,PaymentMethodEnum paymentMethodType) {
+
+    	if(ao.getSubscription() != null && ao.getSubscription().getPaymentMethod() != null && ao.getSubscription().getPaymentMethod().getPaymentType() == paymentMethodType ) {
+    		return ao.getSubscription().getPaymentMethod();
+    	}
+    	if(ao instanceof RecordedInvoice) {
+    		if(((RecordedInvoice)ao).getInvoice() != null && ((RecordedInvoice)ao).getInvoice().getBillingAccount().getPaymentMethod() != null && ((RecordedInvoice)ao).getInvoice().getBillingAccount().getPaymentMethod().getPaymentType() == paymentMethodType ) {
+    			return ((RecordedInvoice)ao).getInvoice().getBillingAccount().getPaymentMethod();
+    		}
+    	}
+    	return ao.getCustomerAccount().getPreferredPaymentMethod();
     }
 
     /**

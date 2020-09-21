@@ -329,6 +329,7 @@ public class SepaDirectDebitJobBean extends BaseJobBean {
 		AccountOperationFilterScript aoFilterScript = this.getAOScriptInstance(jobInstance);
 		if (aoFilterScript != null) {
 			Map<String, Object> methodContext = new HashMap<>();				
+			 methodContext.put(AccountOperationFilterScript.DD_REQ_OP, ddRequestLotOp);
 			 methodContext.put(AccountOperationFilterScript.FROM_DUE_DATE, ddRequestLotOp.getFromDueDate());
 			 methodContext.put(AccountOperationFilterScript.TO_DUE_DATE, ddRequestLotOp.getToDueDate());
 			 methodContext.put(AccountOperationFilterScript.PAYMENT_METHOD, PaymentMethodEnum.DIRECTDEBIT);
