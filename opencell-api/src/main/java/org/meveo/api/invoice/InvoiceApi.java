@@ -193,9 +193,17 @@ public class InvoiceApi extends BaseApi {
             throw new EntityDoesNotExistsException(InvoiceType.class, invoiceDTO.getInvoiceType());
         }
         
+        Subscription subscription = null;
+        if(!StringUtils.isBlank(invoiceDTO.getSubscriptionCode())) {
+        	subscription = subscriptionService.findByCode(invoiceDTO.getSubscriptionCode());
+        	if(subscription == null) {
+        		throw new EntityDoesNotExistsException(Subscription.class, invoiceDTO.getSubscriptionCode());
+        	}
+        }
+        
 
         Seller seller = this.getSeller(invoiceDTO, billingAccount);
-        Invoice invoice = invoiceService.createInvoice(invoiceDTO, seller, billingAccount, invoiceType);
+        Invoice invoice = invoiceService.createInvoice(invoiceDTO, seller, billingAccount, invoiceType,subscription);
 
         CreateInvoiceResponseDto response = new CreateInvoiceResponseDto();
         response.setInvoiceId(invoice.getId());
