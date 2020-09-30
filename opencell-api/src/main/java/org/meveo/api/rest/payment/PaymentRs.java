@@ -37,6 +37,7 @@ import org.meveo.api.dto.payment.CardPaymentMethodTokenDto;
 import org.meveo.api.dto.payment.CardPaymentMethodTokensDto;
 import org.meveo.api.dto.payment.DDRequestBuilderDto;
 import org.meveo.api.dto.payment.DDRequestBuilderResponseDto;
+import org.meveo.api.dto.payment.PaymentCallbackDto;
 import org.meveo.api.dto.payment.MandatInfoDto;
 import org.meveo.api.dto.payment.PaymentDto;
 import org.meveo.api.dto.payment.PaymentGatewayDto;
@@ -107,6 +108,17 @@ public interface PaymentRs extends IBaseRs {
     @GET
     @Path("/customerPayment")
     public CustomerPaymentsResponse list(@QueryParam("customerAccountCode") String customerAccountCode,  PagingAndFiltering pagingAndFiltering);
+
+    /**
+     * paymentCallback to reject or validate a payment.
+     *
+     * @param paymentCallbackDto paymentCallbackDto
+     * @return payment action status
+     */
+    @POST
+    @Path("/paymentCallback")
+    public ActionStatus paymentCallback(PaymentCallbackDto paymentCallbackDto);
+
 
     /************************************************************************************************/
     /**** Card Payment Method ****/
@@ -212,11 +224,11 @@ public interface PaymentRs extends IBaseRs {
     @Path("/paymentMethod/list")
     public PaymentMethodTokensDto listPaymentMethodGet(@QueryParam("query") String query, @QueryParam("fields") String fields, @QueryParam("offset") Integer offset,
             @QueryParam("limit") Integer limit, @DefaultValue("id") @QueryParam("sortBy") String sortBy, @DefaultValue("ASCENDING") @QueryParam("sortOrder") SortOrder sortOrder);
-    
-    
+
+
     /**
      * List Payment Methods matching a customer account
-     * 
+     *
      * @param customerAccountCode customer account code.
      * @param offset Pagination - from record number
      * @param limit Pagination - number of records to retrieve
@@ -714,12 +726,12 @@ public interface PaymentRs extends IBaseRs {
     @PUT
     @Path("/paymentScheduleInstance/cancel")
     public ActionStatus cancelPaymentScheduleInstance(PaymentScheduleInstanceDto paymentScheduleInstanceDto);
-     
-    
-    
+
+
+
     /**
      * Gets a created mandate.
-     * 
+     *
      * @param mandateReference mandate reference
      * @param mandateId mandate Id
      * @param customerAccountCode customer account code
@@ -728,10 +740,10 @@ public interface PaymentRs extends IBaseRs {
     @GET
     @Path("/paymentGateway/checkMandate")
     public MandatInfoDto checkMandate(@QueryParam("mandateReference") String mandateReference,@QueryParam("mandateId") String mandateId,@QueryParam("customerAccountCode") String customerAccountCode);
-    
+
     @GET
     @Path("/paymentGateway/approveSepaDDMandate")
     public ActionStatus approveSepaDDMandate(@QueryParam("customerAccountCode") String customerAccountCode,@QueryParam("tokenId")String tokenId);
-    
-    
+
+
 }

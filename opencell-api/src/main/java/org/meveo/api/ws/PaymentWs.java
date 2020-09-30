@@ -23,7 +23,6 @@ import java.util.Date;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import javax.ws.rs.QueryParam;
 
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.account.CreditCategoryDto;
@@ -34,6 +33,7 @@ import org.meveo.api.dto.payment.DDRequestBuilderDto;
 import org.meveo.api.dto.payment.DDRequestBuilderResponseDto;
 import org.meveo.api.dto.payment.DDRequestLotOpDto;
 import org.meveo.api.dto.payment.PayByCardDto;
+import org.meveo.api.dto.payment.PaymentCallbackDto;
 import org.meveo.api.dto.payment.PaymentDto;
 import org.meveo.api.dto.payment.PaymentGatewayDto;
 import org.meveo.api.dto.payment.PaymentGatewayResponseDto;
@@ -57,6 +57,7 @@ import org.meveo.api.dto.response.payment.DDRequestLotOpsResponseDto;
 import org.meveo.api.dto.response.payment.PaymentGatewayRumSequenceResponseDto;
 import org.meveo.api.dto.sequence.GenericSequenceValueResponseDto;
 import org.meveo.model.payments.DDRequestOpStatusEnum;
+
 
 /**
  * The Interface PaymentWs.
@@ -84,15 +85,15 @@ public interface PaymentWs extends IBaseWs {
      * List.
      *
      * @param customerAccountCode the customer account code
-     * @param pagingAndFiltering
+     * @param pagingAndFiltering the paging and filtering
      * @return the customer payments response
      */
     @WebMethod
     public CustomerPaymentsResponse list(@WebParam(name = "customerAccountCode") String customerAccountCode, PagingAndFiltering pagingAndFiltering);
 
     /**
-     * create a ddrequestLotOp by dto
-     * 
+     * create a ddrequestLotOp by dto.
+     *
      * @param ddrequestLotOp ddrequestLotOp
      * @return ActionStatus
      */
@@ -100,8 +101,8 @@ public interface PaymentWs extends IBaseWs {
     ActionStatus createDDRequestLotOp(@WebParam(name = "ddrequestLotOp") DDRequestLotOpDto ddrequestLotOp);
 
     /**
-     * list ddrequestLotOps by fromDueDate,toDueDate,status
-     * 
+     * list ddrequestLotOps by fromDueDate,toDueDate,status.
+     *
      * @param fromDueDate fromDueDate
      * @param toDueDate toDueDate
      * @param status status
@@ -120,7 +121,21 @@ public interface PaymentWs extends IBaseWs {
     @WebMethod
     public PaymentResponseDto payByCard(@WebParam(name = "payByCard") PayByCardDto payByCardDto);
 
-    /************************************************************************************************/
+    /**
+     * Payment callback.
+     *
+     * @param paymentCallbackDto the payment callback dto
+     * @return the action status
+     */
+    @WebMethod
+    public ActionStatus paymentCallback(@WebParam(name = "PaymentCallbackDto") PaymentCallbackDto paymentCallbackDto);
+
+    /**
+     * *********************************************************************************************.
+     *
+     * @param cardPaymentMethod the card payment method
+     * @return the card payment method token dto
+     */
     /**** Card Payment Method ****/
     /************************************************************************************************/
 
@@ -154,8 +169,8 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus removeCardPaymentMethod(@WebParam(name = "id") Long id);
 
     /**
-     * List available card payment methods for a given customer account identified either by id or by code
-     * 
+     * List available card payment methods for a given customer account identified either by id or by code.
+     *
      * @param customerAccountId Customer account id
      * @param customerAccountCode Customer account code
      * @return A list of card payment methods
@@ -166,8 +181,8 @@ public interface PaymentWs extends IBaseWs {
             @WebParam(name = "customerAccountCode") String customerAccountCode);
 
     /**
-     * Retrieve card payment method by its id
-     * 
+     * Retrieve card payment method by its id.
+     *
      * @param id Id
      * @return Card payment DTO
      */
@@ -175,7 +190,12 @@ public interface PaymentWs extends IBaseWs {
     @Deprecated // Use findPaymentMthod operation
     public CardPaymentMethodTokenDto findCardPaymentMethod(@WebParam(name = "id") Long id);
 
-    /************************************************************************************************/
+    /**
+     * *********************************************************************************************.
+     *
+     * @param paymentMethod the payment method
+     * @return the payment method token dto
+     */
     /**** Payment Methods ****/
     /************************************************************************************************/
 
@@ -233,8 +253,8 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus disablePaymentMethod(@WebParam(name = "id") Long id);
 
     /**
-     * Retrieve payment method by its id
-     * 
+     * Retrieve payment method by its id.
+     *
      * @param id Id
      * @return DD payment DTO
      */
@@ -242,8 +262,8 @@ public interface PaymentWs extends IBaseWs {
     public PaymentMethodTokenDto findPaymentMethod(@WebParam(name = "id") Long id);
 
     /**
-     * Credit Category
-     * 
+     * Credit Category.
+     *
      * @param postData credit category Dto
      * @return ActionStatus
      */
@@ -331,8 +351,8 @@ public interface PaymentWs extends IBaseWs {
     public PaymentGatewayResponseDto listPaymentGateways(@WebParam(name = "pagingAndFiltering") PagingAndFiltering pagingAndFiltering);
 
     /**
-     * Retrieve payment gateway by its code
-     * 
+     * Retrieve payment gateway by its code.
+     *
      * @param code code
      * @return payment DTO
      */
@@ -349,8 +369,8 @@ public interface PaymentWs extends IBaseWs {
     public PaymentGatewayResponseDto createOrUpdatePaymentGateway(@WebParam(name = "paymentGateway") PaymentGatewayDto paymentGateway);
 
     /**
-     * Enable payment gateway by its code
-     * 
+     * Enable payment gateway by its code.
+     *
      * @param code Payment gateway code
      * @return Request processing status
      */
@@ -358,8 +378,8 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus enablePaymentGateway(@WebParam(name = "code") String code);
 
     /**
-     * Disable payment gateway by its code
-     * 
+     * Disable payment gateway by its code.
+     *
      * @param code Payment gateway code
      * @return Request processing status
      */
@@ -410,8 +430,8 @@ public interface PaymentWs extends IBaseWs {
 
 
     /**
-     * List payment history matching a given criteria
-     * 
+     * List payment history matching a given criteria.
+     *
      * @param pagingAndFiltering Pagination and filtering criteria.
      * @return An payment history list
      */
@@ -419,7 +439,12 @@ public interface PaymentWs extends IBaseWs {
     public PaymentHistoriesDto listHistory(@WebParam(name = "pagingAndFiltering") PagingAndFiltering pagingAndFiltering);
 
    
-    /********************************************/
+    /**
+     * *****************************************.
+     *
+     * @param ddRequestBuilder the dd request builder
+     * @return the DD request builder response dto
+     */
     /**** DDRequest Builder                 ****/
     /******************************************/
     
@@ -460,8 +485,8 @@ public interface PaymentWs extends IBaseWs {
     public DDRequestBuilderResponseDto listDDRequestBuilders(@WebParam(name = "pagingAndFiltering") PagingAndFiltering pagingAndFiltering);
 
     /**
-     * Retrieve ddRequest builder by its code
-     * 
+     * Retrieve ddRequest builder by its code.
+     *
      * @param code code
      * @return payment DTO
      */
@@ -478,8 +503,8 @@ public interface PaymentWs extends IBaseWs {
     public DDRequestBuilderResponseDto createOrUpdateDDRequestBuilder(@WebParam(name = "DDRequestBuilderDto") DDRequestBuilderDto ddRequestBuilder);
 
     /**
-     * Enable ddRequest builder by its code
-     * 
+     * Enable ddRequest builder by its code.
+     *
      * @param code Payment gateway code
      * @return Request processing status
      */
@@ -487,15 +512,20 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus enableDDRequestBuilder(@WebParam(name = "code") String code);
 
     /**
-     * Disable ddRequest builder by its code
-     * 
+     * Disable ddRequest builder by its code.
+     *
      * @param code Payment gateway code
      * @return Request processing status
      */
     @WebMethod
     public ActionStatus disableDDRequestBuilder(@WebParam(name = "code") String code);
     
-    /************************************************************************************************/
+    /**
+     * *********************************************************************************************.
+     *
+     * @param paymentScheduleTemplateDto the payment schedule template dto
+     * @return the action status
+     */
     /****                           Payment Schedules                                            ****/
     /************************************************************************************************/
     /**
@@ -543,8 +573,8 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus updatePaymentScheduleTemplate(@WebParam(name = "paymentScheduleTemplateDto") PaymentScheduleTemplateDto paymentScheduleTemplateDto);
     
     /**
-     * List payment PaymentScheduleTemplate matching a given criteria
-     * 
+     * List payment PaymentScheduleTemplate matching a given criteria.
+     *
      * @param pagingAndFiltering Pagination and filtering criteria.
      * @return An paymentScheduleTemplate dto list
      */
@@ -561,8 +591,8 @@ public interface PaymentWs extends IBaseWs {
     public ActionStatus updatePaymentScheduleInstance(@WebParam(name = "paymentScheduleInstanceDto") PaymentScheduleInstanceDto paymentScheduleInstanceDto);
     
     /**
-     * Find  PaymentScheduleInstance by ID
-     * 
+     * Find  PaymentScheduleInstance by ID.
+     *
      * @param id PaymentScheduleInstance ID
      * @return A paymentScheduleInstance dto
      */
@@ -570,8 +600,8 @@ public interface PaymentWs extends IBaseWs {
     public PaymentScheduleInstanceResponseDto findPaymentScheduleInstance(@WebParam(name = "paymentScheduleInstanceId") Long id);
     
     /**
-     * List payment PaymentScheduleInstance matching a given criteria
-     * 
+     * List payment PaymentScheduleInstance matching a given criteria.
+     *
      * @param pagingAndFiltering Pagination and filtering criteria.
      * @return An paymentScheduleInstance dto list
      */

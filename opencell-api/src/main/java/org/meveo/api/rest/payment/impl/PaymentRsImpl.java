@@ -34,6 +34,7 @@ import org.meveo.api.dto.payment.DDRequestBuilderDto;
 import org.meveo.api.dto.payment.DDRequestBuilderResponseDto;
 import org.meveo.api.dto.payment.GatewayPaymentNamesEnum;
 import org.meveo.api.dto.payment.HostedCheckoutInput;
+import org.meveo.api.dto.payment.PaymentCallbackDto;
 import org.meveo.api.dto.payment.MandatInfoDto;
 import org.meveo.api.dto.payment.PaymentDto;
 import org.meveo.api.dto.payment.PaymentGatewayDto;
@@ -853,7 +854,20 @@ public class PaymentRsImpl extends BaseRs implements PaymentRs {
 
         return result;
     }
-    
+
+	@Override
+	public ActionStatus paymentCallback(PaymentCallbackDto paymentCallbackDto) {
+		ActionStatus result = new ActionStatus();
+
+		try {
+			paymentApi.paymentCallback(paymentCallbackDto);
+		} catch (Exception e) {
+			processException(e, result);
+		}
+
+        return result;
+    }
+
     @Override
     public PaymentMethodTokensDto findPaymentMethodByCustomerAccount(String customerAccountCode, Integer offset, Integer limit) {
         PaymentMethodTokensDto result = new PaymentMethodTokensDto();
@@ -888,6 +902,6 @@ public class PaymentRsImpl extends BaseRs implements PaymentRs {
             processException(e, result);
         }
 
-        return result;
-    }
+		return result;
+	}
 }
