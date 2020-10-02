@@ -164,6 +164,10 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
         return walletOperationService.listToRate(entityToInvoice, invoicingDate);
     }
 
+    public List<WalletOperation> getWalletOperations(List<Long> ids){
+        return walletOperationService.listByIds(ids);
+    }
+
     /**
      * Create Rated transaction from wallet operation.
      * 

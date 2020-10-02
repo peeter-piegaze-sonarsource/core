@@ -670,11 +670,33 @@ public class InvoiceService extends PersistenceService<Invoice> {
     }
 
     private List<RatedTransaction> getRatedTransactions(IBillableEntity entityToInvoice, Filter ratedTransactionFilter, Date firstTransactionDate, Date lastTransactionDate, boolean isDraft) {
-        if (isDraft)
-            ratedTransactionService.getWalletOperations(entityToInvoice, lastTransactionDate).stream()
-                    .map(e -> new RatedTransaction(e))
-                    .collect(Collectors.toList());
-        return ratedTransactionService.listRTsToInvoice(entityToInvoice, firstTransactionDate, lastTransactionDate, ratedTransactionFilter, rtPaginationSize);
+        List<RatedTransaction> ratedTransactions = ratedTransactionService.listRTsToInvoice(entityToInvoice, firstTransactionDate, lastTransactionDate, ratedTransactionFilter, rtPaginationSize);
+        // if draft add unrated wallet operation
+        if (isDraft) {
+            ratedTransactions.addAll(getDraftRatedTransactions(entityToInvoice, firstTransactionDate, lastTransactionDate));
+        }
+        return ratedTransactions;
+    }
+
+    private List<RatedTransaction> getDraftRatedTransactions(IBillableEntity entityToInvoice, Date firstTransactionDate, Date lastTransactionDate) {
+        return ratedTransactionService.getWalletOperations(entityToInvoice, lastTransactionDate).stream()
+                .filter(wo -> wo.getOperationDate().before(lastTransactionDate) && (wo.getOperationDate().after(firstTransactionDate) || wo.getOperationDate().equals(firstTransactionDate)))
+                .map(e -> new RatedTransaction(e))
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getDrafWalletOperationIds(IBillableEntity entityToInvoice, Date firstTransactionDate, Date lastTransactionDate) {
+        return ratedTransactionService.getWalletOperations(entityToInvoice, lastTransactionDate).stream()
+                .filter(wo -> wo.getOperationDate().before(lastTransactionDate) && (wo.getOperationDate().after(firstTransactionDate) || wo.getOperationDate().equals(firstTransactionDate)))
+                .map(e -> e.getId())
+                .collect(Collectors.toList());
+    }
+
+    private List<RatedTransaction> getDraftRatedTransactions(List<Long> walletOperationsIds) {
+        return ratedTransactionService.getWalletOperations(walletOperationsIds)
+                .stream()
+                .map(e -> new RatedTransaction(e))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -794,7 +816,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
             }
 
             // Store RTs, to reach minimum amount per invoice, to DB
-            if (!isDraft && minAmountTransactions != null && !minAmountTransactions.isEmpty()) {
+            if (minAmountTransactions != null && !minAmountTransactions.isEmpty()) {
                 for (RatedTransaction minRatedTransaction : minAmountTransactions) {
                     // This is needed, as even if ratedTransactionService.create() is called and then sql is called to retrieve RTs, these minAmountTransactions will contain
                     // unmanaged
@@ -1041,6 +1063,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
                     // Start of alternative 2 for 4326
                     // ratedTransactionService.updateViaDeleteAndInsert(rtsToUpdate);
                     // End of alternative 2 for 4326
+
                 }
             }
         }
@@ -1177,13 +1200,15 @@ public class InvoiceService extends PersistenceService<Invoice> {
     /**
      * Produce invoice pdf in new transaction.
      *
-     * @param invoiceId id of invoice
+     * @param invoiceId              id of invoice
+     * @param walletOperationIds
      * @throws BusinessException business exception
      */
     @JpaAmpNewTx
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void produceInvoicePdfInNewTransaction(Long invoiceId) throws BusinessException {
+    public void produceInvoicePdfInNewTransaction(Long invoiceId, List<Long> walletOperationIds) throws BusinessException {
         Invoice invoice = findById(invoiceId);
+        invoice.setDraftRatedTransactions(getDraftRatedTransactions(walletOperationIds));
         produceInvoicePdf(invoice);
     }
 
@@ -1803,13 +1828,15 @@ public class InvoiceService extends PersistenceService<Invoice> {
     /**
      * Produce invoice xml in new transaction.
      *
-     * @param invoiceId invoice's id
+     * @param invoiceId         invoice's id
+     * @param draftWalletOperationsId
      * @throws BusinessException business exception
      */
     @JpaAmpNewTx
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void produceInvoiceXmlInNewTransaction(Long invoiceId) throws BusinessException {
+    public void produceInvoiceXmlInNewTransaction(Long invoiceId, List<Long> draftWalletOperationsId) throws BusinessException {
         Invoice invoice = findById(invoiceId);
+        invoice.setDraftRatedTransactions(getDraftRatedTransactions(draftWalletOperationsId));
         produceInvoiceXml(invoice);
     }
 
@@ -2043,7 +2070,12 @@ public class InvoiceService extends PersistenceService<Invoice> {
                 continue;
             }
             try {
-                produceFilesAndAO(produceXml, producePdf, generateAO, invoice.getId(), isDraft);
+                List<Long> drafWalletOperationIds;
+                if(isDraft)
+                   drafWalletOperationIds = getDrafWalletOperationIds(entityToInvoice, generateInvoiceRequestDto.getFirstTransactionDate(), generateInvoiceRequestDto.getLastTransactionDate());
+                else
+                    drafWalletOperationIds = new ArrayList<>();
+                produceFilesAndAO(produceXml, producePdf, generateAO, invoice.getId(), isDraft, drafWalletOperationIds);
             } catch (Exception e) {
                 log.error("Failed to generate XML/PDF files or recorded invoice AO for invoice {}/{}", invoice.getId(), invoice.getInvoiceNumberOrTemporaryNumber(), e);
             }
@@ -2121,13 +2153,13 @@ public class InvoiceService extends PersistenceService<Invoice> {
      * @throws InvoiceExistException  Invoice already exist exception
      * @throws ImportInvoiceException Import invoice exception
      */
-    public void produceFilesAndAO(boolean produceXml, boolean producePdf, boolean generateAO, Long invoiceId, boolean isDraft) throws BusinessException, InvoiceExistException, ImportInvoiceException {
+    public void produceFilesAndAO(boolean produceXml, boolean producePdf, boolean generateAO, Long invoiceId, boolean isDraft, List<Long> draftWalletOperationIds) throws BusinessException, InvoiceExistException, ImportInvoiceException {
 
         if (produceXml) {
-            invoiceService.produceInvoiceXmlInNewTransaction(invoiceId);
+            invoiceService.produceInvoiceXmlInNewTransaction(invoiceId, draftWalletOperationIds);
         }
         if (producePdf) {
-            invoiceService.produceInvoicePdfInNewTransaction(invoiceId);
+            invoiceService.produceInvoicePdfInNewTransaction(invoiceId, draftWalletOperationIds);
         }
         if (generateAO && !isDraft) {
             invoiceService.generateRecordedInvoiceAO(invoiceId);
