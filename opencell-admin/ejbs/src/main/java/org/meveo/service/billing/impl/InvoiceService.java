@@ -1178,6 +1178,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
     /**
      * Produce invoice's PDF file and update invoice record in DB.
      *
+     *
      * @param invoice Invoice
      * @return Update invoice entity
      * @throws BusinessException business exception
@@ -2105,7 +2106,6 @@ public class InvoiceService extends PersistenceService<Invoice> {
         return invoices;
     }
 
-
     /**
      * Produce XML and PDF files and AO.
      *
@@ -2360,7 +2360,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
     /**
      * Assign invoice number .
      *
-     * @param invoiceId            invoice id
+     * @param invoiceId invoice id
      * @param invoicesToNumberInfo instance of InvoicesToNumberInfo
      * @throws BusinessException business exception
      */
