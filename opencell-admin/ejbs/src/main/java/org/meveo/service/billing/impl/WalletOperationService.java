@@ -52,6 +52,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.meveo.commons.utils.NumberUtils.round;
 
 /**
@@ -928,6 +929,8 @@ public class WalletOperationService extends PersistenceService<WalletOperation> 
      * @return list of walletOperations by ids
      */
     public List<WalletOperation> listByIds(List<Long> ids){
+        if(ids.isEmpty())
+            return emptyList();
         return getEntityManager().createNamedQuery("WalletOperation.listByIds", WalletOperation.class).setParameter("idList", ids)
                 .getResultList();
     }

@@ -681,21 +681,21 @@ public class InvoiceService extends PersistenceService<Invoice> {
     private List<RatedTransaction> getDraftRatedTransactions(IBillableEntity entityToInvoice, Date firstTransactionDate, Date lastTransactionDate) {
         return ratedTransactionService.getWalletOperations(entityToInvoice, lastTransactionDate).stream()
                 .filter(wo -> wo.getOperationDate().before(lastTransactionDate) && (wo.getOperationDate().after(firstTransactionDate) || wo.getOperationDate().equals(firstTransactionDate)))
-                .map(e -> new RatedTransaction(e))
+                .map(RatedTransaction::new)
                 .collect(Collectors.toList());
     }
 
     private List<Long> getDrafWalletOperationIds(IBillableEntity entityToInvoice, Date firstTransactionDate, Date lastTransactionDate) {
         return ratedTransactionService.getWalletOperations(entityToInvoice, lastTransactionDate).stream()
                 .filter(wo -> wo.getOperationDate().before(lastTransactionDate) && (wo.getOperationDate().after(firstTransactionDate) || wo.getOperationDate().equals(firstTransactionDate)))
-                .map(e -> e.getId())
+                .map(BaseEntity::getId)
                 .collect(Collectors.toList());
     }
 
     private List<RatedTransaction> getDraftRatedTransactions(List<Long> walletOperationsIds) {
         return ratedTransactionService.getWalletOperations(walletOperationsIds)
                 .stream()
-                .map(e -> new RatedTransaction(e))
+                .map(RatedTransaction::new)
                 .collect(Collectors.toList());
     }
 
