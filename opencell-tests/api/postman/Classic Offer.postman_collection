@@ -25960,202 +25960,202 @@
 	],
 	"variable": [
 		{
-			"id": "d496bd15-d5a3-4044-aaa9-5106dd6e4777",
+			"id": "a059d380-e99e-4ef3-98d1-734f920ff842",
 			"key": "opencell.base",
 			"value": "https://vnn.d2.opencell.work/opencell"
 		},
 		{
-			"id": "9f83ddf8-a8f2-497d-9dd4-ba2f29a3aa93",
+			"id": "45017025-a088-488e-9bf5-1ed057ea2687",
 			"key": "opencell.url",
 			"value": "{{opencell.base}}/api/rest"
 		},
 		{
-			"id": "335a9a66-2125-4025-86fb-aeb5d2698a31",
+			"id": "a864c6f5-089b-4a49-9cd3-06f23126fc79",
 			"key": "adminUsername",
 			"value": "opencell.superadmin"
 		},
 		{
-			"id": "59cbdce4-dcc8-4605-b3af-95bdac13d66a",
+			"id": "6a754222-86ef-48a0-84ec-50d863dd12b2",
 			"key": "adminPassword",
 			"value": "opencell.superadmin"
 		},
 		{
-			"id": "0b6d34cf-86db-4b3c-82e8-4dc9f0ad33e8",
+			"id": "08582004-71f7-4906-8850-b9a91805bee0",
 			"key": "provideraddrName",
 			"value": "opencell"
 		},
 		{
-			"id": "32f167eb-4c6a-432a-86f4-ad911b164368",
+			"id": "366e8291-def7-4554-b24a-9986624ba6ef",
 			"key": "MMUsername",
 			"value": "opencell.marketingmanager"
 		},
 		{
-			"id": "0cd9162c-f98a-475d-9223-6cfe38bc9225",
+			"id": "376bddf0-266f-4196-9993-52c288b58aee",
 			"key": "MMPassword",
 			"value": "opencell.marketingmanager"
 		},
 		{
-			"id": "addadcce-3400-4789-a3de-474d60254534",
+			"id": "c2149306-84f5-4b4f-99e0-111a58746724",
 			"key": "provider",
 			"value": "DEMO"
 		},
 		{
-			"id": "049bd67a-66e6-457d-b7ba-44b5c98b262d",
+			"id": "018746c5-184d-4382-9bd0-2390ae0d05b1",
 			"key": "providerAddrLine1",
 			"value": "14 rue Crespin du Gast"
 		},
 		{
-			"id": "2347f9d8-2be1-46c9-9475-ce48acd799cc",
+			"id": "8d3e8d2d-a436-4033-8418-6eea549f2940",
 			"key": "providerAddrLine2",
 			"value": "3rd floor"
 		},
 		{
-			"id": "e1643fe3-d5db-4b68-9fbb-8de9934624c2",
+			"id": "94e1e67b-ae21-4f92-b428-cc1a34347753",
 			"key": "providerAddrZip",
 			"value": "75011"
 		},
 		{
-			"id": "0fe1833f-1a58-408d-8792-610d3d6f72c4",
+			"id": "e8d71b5c-227d-44d1-9ba5-1fa5ecabe815",
 			"key": "providerAddrCity",
 			"value": "Paris"
 		},
 		{
-			"id": "19d8c325-fae5-480e-b8c3-4078bbc02a4b",
+			"id": "80c6511a-2d12-4310-9e95-5b188e308019",
 			"key": "providerAddrPhone",
 			"value": "+00 123 456 798"
 		},
 		{
-			"id": "835d42b3-e8f2-4514-83cf-4050ff288110",
+			"id": "53fb03a8-62e3-49a6-a0b2-7a2d9e28465b",
 			"key": "providerAddrEmail",
 			"value": "contact@opencellsoft.com"
 		},
 		{
-			"id": "de5f4b2e-892d-48b3-8f63-1cd1f6e55098",
+			"id": "d9a026ea-170f-45a3-bc37-00e80d662f71",
 			"key": "CCUsername",
 			"value": "opencell.customercare"
 		},
 		{
-			"id": "4ca7dd14-972b-462e-9263-3edc85eacc73",
+			"id": "ca416e88-9eeb-4451-8fb9-910bd18a728a",
 			"key": "CCPassword",
 			"value": "opencell.customercare"
 		},
 		{
-			"id": "c76bd963-3784-4fb9-8694-cad4548aa931",
+			"id": "4d18e9d0-ee9c-4051-9448-76cc168b3496",
 			"key": "SCUsername",
 			"value": "DEMO.CLASSIC"
 		},
 		{
-			"id": "222123d3-af7a-4d2f-bd54-0c0fefbdc183",
+			"id": "339f8ec4-3f34-4b5b-89e5-e91eeab70c4b",
 			"key": "SCPassword",
 			"value": "DEMO.CLASSIC"
 		},
 		{
-			"id": "a39d0140-8d86-44d5-afd8-82af53d342a4",
+			"id": "24956f72-94a7-4a39-a0d0-524fcd11400c",
 			"key": "CCLastname",
 			"value": "Doe"
 		},
 		{
-			"id": "7b1a22c3-b400-40fb-b55a-1126c43d26f1",
+			"id": "07dac210-65f3-4661-9d35-23420ab08d5b",
 			"key": "CCFirstname",
 			"value": "Jeanette"
 		},
 		{
-			"id": "af07f6c5-3371-4dfe-8ecf-4e28589cf9b2",
+			"id": "6a2abec3-1318-465b-be99-4c47836bdda3",
 			"key": "SCLastname",
 			"value": "Clive"
 		},
 		{
-			"id": "9504b2e4-7e49-417f-bc94-6b1d7f1158d6",
+			"id": "f91caf0c-6458-4650-b4c1-a827a79acde0",
 			"key": "SCFirstname",
 			"value": "Gildarts"
 		},
 		{
-			"id": "bfbbb4bb-48a3-45e6-bf14-971b0daa778e",
+			"id": "e0e97919-a7ce-4097-88b3-7eb43d8bd17e",
 			"key": "reseller1",
 			"value": "Reseller1"
 		},
 		{
-			"id": "06689ff3-acad-4d91-8c6e-3df11d1a968e",
+			"id": "9afbd445-3f95-4ed1-8a09-91f92321ec62",
 			"key": "reseller2",
 			"value": "Reseller2"
 		},
 		{
-			"id": "a576c451-ac9e-4c7e-96b9-58375e23c565",
+			"id": "a53b9b56-60ce-428f-bf21-20598aa3aa54",
 			"key": "ingenico.merchantId",
 			"value": "XCSmoovetest003"
 		},
 		{
-			"id": "80266195-8f05-4f02-8d5c-44d7c04b5667",
+			"id": "863d55b3-af10-48d1-b068-c73770823339",
 			"key": "ingenico.SecretApiKey",
 			"value": "+bEfYyY1YVUP2J/80yZOxD4Jj+/N/j2s/GcoY7F5rAg="
 		},
 		{
-			"id": "0cd9ebf7-c870-416b-b461-811f31c1c6c8",
+			"id": "6413d0f4-a3ea-4c3e-9a3b-fb68b49b9468",
 			"key": "ingenico.ApiKeyId",
 			"value": "85c81e73917d806c"
 		},
 		{
-			"id": "83611103-3e62-4c5e-a047-7d6b77dc3032",
+			"id": "759fd65f-0fdb-4922-bff5-77bc13fc7ba3",
 			"key": "slimPay.userId",
 			"value": "opencelldev"
 		},
 		{
-			"id": "cfab9b22-4053-438b-b9fb-2f538179361c",
+			"id": "111cf4aa-1436-47c7-b568-2bd699dcd750",
 			"key": "slimPay.secretKey",
 			"value": "OSpPCH4jYWfg7SRT53d5OTNCIcodepvfpfKHULQi"
 		},
 		{
-			"id": "629e284d-9ac2-4e7b-808f-dd5f3336de8f",
+			"id": "f71d73a5-40e6-4de9-b06d-e0ef3ae287f6",
 			"key": "templateCode",
 			"value": "CLASSIC"
 		},
 		{
-			"id": "3e446192-02c7-4935-ab4b-e40ff8ac8061",
+			"id": "a7ed282c-5fdc-498a-a708-90c00bcdbbf6",
 			"key": "templateLabel",
 			"value": "Generic"
 		},
 		{
-			"id": "7d7fe220-c03b-4747-a019-0eed4fb23e84",
+			"id": "b92c1036-b348-4f18-91c7-bc220b9cdfaa",
 			"key": "invoiceNumber1",
 			"value": "INV-CLASSIC-000000003"
 		},
 		{
-			"id": "84c23000-0eb8-49e5-a063-3369ed6da982",
+			"id": "46323e2b-4475-46b6-a90b-abec693781a2",
 			"key": "invoiceNumber2",
 			"value": "INV-CLASSIC-000000004"
 		},
 		{
-			"id": "dd0cde0a-6458-42d5-88bd-cda431de516a",
+			"id": "f328addc-d6f0-4991-bca7-b234e86b8816",
 			"key": "valid_from",
 			"value": "2020-01-01"
 		},
 		{
-			"id": "9fdfe613-acad-4da3-8626-df3407a9621b",
+			"id": "f9b292a0-ea86-4f30-b5b1-eff5d42eb95e",
 			"key": "valid_to",
 			"value": "2020-12-01"
 		},
 		{
-			"id": "00f5abbd-cba0-453f-8f95-4b8aed21f87b",
+			"id": "bd907b95-fd8d-42b8-b575-b89ae614259f",
 			"key": "userAccount",
 			"value": "DEMO.partner.CLASSIC"
 		},
 		{
-			"id": "0d5312c7-8f15-46d3-a36e-a3ea04b94a69",
+			"id": "0dd75181-0ad3-47d5-b156-91c5fbfbce3d",
 			"key": "currency",
 			"value": "USD"
 		},
 		{
-			"id": "f4fc972d-7e5e-410b-8075-41544d16cad4",
+			"id": "b171abaa-55d9-4f57-be1d-5b16f23b8ac5",
 			"key": "language",
 			"value": "ENG"
 		},
 		{
-			"id": "1e8ba7c5-a3dc-4b8b-b6c3-7f406cf14561",
+			"id": "8dd86b9a-f869-4376-9781-101f190308dc",
 			"key": "index",
 			"value": "0"
 		},
 		{
-			"id": "1cdc8f55-4cd6-4cac-a1d2-c8b53f2198bb",
+			"id": "48955349-2820-434e-9dd2-fece60b357bd",
 			"key": "calenderCode",
 			"value": ""
 		}
