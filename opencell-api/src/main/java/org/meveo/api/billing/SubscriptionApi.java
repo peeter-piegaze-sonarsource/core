@@ -586,7 +586,7 @@ public class SubscriptionApi extends BaseApi {
         List<ServiceTemplate> serviceToActivate = new ArrayList<>();
         List<ServiceToActivateDto> servicesToActivateDto = new ArrayList<>();
         getServiceToActivate(activateServicesDto.getServicesToActivateDto().getService(), serviceToActivate, servicesToActivateDto);
-        subscriptionService.checkCompatibilityOfferServices(subscription, serviceToActivate);
+        subscriptionService.checkCompatibilityOfferServices(subscription, serviceToActivate, true);
 
         // Find instantiated or instantiate if not instantiated yet
         List<ServiceInstance> serviceInstances = new ArrayList<>();
@@ -862,7 +862,7 @@ public class SubscriptionApi extends BaseApi {
             serviceToInstantiates.add(serviceTemplate);
         }
 
-        subscriptionService.checkCompatibilityOfferServices(subscription, serviceToInstantiates);
+        subscriptionService.checkCompatibilityOfferServices(subscription, serviceToInstantiates, true);
 
         // instantiate
         for (ServiceToInstantiateDto serviceToInstantiateDto : serviceToInstantiateDtos) {
