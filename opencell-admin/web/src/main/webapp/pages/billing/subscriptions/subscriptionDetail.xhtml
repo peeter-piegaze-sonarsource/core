@@ -304,6 +304,7 @@
                         <h:outputText value="#{messages['subscription.subscribableServices']}:" />
 
                         <h:form id="ST_results2_form" prependId="false">
+                            <p:messages id="InstantiateMessages"></p:messages>
                             <p:outputPanel id="ST_results2_formPanel">
                                 <p:dataTable value="#{subscriptionBean.serviceTemplates}" var="entity" rowKey="#{entity.id}" resizableColumns="true"
                                     selection="#{subscriptionBean.serviceTemplates.selectedItems}" editable="true" editMode="cell">
@@ -331,7 +332,7 @@
                                 <p:outputLabel for="quantity" value="#{messages['serviceInstance.quantity']}:"></p:outputLabel>
                                 <p:inputText id="quantity" value="#{subscriptionBean.quantity}" size="5" maxlength="5" />
                                 <p:commandButton id="cbutton" action="#{subscriptionBean.instanciateManyServices}" value="#{messages['button.instanciateButton']}"
-                                    update=":subscriptionTab" disabled="#{subscriptionBean.entity.status != 'ACTIVE' and subscriptionBean.entity.status != 'CREATED'}" />
+                                    update=":subscriptionTab:srvInstansFrm :subscriptionTab:ST_results2_form" disabled="#{subscriptionBean.entity.status != 'ACTIVE' and subscriptionBean.entity.status != 'CREATED'}" />
                             </h:panelGroup>
                         </h:form>
                     </p:tab>

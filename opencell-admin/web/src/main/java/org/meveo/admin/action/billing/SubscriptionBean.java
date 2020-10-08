@@ -584,9 +584,24 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
 
         log.debug("Instantiating serviceTemplates {}", serviceTemplates.getSelectedItemsAsList());
 
-        OfferTemplate offerTemplate = ((Subscription) entity).getOffer();
+        //OfferTemplate offerTemplate = ((Subscription) entity).getOffer();
+        try {
+        	subscriptionService.checkCompatibilityOfferServices(((Subscription) entity), serviceTemplates.getSelectedItemsAsList());
+        }catch(BusinessException e) {
+        	if(e.getMessage().contains(";")) {
+	           	 String[] codes = e.getMessage().split(";");
+	           	 messages.error(new BundleKey("messages", "serviceincompatible.error.message"), codes[0], codes[1]);
+        	}else {
+        		messages.error(new BundleKey("messages", "instanciation.error"));
+        	}
+            entity = subscriptionService.refreshOrRetrieve(entity);
 
-        subscriptionService.checkCompatibilityOfferServices(((Subscription) entity), serviceTemplates.getSelectedItemsAsList());
+            initServiceInstances(entity.getServiceInstances());
+            initServiceTemplates();
+            resetChargesDataModels();
+            keepCurrentTab();
+        	return;
+        }
 
         for (ServiceTemplate serviceTemplate : serviceTemplates.getSelectedItemsAsList()) {
 
@@ -1227,7 +1242,7 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
 
     public List<DiscountPlan> getAllowedDiscountPlans() {
         if (entity.getOffer() != null) {
-            List<DiscountPlan> allowedDiscountPlans = entity.getOffer().getAllowedDiscountPlans();
+            List<DiscountPlan> allowedDiscountPlans = new ArrayList<>(entity.getOffer().getAllowedDiscountPlans());
             if (entity.getUserAccount() != null) {
                 BillingAccount billingAccount = billingAccountService.retrieveIfNotManaged(entity.getUserAccount().getBillingAccount());
                 billingAccount.getDiscountPlanInstances().forEach(dpi -> allowedDiscountPlans.remove(dpi.getDiscountPlan()));

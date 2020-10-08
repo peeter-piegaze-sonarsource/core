@@ -717,7 +717,8 @@ public class SubscriptionService extends BusinessService<Subscription> {
                 if (!serviceTemplateOther.getCode().equals(serviceTemplate.getCode())) {
                     for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                         if (serviceTemplateOther.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                            throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
+//                            throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
+                        	throw new BusinessException(serviceTemplateIncompatible.getCode() + ";" + serviceTemplate.getCode());
                         }
                     }
                 }
@@ -727,7 +728,8 @@ public class SubscriptionService extends BusinessService<Subscription> {
             for (ServiceInstance subscribedService : serviceInstances) {
                 for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                     if (subscribedService.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                        throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
+//                        throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
+                    	throw new BusinessException(serviceTemplateIncompatible.getCode() + ";" + serviceTemplate.getCode());
                     }
                 }
             }
