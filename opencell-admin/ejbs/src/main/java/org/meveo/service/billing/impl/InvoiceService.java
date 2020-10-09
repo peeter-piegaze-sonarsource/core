@@ -2467,6 +2467,12 @@ public class InvoiceService extends PersistenceService<Invoice> {
     public void assignInvoiceNumber(Long invoiceId, InvoicesToNumberInfo invoicesToNumberInfo) throws BusinessException {
         Invoice invoice = findById(invoiceId);
         assignInvoiceNumberFromReserve(invoice, invoicesToNumberInfo);
+
+        BillingAccount billingAccount = invoice.getBillingAccount();
+
+        billingAccount = incrementBAInvoiceDate(invoice.getBillingRun(), billingAccount);
+        // /!\ DO NOT REMOVE THIS LINE
+        billingAccount = billingAccountService.refreshOrRetrieve(billingAccount);
         invoice = update(invoice);
     }
 
