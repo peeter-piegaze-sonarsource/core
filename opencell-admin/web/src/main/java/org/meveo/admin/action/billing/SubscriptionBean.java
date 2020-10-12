@@ -48,6 +48,7 @@ import org.meveo.admin.exception.IncorrectServiceInstanceException;
 import org.meveo.admin.exception.IncorrectSusbcriptionException;
 import org.meveo.admin.util.pagination.EntityListDataModelPF;
 import org.meveo.admin.web.interceptor.ActionMethod;
+import org.meveo.api.exception.IncompatibleServiceException;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.commons.utils.StringUtils;
@@ -579,6 +580,7 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
             quantity = BigDecimal.ONE;
         }
         boolean isChecked = false;
+        boolean throwException = false;
 
         entity = subscriptionService.refreshOrRetrieve(entity);
 
@@ -587,23 +589,24 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
         //OfferTemplate offerTemplate = ((Subscription) entity).getOffer();
         try {
         	subscriptionService.checkCompatibilityOfferServices(((Subscription) entity), serviceTemplates.getSelectedItemsAsList());
-        }catch(BusinessException e) {
-        	if(e.getMessage().split(" ").length == 2) {
-        		var context = FacesContext.getCurrentInstance();
-        		String serviceIncompatible = context.getApplication().getResourceBundle(context, "messages").getString("serviceincompatible.error.message");
-	           	 messages.error(serviceIncompatible + " " + e.getMessage());
-        	}else {
-        		messages.error(new BundleKey("messages", "instanciation.error"));
+        }catch(IncompatibleServiceException e) {
+    		var context = FacesContext.getCurrentInstance();
+    		String serviceIncompatible = context.getApplication().getResourceBundle(context, "messages").getString("serviceincompatible.error.message");
+           	messages.error(serviceIncompatible + " " + e.getMessage());
+           	throwException = true;
+        }catch(BusinessException bs) {
+        	messages.error(new BundleKey("messages", "instanciation.error"));
+        	throwException = true;
+        }finally {
+        	if(throwException) {
+    	        entity = subscriptionService.refreshOrRetrieve(entity);
+                initServiceInstances(entity.getServiceInstances());
+                initServiceTemplates();
+                resetChargesDataModels();
+                keepCurrentTab();
+                return;
         	}
-            entity = subscriptionService.refreshOrRetrieve(entity);
-
-            initServiceInstances(entity.getServiceInstances());
-            initServiceTemplates();
-            resetChargesDataModels();
-            keepCurrentTab();
-        	return;
         }
-
         for (ServiceTemplate serviceTemplate : serviceTemplates.getSelectedItemsAsList()) {
 
             String descriptionOverride = serviceTemplate.getDescriptionOverride();

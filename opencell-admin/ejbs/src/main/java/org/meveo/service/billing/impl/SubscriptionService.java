@@ -39,6 +39,7 @@ import org.meveo.admin.exception.ElementNotResiliatedOrCanceledException;
 import org.meveo.admin.exception.IncorrectServiceInstanceException;
 import org.meveo.admin.exception.IncorrectSusbcriptionException;
 import org.meveo.admin.exception.ValidationException;
+import org.meveo.api.exception.IncompatibleServiceException;
 import org.meveo.audit.logging.annotations.MeveoAudit;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.PersistenceUtils;
@@ -718,7 +719,7 @@ public class SubscriptionService extends BusinessService<Subscription> {
                 if (!serviceTemplateOther.getCode().equals(serviceTemplate.getCode())) {
                     for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                         if (serviceTemplateOther.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                        	throw new BusinessException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
+                        	throw new IncompatibleServiceException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
                         }
                     }
                 }
@@ -728,7 +729,7 @@ public class SubscriptionService extends BusinessService<Subscription> {
             for (ServiceInstance subscribedService : serviceInstances) {
                 for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                     if (subscribedService.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                    	throw new BusinessException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
+                    	throw new IncompatibleServiceException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
                     }
                 }
             }
@@ -743,7 +744,7 @@ public class SubscriptionService extends BusinessService<Subscription> {
             for (ServiceTemplate serviceTemplateSelectedItem : selectedItemsAsList) {
                 for (ServiceTemplate serviceTemplateSubscribedServiceIncompatible : serviceTemplateSubscribedServiceIncompatibles) {
                     if (serviceTemplateSelectedItem.getCode().equals(serviceTemplateSubscribedServiceIncompatible.getCode())) {
-                    	throw new BusinessException(serviceTemplateSelectedItem.getCode() + " " + subscribedService.getCode());
+                    	throw new IncompatibleServiceException(serviceTemplateSelectedItem.getCode() + " " + subscribedService.getCode());
                     }
                 }
             }
