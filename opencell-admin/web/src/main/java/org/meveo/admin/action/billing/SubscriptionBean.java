@@ -588,9 +588,10 @@ public class SubscriptionBean extends CustomFieldBean<Subscription> {
         try {
         	subscriptionService.checkCompatibilityOfferServices(((Subscription) entity), serviceTemplates.getSelectedItemsAsList());
         }catch(BusinessException e) {
-        	if(e.getMessage().contains(";")) {
-	           	 String[] codes = e.getMessage().split(";");
-	           	 messages.error(new BundleKey("messages", "serviceincompatible.error.message"), codes[0], codes[1]);
+        	if(e.getMessage().split(" ").length == 2) {
+        		var context = FacesContext.getCurrentInstance();
+        		String serviceIncompatible = context.getApplication().getResourceBundle(context, "messages").getString("serviceincompatible.error.message");
+	           	 messages.error(serviceIncompatible + " " + e.getMessage());
         	}else {
         		messages.error(new BundleKey("messages", "instanciation.error"));
         	}

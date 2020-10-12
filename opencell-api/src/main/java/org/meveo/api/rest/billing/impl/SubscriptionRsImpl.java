@@ -24,6 +24,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 
+import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.billing.SubscriptionApi;
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.ActionStatusEnum;
@@ -123,6 +124,11 @@ public class SubscriptionRsImpl extends BaseRs implements SubscriptionRs {
         try {
             subscriptionApi.activateServices(postData);
         } catch (Exception e) {
+        	if(e instanceof BusinessException) {
+        		if(e.getMessage().split(" ").length == 2) {
+                    processException(new Exception("Service Incompatibility " + e.getMessage()), result);
+        		}
+        	}
             processException(e, result);
         }
 

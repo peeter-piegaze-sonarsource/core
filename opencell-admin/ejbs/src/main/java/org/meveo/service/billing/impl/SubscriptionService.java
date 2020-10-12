@@ -692,10 +692,9 @@ public class SubscriptionService extends BusinessService<Subscription> {
      *
      * @param subscription
      * @param selectedItemsAsList
-     * @param fromAPI
      * @throws BusinessException
      */
-    public void checkCompatibilityOfferServices(Subscription subscription, List<ServiceTemplate> selectedItemsAsList, boolean fromAPI) throws BusinessException {
+    public void checkCompatibilityOfferServices(Subscription subscription, List<ServiceTemplate> selectedItemsAsList) throws BusinessException {
 
 
         if (subscription == null) {
@@ -719,9 +718,7 @@ public class SubscriptionService extends BusinessService<Subscription> {
                 if (!serviceTemplateOther.getCode().equals(serviceTemplate.getCode())) {
                     for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                         if (serviceTemplateOther.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                        	if(fromAPI)
-                        		throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
-                        	throw new BusinessException(serviceTemplateIncompatible.getCode() + ";" + serviceTemplate.getCode());
+                        	throw new BusinessException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
                         }
                     }
                 }
@@ -731,9 +728,7 @@ public class SubscriptionService extends BusinessService<Subscription> {
             for (ServiceInstance subscribedService : serviceInstances) {
                 for (ServiceTemplate serviceTemplateIncompatible : serviceTemplateIncompatibles) {
                     if (subscribedService.getCode().equals(serviceTemplateIncompatible.getCode())) {
-                    	if(fromAPI)
-                    		throw new BusinessException("Services Incompatibility between " + serviceTemplateIncompatible.getCode() + " and " + serviceTemplate.getCode());
-                    	throw new BusinessException(serviceTemplateIncompatible.getCode() + ";" + serviceTemplate.getCode());
+                    	throw new BusinessException(serviceTemplateIncompatible.getCode() + " " + serviceTemplate.getCode());
                     }
                 }
             }
@@ -748,24 +743,12 @@ public class SubscriptionService extends BusinessService<Subscription> {
             for (ServiceTemplate serviceTemplateSelectedItem : selectedItemsAsList) {
                 for (ServiceTemplate serviceTemplateSubscribedServiceIncompatible : serviceTemplateSubscribedServiceIncompatibles) {
                     if (serviceTemplateSelectedItem.getCode().equals(serviceTemplateSubscribedServiceIncompatible.getCode())) {
-                    	if(fromAPI)
-                    		throw new BusinessException("Services Incompatibility between " + serviceTemplateSelectedItem.getCode() + " and " + subscribedService.getCode());
-                    	throw new BusinessException(serviceTemplateSelectedItem.getCode() + ";" + subscribedService.getCode());
+                    	throw new BusinessException(serviceTemplateSelectedItem.getCode() + " " + subscribedService.getCode());
                     }
                 }
             }
         }
     
-    }
-    /**
-     * check compatibility of services before instantiation
-     *
-     * @param subscription
-     * @param selectedItemsAsList
-     * @throws BusinessException
-     */
-    public void checkCompatibilityOfferServices(Subscription subscription, List<ServiceTemplate> selectedItemsAsList) throws BusinessException {
-    	checkCompatibilityOfferServices(subscription, selectedItemsAsList, false);
     }
 
     /**
