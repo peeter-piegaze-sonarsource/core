@@ -39,6 +39,10 @@ import java.util.Map;
 @Stateless
 public class DataCollectorJobBean extends BaseJobBean {
 
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+    public static final String INPUT_DATE_SEPARATOR = "=";
+    public static final String SEPARATOR = ";";
+
     @Inject
     private DataCollectorService dataCollectorService;
 
@@ -51,10 +55,10 @@ public class DataCollectorJobBean extends BaseJobBean {
         try {
             String report;
             if (!StringUtils.isBlank(parameter)) {
-                String[] parameters =  parameter.split(";");
+                String[] parameters =  parameter.split(SEPARATOR);
                 if(parameters.length > 1) {
-                    Date from = guessDate(parameters[0].split("=")[1], "yyyy-MM-dd");
-                    Date to = guessDate(parameters[1].split("=")[1], "yyyy-MM-dd");
+                    Date from = guessDate(parameters[0].split(INPUT_DATE_SEPARATOR)[1], DATE_PATTERN);
+                    Date to = guessDate(parameters[1].split(INPUT_DATE_SEPARATOR)[1], DATE_PATTERN);
                     log.info(format("Run DataCollector request between :%s and %s", from, to));
                     Map<String, Integer> executionResult = dataCollectorService.execute(from, to);
                     result.setNbItemsToProcess(executionResult.size());
