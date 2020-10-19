@@ -40,8 +40,6 @@ public class DataCollectorBean extends UpdateMapTypeFieldBean<DataCollector> {
 
     protected Map<String, List<HashMap<String, String>>> mapTypeFieldValues = new HashMap<>();
 
-    private Map<String, String> aggregationFields;
-
     public DataCollectorBean() {
         super(DataCollector.class);
     }
@@ -49,7 +47,6 @@ public class DataCollectorBean extends UpdateMapTypeFieldBean<DataCollector> {
     @Override
     public DataCollector initEntity() {
         DataCollector dataCollector = super.initEntity();
-        this.aggregationFields = aggregationFields = new HashMap<>();
         extractMapTypeFieldFromEntity(dataCollector.getAliases(), "aliases");
         return dataCollector;
     }
@@ -101,10 +98,6 @@ public class DataCollectorBean extends UpdateMapTypeFieldBean<DataCollector> {
         }
     }
 
-    public void executeAggregation() {
-        dataCollectorService.aggregatedData(entity.getCustomTableCode(), entity.getCode(), aggregationFields, null);
-    }
-
     public void removeMapTypeFieldValue(String fieldName, Map<String, String> valueInfo) {
         mapTypeFieldValues.get(fieldName).remove(valueInfo);
     }
@@ -115,13 +108,5 @@ public class DataCollectorBean extends UpdateMapTypeFieldBean<DataCollector> {
 
     public void setMapTypeFieldValues(Map<String, List<HashMap<String, String>>> mapTypeFieldValues) {
         this.mapTypeFieldValues = mapTypeFieldValues;
-    }
-
-    public Map<String, String> getAggregationFields() {
-        return aggregationFields;
-    }
-
-    public void setAggregationFields(Map<String, String> aggregationFields) {
-        this.aggregationFields = aggregationFields;
     }
 }

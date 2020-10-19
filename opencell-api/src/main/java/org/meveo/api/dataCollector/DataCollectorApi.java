@@ -34,7 +34,7 @@ public class DataCollectorApi extends BaseApi {
 
     public DataCollectorDto create(DataCollectorDto postData) throws MeveoApiException, BusinessException {
         if(postData.getEntityTemplateDto() == null && postData.getCustomTableCode() == null) {
-            throw new BusinessException("Custom table is missing");
+            throw new MeveoApiException("Custom table is missing");
         }
         String customTableCode = customTableCode(postData);
         DataCollector dataCollector = from(postData, customTableCode);
