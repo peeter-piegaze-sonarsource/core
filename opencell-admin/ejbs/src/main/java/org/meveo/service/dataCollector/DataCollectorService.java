@@ -25,7 +25,8 @@ import java.util.Map;
 @Stateless
 public class DataCollectorService extends BusinessService<DataCollector> {
 
-    public static final String META_DATA_QUERY_STRING = "SELECT column_name \nFROM information_schema.columns \nWHERE table_name = :table_name";
+    private static final String META_DATA_QUERY_STRING = "SELECT column_name \nFROM information_schema.columns \nWHERE table_name = :table_name";
+    private static final String NAMED_QUERY_NAME = "DataCollector.dataCollectorsBetween";
 
     @Inject
     private CustomEntityTemplateService customEntityTemplateService;
@@ -110,7 +111,7 @@ public class DataCollectorService extends BusinessService<DataCollector> {
 
     private String toQueryField(String expression, String function, Map<Object, Object> context) {
         String result = evaluateExpression(expression, context, String.class);
-        return function + "(" + "here" + ") as " + result + function.toUpperCase();
+        return function + "(" + result + ") as " + result + function.toUpperCase();
     }
 
     private void addFields(StringBuilder query, List<String> fields) {
@@ -125,8 +126,7 @@ public class DataCollectorService extends BusinessService<DataCollector> {
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public Map<String, Integer> execute(Date from, Date to) {
-        List<DataCollector> collectors = listByNamedQuery("DataCollector.dataCollectorsBetween",
-                "from", from, "to" , to);
+        List<DataCollector> collectors = listByNamedQuery(NAMED_QUERY_NAME, "from", from, "to" , to);
         Map<String, Integer> result = new HashMap<>();
         for (DataCollector dataCollector : collectors) {
             result.put(dataCollector.getCode(), executeQuery(dataCollector.getCode()));

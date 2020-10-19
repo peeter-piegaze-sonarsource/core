@@ -27,7 +27,6 @@ public class DataCollectorRsImpl  extends BaseRs implements DataCollectorRs {
     @Override
     public ActionStatus create(DataCollectorDto postData) {
         ActionStatus result = new ActionStatus(SUCCESS, "");
-
         try {
             DataCollectorDto dto = dataCollectorApi.create(postData);
             result.setEntityCode(dto.getCode());

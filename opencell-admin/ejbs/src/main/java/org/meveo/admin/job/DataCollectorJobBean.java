@@ -39,9 +39,9 @@ import java.util.Map;
 @Stateless
 public class DataCollectorJobBean extends BaseJobBean {
 
-    public static final String DATE_PATTERN = "yyyy-MM-dd";
-    public static final String INPUT_DATE_SEPARATOR = "=";
-    public static final String SEPARATOR = ";";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final String INPUT_DATE_SEPARATOR = "=";
+    private static final String SEPARATOR = ";";
 
     @Inject
     private DataCollectorService dataCollectorService;
