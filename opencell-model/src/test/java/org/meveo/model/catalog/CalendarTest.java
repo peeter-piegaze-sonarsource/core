@@ -1946,12 +1946,12 @@ public class CalendarTest {
         calendar.addFixedDate(datePeriod1);
         calendar.addFixedDate(datePeriod2);
 
-        Assert.assertNull(calendar.previousCalendarDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 01, 0, 0, 0), calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
-        Assert.assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
-        Assert.assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
-        Assert.assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
+        assertNull(calendar.previousCalendarDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 01, 0, 0, 0), calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
+        assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
+        assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
+        assertNull(calendar.previousCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
     }
 
     @Test
@@ -1965,12 +1965,12 @@ public class CalendarTest {
         calendar.addFixedDate(datePeriod1);
         calendar.addFixedDate(datePeriod2);
 
-        Assert.assertNull(calendar.nextCalendarDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 01, 0, 0, 0), calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
-        Assert.assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
-        Assert.assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 8, 0, 0, 0), calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
-        Assert.assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
+        assertNull(calendar.nextCalendarDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 01, 0, 0, 0), calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
+        assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
+        assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 8, 0, 0, 0), calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
+        assertNull(calendar.nextCalendarDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
     }
 
     @Test
@@ -1984,12 +1984,12 @@ public class CalendarTest {
         calendar.addFixedDate(datePeriod1);
         calendar.addFixedDate(datePeriod2);
 
-        Assert.assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
-        Assert.assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
-        Assert.assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0), calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0), calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 8, 0, 0, 0),calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
+        assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
+        assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
+        assertNull(calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0), calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0), calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 8, 0, 0, 0),calendar.previousPeriodEndDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
     }
     
     @Test
@@ -2003,11 +2003,11 @@ public class CalendarTest {
         calendar.addFixedDate(datePeriod1);
         calendar.addFixedDate(datePeriod2);
 
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
-        Assert.assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
-        Assert.assertNull(calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
-        Assert.assertNull(calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2019, java.util.Calendar.DECEMBER, 31, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.JANUARY, 1, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 1, 0, 0, 0)));
+        assertEquals(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 5, 0, 0, 0), calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 4, 0, 0, 0)));
+        assertNull(calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 6, 0, 0, 0)));
+        assertNull(calendar.nextPeriodStartDate(DateUtils.newDate(2020, java.util.Calendar.FEBRUARY, 9, 0, 0, 0)));
     }
 }

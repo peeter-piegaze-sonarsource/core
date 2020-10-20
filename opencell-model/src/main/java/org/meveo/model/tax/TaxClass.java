@@ -22,14 +22,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.QueryHint;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -38,6 +31,7 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.ISearchable;
+import org.meveo.model.article.Article;
 
 /**
  * Tax class
@@ -61,6 +55,9 @@ public class TaxClass extends BusinessCFEntity implements Serializable, ISearcha
     @Type(type = "json")
     @Column(name = "description_i18n", columnDefinition = "text")
     private Map<String, String> descriptionI18n;
+
+    @OneToOne(mappedBy = "accountingCode")
+    private Article article;
 
     /**
      * @param descriptionI18n Translated descriptions in JSON format with language code as a key and translated description as a value

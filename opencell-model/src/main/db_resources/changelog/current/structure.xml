@@ -3685,5 +3685,140 @@ END $$;]]>
             </column>
         </addColumn>  
     </changeSet>
+    <changeSet id = "#FEAT-761-2020-10-19" author = "ZBariki">
+        <createSequence sequenceName="billing_article_seq" startValue="1" />
+        <createTable tableName="billing_article" >
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_article_pk"/>
+            </column>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_class_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_sub_category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_family_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accounting_code_id" type="bigint" />
+            <column name="cf_values" type="${type.json}" />
+        </createTable>
+
+        <createSequence sequenceName="billing_article_family_seq" startValue="1" />
+        <createTable tableName="billing_article_family" >
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_article_family_pk"/>
+            </column>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accounting_code_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_family_ref_id" type="bigint" />
+        </createTable>
+
+        <createSequence sequenceName="billing_article_mapping_seq" startValue="1" />
+        <createTable tableName="billing_article_mapping" >
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_article_mapping_pk"/>
+            </column>
+            <column name="version" type="int4" />
+            <column name="created" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated" type="datetime" />
+            <column name="creator" type="varchar(100)" />
+            <column name="updater" type="varchar(100)" />
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mapping_script_id" type="bigint" />
+        </createTable>
+        <createSequence sequenceName="billing_article_mapping_line_seq" startValue="1" />
+        <createTable tableName="billing_article_mapping_line">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_article_mapping_line_pk"/>
+            </column>
+            <column name="version" type="int4" />
+            <column name="article_mapping_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_code" type="varchar(255)"/>
+            <column name="service_code" type="varchar(255)"/>
+            <column name="charge_code" type="varchar(255)"/>
+            <column name="parameter_1" type="varchar(255)"/>
+            <column name="parameter_2" type="varchar(255)"/>
+            <column name="parameter_3" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="tax_class_id" baseTableName="billing_article"
+                                 constraintName="fk_billing_article_tax_class" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_tax_class" />
+        <addForeignKeyConstraint baseColumnNames="invoice_sub_category_id" baseTableName="billing_article"
+                                 constraintName="fk_billing_article_invoice_sub_category" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_invoice_sub_cat" />
+        <addForeignKeyConstraint baseColumnNames="article_family_id" baseTableName="billing_article"
+                                 constraintName="fk_billing_article_article_family" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_article_family" />
+        <addForeignKeyConstraint baseColumnNames="accounting_code_id" baseTableName="billing_article"
+                                 constraintName="fk_billing_article_accounting_code" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_accounting_code" />
+
+        <addForeignKeyConstraint baseColumnNames="accounting_code_id" baseTableName="billing_article_family"
+                                 constraintName="fk_billing_article_family_accounting_code" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_accounting_code" />
+        <addForeignKeyConstraint baseColumnNames="article_family_ref_id" baseTableName="billing_article_family"
+                                 constraintName="fk_billing_article_family_article_family_ref" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_article_family" />
+
+        <addForeignKeyConstraint baseColumnNames="mapping_script_id" baseTableName="billing_article_mapping"
+                                 constraintName="fk_billing_article_mapping_mapping_script" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="meveo_script_instance" />
+
+        <addForeignKeyConstraint baseColumnNames="article_mapping_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_article_mapping" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_article_mapping" />
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_article" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_article" />
+    </changeSet>
     
 </databaseChangeLog>

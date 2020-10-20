@@ -18,19 +18,15 @@
 
 package org.meveo.model.billing;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.meveo.model.*;
+import org.meveo.model.article.Article;
+import org.meveo.model.article.ArticleFamily;
 
 /**
  * Use to store Chart of accounts. Previously accounting_code fields.
@@ -92,6 +88,12 @@ public class AccountingCode extends EnableBusinessEntity implements ISearchable{
     @Column(name = "migrated", nullable = false)
     private boolean migrated = false;
 
+    @OneToOne(mappedBy = "accountingCode")
+    private Article article;
+
+    @OneToOne(mappedBy = "accountingCode")
+    private ArticleFamily articleFamily;
+
     public AccountingCode getParentAccountingCode() {
         return parentAccountingCode;
     }
@@ -140,4 +142,19 @@ public class AccountingCode extends EnableBusinessEntity implements ISearchable{
         this.migrated = migrated;
     }
 
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public ArticleFamily getArticleFamily() {
+        return articleFamily;
+    }
+
+    public void setArticleFamily(ArticleFamily articleFamily) {
+        this.articleFamily = articleFamily;
+    }
 }
