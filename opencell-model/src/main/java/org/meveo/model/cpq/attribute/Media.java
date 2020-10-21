@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BaseEntity;
+import org.meveo.model.catalog.ServiceTemplate;
 import org.meveo.model.cpq.Product;
 import org.meveo.model.cpq.enums.MediaTypeEnum;
 
@@ -84,6 +85,15 @@ public class Media extends BaseEntity{
 	@Column(name = "media_path", length = 255)
 	@Size(max = 255)
 	private String mediaPath;
+	
+	
+	 /**
+     * Service template
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_template_id",referencedColumnName = "id")
+    private ServiceTemplate serviceTemplate;
+    
 
 	/**
 	 * @return the product
