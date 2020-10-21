@@ -57,6 +57,8 @@ import org.meveo.model.ModuleItem;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.OperationTypeEnum;
+import org.meveo.model.cpq.Product;
+import org.meveo.model.cpq.enums.RecurrenceDurationEnum;
 import org.meveo.model.finance.RevenueRecognitionRule;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.tax.TaxClass;
@@ -280,7 +282,238 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
 
     @Transient
     private int roundingEdrNbDecimal = BaseEntity.NB_DECIMALS;
+    
+    
+	/**
+	 * offer template
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name =  "offer_template_id", referencedColumnName = "id")
+	@NotNull
+	protected OfferTemplate offerTemplate;
+	
+	
+	/**
+	 * product code
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+	@NotNull
+	protected Product product;
+	
+	
+	 /**
+     * Service template
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_template_id",referencedColumnName = "id")
+    protected ServiceTemplate serviceTemplate;
+	
+    
+	 /**
+     * Price Plan Matrix
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "price_plan_matrix_id",referencedColumnName = "id")
+    protected PricePlanMatrix pricePlanMatrix;
+    
+    
+    /**
+     * recurence duration
+     */
+    @Column(name = "recurrence_duration_enum")
+    protected RecurrenceDurationEnum recurrenceDurationEnum;
+    
+    
+    /**
+     *service duration
+     */
+    @Column(name = "service_durationn", length = 20)
+    @Size(max = 20)
+    protected String serviceDuration;
+    
+    /**
+     * recurrence calendar
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recurrence_calendar")
+    protected Calendar recurrenceCalendar;
+    
+    
+    /**
+     *service duration
+     */
+    @Column(name = "service_calendar", length = 20)
+    @Size(max = 20)
+    protected String serviceCalendar;
+    
+    
+    /**
+     * oneShot type
+     */
+    @Column(name = "oneShot_type")
+    protected OneShotChargeTemplateTypeEnum oneShotChargeTemplateTypeEnum;
+    
+    
+	 /**
+     * Usage Charge Template
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usage_charge_template_id",referencedColumnName = "id")
+    protected UsageChargeTemplate usageChargeTemplate;
+    
+    
+    /**
+     * surchage
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "surcharge")
+    @NotNull
+    protected Boolean surcharge;
+    
+    
+    /**
+     * price matrix
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "priceMatrix")
+    @NotNull
+    protected Boolean priceMatrix;
+    
+    
+    
+    /**
+     *param1
+     */
+    @Column(name = "param1", length = 50)
+    @Size(max = 50)
+    protected String param1;
+    
+    /**
+     *param1 service
+     */
+    @Column(name = "param1", length = 20)
+    @Size(max = 20)
+    protected String param1Service;
+    
+    
+    /**
+     *param2
+     */
+    @Column(name = "param2", length = 50)
+    @Size(max = 50)
+    protected String param2;
+    
+    /**
+     *param2 service
+     */
+    @Column(name = "param2", length = 20)
+    @Size(max = 20)
+    protected String param2Service;
+    
+    /**
+     *param3
+     */
+    @Column(name = "param3", length = 50)
+    @Size(max = 50)
+    protected String param3;
+    
+    /**
+     *param3 service
+     */
+    @Column(name = "param3", length = 20)
+    @Size(max = 20)
+    protected String param3Service;
+    
+    
+    /**
+     *param4
+     */
+    @Column(name = "param4", length = 50)
+    @Size(max = 50)
+    protected String param4;
+    
+    /**
+     *param1 service
+     */
+    @Column(name = "param4", length = 20)
+    @Size(max = 20)
+    protected String param4Service;
+    
+    
+    /**
+     *dimension 1 matrix
+     */
+    @Column(name = "dim1_matrix", length = 50)
+    @Size(max = 50)
+    protected String dim1Matrix;
+    
+    
+    /**
+     * DIMENSION 1 MATRIX BYSTEP
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "dim1_matrix_bystep") 
+    protected Boolean dim1MatrixByStep=false;
+    
+    
+    /**
+     *dimension 1 matrix service
+     */
+    @Column(name = "dim1_matrix_service", length = 20)
+    @Size(max = 20)
+    protected String dim1MatrixService;
+    
+    
+    
+    /**
+     *dimension 2 matrix
+     */
+    @Column(name = "dim2_matrix", length = 50)
+    @Size(max = 50)
+    protected String dim2Matrix;
+    
+    
+    /**
+     * DIMENSION 2 MATRIX BYSTEP
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "dim2_matrix_bystep") 
+    protected Boolean dim2MatrixByStep=false;
+    
+    
+    /**
+     *dimension 2 matrix service
+     */
+    @Column(name = "dim2_matrix_service", length = 20)
+    @Size(max = 20)
+    protected String dim2MatrixService;
+    
+    
+    /**
+     *dimension 3 matrix
+     */
+    @Column(name = "dim3_matrix", length = 50)
+    @Size(max = 50)
+    protected String dim3Matrix;
+    
+    
+    /**
+     * DIMENSION 3 MATRIX BYSTEP
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "dim3_matrix_bystep") 
+    protected Boolean dim3MatrixByStep=false;
+    
+    
+    /**
+     *dimension 3 matrix service
+     */
+    @Column(name = "dim3_matrix_service", length = 20)
+    @Size(max = 20)
+    protected String dim3MatrixService;
 
+    
     public String getInputUnitEL() {
         return inputUnitEL;
     }
@@ -596,4 +829,411 @@ public abstract class ChargeTemplate extends EnableBusinessCFEntity {
         this.sortIndexEl = sortIndexEl;
     }
 
+	/**
+	 * @return the offerTemplate
+	 */
+	public OfferTemplate getOfferTemplate() {
+		return offerTemplate;
+	}
+
+	/**
+	 * @param offerTemplate the offerTemplate to set
+	 */
+	public void setOfferTemplate(OfferTemplate offerTemplate) {
+		this.offerTemplate = offerTemplate;
+	}
+
+	/**
+	 * @return the product
+	 */
+	public Product getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set
+	 */
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	/**
+	 * @return the serviceTemplate
+	 */
+	public ServiceTemplate getServiceTemplate() {
+		return serviceTemplate;
+	}
+
+	/**
+	 * @param serviceTemplate the serviceTemplate to set
+	 */
+	public void setServiceTemplate(ServiceTemplate serviceTemplate) {
+		this.serviceTemplate = serviceTemplate;
+	}
+
+	/**
+	 * @return the pricePlanMatrix
+	 */
+	public PricePlanMatrix getPricePlanMatrix() {
+		return pricePlanMatrix;
+	}
+
+	/**
+	 * @param pricePlanMatrix the pricePlanMatrix to set
+	 */
+	public void setPricePlanMatrix(PricePlanMatrix pricePlanMatrix) {
+		this.pricePlanMatrix = pricePlanMatrix;
+	}
+
+	/**
+	 * @return the recurrenceDurationEnum
+	 */
+	public RecurrenceDurationEnum getRecurrenceDurationEnum() {
+		return recurrenceDurationEnum;
+	}
+
+	/**
+	 * @param recurrenceDurationEnum the recurrenceDurationEnum to set
+	 */
+	public void setRecurrenceDurationEnum(RecurrenceDurationEnum recurrenceDurationEnum) {
+		this.recurrenceDurationEnum = recurrenceDurationEnum;
+	}
+
+	/**
+	 * @return the serviceDuration
+	 */
+	public String getServiceDuration() {
+		return serviceDuration;
+	}
+
+	/**
+	 * @param serviceDuration the serviceDuration to set
+	 */
+	public void setServiceDuration(String serviceDuration) {
+		this.serviceDuration = serviceDuration;
+	}
+
+	/**
+	 * @return the recurrenceCalendar
+	 */
+	public Calendar getRecurrenceCalendar() {
+		return recurrenceCalendar;
+	}
+
+	/**
+	 * @param recurrenceCalendar the recurrenceCalendar to set
+	 */
+	public void setRecurrenceCalendar(Calendar recurrenceCalendar) {
+		this.recurrenceCalendar = recurrenceCalendar;
+	}
+
+	/**
+	 * @return the serviceCalendar
+	 */
+	public String getServiceCalendar() {
+		return serviceCalendar;
+	}
+
+	/**
+	 * @param serviceCalendar the serviceCalendar to set
+	 */
+	public void setServiceCalendar(String serviceCalendar) {
+		this.serviceCalendar = serviceCalendar;
+	}
+
+	/**
+	 * @return the oneShotChargeTemplateTypeEnum
+	 */
+	public OneShotChargeTemplateTypeEnum getOneShotChargeTemplateTypeEnum() {
+		return oneShotChargeTemplateTypeEnum;
+	}
+
+	/**
+	 * @param oneShotChargeTemplateTypeEnum the oneShotChargeTemplateTypeEnum to set
+	 */
+	public void setOneShotChargeTemplateTypeEnum(OneShotChargeTemplateTypeEnum oneShotChargeTemplateTypeEnum) {
+		this.oneShotChargeTemplateTypeEnum = oneShotChargeTemplateTypeEnum;
+	}
+
+	/**
+	 * @return the usageChargeTemplate
+	 */
+	public UsageChargeTemplate getUsageChargeTemplate() {
+		return usageChargeTemplate;
+	}
+
+	/**
+	 * @param usageChargeTemplate the usageChargeTemplate to set
+	 */
+	public void setUsageChargeTemplate(UsageChargeTemplate usageChargeTemplate) {
+		this.usageChargeTemplate = usageChargeTemplate;
+	}
+
+	/**
+	 * @return the surcharge
+	 */
+	public Boolean getSurcharge() {
+		return surcharge;
+	}
+
+	/**
+	 * @param surcharge the surcharge to set
+	 */
+	public void setSurcharge(Boolean surcharge) {
+		this.surcharge = surcharge;
+	}
+
+	/**
+	 * @return the priceMatrix
+	 */
+	public Boolean getPriceMatrix() {
+		return priceMatrix;
+	}
+
+	/**
+	 * @param priceMatrix the priceMatrix to set
+	 */
+	public void setPriceMatrix(Boolean priceMatrix) {
+		this.priceMatrix = priceMatrix;
+	}
+
+	/**
+	 * @return the param1
+	 */
+	public String getParam1() {
+		return param1;
+	}
+
+	/**
+	 * @param param1 the param1 to set
+	 */
+	public void setParam1(String param1) {
+		this.param1 = param1;
+	}
+
+	/**
+	 * @return the param1Service
+	 */
+	public String getParam1Service() {
+		return param1Service;
+	}
+
+	/**
+	 * @param param1Service the param1Service to set
+	 */
+	public void setParam1Service(String param1Service) {
+		this.param1Service = param1Service;
+	}
+
+	/**
+	 * @return the param2
+	 */
+	public String getParam2() {
+		return param2;
+	}
+
+	/**
+	 * @param param2 the param2 to set
+	 */
+	public void setParam2(String param2) {
+		this.param2 = param2;
+	}
+
+	/**
+	 * @return the param2Service
+	 */
+	public String getParam2Service() {
+		return param2Service;
+	}
+
+	/**
+	 * @param param2Service the param2Service to set
+	 */
+	public void setParam2Service(String param2Service) {
+		this.param2Service = param2Service;
+	}
+
+	/**
+	 * @return the param3
+	 */
+	public String getParam3() {
+		return param3;
+	}
+
+	/**
+	 * @param param3 the param3 to set
+	 */
+	public void setParam3(String param3) {
+		this.param3 = param3;
+	}
+
+	/**
+	 * @return the param3Service
+	 */
+	public String getParam3Service() {
+		return param3Service;
+	}
+
+	/**
+	 * @param param3Service the param3Service to set
+	 */
+	public void setParam3Service(String param3Service) {
+		this.param3Service = param3Service;
+	}
+
+	/**
+	 * @return the param4
+	 */
+	public String getParam4() {
+		return param4;
+	}
+
+	/**
+	 * @param param4 the param4 to set
+	 */
+	public void setParam4(String param4) {
+		this.param4 = param4;
+	}
+
+	/**
+	 * @return the param4Service
+	 */
+	public String getParam4Service() {
+		return param4Service;
+	}
+
+	/**
+	 * @param param4Service the param4Service to set
+	 */
+	public void setParam4Service(String param4Service) {
+		this.param4Service = param4Service;
+	}
+
+	/**
+	 * @return the dim1Matrix
+	 */
+	public String getDim1Matrix() {
+		return dim1Matrix;
+	}
+
+	/**
+	 * @param dim1Matrix the dim1Matrix to set
+	 */
+	public void setDim1Matrix(String dim1Matrix) {
+		this.dim1Matrix = dim1Matrix;
+	}
+
+	/**
+	 * @return the dim1MatrixByStep
+	 */
+	public Boolean getDim1MatrixByStep() {
+		return dim1MatrixByStep;
+	}
+
+	/**
+	 * @param dim1MatrixByStep the dim1MatrixByStep to set
+	 */
+	public void setDim1MatrixByStep(Boolean dim1MatrixByStep) {
+		this.dim1MatrixByStep = dim1MatrixByStep;
+	}
+
+	/**
+	 * @return the dim1MatrixService
+	 */
+	public String getDim1MatrixService() {
+		return dim1MatrixService;
+	}
+
+	/**
+	 * @param dim1MatrixService the dim1MatrixService to set
+	 */
+	public void setDim1MatrixService(String dim1MatrixService) {
+		this.dim1MatrixService = dim1MatrixService;
+	}
+
+	/**
+	 * @return the dim2Matrix
+	 */
+	public String getDim2Matrix() {
+		return dim2Matrix;
+	}
+
+	/**
+	 * @param dim2Matrix the dim2Matrix to set
+	 */
+	public void setDim2Matrix(String dim2Matrix) {
+		this.dim2Matrix = dim2Matrix;
+	}
+
+	/**
+	 * @return the dim2MatrixByStep
+	 */
+	public Boolean getDim2MatrixByStep() {
+		return dim2MatrixByStep;
+	}
+
+	/**
+	 * @param dim2MatrixByStep the dim2MatrixByStep to set
+	 */
+	public void setDim2MatrixByStep(Boolean dim2MatrixByStep) {
+		this.dim2MatrixByStep = dim2MatrixByStep;
+	}
+
+	/**
+	 * @return the dim2MatrixService
+	 */
+	public String getDim2MatrixService() {
+		return dim2MatrixService;
+	}
+
+	/**
+	 * @param dim2MatrixService the dim2MatrixService to set
+	 */
+	public void setDim2MatrixService(String dim2MatrixService) {
+		this.dim2MatrixService = dim2MatrixService;
+	}
+
+	/**
+	 * @return the dim3Matrix
+	 */
+	public String getDim3Matrix() {
+		return dim3Matrix;
+	}
+
+	/**
+	 * @param dim3Matrix the dim3Matrix to set
+	 */
+	public void setDim3Matrix(String dim3Matrix) {
+		this.dim3Matrix = dim3Matrix;
+	}
+
+	/**
+	 * @return the dim3MatrixByStep
+	 */
+	public Boolean getDim3MatrixByStep() {
+		return dim3MatrixByStep;
+	}
+
+	/**
+	 * @param dim3MatrixByStep the dim3MatrixByStep to set
+	 */
+	public void setDim3MatrixByStep(Boolean dim3MatrixByStep) {
+		this.dim3MatrixByStep = dim3MatrixByStep;
+	}
+
+	/**
+	 * @return the dim3MatrixService
+	 */
+	public String getDim3MatrixService() {
+		return dim3MatrixService;
+	}
+
+	/**
+	 * @param dim3MatrixService the dim3MatrixService to set
+	 */
+	public void setDim3MatrixService(String dim3MatrixService) {
+		this.dim3MatrixService = dim3MatrixService;
+	}
+
+    
 }
