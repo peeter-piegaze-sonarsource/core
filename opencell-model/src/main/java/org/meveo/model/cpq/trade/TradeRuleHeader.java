@@ -19,6 +19,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.catalog.OfferTemplate;
+import org.meveo.model.catalog.ServiceTemplate;
+import org.meveo.model.cpq.GroupedService;
 import org.meveo.model.cpq.Product;
 import org.meveo.model.cpq.ProductVersion;
 import org.meveo.model.cpq.enums.RuleTypeEnum;
@@ -68,13 +70,29 @@ public class TradeRuleHeader extends BusinessEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cpq_product_version_id", referencedColumnName = "id")
 	private  ProductVersion targetProductVersion;
+	
 
 	/**
-	 * attribute name
+	 * grouped service
 	 */
-	@Column(name = "target_attribute_name", length = 20)
-	@Size(max = 20)
-	private String targetAttributeName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "grouped_service_id", referencedColumnName = "id")
+	private GroupedService groupedService;
+	
+	/**
+	 * service template
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "service_template_id", referencedColumnName = "id")
+	private ServiceTemplate serviceTemplate;
+	
+
+	/**
+	 * target service value
+	 */
+	@Column(name = "target_service_value", length = 255)
+	@Size(max = 255)
+	private String targetServiceValue;
 	
 
 	/**
@@ -154,19 +172,7 @@ public class TradeRuleHeader extends BusinessEntity {
 		this.targetProductVersion = targetProductVersion;
 	}
 
-	/**
-	 * @return the targetAttributeName
-	 */
-	public String getTargetAttributeName() {
-		return targetAttributeName;
-	}
-
-	/**
-	 * @param targetAttributeName the targetAttributeName to set
-	 */
-	public void setTargetAttributeName(String targetAttributeName) {
-		this.targetAttributeName = targetAttributeName;
-	}
+ 
 
 	/**
 	 * @return the targetAttributeValue
@@ -210,11 +216,55 @@ public class TradeRuleHeader extends BusinessEntity {
 		this.ruleEl = ruleEl;
 	}
 
+	
+	
+	/**
+	 * @return the groupedService
+	 */
+	public GroupedService getGroupedService() {
+		return groupedService;
+	}
+
+	/**
+	 * @param groupedService the groupedService to set
+	 */
+	public void setGroupedService(GroupedService groupedService) {
+		this.groupedService = groupedService;
+	}
+
+	/**
+	 * @return the serviceTemplate
+	 */
+	public ServiceTemplate getServiceTemplate() {
+		return serviceTemplate;
+	}
+
+	/**
+	 * @param serviceTemplate the serviceTemplate to set
+	 */
+	public void setServiceTemplate(ServiceTemplate serviceTemplate) {
+		this.serviceTemplate = serviceTemplate;
+	}
+
+	/**
+	 * @return the targetServiceValue
+	 */
+	public String getTargetServiceValue() {
+		return targetServiceValue;
+	}
+
+	/**
+	 * @param targetServiceValue the targetServiceValue to set
+	 */
+	public void setTargetServiceValue(String targetServiceValue) {
+		this.targetServiceValue = targetServiceValue;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(ruleEl, ruleType, tagTarget, targetAttributeName, targetAttributeValue,
+		result = prime * result + Objects.hash(ruleEl, ruleType, tagTarget, targetServiceValue, targetAttributeValue,
 				targetProduct, targetProductVersion);
 		return result;
 	}
@@ -230,7 +280,7 @@ public class TradeRuleHeader extends BusinessEntity {
 		TradeRuleHeader other = (TradeRuleHeader) obj;
 		return Objects.equals(ruleEl, other.ruleEl) && ruleType == other.ruleType
 				&& Objects.equals(tagTarget, other.tagTarget)
-				&& Objects.equals(targetAttributeName, other.targetAttributeName)
+				&& Objects.equals(targetServiceValue, other.targetServiceValue)
 				&& Objects.equals(targetAttributeValue, other.targetAttributeValue)
 				&& Objects.equals(targetProduct, other.targetProduct)
 				&& Objects.equals(targetProductVersion, other.targetProductVersion);
