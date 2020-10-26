@@ -10540,6 +10540,30 @@ $$ LANGUAGE plpgsql;
             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_commercial_offer" />
      </changeSet> 
      
+     
+      <changeSet author="Mbarek-Ay" id="rebuild-mediapost-tbl-30">
+		<createTable tableName="cpq_accounting_article">
+			<column name="id" type="bigint" autoIncrement="${id.auto}">
+				<constraints nullable="false" primaryKey="true"
+					primaryKeyName="cpq_accounting_article_pkey" />
+			</column>
+			<column name="version" type="int4" />
+			<column name="created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="updated" type="datetime" />
+			<column name="code" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" />
+			<column name="creator" type="varchar(100)" />
+			<column name="updater" type="varchar(100)" /> 
+		</createTable>
+	</changeSet>
+	
+	
+	
+     
 <!--     <changeSet id="540-15_20201019_servicetype" author="TarikF"> -->
 <!--     	<createTable tableName="cpq_service_type"> -->
 <!--     		<column name="id" type="bigint" autoIncrement="${id.auto}"> -->
