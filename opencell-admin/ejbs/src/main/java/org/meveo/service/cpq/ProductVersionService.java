@@ -3,11 +3,16 @@ package org.meveo.service.cpq;
 import java.util.Calendar;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.Query;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.model.cpq.Product;
 import org.meveo.model.cpq.ProductVersion;
 import org.meveo.model.cpq.enums.VersionStatusEnum;
 import org.meveo.service.base.PersistenceService;
+import org.meveo.service.cpq.exception.ProductException;
 import org.meveo.service.cpq.exception.ProductVersionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +27,9 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class ProductVersionService extends
 		PersistenceService<ProductVersion> {
+	
+	@Inject
+	private ProductService productService;
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(ProductVersionService.class);
 	private final static String PRODUCT_ACTIVE_CAN_NOT_REMOVED_OR_UPDATE = "status of the product (%d) is %s, it can not be updated nor removed";
@@ -125,6 +133,20 @@ public class ProductVersionService extends
 			LOGGER.warn("The version product {}  is missing", id);
 			throw new ProductVersionException(String.format(PRODUCT_VERSION_MISSING, id));
 		}
+		return productVersion;
+	}
+	
+	public ProductVersion findByProductAndVersion(String productCode,int currentVersion) throws ProductException{
+	 
+		Product product=productService.findByCode(productCode);
+		if(product == null) {
+			log.warn("the product with code={} inexistent",productCode);
+			throw new EntityDoesNotExistsException(Product.class,productCode);
+		} 
+		Query query = getEntityManager().createNamedQuery("ProductVersion.findByProductAndVersion")
+				.setParameter("productCode", productCode).setParameter("currentVersion", currentVersion);
+		
+		ProductVersion productVersion=(ProductVersion)query.getResultList().get(0);
 		return productVersion;
 	}
 	

@@ -8,16 +8,27 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.logging.log4j.util.Strings;
+import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.BaseApi;
+import org.meveo.api.dto.cpq.ProductVersionDto;
+import org.meveo.api.dto.response.TitleDto;
+import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.api.exception.MeveoApiException;
+import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.catalog.DiscountPlan;
 import org.meveo.model.cpq.Product;
 import org.meveo.model.cpq.ProductLine;
+import org.meveo.model.cpq.ProductVersion;
 import org.meveo.model.cpq.enums.ProductStatusEnum;
+import org.meveo.model.cpq.enums.VersionStatusEnum;
 import org.meveo.model.crm.CustomerBrand;
+import org.meveo.model.shared.Title;
 import org.meveo.service.catalog.impl.DiscountPlanService;
 import org.meveo.service.cpq.ProductLineService;
 import org.meveo.service.cpq.ProductService;
+import org.meveo.service.cpq.ProductVersionService;
 import org.meveo.service.cpq.exception.ProductException;
+import org.meveo.service.cpq.exception.ProductVersionException;
 import org.meveo.service.crm.impl.CustomerBrandService;
 
 /**
@@ -38,6 +49,8 @@ public class ProductApi extends BaseApi {
 	private CustomerBrandService brandService;
 	@Inject
 	private DiscountPlanService discountPlanService;
+	@Inject
+	private ProductVersionService productVersionService;
 	
 	/**
 	 * @param codeProduct
@@ -136,4 +149,75 @@ public class ProductApi extends BaseApi {
 		handleMissingParameters();
 		return productService.findByCode(code);
 	}
+	
+	
+	
+	 /**
+     * Creates a new product version entity.
+     * 
+     * @param postData posted data to API
+     * 
+     * @throws MeveoApiException meveo api exception
+     * @throws BusinessException business exception.
+	 * @throws ProductException 
+     */
+	public ProductVersion create(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException {
+		String description = postData.getShortDescription();
+		String productCode = postData.getProductCode();
+		if (StringUtils.isBlank(description)) {
+			missingParameters.add("description");
+		}
+		if (StringUtils.isBlank(productCode)) {
+			missingParameters.add("productCode");
+		}
+		handleMissingParametersAndValidate(postData);
+		Product product = productService.findByCode(productCode);
+		if (product == null) {
+			throw new EntityDoesNotExistsException(Product.class,productCode);
+		}
+		ProductVersion  productVersion= new ProductVersion();
+		productVersion.setProduct(product);
+		productVersion.setShortDescription(postData.getShortDescription());
+		productVersion.setLongDescription(postData.getLongDescription());
+		productVersion.setCurrentVersion(postData.getCurrentVersion());
+		productVersion.setStartDate(postData.getStartDate());
+		productVersion.setEndDate(postData.getEndDate());
+		productVersion.setStartDate(postData.getStartDate());
+		productVersion.setStatus(VersionStatusEnum.DRAFT);  
+		productVersionService.create(productVersion);
+
+		return productVersion;
+	}
+	
+	
+	   /**
+     * Updates a product version Entity
+     * 
+     * @param postData posted data to API
+     * 
+     * @throws MeveoApiException meveo api exception
+     * @throws BusinessException business exception.
+	 * @throws ProductException 
+	 * @throws ProductVersionException 
+     */
+    public ProductVersion update(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException, ProductVersionException {
+    	 
+       ProductVersion productVersion=productVersionService.findByProductAndVersion(postData.getProductCode(),postData.getCurrentVersion());
+       if(productVersion==null) {
+    	   throw new EntityDoesNotExistsException(Product.class,postData.getProductCode(),""+postData.getCurrentVersion());    
+       }
+        productVersion.setShortDescription(postData.getShortDescription());
+		productVersion.setLongDescription(postData.getLongDescription());
+		productVersion.setCurrentVersion(postData.getCurrentVersion());
+		productVersion.setStartDate(postData.getStartDate());
+		productVersion.setEndDate(postData.getEndDate());
+		productVersion.setStartDate(postData.getStartDate());
+		productVersion.setStatus(postData.getStatus());   	   
+        productVersionService.updateProductVersion(productVersion);
+
+        return productVersion;
+    }
+	
+	
+	
 }

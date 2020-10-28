@@ -5,20 +5,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -32,8 +29,6 @@ import org.meveo.model.BaseEntity;
 import org.meveo.model.cpq.enums.VersionStatusEnum;
 import org.meveo.model.cpq.tags.Tag;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * @author Tarik FAKHOURI.
  * @author Mbarek-Ay.
@@ -43,20 +38,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "cpq_product_version")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "cpq_product_version_seq"), })
+@NamedQueries({ @NamedQuery(name = "ProductVersion.findByProductAndVersion", 
+query = "SELECT pv FROM ProductVersion pv left join  bv.product p where p.code=:productCode and pv.currentVersion=:currentVersion")})
 public class ProductVersion extends BaseEntity{
 
 
 	private static final long serialVersionUID = 1L;
-	
-	/**
-     * Record/entity identifier
-     */
-    @Id
-    @GeneratedValue(generator = "ID_GENERATOR", strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    @Access(AccessType.PROPERTY) // Access is set to property so a call to getId() wont trigger hibernate proxy loading
-    @JsonProperty
-    protected Long id;
+	 
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_code", nullable = false, referencedColumnName = "id")
