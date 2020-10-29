@@ -21,8 +21,7 @@ import org.meveo.model.cpq.ProductLine;
 import org.meveo.model.cpq.ProductVersion;
 import org.meveo.model.cpq.enums.ProductStatusEnum;
 import org.meveo.model.cpq.enums.VersionStatusEnum;
-import org.meveo.model.crm.CustomerBrand;
-import org.meveo.model.shared.Title;
+import org.meveo.model.crm.CustomerBrand; 
 import org.meveo.service.catalog.impl.DiscountPlanService;
 import org.meveo.service.cpq.ProductLineService;
 import org.meveo.service.cpq.ProductService;
@@ -161,25 +160,29 @@ public class ProductApi extends BaseApi {
      * @throws BusinessException business exception.
 	 * @throws ProductException 
      */
-	public ProductVersion create(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException {
+	public ProductVersion createProductVersion(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException {
 		String description = postData.getShortDescription();
 		String productCode = postData.getProductCode();
+		int currentVersion = postData.getCurrentVersion();
 		if (StringUtils.isBlank(description)) {
 			missingParameters.add("description");
 		}
 		if (StringUtils.isBlank(productCode)) {
 			missingParameters.add("productCode");
 		}
+		if (StringUtils.isBlank(currentVersion)) {
+			missingParameters.add("currentVersion");
+		}
 		handleMissingParametersAndValidate(postData);
 		Product product = productService.findByCode(productCode);
 		if (product == null) {
-			throw new EntityDoesNotExistsException(Product.class,productCode);
+			throw new EntityDoesNotExistsException(Product.class,productCode,"productCode");
 		}
 		ProductVersion  productVersion= new ProductVersion();
 		productVersion.setProduct(product);
-		productVersion.setShortDescription(postData.getShortDescription());
+		productVersion.setShortDescription(description);
 		productVersion.setLongDescription(postData.getLongDescription());
-		productVersion.setCurrentVersion(postData.getCurrentVersion());
+		productVersion.setCurrentVersion(currentVersion);
 		productVersion.setStartDate(postData.getStartDate());
 		productVersion.setEndDate(postData.getEndDate());
 		productVersion.setStartDate(postData.getStartDate());
@@ -200,15 +203,21 @@ public class ProductApi extends BaseApi {
 	 * @throws ProductException 
 	 * @throws ProductVersionException 
      */
-    public ProductVersion update(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException, ProductVersionException {
-    	 
-       ProductVersion productVersion=productVersionService.findByProductAndVersion(postData.getProductCode(),postData.getCurrentVersion());
+    public ProductVersion updateProductVersion(ProductVersionDto postData) throws MeveoApiException, BusinessException, ProductException, ProductVersionException { 
+		String productCode = postData.getProductCode();
+		int currentVersion = postData.getCurrentVersion(); 
+		if (StringUtils.isBlank(productCode)) {
+			missingParameters.add("productCode");
+		}
+		if (StringUtils.isBlank(currentVersion)) {
+			missingParameters.add("currentVersion");
+		}
+       ProductVersion productVersion=productVersionService.findByProductAndVersion(productCode,currentVersion);
        if(productVersion==null) {
-    	   throw new EntityDoesNotExistsException(Product.class,postData.getProductCode(),""+postData.getCurrentVersion());    
+    	   throw new EntityDoesNotExistsException(ProductVersion.class,productCode,"productCode",""+currentVersion,"currentVersion");  
        }
         productVersion.setShortDescription(postData.getShortDescription());
-		productVersion.setLongDescription(postData.getLongDescription());
-		productVersion.setCurrentVersion(postData.getCurrentVersion());
+		productVersion.setLongDescription(postData.getLongDescription());  
 		productVersion.setStartDate(postData.getStartDate());
 		productVersion.setEndDate(postData.getEndDate());
 		productVersion.setStartDate(postData.getStartDate());
@@ -217,6 +226,71 @@ public class ProductApi extends BaseApi {
 
         return productVersion;
     }
+    /**
+     * Delete a product version Entity
+     * 
+     * @param postData posted data to API
+     * 
+     * @throws MeveoApiException meveo api exception
+     * @throws BusinessException business exception.
+	 * @throws ProductException 
+	 * @throws ProductVersionException 
+     */
+    public void deleteProductVersion(ProductVersionDto postData)  throws MeveoApiException, BusinessException, ProductException, ProductVersionException {
+    	String productCode = postData.getProductCode();
+    	int currentVersion = postData.getCurrentVersion(); 
+    	ProductVersion productVersion=productVersionService.findByProductAndVersion(productCode,currentVersion);
+    	if(productVersion==null) {
+    		throw new EntityDoesNotExistsException(ProductVersion.class,productCode,"productCode",""+currentVersion,"currentVersion");  
+    	}
+    	productVersionService.removeProductVersion(productVersion);
+    }
+    
+    /**
+     * Duplicate a product version Entity
+     * 
+     * @param postData posted data to API
+     * 
+     * @throws MeveoApiException meveo api exception
+     * @throws BusinessException business exception.
+	 * @throws ProductException 
+	 * @throws ProductVersionException 
+     */
+    public ProductVersion duplicateProductVersion(ProductVersionDto postData)  throws MeveoApiException, BusinessException, ProductException, ProductVersionException {
+    	String productCode = postData.getProductCode();
+    	int currentVersion = postData.getCurrentVersion(); 
+    	ProductVersion productVersion=productVersionService.findByProductAndVersion(productCode,currentVersion);
+    	if(productVersion==null) {
+    		throw new EntityDoesNotExistsException(ProductVersion.class,productCode,"productCode",""+currentVersion,"currentVersion");  
+    	}
+    	productVersionService.duplicate(productVersion);
+    	
+    	return productVersion;
+    }
+    
+    
+    /**
+     * Change status product version Entity
+     * 
+     * @param postData posted data to API
+     * 
+     * @throws MeveoApiException meveo api exception
+     * @throws BusinessException business exception.
+	 * @throws ProductException 
+	 * @throws ProductVersionException 
+     */
+    public ProductVersion UpdateProductVersionStatus(ProductVersionDto postData)  throws MeveoApiException, BusinessException, ProductException, ProductVersionException {
+    	String productCode = postData.getProductCode();
+    	int currentVersion = postData.getCurrentVersion(); 
+    	ProductVersion productVersion=productVersionService.findByProductAndVersion(productCode,currentVersion);
+    	if(productVersion==null) {
+    		throw new EntityDoesNotExistsException(ProductVersion.class,productCode,"productCode",""+currentVersion,"currentVersion");  
+    	}
+    	productVersionService.updateProductVersionStatus(productVersion,postData.getStatus());
+    	
+    	return productVersion;
+    }
+    
 	
 	
 	
