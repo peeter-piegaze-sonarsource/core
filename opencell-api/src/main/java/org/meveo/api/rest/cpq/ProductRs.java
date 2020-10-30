@@ -21,6 +21,7 @@ import org.meveo.api.rest.IBaseRs;
 import org.meveo.apiv2.models.ApiException;
 import org.meveo.apiv2.models.Document;
 import org.meveo.model.cpq.Product;
+import org.meveo.model.cpq.enums.ProductStatusEnum;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -84,7 +85,7 @@ public interface ProductRs extends IBaseRs{
                     content = @Content(schema = @Schema(implementation = ActionStatus.class))),
             @ApiResponse(responseCode = "500", description = "the status of the product is already closed")
     })
-	ActionStatus updateStatus(@PathParam("codeProduct") String codeProduct,@QueryParam("status") int status);
+	ActionStatus updateStatus(@PathParam("codeProduct") String codeProduct,@QueryParam("status") ProductStatusEnum status);
 	
 	/**
 	 * 

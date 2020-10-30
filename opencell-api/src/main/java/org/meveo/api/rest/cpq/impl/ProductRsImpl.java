@@ -14,6 +14,7 @@ import org.meveo.api.dto.response.cpq.GetProductDtoResponse;
 import org.meveo.api.dto.response.cpq.GetProductLineDtoResponse;
 import org.meveo.api.rest.cpq.ProductRs;
 import org.meveo.api.rest.impl.BaseRs;
+import org.meveo.model.cpq.enums.ProductStatusEnum;
 
 public class ProductRsImpl extends BaseRs implements ProductRs {
 
@@ -45,7 +46,7 @@ public class ProductRsImpl extends BaseRs implements ProductRs {
 	}
 
 	@Override
-	public ActionStatus updateStatus(String codeProduct, int status) {
+	public ActionStatus updateStatus(String codeProduct, ProductStatusEnum status) {
 		  ActionStatus result = new ActionStatus(ActionStatusEnum.SUCCESS, "");
 	        try {
 	        	productApi.updateStatus(codeProduct, status);
@@ -97,7 +98,7 @@ public class ProductRsImpl extends BaseRs implements ProductRs {
 		GetProductLineDtoResponse result = new GetProductLineDtoResponse();
         result.getActionStatus().setStatus(ActionStatusEnum.SUCCESS);
         try {
-        	result.setProductLineDto(productLineApi.findOne(code));
+        	result.setProductLineDto(productLineApi.findProductLineByCode(code));
         } catch (Exception e) {
             processException(e, result.getActionStatus());
         }

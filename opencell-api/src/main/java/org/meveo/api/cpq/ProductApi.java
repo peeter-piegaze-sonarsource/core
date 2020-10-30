@@ -100,16 +100,15 @@ public class ProductApi extends BaseApi {
 	 * @return
 	 * @throws ProductException when the status is unknown and the status 
 	 */
-	public ProductDto updateStatus(String codeProduct, int status) throws ProductException {
+	public ProductDto updateStatus(String codeProduct, ProductStatusEnum status) throws ProductException {
 		if(Strings.isEmpty(codeProduct)) {
 			missingParameters.add("code");
 		}
 		handleMissingParameters();
-		ProductStatusEnum productStatus = ProductStatusEnum.getCurrentStatus(status).get();
-		if(productStatus == null)
+		if(status == null)
 			throw new ProductException(String.format(PRODUCT_STATUS_NOT_FOUND, status));
 		final Product product = productService.findByCode(codeProduct);
-		return new ProductDto(productService.updateStatus(product, productStatus));
+		return new ProductDto(productService.updateStatus(product, status));
 	}
 	
 	/**
@@ -173,7 +172,7 @@ public class ProductApi extends BaseApi {
 	 */
 	public ProductLineDto findProductLineByCode(String code) {
 		try {
-			return new ProductLineDto(productLineApi.findOne(code));
+			return new ProductLineDto(productLineApi.findProductLineByCode(code));
 		} catch (ProductLineException e) {
 			throw new BusinessApiException(e);
 
