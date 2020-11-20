@@ -20,6 +20,7 @@ package org.meveo.admin.action.generic.wf;
 import static java.util.Arrays.stream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.swap;
 import static java.util.stream.Collectors.toList;
 
 import org.jboss.seam.international.status.builder.BundleKey;
@@ -137,7 +138,7 @@ public class ActionBean extends CustomFieldBean<Action>  {
             actionsService.update(needUpdate);
             transition.getActions().get(index).setPriority(downAction.getPriority());
             transition.getActions().get(index - 1).setPriority(priorityUp);
-            Collections.swap(transition.getActions(), index, index - 1);
+            swap(transition.getActions(), index, index - 1);
             messages.info(new BundleKey("messages", "update.successful"));
         }
     }
@@ -157,7 +158,7 @@ public class ActionBean extends CustomFieldBean<Action>  {
             actionsService.update(needUpdate);
             transition.getActions().get(index).setPriority(downAction.getPriority());
             transition.getActions().get(index + 1).setPriority(priorityUp);
-            Collections.swap(transition.getActions(), index, index + 1);
+            swap(transition.getActions(), index, index + 1);
             messages.info(new BundleKey("messages", "update.successful"));
         }
     }
