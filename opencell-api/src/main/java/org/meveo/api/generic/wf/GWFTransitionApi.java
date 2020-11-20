@@ -23,18 +23,24 @@ import javax.inject.Inject;
 
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.BaseApi;
+import org.meveo.api.dto.generic.wf.GWFActionDto;
 import org.meveo.api.dto.generic.wf.GWFTransitionDto;
 import org.meveo.api.exception.BusinessApiException;
 import org.meveo.api.exception.EntityAlreadyExistsException;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.exception.MissingParameterException;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.generic.wf.Action;
 import org.meveo.model.generic.wf.GWFTransition;
 import org.meveo.model.generic.wf.GenericWorkflow;
+import org.meveo.model.notification.Notification;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.wf.WFTransition;
 import org.meveo.service.generic.wf.GWFTransitionService;
+import org.meveo.service.notification.NotificationService;
 import org.meveo.service.script.ScriptInstanceService;
+
+import static java.util.Optional.ofNullable;
 
 @Stateless
 public class GWFTransitionApi extends BaseApi {
@@ -44,6 +50,9 @@ public class GWFTransitionApi extends BaseApi {
 
     @Inject
     private ScriptInstanceService scriptInstanceService;
+
+    @Inject
+    private NotificationService notificationService;
 
     /**
      * Create Workflow
@@ -194,7 +203,35 @@ public class GWFTransitionApi extends BaseApi {
             ScriptInstance actionScript = scriptInstanceService.findByCode(dto.getActionScriptCode());
             gwfTransition.setActionScript(actionScript);
         }
-
+        for (GWFActionDto action: dto.getActions()) {
+            gwfTransition.getActions().add(from(action, gwfTransition));
+        }
         return gwfTransition;
+    }
+
+    public Action from(GWFActionDto actionDto, GWFTransition gwfTransition) {
+        Action action = new Action();
+        action.setTransition(gwfTransition);
+        action.setType(actionDto.getType());
+        action.setConditionEl(actionDto.getConditionEl());
+        ofNullable(actionDto.getField()).ifPresent(field -> action.setFieldToUpdate(field));
+        action.setValueEL(actionDto.getValueEl());
+        action.setDescription(actionDto.getDescription());
+        ofNullable(actionDto.getLogLevel())
+                .ifPresent(log -> action.setLogLevel(log.toString()));
+        action.setAsynchronous(actionDto.isAsynchronous());
+        action.setUuid(actionDto.getUuid());
+        action.setPriority(actionDto.getPriority());
+        ofNullable(actionDto.getActionScriptCode())
+                .ifPresent(code -> action.setActionScript(scriptInstanceService.findByCode(code)));
+        if (actionDto.getNotificationCode() != null) {
+            Notification notification = ofNullable(notificationService.findByCode(actionDto.getNotificationCode()))
+                    .orElseThrow(() -> new BusinessException("Notification does not exits code : " + actionDto.getNotificationCode()));
+            ofNullable(actionDto.getParameters())
+                    .ifPresent(params -> notification.setParams(params));
+            action.setNotification(notification);
+
+        }
+        return action;
     }
 }
