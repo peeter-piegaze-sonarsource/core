@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 @Named
 @ViewScoped
 @ViewBean
-public class actionBean extends CustomFieldBean<Action>  {
+public class ActionBean extends CustomFieldBean<Action>  {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,7 +70,7 @@ public class actionBean extends CustomFieldBean<Action>  {
 
     private List<Action> actions = new ArrayList<>();
 
-    public actionBean() {
+    public ActionBean() {
         super(Action.class);
     }
 
