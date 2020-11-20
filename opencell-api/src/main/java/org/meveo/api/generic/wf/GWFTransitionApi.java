@@ -18,6 +18,9 @@
 
 package org.meveo.api.generic.wf;
 
+import static java.util.UUID.randomUUID;
+import static java.util.Optional.ofNullable;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -39,8 +42,6 @@ import org.meveo.model.wf.WFTransition;
 import org.meveo.service.generic.wf.GWFTransitionService;
 import org.meveo.service.notification.NotificationService;
 import org.meveo.service.script.ScriptInstanceService;
-
-import static java.util.Optional.ofNullable;
 
 @Stateless
 public class GWFTransitionApi extends BaseApi {
@@ -203,7 +204,7 @@ public class GWFTransitionApi extends BaseApi {
             ScriptInstance actionScript = scriptInstanceService.findByCode(dto.getActionScriptCode());
             gwfTransition.setActionScript(actionScript);
         }
-        for (GWFActionDto action: dto.getActions()) {
+        for (GWFActionDto action : dto.getActions()) {
             gwfTransition.getActions().add(from(action, gwfTransition));
         }
         return gwfTransition;
@@ -211,8 +212,13 @@ public class GWFTransitionApi extends BaseApi {
 
     public Action from(GWFActionDto actionDto, GWFTransition gwfTransition) {
         Action action = new Action();
+        if(actionDto.getUuid() == null) {
+            action.setUuid(randomUUID().toString());
+        } else {
+            action.setUuid(actionDto.getUuid());
+        }
         action.setTransition(gwfTransition);
-        action.setType(actionDto.getType());
+        action.setType(actionDto.getType().name());
         action.setConditionEl(actionDto.getConditionEl());
         ofNullable(actionDto.getField()).ifPresent(field -> action.setFieldToUpdate(field));
         action.setValueEL(actionDto.getValueEl());
@@ -220,7 +226,6 @@ public class GWFTransitionApi extends BaseApi {
         ofNullable(actionDto.getLogLevel())
                 .ifPresent(log -> action.setLogLevel(log.toString()));
         action.setAsynchronous(actionDto.isAsynchronous());
-        action.setUuid(actionDto.getUuid());
         action.setPriority(actionDto.getPriority());
         ofNullable(actionDto.getActionScriptCode())
                 .ifPresent(code -> action.setActionScript(scriptInstanceService.findByCode(code)));

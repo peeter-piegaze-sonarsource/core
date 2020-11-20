@@ -21,6 +21,10 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.meveo.admin.job.GenericWorkflowJob.*;
 import static org.meveo.service.base.ValueExpressionWrapper.evaluateExpression;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.ACTION_SCRIPT;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.LOG;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.UPDATE_FIELD;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.NOTIFICATION;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -37,8 +41,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.commons.utils.EjbUtils;
 import org.meveo.commons.utils.ReflectionUtils;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.BaseEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.WorkflowedEntity;
 import org.meveo.model.customEntities.CustomEntityInstance;
@@ -46,6 +52,7 @@ import org.meveo.model.generic.wf.*;
 import org.meveo.model.notification.Notification;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.service.base.BusinessService;
+import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.ValueExpressionWrapper;
 import org.meveo.service.notification.DefaultNotificationService;
 import org.meveo.service.script.Script;
@@ -341,20 +348,20 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
                                            GenericWorkflow genericWorkflow, GWFTransition transition, Action action,
                                            Map<Object, Object> context) {
         try {
-            if(action.getType().equalsIgnoreCase("SCRIPT")) {
+            if(action.getType().equalsIgnoreCase(ACTION_SCRIPT.name())) {
                 ScriptInstance scriptInstance = action.getActionScript();
                 String scriptCode = scriptInstance.getCode();
                 executeActionScript(entity, workflowInstance, genericWorkflow, transition, scriptCode);
             }
-            if(action.getType().equalsIgnoreCase("LOG")) {
+            if(action.getType().equalsIgnoreCase(LOG.name())) {
                 String inputToLog = evaluateExpression(action.getValueEL(), context, String.class);
                 log(inputToLog, action.getLogLevel());
             }
-
-            if(action.getType().equalsIgnoreCase("FIELD")) {
-                evaluateExpression(action.getValueEL(), context, String.class);
+            if(action.getType().equalsIgnoreCase(UPDATE_FIELD.name())) {
+                Object result = evaluateExpression(action.getValueEL(), context, Object.class);
+                updateEntity(entity, action.getFieldToUpdate(), result);
             }
-            if (action.getType().equalsIgnoreCase("NOTIFICATION")) {
+            if (action.getType().equalsIgnoreCase(NOTIFICATION.name())) {
                 Notification notification = action.getNotification();
                 defaultNotificationService.fireNotificationAsync(notification, entity);
             }
@@ -365,21 +372,23 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
 
     private void syncExecution(BusinessEntity entity, WorkflowInstance workflowInstance, GenericWorkflow genericWorkflow,
                                 GWFTransition transition, Action action, Map<Object, Object> context) {
-        if(action.getType().equalsIgnoreCase("SCRIPT")) {
+
+        if(action.getType().equalsIgnoreCase(ACTION_SCRIPT.name())) {
             ScriptInstance scriptInstance = action.getActionScript();
             String scriptCode = scriptInstance.getCode();
             executeActionScript(entity, workflowInstance, genericWorkflow, transition, scriptCode);
         }
-        if(action.getType().equalsIgnoreCase("LOG")) {
+        if(action.getType().equalsIgnoreCase(LOG.name())) {
             String inputToLog = evaluateExpression(action.getValueEL(), context, String.class);
             log(inputToLog, action.getLogLevel());
         }
 
-        if(action.getType().equalsIgnoreCase("FIELD")) {
-            evaluateExpression(action.getValueEL(), context, String.class);
+        if(action.getType().equalsIgnoreCase(LOG.name())) {
+            Object result = evaluateExpression(action.getValueEL(), context, Object.class);
+            updateEntity(entity, action.getFieldToUpdate(), result);
         }
 
-        if (action.getType().equalsIgnoreCase("NOTIFICATION")) {
+        if (action.getType().equalsIgnoreCase(NOTIFICATION.name())) {
             Notification notification = action.getNotification();
             defaultNotificationService.fireNotification(notification, entity);
         }
@@ -390,6 +399,31 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
             log.getClass().getMethod(level.toLowerCase(), String.class).invoke(log, inputToLog);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
             throw new BusinessException(exception);
+        }
+    }
+
+    private void updateEntity(BusinessEntity entity, String fieldToUpdate, Object valueToSet) {
+        try {
+            String methodName = "set" + org.apache.commons.lang3.StringUtils.capitalize(fieldToUpdate);
+            Class<?> current = entity.getClass();
+            PersistenceService persistenceService = (PersistenceService) EjbUtils.getServiceInterface(entity.getClass());
+            persistenceService.refreshOrRetrieve(entity);
+            boolean updated = false;
+            do {
+                try {
+                    current.getMethod(methodName, current.getDeclaredField(fieldToUpdate).getType())
+                            .invoke(entity, valueToSet);
+                    updated = true;
+                } catch (NoSuchFieldException e) {
+                    current = current.getSuperclass();
+                }
+            } while(current != BaseEntity.class && !updated);
+            if (!updated) {
+                throw new BusinessException("Filed does not exists");
+            }
+            persistenceService.update(entity);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 }

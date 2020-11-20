@@ -1,28 +1,73 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:hftl="http://hftl.org"
-    template="/layout/template.xhtml">
-
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:event type="preRenderView" listener="#{wfTransitionListBean.preRenderView}" />
-        </f:metadata>
-    </ui:define>
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:hftl="http://hftl.org"
+				xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml"
+>
 
     <ui:define name="body">
-		    <hftl:searchPanel
-			label="#{messages['dunningPlanTransition.search']}" backingBean="#{wfTransitionListBean}">
-				<hftl:searchField  label="#{messages['dunningPlanTransition.dunningLevelFrom']}" field="dunningLevelFrom" />
-    			<hftl:searchField  label="#{messages['dunningPlanTransition.dunningLevelTo']}" field="dunningLevelTo" />
-		    </hftl:searchPanel>
-		 
-	    	<hftl:dataList label="#{messages['dunningPlanTransition.title']}" backingBean="#{wfTransitionListBean}"   dataModel="#{wfTransitions}">
-	    		<hftl:column label="#{messages['dunningPlanTransition.dunningLevelFrom']}" field="dunningLevelFrom" />
-				<hftl:column label="#{messages['dunningPlanTransition.dunningLevelTo']}" field="dunningLevelTo" />
-				 <hftl:actionsColumn permission="#{currentUser.hasRole('billingManagement')}" />   	
-		    </hftl:dataList >
+
+		<p:outputPanel id="dunningPlanTransition_panel">
+		<p:messages id="messages" rendered="#{!genericWorkflowBean.showDetailPage}" />
+		<hftl:dataList backingBean="#{gWFTransitionBean}" dataModel="#{genericWorkflowBean.entity.transitions}" sortBy="fromStatus"
+					   resultsId="dunningPlanTransitions_results" exportXlsxButton="false">
+			<hftl:column label="#{messages['dunningPlanTransition.fromStatus']}" field="fromStatus" />
+			<hftl:column label="#{messages['dunningPlanTransition.toStatus']}" field="toStatus" />
+			<hftl:column label="#{messages['businessEntity.description']}" field="description" />
+			<hftl:column label="#{messages['dunningPlan.conditionEl']}" field="conditionEl" />
+			<hftl:column label="#{messages['generic.wf.actionScript']}" field="actionScript.code" />
+
+			<p:column styleClass="actions-column" rendered="#{genericWorkflowBean.edit}">
+				<f:facet name="header">
+					<h:outputText value="#{messages['commons.actions']}" />
+				</f:facet>
+
+				<p:commandButton id="editDunningPlanTransitionLink" update=":genericWFFormId:tabView:dunningPlanTransition_panel"
+								 action="#{genericWorkflowBean.editgWFTransition(entity)}"
+								 icon="ui-icon-document" process="@this"/>
+				<p:commandButton id="duplicateDunningPlanTransitionLink" update=":genericWFFormId:tabView:dunningPlanTransition_panel"
+								 action="#{genericWorkflowBean.duplicateWfTransition(entity)}"
+								 icon="ui-icon-plus" process="@this"/>
+				<p:commandButton id="deleteDunningPlanTransitionLink" action="#{genericWorkflowBean.deleteWfTransition(entity)}" icon="ui-icon-trash"
+								 update=":genericWFFormId:tabView:dunningPlanTransition_panel" process="@this"/>
+				<p:commandButton id="moveUpTransitionLink" icon="ui-icon-arrowthick-1-n" action="#{genericWorkflowBean.moveUpTransition(entity)}"
+								 update=":genericWFFormId:tabView:dunningPlanTransition_panel" process="@this"/>
+				<p:commandButton id="moveDownTransitionLink" icon="ui-icon-arrowthick-1-s" action="#{genericWorkflowBean.moveDownTransition(entity)}"
+								 update=":genericWFFormId:tabView:dunningPlanTransition_panel" process="@this" />
+			</p:column>
+
+		</hftl:dataList>
+			<p:panel >
+				<hftl:formPanel formId="formDunningPlanTransition" edit="#{genericWorkflowBean.edit}" label="" backingBean="#{gWFTransitionBean}"
+								entity="#{genericWorkflowBean.gWFTransition}" showFormButtons="false" ajaxSubmit="true">
+					<p:panel styleClass="clearLeft">
+						<hftl:formField label="#{messages['dunningPlanTransition.fromStatus']}" field="fromStatus" required="false" isMessage="true"
+										edit="#{genericWorkflowBean.edit}" listValues="#{genericWorkflowBean.transitionStatuses}" />
+
+						<hftl:formField label="#{messages['dunningPlanTransition.toStatus']}" field="toStatus" required="true" isMessage="true"
+										edit="#{genericWorkflowBean.edit}" listValues="#{genericWorkflowBean.transitionStatuses}" />
+
+						<hftl:formField label="#{messages['dunningPlan.conditionEl']}" field="conditionEl" textArea="true" rows="1" maxlength="2000"
+										edit="#{genericWorkflowBean.edit}" required="true" />
+
+						<hftl:formField label="#{messages['transition.description']}" field="description" required="true" edit="#{genericWorkflowBean.edit}" />
+
+						<hftl:formField
+								id="scriptSelectId" label="#{messages['generic.wf.actionScript']}" field="actionScript" valueLabelField="code" popup="true"
+								showResetButton="true" popupId="actionScriptPopup" edit="#{genericWorkflowBean.edit}" required="false" />
+					</p:panel>
+
+					<ui:param name="buttons" value="true" />
+					<p:panel id="buttons">
+						<p:commandButton action="#{genericWorkflowBean.saveWfTransition}" value="#{messages['action.save']}" process="@form"  />
+						<p:commandButton action="#{genericWorkflowBean.cancelTransitionDetail}" value="#{messages['action.cancel']}" process="@this"
+										  />
+					</p:panel>
+				</hftl:formPanel>
+			</p:panel>
+
+		</p:outputPanel>
 		
     </ui:define>
     

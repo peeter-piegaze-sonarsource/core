@@ -1,5 +1,8 @@
 package org.meveo.api.dto.generic.wf;
 
+import static java.util.Optional.ofNullable;
+import static javax.xml.bind.annotation.XmlAccessType.FIELD;
+
 import org.meveo.api.dto.BaseEntityDto;
 import org.meveo.model.generic.wf.Action;
 import org.meveo.model.notification.Notification;
@@ -11,9 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 import java.util.Map;
 
-import static java.util.Optional.ofNullable;
-import static javax.xml.bind.annotation.XmlAccessType.FIELD;
-
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class GWFActionDto extends BaseEntityDto {
@@ -24,7 +24,7 @@ public class GWFActionDto extends BaseEntityDto {
 
     private int priority;
 
-    private String type;
+    private ActionTypesEnum type;
 
     private String conditionEl;
 
@@ -58,7 +58,7 @@ public class GWFActionDto extends BaseEntityDto {
             this.setNotificationCode(notification.getCode());
             this.setParameters(notification.getParams());
         }
-        this.setType(action.getType());
+        this.setType(ActionTypesEnum.valueOf(action.getType()));
         this.setValueEl(action.getValueEL());
         this.setField(action.getFieldToUpdate());
         ofNullable(action.getLogLevel()).ifPresent(level -> this.setLogLevel(LogLevel.fromValue(level)));
@@ -128,11 +128,11 @@ public class GWFActionDto extends BaseEntityDto {
         this.field = field;
     }
 
-    public String getType() {
+    public ActionTypesEnum getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ActionTypesEnum type) {
         this.type = type;
     }
 

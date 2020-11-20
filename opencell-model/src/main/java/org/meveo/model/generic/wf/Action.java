@@ -14,7 +14,8 @@ import javax.validation.constraints.Size;
 @Table(name = "wf_generic_action", uniqueConstraints = @UniqueConstraint(columnNames = { "uuid" }))
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @org.hibernate.annotations.Parameter(name = "sequence_name", value = "wf_generic_action_seq") })
-public class Action extends BaseEntity {
+
+public class Action extends BaseEntity implements Comparable<Action> {
 
     @Column(name = "uuid", nullable = false, updatable = false, length = 60)
     @Size(max = 60)
@@ -42,7 +43,8 @@ public class Action extends BaseEntity {
 
     @Column(name = "is_asynchronous")
     @Type(type = "numeric_boolean")
-    private boolean isAsynchronous;
+
+    private boolean asynchronous;
 
     @Column(name = "value_el", length = 2000)
     @Size(max = 2000)
@@ -93,11 +95,11 @@ public class Action extends BaseEntity {
     }
 
     public boolean isAsynchronous() {
-        return isAsynchronous;
+        return asynchronous;
     }
 
     public void setAsynchronous(boolean asynchronous) {
-        isAsynchronous = asynchronous;
+        this.asynchronous = asynchronous;
     }
 
     public ScriptInstance getActionScript() {
@@ -154,5 +156,10 @@ public class Action extends BaseEntity {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public int compareTo(Action action) {
+        return this.priority - action.priority;
     }
 }
