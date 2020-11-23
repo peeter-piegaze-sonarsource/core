@@ -396,16 +396,6 @@
 				}
 			],
 			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Grouped Service",
-			"item": [],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Tags",
-			"item": [],
-			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -447,17 +437,17 @@
 	],
 	"variable": [
 		{
-			"id": "0e8d2f84-7bbd-4954-9d45-0c40ad51454e",
+			"id": "7febb24c-1223-4b5e-b4ac-fe61489d9cea",
 			"key": "entityCode",
 			"value": "TEST"
 		},
 		{
-			"id": "4fbebf9b-e57c-410f-b69e-c79d32d9bfed",
+			"id": "631b52ec-0a64-408c-9610-fc33f802616b",
 			"key": "productLineCode",
 			"value": ""
 		},
 		{
-			"id": "315913d5-91b3-406c-bf77-f8597d3fe1eb",
+			"id": "42dc9a10-4c7e-49dd-8bbf-5cbcb82052d4",
 			"key": "productCode",
 			"value": ""
 		}
