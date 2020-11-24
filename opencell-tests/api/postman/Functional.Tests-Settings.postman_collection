@@ -24,6 +24,16 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "527bac67-be7d-4da3-888b-b92e39181c33",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -11033,6 +11043,10 @@
 									"script": {
 										"id": "d810b012-2e71-4b12-be04-b1778e3b6d32",
 										"exec": [
+											"let req_body = JSON.parse(pm.request.body);\r",
+											"pm.variables.set(\"req_body_obj\",req_body);\r",
+											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
+											"console.log(\"body request \",req_body);\r",
 											"// let req_body = JSON.parse(pm.request.body);\r",
 											"// _.forEach(req_body, (value, key) => pm.environment.set(key, JSON.stringify(value)));\r",
 											"// console.log(\"body request \",pm.environment.get(\"req_body\"));"
@@ -11109,16 +11123,16 @@
 									"script": {
 										"id": "c69b9a8f-9ed4-4bfc-aed4-67ca7f5c1ade",
 										"exec": [
-											"// let res_body = JSON.parse(responseBody);\r",
-											"// _.forEach(res_body, (value, key) => pm.environment.set(key, JSON.stringify(value)));\r",
-											"// let attachments = JSON.parse(pm.environment.get('attachments'));\r",
-											"// pm.test('All attachments are of correct value', function () {\r",
-											"//   // ...write your test here using the `attachments` variable\r",
-											"// });\r",
-											"\r",
-											"// // console.log(\"body response \",res_body);\r",
-											"\r",
-											""
+											"let res_body = JSON.parse(responseBody);\r",
+											"// console.log(\"response body \",res_body);\r",
+											"    pm.test(request.name + \" - Objects Match\", function () {\r",
+											"        _.forEach(pm.variables.get(\"req_body_obj\"), (val, key) => {\r",
+											"            console.log(\"key and val\",val,key);\r",
+											"                //pm.expect(res_body[val]).to.eql(key);\r",
+											"        expect(key).to.have.members(val);\r",
+											"        //pm.expect({ key: res_body[key] }).to.eql({ key: val });\r",
+											"    });\r",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -11164,7 +11178,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{opencell.url}}/account/customer?customerCode={{entityCode}}\n",
+									"raw": "{{opencell.url}}/account/customer?customerCode={{entityCode}}",
 									"host": [
 										"{{opencell.url}}"
 									],
@@ -11175,7 +11189,7 @@
 									"query": [
 										{
 											"key": "customerCode",
-											"value": "{{entityCode}}\n"
+											"value": "{{entityCode}}"
 										}
 									]
 								}
