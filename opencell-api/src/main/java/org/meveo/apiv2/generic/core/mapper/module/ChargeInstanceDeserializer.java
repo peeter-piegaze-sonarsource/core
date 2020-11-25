@@ -13,6 +13,13 @@ import org.meveo.model.billing.UsageChargeInstance;
 
 import java.io.IOException;
 
+/**
+ * A custom deserializer for ChargeInstance
+ *
+ * @author Thang Nguyen
+ * @since Nov 23, 2020
+ */
+
 class ChargeInstanceDeserializer extends JsonDeserializer<ChargeInstance> {
 
     @Override
