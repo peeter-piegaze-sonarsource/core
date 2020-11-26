@@ -7688,7 +7688,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"code\":\"{{entityCode}}\",\r\n    \"description\": \"{{testDescription}}\",\r\n    \"parentSeller\":\"{{seller}}\",\r\n    \"address\": {\r\n        \"address1\": \"{{address}}\",\r\n        \"address2\": null,\r\n        \"address3\": null,\r\n        \"zipCode\": \"{{zip_code}}\",\r\n        \"city\": \"{{city}}\",\r\n        \"country\": \"{{counrty_code}}\",\r\n        \"state\": \"{{state}}\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"code\":\"{{entityCode}}\",\r\n    \"description\": \"{{testDescription}}\",\r\n    \"parentSeller\": \"SELLER_FR\",\r\n    \"address\": {\r\n        \"address1\": \"{{address}}\",\r\n        \"address2\": null,\r\n        \"address3\": null,\r\n        \"zipCode\": \"{{zip_code}}\",\r\n        \"city\": \"{{city}}\",\r\n        \"country\": \"{{counrty_code}}\",\r\n        \"state\": \"{{state}}\"\r\n    }\r\n}",
 									"options": {
 										"raw": {}
 									}
@@ -11043,13 +11043,10 @@
 									"script": {
 										"id": "d810b012-2e71-4b12-be04-b1778e3b6d32",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_c\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);\r",
-											"// let req_body = JSON.parse(pm.request.body);\r",
-											"// _.forEach(req_body, (value, key) => pm.environment.set(key, JSON.stringify(value)));\r",
-											"// console.log(\"body request \",pm.environment.get(\"req_body\"));"
+											"let req_body_c = JSON.parse(pm.request.body);\r",
+											"pm.globals.set(\"req_body_c\",req_body_c);\r",
+											"// _.forEach(req_body_c, (value, key) => pm.globals.set(key, JSON.stringify(value)));\r",
+											"console.log(\"request body \",req_body_c);"
 										],
 										"type": "text/javascript"
 									}
@@ -11123,14 +11120,14 @@
 									"script": {
 										"id": "c69b9a8f-9ed4-4bfc-aed4-67ca7f5c1ade",
 										"exec": [
-											"let res_body = JSON.parse(responseBody);\r",
-											"// console.log(\"response body \",res_body);\r",
-											"    pm.test(request.name + \" - Objects Match\", function () {\r",
-											"        _.forEach(pm.variables.get(\"req_body_c\"), (val, key) => {\r",
-											"            expect({ key: res_body[key] }).to.have.members({ key: val });\r",
-											"            console.log(\"key and val\",val,key);\r",
-											"                //pm.expect(res_body[val]).to.eql(val);\r",
-											"                //pm.expect({ key: res_body[key] }).to.eql({ key: val });\r",
+											"let res_body_c = JSON.parse(responseBody).customer;\r",
+											"// console.log(\"response body \",res_body_c);\r",
+											"\r",
+											"pm.test(request.name + \" - Data Match\", function () {\r",
+											"    _.forEach(pm.globals.get(\"req_body_c\"), (val, key) => {\r",
+											"        console.log(\"request: key and val\",key,val);\r",
+											"        console.log(\"response: key and val\",key, res_body_c[key]);\r",
+											"        expect({ key: res_body_c[val]}).to.have.members({ key: val });\r",
 											"    });\r",
 											"});"
 										],
@@ -11991,10 +11988,7 @@
 									"script": {
 										"id": "d23b6c63-9c35-423d-a8c3-3d59e2673ad1",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ca\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -12058,13 +12052,7 @@
 									"script": {
 										"id": "4fbcb62e-adff-42fd-8625-77de9cfc61d9",
 										"exec": [
-											"let res_body = JSON.parse(responseBody);\r",
-											"    pm.test(request.name + \" - Objects Match\", function () {\r",
-											"        _.forEach(pm.variables.get(\"req_body_ca\"), (val, key) => {\r",
-											"            expect({ key: res_body[key] }).to.have.members({ key: val });\r",
-											"            console.log(\"key and val\",val,key);\r",
-											"    });\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -12638,10 +12626,7 @@
 									"script": {
 										"id": "d2fff935-33f3-4769-aa60-f704617b0857",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ba\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -12705,10 +12690,7 @@
 									"script": {
 										"id": "8b8f27b5-f704-4e5a-aa1b-3b588442805a",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ba\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -13356,11 +13338,6 @@
 									"script": {
 										"id": "8417546f-7f14-4871-93f5-14b584468daf",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ua\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);\r",
-											"\r",
 											"// used in subscription suite\r",
 											"pm.globals.set(\"user_acc\",pm.variables.get(\"entityCode\"));"
 										],
@@ -13426,10 +13403,7 @@
 									"script": {
 										"id": "48f4b31e-8f57-4809-b7bb-52b520f778d5",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ua\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -14089,10 +14063,7 @@
 									"script": {
 										"id": "b0ee9337-de2d-477a-92aa-bb59a635e7e3",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_pc\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -14156,10 +14127,7 @@
 									"script": {
 										"id": "56e68007-3463-4ebf-bd83-08ab31812e41",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_pc\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -14806,10 +14774,7 @@
 									"script": {
 										"id": "ebcafc03-9e18-40fd-bdd2-4a80d36ce22d",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ah\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -14883,10 +14848,7 @@
 									"script": {
 										"id": "e04024ae-22c2-42ae-8cb1-9df5a2d2a39c",
 										"exec": [
-											"let req_body = JSON.parse(pm.request.body);\r",
-											"pm.variables.set(\"req_body_ah\",req_body);\r",
-											"_.forEach(req_body, (value, key) => pm.variables.set(key, JSON.stringify(value)));\r",
-											"console.log(\"body request \",req_body);"
+											""
 										],
 										"type": "text/javascript"
 									}
