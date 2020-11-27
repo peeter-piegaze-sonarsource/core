@@ -16,8 +16,7 @@
 							"script": {
 								"id": "4abf5b45-33d0-44db-8281-8df20d8f4de4",
 								"exec": [
-									"var productline_code = pm.response.json().id;\r",
-									"pm.collectionVariables.set(\"productLineCode\",productline_code);"
+									"pm.collectionVariables.set(\"productLineCode\",\"TEST_PR_LINE\");"
 								],
 								"type": "text/javascript"
 							}
@@ -28,7 +27,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"codeProductLine\": \"TEST_PR_LINE\",\r\n  \"label\": \"Product Line Test\",\r\n  \"codeSeller\": \"SELLER_FR\",\r\n  \"longDescription\": \"This is a test description for product line\"\r\n}",
+							"raw": "{\r\n  \"codeProductLine\": \"TEST_PR_LINE\",\r\n  \"label\": \"Product line label\",\r\n  \"codeSeller\": \"SELLER_FR\",\r\n  \"longDescription\": \"This is a test description for product line\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -56,14 +55,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{opencell.url}}/catalog/product/{{productLineCode}}",
+							"raw": "{{opencell.url}}/catalog/product/productLine?productLineCode={{productLineCode}}",
 							"host": [
 								"{{opencell.url}}"
 							],
 							"path": [
 								"catalog",
 								"product",
-								"{{productLineCode}}"
+								"productLine"
+							],
+							"query": [
+								{
+									"key": "productLineCode",
+									"value": "{{productLineCode}}"
+								}
 							]
 						},
 						"description": "retrieving a product line with its code"
@@ -76,7 +81,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "b342c4e5-12c8-40c7-b448-46ff81676e8e",
+								"id": "3bd7d287-97e6-40e7-98d1-a119d69c2712",
 								"exec": [
 									""
 								],
@@ -86,10 +91,9 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2b07e163-7538-4a59-b594-e638adc4601c",
+								"id": "a9c1964c-f27f-4d66-b0fc-1a9dd13cc35d",
 								"exec": [
-									"var product_code = pm.response.json().id;\r",
-									"pm.collectionVariables.set(\"productCode\",product_code);"
+									"pm.collectionVariables.set(\"productCode\",\"TEST_PR\");"
 								],
 								"type": "text/javascript"
 							}
@@ -100,7 +104,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"code\": \"TST_PRODUCT\",\r\n  \"label\": \"Product Test\",\r\n  \"status\": \"DRAFT\",\r\n  \"discountFlag\":false,\r\n  \"packageFlag\":true\r\n \r\n}",
+							"raw": "{\r\n  \"code\": \"TEST_PR\",\r\n  \"label\": \"this is the product label\",\r\n  \"status\": \"DRAFT\",\r\n  \"statusDate\": \"2020-11-25T13:45:00.087Z\",\r\n  \"productLineCode\": \"TEST_PR_LINE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -127,14 +131,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{opencell.url}}/catalog/product/{{productCode}}",
+							"raw": "{{opencell.url}}/catalog/product?productCode={{productCode}}",
 							"host": [
 								"{{opencell.url}}"
 							],
 							"path": [
 								"catalog",
-								"product",
-								"{{productCode}}"
+								"product"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "{{productCode}}"
+								}
 							]
 						},
 						"description": "Retrieving a product with its code"
@@ -148,7 +157,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"code\": \"TEST_PRODUCT\",\r\n  \"label\": \"Product Test updated\",\r\n  \"discountFlag\":false,\r\n  \"packageFlag\":true\r\n}",
+							"raw": "{\r\n  \"code\": \"TEST_PRODUCT\",\r\n  \"label\": \"This is product label (updated)\",\r\n  \"discountFlag\":false,\r\n  \"packageFlag\":true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -245,7 +254,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"shortDescription\": \"Product version test\",\r\n  \"productCode\": \"TEST_PRODUCT\",\r\n  \"currentVersion\": 1,\r\n  \"status\": \"DRAFT\",\r\n  \"statusDate\": \"2020-11-24\",\r\n  \"longDescription\": \"This is a long test description for product version\",\r\n  \"startDate\": \"2020-11-24\",\r\n  \"endDate\": \"2020-11-25\"\r\n}",
+							"raw": "{\r\n  \"shortDescription\": \"Product version test\",\r\n  \"productCode\": \"TEST_PR\",\r\n  \"currentVersion\": 1,\r\n  \"status\": \"DRAFT\",\r\n  \"statusDate\": \"2020-11-24\",\r\n  \"longDescription\": \"This is a long test description for product version\",\r\n  \"startDate\": \"2020-11-24\",\r\n  \"endDate\": \"2020-11-25\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -447,17 +456,17 @@
 	],
 	"variable": [
 		{
-			"id": "f683ea80-53bf-4614-adaa-2e2c4b96bd78",
+			"id": "3c74a304-37b4-40f5-9b7a-b137a37976a4",
 			"key": "entityCode",
 			"value": "TEST"
 		},
 		{
-			"id": "cda054d4-9e26-4b57-bf57-ef6d7ecf45a9",
+			"id": "18b75acd-4744-4608-ae04-ec9455760c23",
 			"key": "productLineCode",
 			"value": ""
 		},
 		{
-			"id": "e614308f-27ac-4441-a5d7-b28bc39b592d",
+			"id": "756d0549-8a0c-4051-a8d2-04b2acbab129",
 			"key": "productCode",
 			"value": ""
 		}
