@@ -1,11 +1,19 @@
 package org.meveo.api.dto.cpq;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+
 import org.meveo.api.dto.BaseEntityDto;
+import org.meveo.api.dto.catalog.ServiceTemplateDto;
 import org.meveo.model.cpq.ProductVersion;
 import org.meveo.model.cpq.enums.VersionStatusEnum;
 /**
@@ -40,6 +48,16 @@ public class ProductVersionDto extends BaseEntityDto {
     private Date endDate;
   
     
+    /** The services template. */
+    @XmlElementWrapper(name = "services")
+    @XmlElement(name = "services")
+    private Set<ServiceDTO> services;
+    
+    /** The services template. */
+    @XmlElementWrapper(name = "tags")
+    @XmlElement(name = "tags")
+    private Set<TagDto> tagList = new HashSet<>();
+    
     /**
      * Instantiates a new product version dto.
      */
@@ -62,6 +80,19 @@ public class ProductVersionDto extends BaseEntityDto {
         this.longDescription =productVersion.getLongDescription();
         this.startDate = productVersion.getStartDate();
         this.endDate = productVersion.getEndDate();
+
+    	if(productVersion.getServices() != null && !productVersion.getServices().isEmpty()) {
+    		services = productVersion.getServices().stream().map(d -> {
+    			final ServiceDTO service = new ServiceDTO(d);
+    			return service;
+    		}).collect(Collectors.toSet());
+    	}
+    	if(productVersion.getTags() != null && !productVersion.getTags().isEmpty()) {
+    		tagList = productVersion.getTags().stream().map(t -> {
+    			final TagDto dto = new TagDto(t);
+    			return dto;
+    		}).collect(Collectors.toSet());
+    	}
     }
     /**
      * @return the shortDescription
@@ -159,12 +190,38 @@ public class ProductVersionDto extends BaseEntityDto {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    @Override
+    
+    
+    /**
+	 * @return the services
+	 */
+	public Set<ServiceDTO> getServices() {
+		return services;
+	}
+	/**
+	 * @param services the services to set
+	 */
+	public void setServices(Set<ServiceDTO> services) {
+		this.services = services;
+	}
+	@Override
     public String toString() {
         return "ProductVersionDto [shortDescription=" + shortDescription + ", productCode=" + productCode
                 + ", currentVersion=" + currentVersion + ", status=" + status + ", statusDate=" + statusDate
                 + ", longDescription=" + longDescription + ", startDate=" + startDate + ", endDate=" + endDate + "]";
     }
+	/**
+	 * @return the tagList
+	 */
+	public Set<TagDto> getTagList() {
+		return tagList;
+	}
+	/**
+	 * @param tagList the tagList to set
+	 */
+	public void setTagList(Set<TagDto> tagList) {
+		this.tagList = tagList;
+	}
      
     
 }

@@ -91,8 +91,6 @@ public class ProductRsImpl extends BaseRs implements ProductRs {
 	}
 
 	@Override
-	 
-	 
 	public Response listPost(OfferContextDTO offerContextDTO) {
 		 GetListProductsResponseDto result = new GetListProductsResponseDto();
 
@@ -189,14 +187,14 @@ public class ProductRsImpl extends BaseRs implements ProductRs {
 		}
 	}
 
-	private Response errorResponse(MeveoApiException e, ActionStatus result) {
+	/*private Response errorResponse(MeveoApiException e, ActionStatus result) {
 		if(result==null) {
 			result = new ActionStatus();
 		}
 		result.setStatus(ActionStatusEnum.FAIL);
 		result.setMessage(e.getMessage());
 		 return createResponseFromMeveoApiException(e, result).build();
-	}
+	}*/
 
 	@Override
 	public Response removeProduct(String productCode) {
@@ -209,6 +207,44 @@ public class ProductRsImpl extends BaseRs implements ProductRs {
 	        }
 	}
 
+	public Response duplicateProduct(String productCode, boolean duplicateHierarchy, boolean preserveCode) { 
+		GetProductDtoResponse result = new GetProductDtoResponse();
+		try {
+			result = new GetProductDtoResponse(productApi.duplicateProduct(productCode, duplicateHierarchy, preserveCode));
+			return Response.ok(result).build();
+		} catch (MeveoApiException e) {
+		       return errorResponse(e, result.getActionStatus());
+		}
+	}
+
+	@Override
+	public Response findProductVersion(String productCode, int productVersion) {
+		GetProductVersionResponse result = new GetProductVersionResponse();
+		try {
+			result = new GetProductVersionResponse(productApi.findProductVersion(productCode, productVersion));
+			return Response.ok(result).build();
+		} catch (MeveoApiException e) {
+		       return errorResponse(e, result.getActionStatus());
+		}
+	}
+
+	@Override
+	public Response findProductVersions(String productCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response listProductVersions(OfferContextDTO offerContextDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response listProductVersions(PagingAndFiltering pagingAndFiltering) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 

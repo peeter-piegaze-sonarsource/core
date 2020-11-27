@@ -31,11 +31,12 @@ public class ProductDto extends BaseEntityDto{
 	private String brandCode;
 	private String reference;
 	private String model;
-	private Set<String> modelChlidren;
+	private Set<String> modelChildren;
 	private boolean discountFlag;
     private boolean packageFlag;
     /** The custom fields. */
     private CustomFieldsDto customFields;
+
     
     
     public ProductDto() {}
@@ -54,7 +55,7 @@ public class ProductDto extends BaseEntityDto{
     	}
     	this.reference = p.getReference();
     	this.model = p.getModel();
-    	this.modelChlidren = p.getModelChlidren();
+    	this.modelChildren = p.getModelChlidren();
     	this.discountFlag = p.isDiscountFlag();
     	this.packageFlag = p.isPackageFlag();
     }
@@ -181,18 +182,20 @@ public class ProductDto extends BaseEntityDto{
 		this.model = model;
 	}
 
+	
+
 	/**
-	 * @return the modelChlidren
+	 * @return the modelChildren
 	 */
-	public Set<String> getModelChlidren() {
-		return modelChlidren;
+	public Set<String> getModelChildren() {
+		return modelChildren;
 	}
 
 	/**
-	 * @param modelChlidren the modelChlidren to set
+	 * @param modelChildren the modelChildren to set
 	 */
-	public void setModelChlidren(Set<String> modelChlidren) {
-		this.modelChlidren = modelChlidren;
+	public void setModelChildren(Set<String> modelChildren) {
+		this.modelChildren = modelChildren;
 	}
 
 	/**
@@ -236,6 +239,9 @@ public class ProductDto extends BaseEntityDto{
 	public void setCustomFields(CustomFieldsDto customFields) {
 		this.customFields = customFields;
 	}
+
+
+	
 	
     
 }

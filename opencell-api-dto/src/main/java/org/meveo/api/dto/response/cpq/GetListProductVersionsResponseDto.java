@@ -23,55 +23,77 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.meveo.api.dto.cpq.ServiceDTO;
+import org.meveo.api.dto.cpq.ProductVersionDto;
 import org.meveo.api.dto.response.SearchResponse;
 
 /**
- * The Class GetListServiceResponseDto.
+ * The Class GetListProductsResponseDto.
  * 
  * @author Rachid.AIT
- * @lastModifiedVersion 11.0.0
  */
-@XmlRootElement(name = "GetListServiceResponseDto")
+@XmlRootElement(name = "GetListProductVersionsResponseDto")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GetListServiceResponseDto extends SearchResponse {
-	
+public class GetListProductVersionsResponseDto extends SearchResponse {
+
+    /**
+	 * 
+	 *
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -4317478215685305319L;
-	
+	private static final long serialVersionUID = 4603307996134173567L;
    
 
-    /** The list product template. */
-    private List<ServiceDTO> services;
+    /** products list. */
+    @XmlElementWrapper(name = "productVersions")
+    @XmlElement(name = "productVersions")
+    private List<ProductVersionDto> productVersions  = new ArrayList<>();;
 
     /**
-     * Gets the service template list.
-     *
-     * @return the list service template
+     * Instantiates a new gets the list offer template response dto.
      */
-    public List<ServiceDTO> getServices() {
-        return services;
+    public GetListProductVersionsResponseDto() {
+
     }
 
-    /**
-     * Sets the list product template.
+	/**
+	 * @return the productVersions
+	 */
+	public List<ProductVersionDto> getProductVersions() {
+		return productVersions;
+	}
+
+
+
+
+
+
+
+
+	/**
+	 * @param productVersions the productVersions to set
+	 */
+	public void setProductVersions(List<ProductVersionDto> productVersions) {
+		this.productVersions = productVersions;
+	}
+
+
+
+
+
+
+
+
+	/**
+     * Adds the product version.
      *
-     * @param listServiceTemplate the new list service template
+     * @param productVersion the offer template
      */
-    public void setServices(List<ServiceDTO> services) {
-        this.services = services;
-    }
-
-    public void addServiceTemplate(ServiceDTO serviceDto) {
-        if (services == null) {
-        	services = new ArrayList<>();
-        }if(!services.contains(serviceDto)) {
-        services.add(serviceDto);
-        }
-    }
-    
-    
-
+	public void addProductVersion(ProductVersionDto productVersion) { 
+		if(!productVersions.contains(productVersion)) {
+			productVersions.add(productVersion);
+		}
+	}
 }
