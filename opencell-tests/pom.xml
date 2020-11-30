@@ -5,7 +5,17 @@
     <artifactId>opencelltests</artifactId>
     <name>Opencell tests</name>
     <version>11.0.0-SNAPSHOT</version>
-    
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.opencellsoft</groupId>
+            <artifactId>opencell-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
     <pluginRepositories>
         <pluginRepository>
             <id>eviwarePluginRepository</id>
@@ -16,7 +26,7 @@
             <url>https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <endPoint>http://tests.i.opencellsoft.com/opencell</endPoint>
@@ -39,7 +49,7 @@
         <thinkTime>1000</thinkTime>
         <firstCustId>100</firstCustId>
     </properties>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -144,7 +154,7 @@
                             </exclusion>
                         </exclusions>
                     </dependency>
-                    
+
                 </dependencies>
             </plugin>
             <plugin>
@@ -183,7 +193,7 @@
                     <!-- source file that contains jmeter result data. Needs to be XML format
                      or a GZIPed XML format -->
                     <!-- <source>${project.build.directory}/jmeter/results/*</source> -->
-                    
+
                     <!-- directory where to store analysis report files. At least a file
                      "summary.txt" will be stored here. -->
                     <!-- <targetDirectory>${project.build.directory}/reports</targetDirectory> -->
@@ -219,7 +229,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <reporting>
         <plugins>
             <plugin>

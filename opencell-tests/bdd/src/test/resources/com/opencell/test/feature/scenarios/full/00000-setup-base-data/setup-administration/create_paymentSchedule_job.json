@@ -1,7 +1,0 @@
-{
-    "jobTemplate": "PaymentScheduleProcessingJob",
-    "code": "PaymentSchedule_Job",
-    "description": "PaymentSchedule_Job",
-    "jobCategory": "ACCOUNT_RECEIVABLES",
-    "active": "false"
-}

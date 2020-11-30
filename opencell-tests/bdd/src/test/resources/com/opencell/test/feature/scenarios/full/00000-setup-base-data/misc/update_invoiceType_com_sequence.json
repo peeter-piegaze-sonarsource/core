@@ -1,9 +1,0 @@
-{
-    "code": "COM",
-    "occTemplateCode": "INV_STD",
-    "sequenceDto": {
-        "prefixEL": "COM_",
-        "sequenceSize": "9"
-    },
-    "matchingAuto": "false"
-}

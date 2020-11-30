@@ -1,7 +1,0 @@
-{
-    "jobTemplate": "GDPRJob",
-    "code": "GDPR_Job",
-    "description": "GDPR_Job",
-    "jobCategory": "DWH",
-    "active": "false"
-}

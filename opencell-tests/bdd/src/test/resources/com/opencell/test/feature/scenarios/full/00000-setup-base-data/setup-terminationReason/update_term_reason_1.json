@@ -1,7 +1,0 @@
-{
-    "code": "TERM_REASON_1",
-    "description": "Agreement Reimbursement Charge",
-    "applyAgreement": "true",
-    "applyReimbursment": "true",
-    "applyTerminationCharges": "true"
-}

@@ -1,7 +1,0 @@
-{ 
-	    "code": "TERM_REASON_TEST",
-            "description": "TERM_REASON_TEST",
-            "applyAgreement": true,
-            "applyReimbursment": true,
-            "applyTerminationCharges": true
-}

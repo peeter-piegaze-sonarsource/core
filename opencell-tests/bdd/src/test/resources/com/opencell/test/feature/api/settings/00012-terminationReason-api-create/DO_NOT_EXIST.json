@@ -1,7 +1,0 @@
-{ 
-	    "code": "NOT_EXIST",
-            "description": "TERM_REASON_TEST",
-            "applyAgreement": true,
-            "applyReimbursment": true,
-            "applyTerminationCharges": true
-}

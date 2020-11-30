@@ -1,8 +1,0 @@
-{
-	"code": "CHILD_SELLER",
-	"description": "Child Seller",
-	"currencyCode": "USD",
-	"countryCode": "US",
-	"languageCode": "ENG",
-	"parentSeller": "PARENT_SELLER"
-}

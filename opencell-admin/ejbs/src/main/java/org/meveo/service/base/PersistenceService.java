@@ -240,7 +240,6 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
      */
     @Override
     public E findById(Long id) {
-
         log.trace("Find {}/{} by id", entityClass.getSimpleName(), id);
         return getEntityManager().find(entityClass, id);
 

@@ -1,6 +1,0 @@
-{
-                        "code": "aString",
-                        "description": "A string on ServiceTemplate",
-                        "fieldType": "STRING",
-                        "stringValue": "TWO"
-                    }

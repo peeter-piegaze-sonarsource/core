@@ -1,6 +1,0 @@
-{
-    "code": "NOT_EXIST",
-    "description": "Test payment gateway",
-    "type": "CUSTOM",
-    "paymentMethodType": "CHECK"
-}

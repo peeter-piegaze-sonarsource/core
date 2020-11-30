@@ -1,6 +1,0 @@
-{
-    "code": "TEST",
-    "description": "Test payment gateway",
-    "type": "CUSTOM",
-    "paymentMethodType": "CHECK"
-}
