@@ -372,10 +372,7 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     private PaymentHistory paymentHistory;
 
     @ManyToMany
-    @JoinTable(
-      name = "ar_ao_payment_histories",
-      joinColumns = @JoinColumn(name = "ao_id"),
-      inverseJoinColumns = @JoinColumn(name = "history_id"))
+    @JoinTable(name = "ar_ao_payment_histories", joinColumns = @JoinColumn(name = "ao_id"), inverseJoinColumns = @JoinColumn(name = "history_id"))
     private List<PaymentHistory> paymentHistories = new ArrayList<PaymentHistory>();
 
     /**

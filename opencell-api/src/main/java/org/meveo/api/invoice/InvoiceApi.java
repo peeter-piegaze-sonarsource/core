@@ -1077,7 +1077,7 @@ public class InvoiceApi extends BaseApi {
         dto.setDiscount(invoice.getDiscount());
         dto.setCheckAlreadySent(invoice.isAlreadySent());
         dto.setSentByEmail(invoice.isDontSend());
-        dto.setInitialCollectionDate(invoice.getInitialCollectionDate());
+        dto.setIntialCollectionDate(invoice.getIntialCollectionDate());
 
         List<CategoryInvoiceAgregateDto> categoryInvoiceAgregates = new ArrayList<>();
         List<TaxInvoiceAggregateDto> taxAggregates = new ArrayList<>();

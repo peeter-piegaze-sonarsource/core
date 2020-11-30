@@ -291,21 +291,21 @@ public class AccountOperationApi extends BaseApi {
         }
         return result;
     }
-    
+
     /**
      * List.
-     * 
+     *
      * @param customerAccountCode customerAccountCode
      * @return the account operations response dto
      * @throws MeveoApiException the meveo api exception
      */
     public AccountOperationsResponseDto listByCustomerAccountCode(String customerAccountCode, Integer firstRow, Integer numberOfRows) throws MeveoApiException {
-        
+
         if (StringUtils.isBlank(customerAccountCode)) {
             missingParameters.add("customerAccountCode");
             handleMissingParameters();
         }
-        
+
         CustomerAccount customerAccount = customerAccountService.findByCode(customerAccountCode);
         if (customerAccount == null) {
             throw new EntityDoesNotExistsException(CustomerAccount.class, customerAccountCode);

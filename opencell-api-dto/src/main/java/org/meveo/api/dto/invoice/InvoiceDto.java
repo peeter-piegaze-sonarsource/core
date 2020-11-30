@@ -233,7 +233,6 @@ public class InvoiceDto extends AuditableEntityDto {
 
     /**
      * list of existing RTs to include, identified by id This option is allowed only if invoiceMode=="DETAILLED"
-     *
      */
     protected List<Long> ratedTransactionsToLink;
     /**
@@ -271,6 +270,10 @@ public class InvoiceDto extends AuditableEntityDto {
         this.paymentIncidents = paymentIncidents;
     }
 
+    /**
+     * Invoice payment collection date.
+     */
+    private Date intialCollectionDate;
     public void addPaymentIncidents(String paymentIncident) {
         this.paymentIncidents.add(paymentIncident);
     }

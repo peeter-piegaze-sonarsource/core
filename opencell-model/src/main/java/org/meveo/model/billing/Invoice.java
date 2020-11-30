@@ -1103,10 +1103,18 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
         return externalRef;
     }
 
-	public void setExternalRef(String externalRef) {
-		this.externalRef = externalRef;
-	}
+    public void setExternalRef(String externalRef) {
+        this.externalRef = externalRef;
+    }
 
+    /**
+     * Gets the invoice payment collection date
+     *
+     * @return Invoice payment collection date
+     */
+    public Date getIntialCollectionDate() {
+        return intialCollectionDate;
+    }
 
     public void setDraftRatedTransactions(List<RatedTransaction> draftRatedTransactions) {
         this.draftRatedTransactions = draftRatedTransactions;
