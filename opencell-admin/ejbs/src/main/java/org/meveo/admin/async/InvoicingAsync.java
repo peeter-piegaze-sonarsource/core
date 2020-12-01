@@ -213,7 +213,8 @@ public class InvoicingAsync {
                 break;
             }
             try {
-                invoiceService.assignInvoiceNumber(invoiceId, invoicesToNumberInfo, billingRun);
+                invoiceService.recalculateDates(invoiceId);
+                invoiceService.assignInvoiceNumber(invoiceId, invoicesToNumberInfo);
 
             } catch (Exception e) {
                 if (result != null) {
