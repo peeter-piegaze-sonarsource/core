@@ -204,6 +204,13 @@ public class BillingCycle extends BusinessCFEntity {
     private boolean splitPerPaymentMethod;
 
     /**
+     * To decide whether or not dates should be recomputed at invoice validation.
+     */
+    @Column(name = "compute_dates_validation")
+    @Type(type = "numeric_boolean")
+    private boolean computeDatesAtValidation;
+
+    /**
      * EL to compute invoice.initialCollectionDate delay.
      */
     @Column(name = "collection_date_delay_el", length = 2000)
@@ -426,7 +433,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * Gets the threshold option.
-     * 
+     *
      * @return the threshold option
      */
     public ThresholdOptionsEnum getCheckThreshold() {
@@ -435,7 +442,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * Sets the threshold option.
-     * 
+     *
      * @param checkThreshold the threshold option
      */
     public void setCheckThreshold(ThresholdOptionsEnum checkThreshold) {
@@ -458,6 +465,20 @@ public class BillingCycle extends BusinessCFEntity {
      */
     public void setSplitPerPaymentMethod(boolean splitPerPaymentMethod) {
         this.splitPerPaymentMethod = splitPerPaymentMethod;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isComputeDatesAtValidation() {
+        return computeDatesAtValidation;
+    }
+
+    /**
+     * @param computeDatesAtValidation
+     */
+    public void setComputeDatesAtValidation(boolean computeDatesAtValidation) {
+        this.computeDatesAtValidation = computeDatesAtValidation;
     }
 
     /**
