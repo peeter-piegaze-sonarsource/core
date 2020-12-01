@@ -15,7 +15,6 @@
         <module>opencell-admin</module>
         <module>opencell-api</module>
         <module>opencell-client</module>
-        <module>opencell-tests</module>
     </modules>
     
     <properties>
@@ -113,11 +112,6 @@
             <dependency>
                 <groupId>com.opencellsoft</groupId>
                 <artifactId>opencell-tmforum</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.opencellsoft</groupId>
-                <artifactId>opencell-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,3 +1,5 @@
+package scenarios.Update_Seller;
+
 import static org.junit.Assert.*;
 import org.meveo.model.admin.Seller;
 
