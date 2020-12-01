@@ -1,11 +1,20 @@
 package Update_Seller;
 
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.meveo.model.admin.Seller;
-import io.cucumber.java.en.*;
+import org.meveo.service.admin.impl.SellerService;
 
-import static org.junit.Assert.*;
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertEquals;
 
 public class Update_Seller_StepDefs {
+
+    @Inject
+    private SellerService sellerService;
 
     private Seller seller;
     private String id;
@@ -16,7 +25,7 @@ public class Update_Seller_StepDefs {
 
     @Given("Update seller")
     public void updateSeller() {
-//        seller = new Seller();
+        seller = sellerService.findByCode(postData.getCode());
     }
 
     @When("Field id filled by {string}")
@@ -42,6 +51,7 @@ public class Update_Seller_StepDefs {
     @Then("The status is {string}")
     public void theStatusIs(String arg0) {
         status = arg0;
-        assertEquals( status, "200" );
+        assertEquals( status, "300" );
+        assertEquals( status, seller.get );
     }
 }
