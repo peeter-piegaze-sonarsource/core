@@ -37,9 +37,6 @@
         <java.version>11</java.version>
         <primefaces.version>7.0</primefaces.version>
 
-        <cucumber.version>6.8.1</cucumber.version>
-        <junit.version>4.13</junit.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <scm>
@@ -622,7 +619,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         
@@ -655,27 +651,6 @@
         <!-- </dependency> -->
 
 
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>${cucumber.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>${cucumber.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
     </dependencies>
     
     <build>

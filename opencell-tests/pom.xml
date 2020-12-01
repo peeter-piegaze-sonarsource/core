@@ -1,8 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>opencell</artifactId>
+        <groupId>com.opencellsoft</groupId>
+        <relativePath>../pom.xml</relativePath>
+        <version>11.0.0-SNAPSHOT</version>
+    </parent>
     <groupId>info.opencell.tests</groupId>
-    <artifactId>opencelltests</artifactId>
+    <artifactId>opencell-tests</artifactId>
     <name>Opencell tests</name>
     <version>11.0.0-SNAPSHOT</version>
 
@@ -12,6 +18,27 @@
             <groupId>com.opencellsoft</groupId>
             <artifactId>opencell-model</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -48,6 +75,10 @@
         <port>8080</port>
         <thinkTime>1000</thinkTime>
         <firstCustId>100</firstCustId>
+
+        <cucumber.version>6.8.1</cucumber.version>
+        <junit.version>4.13</junit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
@@ -251,6 +282,6 @@
             </plugin>
         </plugins>
     </reporting>
-    
+
 </project>
 
