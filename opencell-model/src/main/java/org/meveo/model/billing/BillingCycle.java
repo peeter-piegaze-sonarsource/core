@@ -218,6 +218,13 @@ public class BillingCycle extends BusinessCFEntity {
     private String collectionDateDelayEl;
 
     /**
+     * To decide whether or not dates should be recomputed at invoice validation.
+     */
+    @Column(name = "compute_dates_validation")
+    @Type(type = "numeric_boolean")
+    private Boolean computeDatesAtValidation = false;
+
+    /**
      * @return Invoicing calendar
      */
     public Calendar getCalendar() {
@@ -497,5 +504,19 @@ public class BillingCycle extends BusinessCFEntity {
      */
     public void setCollectionDateDelayEl(String collectionDateDelayEl) {
         this.collectionDateDelayEl = collectionDateDelayEl;
+    }
+
+    /**
+     * @return
+     */
+    public Boolean isComputeDatesAtValidation() {
+        return computeDatesAtValidation;
+    }
+
+    /**
+     * @param computeDatesAtValidation
+     */
+    public void setComputeDatesAtValidation(Boolean computeDatesAtValidation) {
+        this.computeDatesAtValidation = computeDatesAtValidation;
     }
 }

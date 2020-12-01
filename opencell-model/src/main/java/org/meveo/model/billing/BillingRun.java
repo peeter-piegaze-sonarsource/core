@@ -310,7 +310,7 @@ public class BillingRun extends AuditableEntity implements ICustomFieldEntity, I
      */
     @Column(name = "compute_dates_validation")
     @Type(type = "numeric_boolean")
-    private boolean computeDatesAtValidation = false;
+    private Boolean computeDatesAtValidation = false;
 
     /**
      * EL to compute invoice.initialCollectionDate delay.
@@ -728,5 +728,19 @@ public class BillingRun extends AuditableEntity implements ICustomFieldEntity, I
      */
     public void setCollectionDate(Date collectionDate) {
         this.collectionDate = collectionDate;
+    }
+
+    /**
+     * @return
+     */
+    public Boolean isComputeDatesAtValidation() {
+        return computeDatesAtValidation;
+    }
+
+    /**
+     * @param computeDatesAtValidation
+     */
+    public void setComputeDatesAtValidation(Boolean computeDatesAtValidation) {
+        this.computeDatesAtValidation = computeDatesAtValidation;
     }
 }
