@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>com.opencellsoft</groupId>
-            <artifactId>opencell-admin-ejbs</artifactId>
+            <artifactId>opencell-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

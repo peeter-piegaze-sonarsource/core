@@ -12,17 +12,18 @@
  * THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE,
  * YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
  *
- * For more information on the GNU Affero General Public License, please consult
+ * For more information on the
+ *  GNU Affero General Public License, please consult
  * <https://www.gnu.org/licenses/agpl-3.0.en.html>.
  */
 package org.meveo.service.admin.impl;
 
-import javax.ejb.Stateless;
-import javax.persistence.NoResultException;
-
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.model.admin.Seller;
 import org.meveo.service.base.AccountService;
+
+import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
 
 @Stateless
 public class SellerService extends AccountService<Seller> {
