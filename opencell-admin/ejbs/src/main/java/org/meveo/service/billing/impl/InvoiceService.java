@@ -49,6 +49,7 @@ import java.util.UUID;
 import java.util.Set;
 import java.util.Objects;
 import java.util.Map.Entry;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,6 +109,7 @@ import org.meveo.api.exception.InvalidParameterException;
 import org.meveo.commons.utils.NumberUtils;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.commons.utils.PersistenceUtils;
 import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.event.qualifier.InvoiceNumberAssigned;
@@ -2465,7 +2467,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
     @JpaAmpNewTx
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void assignInvoiceNumber(Long invoiceId, InvoicesToNumberInfo invoicesToNumberInfo) throws BusinessException {
-        Invoice invoice = findById(invoiceId);
+        Invoice invoice = invoiceService.findById(invoiceId);
         assignInvoiceNumberFromReserve(invoice, invoicesToNumberInfo);
 
         BillingAccount billingAccount = invoice.getBillingAccount();
@@ -2476,30 +2478,44 @@ public class InvoiceService extends PersistenceService<Invoice> {
         invoice = update(invoice);
     }
 
+    /**
+     * Re-computed invoice date, due date and collection date when the invoice is validated.
+     *
+     * @param invoice
+     */
     @JpaAmpNewTx
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void recalculateDates(Long invoiceId) {
-        Invoice invoice = findById(invoiceId);
-        BillingAccount billingAccount = invoice.getBillingAccount();
-        recalculateDate(invoice, invoice.getBillingRun(), billingAccount);
-        update(invoice);
-    }
-
-    public void recalculateDate(Invoice invoice, BillingRun billingRun, BillingAccount billingAccount) {
+        Invoice invoice = invoiceService.findById(invoiceId);
+        BillingAccount billingAccount = billingAccountService.refreshOrRetrieve(invoice.getBillingAccount());
         BillingCycle billingCycle = billingAccount.getBillingCycle();
+        BillingRun billingRun = billingRunService.refreshOrRetrieve(invoice.getBillingRun());
         if (billingRun != null) {
             billingCycle = billingRun.getBillingCycle();
         }
-        if (billingRun != null) {
-            int delay = billingCycle.getInvoiceDateDelayEL() == null ?
-                    0 :
-                    InvoiceService.resolveImmediateInvoiceDateDelay(billingCycle.getInvoiceDateDelayEL(), invoice, billingAccount);
-            Date invoiceDate = DateUtils.addDaysToDate(new Date(), delay);
-            invoiceDate = DateUtils.setTimeToZero(invoiceDate);
-            invoice.setInvoiceDate(invoiceDate);
-            setInvoiceDueDate(invoice, billingCycle);
-            setInitialCollectionDate(invoice, billingCycle, billingRun);
+        billingCycle = PersistenceUtils.initializeAndUnproxy(billingCycle);
+        if (billingRun == null || !billingRun.isComputeDatesAtValidation()) {
+            return;
         }
+        if (billingRun.isComputeDatesAtValidation() == null && !billingCycle.isComputeDatesAtValidation()) {
+            return;
+        }
+        if (billingRun.isComputeDatesAtValidation() || (billingRun.isComputeDatesAtValidation() == null && billingCycle.isComputeDatesAtValidation())) {
+            recalculateDate(invoice, billingRun, billingAccount, billingCycle);
+            update(invoice);
+        }
+    }
+
+    private void recalculateDate(Invoice invoice, BillingRun billingRun, BillingAccount billingAccount, BillingCycle billingCycle) {
+
+        int delay =
+                billingCycle.getInvoiceDateDelayEL() == null ? 0 : InvoiceService.resolveImmediateInvoiceDateDelay(billingCycle.getInvoiceDateDelayEL(), invoice, billingAccount);
+        Date invoiceDate = DateUtils.addDaysToDate(new Date(), delay);
+        invoiceDate = DateUtils.setTimeToZero(invoiceDate);
+        invoice.setInvoiceDate(invoiceDate);
+        setInvoiceDueDate(invoice, billingCycle);
+        setInitialCollectionDate(invoice, billingCycle, billingRun);
+
     }
 
     /**
