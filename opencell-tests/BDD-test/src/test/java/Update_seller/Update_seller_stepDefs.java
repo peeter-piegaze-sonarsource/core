@@ -1,4 +1,4 @@
-package Update_Seller;
+package Update_seller;
 
 import Utils.Constants;
 import Utils.KeyCloakAuthenticationHook;

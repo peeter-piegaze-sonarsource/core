@@ -1,20 +1,18 @@
-@TestUpdateSeller
-   # The objective of this scenario is to verify whether
-Feature: Testing method Update on entity Seller
+@TestUpdateEntity
+   # The objective of this scenario is to verify whether any entity can
+   # be updated by API
+Feature: Testing method Update on an entity
 
    Background:  System is configured.
 
-   Scenario Outline: Update a seller
+   Scenario Outline: Update an entity
 
-      Given  Update seller on "<env>"
-      When   Field id filled by "<id>"
-      And    Field code filled by "<code>"
-      And    Field description filled by "<description>"
-      And    Field tradingCurrency filled by "<tradingCurrencyId>"
+      Given  Update "<entity>" with "<id>" on "<env>"
+      When   Fields filled by "<code>", "<description>"
       Then   The status is "<status>"
 
 
       Examples:
-         | env                   | id | code               | description     | tradingCurrencyId | status |
-         | http://localhost:8080 | 3  | Seller_ThangNguNgu | new description | -1                | 200    |
-         | http://localhost:8080 | 7  | Seller_ThangHoolaa | new description | -1                | 200    |
+         | entity   | env                   | id  | code               | description   | status |
+         | seller   | http://localhost:8080 | 3   | Seller_ThangNguNgu | A description | 200    |
+         | provider | http://localhost:8080 | 1   | Prov_ThangNguNgu   | A Prov Desc   | 200    |
