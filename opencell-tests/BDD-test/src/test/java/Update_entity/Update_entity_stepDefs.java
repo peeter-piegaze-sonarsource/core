@@ -28,9 +28,8 @@ public class Update_entity_stepDefs {
         env = arg2;
 
         //--------------------------------------------------------------------
-        // This piece of code tests creates a new Http client with authentication by token
-        KeyCloakAuthenticationHook keyCloak = new KeyCloakAuthenticationHook();
-        keyCloak.authenticateAsAdmin();
+        // This piece of code tests creates a new instance of Keycloak token
+        KeyCloakAuthenticationHook.getInstance();
 
         // A request POST tests existence of entity with id
         String url = env + Constants.PREFIX_API_V2 + entity +

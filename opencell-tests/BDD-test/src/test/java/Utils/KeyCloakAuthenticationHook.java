@@ -18,6 +18,20 @@ public class KeyCloakAuthenticationHook {
     private static Map<String, String> tokens = new HashMap<>();
     private static String token;
 
+    // static variable single_instance of type KeyCloakAuthenticationHook
+    private static KeyCloakAuthenticationHook single_instance = null;
+
+    // static method to create a single instance of KeyCloakAuthenticationHook class
+    public static KeyCloakAuthenticationHook getInstance()
+    {
+        if (single_instance == null)
+            single_instance = new KeyCloakAuthenticationHook();
+
+        single_instance.authenticateAsAdmin();
+
+        return single_instance;
+    }
+
     @Before("@admin")
     public void authenticateAsAdmin() {
         setProperties();// TODO to be removed after test, just for debug
