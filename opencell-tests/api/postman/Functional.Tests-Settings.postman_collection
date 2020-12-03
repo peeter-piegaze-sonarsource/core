@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d9ff0103-cd19-4ce2-ab46-67e837c1b76b",
+		"_postman_id": "9728da2c-fdc9-43f9-a5aa-a7f5151b71a9",
 		"name": "Functional Tests - Settings",
 		"description": "# Portal APIs\r\n\r\nHere are all portal APIs. Are tested the CRUD processes when available as well as exceptions that might occure, to assure that everything works as intended.\r\n\r\n### Typical execution\r\n\r\nThe typical test consists of:\r\n1. A successful createOrUpdate (POST) - remplace with create when createOrUpdateis unavailable\r\n2. A successful read (GET) - check if entity created in point 1 is retreived\r\n3. A failed Create (POST) - due to entity already created\r\n4. A failed update (PUT) - due to a non existant entity\r\n5. A succesfull update (PUT) - update entity created in point 1\r\n6. A succesfull createOrUpdate(POST) - update entity created in point 1 - skip this if createOrUpdateis unavailable\r\n7. A successful read (GET) - check if updated entity from point 5 and 6 have been correctly updated\r\n8. Any extra failed tests such as MISSING_PARAMETER or INVALID_PARAMETER\r\n\r\nPlease ensure that tests are correctly asserted in the Tests tab.\r\n",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -18,7 +18,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d1bda485-e535-4a8b-b2bb-895f11ed0672",
+										"id": "1e8460e0-f552-4721-a26e-fb577a9e2286",
 										"exec": [
 											""
 										],
@@ -28,7 +28,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "527bac67-be7d-4da3-888b-b92e39181c33",
+										"id": "2dfad138-ddc6-4f71-871e-1b8f6df68e9f",
 										"exec": [
 											""
 										],
@@ -92,7 +92,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d5f0f15d-b1b2-45e4-a425-2fb1d33fd92a",
+										"id": "52235a8a-1da0-4755-86c7-7f7f6f7103be",
 										"exec": [
 											""
 										],
@@ -164,7 +164,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "82b9722e-edd1-44ca-adce-4d8d99fa1b18",
+										"id": "13611213-6ff4-4f0b-9b5d-23eceee0f999",
 										"exec": [
 											""
 										],
@@ -227,7 +227,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3e05278a-5a99-4fa0-abfe-91220ca6482d",
+										"id": "806a7db2-ca00-4b9b-90eb-7acca5b0a9f6",
 										"exec": [
 											""
 										],
@@ -290,7 +290,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3af4acf5-47ff-48db-b359-a1031d98fa3f",
+										"id": "594f6527-2f14-42b5-8328-fab84e6b71f3",
 										"exec": [
 											""
 										],
@@ -353,7 +353,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c0a38ed9-2f0e-4921-994f-ab0b7122bbe6",
+										"id": "e4871069-53a4-4ef6-a613-49fef0628907",
 										"exec": [
 											""
 										],
@@ -417,7 +417,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ddb89ee3-5fc8-4e96-b8c1-a6cd7108d405",
+										"id": "14d3b7cf-af72-4000-9f72-70c742ce9baa",
 										"exec": [
 											""
 										],
@@ -489,7 +489,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4cb9b4e2-ee54-4de7-9efb-665d68dfc69c",
+										"id": "88224033-41ef-4b71-8fec-2453fa34e6c4",
 										"exec": [
 											""
 										],
@@ -499,7 +499,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "24abeed8-a3d8-4050-9d86-39992c7801f2",
+										"id": "0722c4ff-6925-46a3-b79f-781f25d17398",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: titleCode.\");"
 										],
@@ -563,7 +563,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "bcf1db6b-9648-44bc-833b-156eb20604ba",
+										"id": "3327559f-0808-4c7c-9efb-6d36721a0484",
 										"exec": [
 											""
 										],
@@ -573,7 +573,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "ec22630c-8340-4866-96ee-5dc49067191e",
+										"id": "c1c586d5-eb18-4ccc-9d3e-755909cbbdaa",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -636,7 +636,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "250c6e67-f206-45a2-b55b-de53e21dd72a",
+								"id": "4e80dd83-848e-4d9a-8b63-31ebcfdc7026",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"titleDto\");"
@@ -646,7 +646,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3c088315-e984-4675-826b-e4a19ca690b0",
+								"id": "bc557966-34a9-4806-a057-a31492e63bb3",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -666,7 +666,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2d8e561c-39c7-4f58-a631-beb51b53fb18",
+										"id": "438fd66e-4f7a-4a87-a1b5-d7f29f58b25d",
 										"exec": [
 											""
 										],
@@ -729,7 +729,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2d1c7ade-fe1b-44cd-8b30-9dcea8cb238f",
+										"id": "0eebd6ac-3099-435c-8460-07771193b3ba",
 										"exec": [
 											""
 										],
@@ -801,7 +801,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "55844a62-a6c8-4c86-b6f0-6dd8c578ba91",
+										"id": "ad897cd7-237b-49d2-89ca-61a8556acb47",
 										"exec": [
 											""
 										],
@@ -863,7 +863,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "305e26f8-0255-4f7e-857f-ad6864da4891",
+										"id": "19512ad8-7943-4fe8-b819-17d7c68817d2",
 										"exec": [
 											""
 										],
@@ -925,7 +925,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "aa0f234f-933f-448d-bcf6-774c18182cdc",
+										"id": "ba1bf010-da11-4a88-b9e4-0cd4bbc7e885",
 										"exec": [
 											""
 										],
@@ -987,7 +987,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8d0636e1-6f75-4ee2-a412-34f9246570f7",
+										"id": "dad98dec-8353-4dd7-b3ac-99e89388228c",
 										"exec": [
 											""
 										],
@@ -1050,7 +1050,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7c5ad358-1183-4434-800f-c7b585a2a0ea",
+										"id": "62200ee0-0c99-452d-9525-1a4cb8ac4d74",
 										"exec": [
 											""
 										],
@@ -1122,7 +1122,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "976d55f4-3cf5-48f1-b5d8-91753ac50c4d",
+										"id": "044eddac-127c-4c8e-bde3-6510db708f30",
 										"exec": [
 											""
 										],
@@ -1132,7 +1132,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d41d6342-992b-4ffe-bd16-a2829c9c6f9d",
+										"id": "0119ad1d-4018-408a-809b-1df0b5913633",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: calendarType.\");"
 										],
@@ -1195,7 +1195,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "114d4f6f-503a-47a4-8e05-ec0f2cac057d",
+										"id": "57d73e0d-8ef5-46f7-b0ee-308bd97569e0",
 										"exec": [
 											""
 										],
@@ -1205,7 +1205,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "585a1a62-ae38-4bf2-9672-5848ace8b5c4",
+										"id": "26e10615-fcfb-4e04-83ea-447f9779e23b",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);\r",
 											"pm.variables.set(\"message\", \"query did not return a unique result\");"
@@ -1269,7 +1269,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8e7d0415-c491-4174-9baa-e49b1230d877",
+										"id": "6aba4a6a-24e2-408a-bc26-ce595a874d95",
 										"exec": [
 											""
 										],
@@ -1279,7 +1279,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "288ae017-57ee-4243-b7c4-669b6dc979c1",
+										"id": "68988e93-68fe-4e4c-be01-09879b6604cc",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.api.dto.CalendarTypeEnum` from String\");"
 										],
@@ -1349,7 +1349,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7fd80ab7-9f39-4cf8-b09b-6ab50977fab7",
+										"id": "62c0caf4-85e0-486f-9aaa-90e496898b8a",
 										"exec": [
 											""
 										],
@@ -1413,7 +1413,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4fb10a6f-faa6-4254-9acf-53f86fd25a1a",
+										"id": "73a86d5b-d8ca-4408-9dbf-3840e91022d5",
 										"exec": [
 											""
 										],
@@ -1485,7 +1485,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "acf10d48-875c-45ff-9e86-1dca7b23720e",
+										"id": "f7104088-1589-4bbc-9bb9-92457878d1c1",
 										"exec": [
 											""
 										],
@@ -1548,7 +1548,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a4b8262c-a0ae-4950-8df6-bd3ff7aa7dd8",
+										"id": "cf75fd89-efcd-4b0d-93d9-a01f45de0945",
 										"exec": [
 											""
 										],
@@ -1611,7 +1611,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "17373c1b-edbd-401e-8a2f-4c310b169d76",
+										"id": "8e3734e9-452e-40cf-a317-45ebe6cea82d",
 										"exec": [
 											""
 										],
@@ -1674,7 +1674,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6c7bd13d-cdad-488a-bb15-d663a7cdfa1c",
+										"id": "b2d73f73-e4e5-4238-b617-6e8e98dc7c6c",
 										"exec": [
 											""
 										],
@@ -1738,7 +1738,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "85c7375b-bca6-493b-bea7-c2d3f782b34e",
+										"id": "2b99773d-daba-4103-8729-f7656ad419a9",
 										"exec": [
 											""
 										],
@@ -1810,7 +1810,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7806db1e-8cbf-41c5-b675-1d2a7c695aad",
+										"id": "eb2a24d2-3149-4cdb-a95c-96b587630695",
 										"exec": [
 											""
 										],
@@ -1820,7 +1820,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "964f0d19-978c-4c6a-989f-3f604211d323",
+										"id": "a9324309-d955-4e08-ad56-f8ce4fce2a13",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -1884,7 +1884,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8df0bce0-257f-400c-893a-ce75e782a219",
+										"id": "e3b104f0-437e-4d72-b480-a3a3963b21e7",
 										"exec": [
 											""
 										],
@@ -1894,7 +1894,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "0c85e759-14f4-4a31-b55b-71c5d834cc49",
+										"id": "fdc0972b-2f5c-4468-94d0-0adf9104589e",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -1965,7 +1965,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0b7424a9-1ad1-4a5e-a4ed-21206fae8754",
+										"id": "f4690208-25e9-4a50-8165-b89e5b80b52b",
 										"exec": [
 											""
 										],
@@ -2028,7 +2028,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a03ab9fb-69dc-49c9-81ff-c1044e477a58",
+										"id": "b8decb58-fc9e-4960-85e3-9d558ea91b62",
 										"exec": [
 											""
 										],
@@ -2099,7 +2099,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d457d6b0-9521-4bce-a0b8-6094bd59533d",
+										"id": "21ad0e2f-c82c-45f4-9dc3-704921abe5af",
 										"exec": [
 											""
 										],
@@ -2109,7 +2109,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "8957f399-7090-4961-9f0e-53d05d1677f4",
+										"id": "b142251f-76f8-4e59-98db-72fb6ac376ff",
 										"exec": [
 											"pm.variables.set(\"message\", \"Country with code=\"+pm.variables.get(\"entityCode\")+\" already exists.\");"
 										],
@@ -2171,7 +2171,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "33b0de5f-f103-483a-9cba-85781b94d01a",
+										"id": "0f558f87-fabe-4fe3-b8f4-a50277bfbe1a",
 										"exec": [
 											""
 										],
@@ -2233,7 +2233,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3f02d7cd-cfa3-4c51-82a5-50e6368b9270",
+										"id": "3f12e460-a2c8-497d-85cb-2e06b27ec7ca",
 										"exec": [
 											""
 										],
@@ -2295,7 +2295,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a6dfbd8d-908c-4c2f-8954-3a43efd116b8",
+										"id": "6f4dcf9e-6240-4a76-96f8-6e4e6b36573f",
 										"exec": [
 											""
 										],
@@ -2358,7 +2358,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6b26aa10-80fa-4618-8d5e-142be2476859",
+										"id": "cf57352c-88d5-4bfe-b315-35713c6eff90",
 										"exec": [
 											""
 										],
@@ -2429,7 +2429,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b46add63-9cb7-43fd-92bd-d6ff381f66f6",
+										"id": "ed986323-4d7a-4e76-825a-b00ffee0c4f2",
 										"exec": [
 											""
 										],
@@ -2439,7 +2439,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f1abce7f-d418-4ec1-bc6f-519c3f022d5e",
+										"id": "2a2b3bff-55f9-4265-95be-a38625eed384",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: currencyCode.\");"
 										],
@@ -2502,7 +2502,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "316c64ac-647d-40c2-b7f2-ac2f69741945",
+										"id": "9b9885fa-43ec-443d-9855-00bc28ed7703",
 										"exec": [
 											""
 										],
@@ -2512,7 +2512,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "cab6b8cb-dd80-4d53-a9cc-89a4181a2a55",
+										"id": "b3080e4b-77c8-4f2b-8b7c-3e81855bb185",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize instance of `java.util.ArrayList` out of VALUE_STRING\");"
 										],
@@ -2575,7 +2575,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "96290322-62e6-47f8-ae4e-7375bed9fd9a",
+										"id": "93c6ae1c-309d-4d61-9dc0-0a37f5c6f94b",
 										"exec": [
 											""
 										],
@@ -2585,7 +2585,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "ef9646bb-b8a6-4b3e-b347-147544b79f6e",
+										"id": "2c0ca03e-fac4-4729-9275-8880afae6437",
 										"exec": [
 											"pm.variables.set(\"message\", \"Language with code=NOT_EXIST does not exists.\");"
 										],
@@ -2647,7 +2647,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "e356ae03-28db-488e-b3ed-d688f08c1212",
+								"id": "4ed88c5a-d145-4c6e-a891-bc07d95548db",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityCode\", pm.variables.get(\"suffix\"));",
@@ -2658,7 +2658,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b0ed6b51-e338-4d8c-a97a-3771486038f2",
+								"id": "7155a541-b6b0-437f-a305-3c71c3a45d95",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -2678,7 +2678,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "237e4669-bbd2-45a3-9cf1-b2da68f3c2a2",
+										"id": "ee9177ef-628a-4135-ba88-bb3e73ff2040",
 										"exec": [
 											""
 										],
@@ -2741,7 +2741,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "804c8093-f093-489c-bf4f-3e6a86ad43c5",
+										"id": "0aaac854-b429-4538-8c0d-558400656895",
 										"exec": [
 											""
 										],
@@ -2812,7 +2812,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1befc20e-2ebe-465b-9d6f-1a0b5446c0ab",
+										"id": "d7f77fc6-5a6b-41e3-9ce4-18e58d99c469",
 										"exec": [
 											""
 										],
@@ -2822,7 +2822,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d7799d7d-f11a-4792-b436-8a9c10821518",
+										"id": "4b3405da-bb29-4a8b-be69-93afa84b4590",
 										"exec": [
 											"pm.variables.set(\"message\", \"Currency with code=TST already exists.\");"
 										],
@@ -2884,7 +2884,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2a976dea-8074-49e1-8d9e-6b139d2e7e05",
+										"id": "e6bf84bd-f88e-4643-a031-804ab6d9c9d6",
 										"exec": [
 											""
 										],
@@ -2946,7 +2946,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e489f46b-3db1-44ec-a00b-ac6c34e5052f",
+										"id": "34715417-63a8-4730-b5b4-1b2dc5f358a3",
 										"exec": [
 											""
 										],
@@ -3008,7 +3008,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "48f5a968-5883-4174-9740-bcf6d1305ee9",
+										"id": "2bd30f36-874b-46bf-9308-08b24257e00f",
 										"exec": [
 											""
 										],
@@ -3071,7 +3071,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c3d95d3a-fea8-4f49-a9b9-d3244fcbdb00",
+										"id": "030b194e-b4e7-4a99-bf11-b303d1dda980",
 										"exec": [
 											""
 										],
@@ -3142,7 +3142,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9a1dd599-7c0e-4fd0-bdc7-e148e86dc93c",
+										"id": "4f17603e-f03b-494c-b723-b33edb2a25a6",
 										"exec": [
 											""
 										],
@@ -3152,7 +3152,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b9c4bd3b-9a58-46ec-98c6-94f0d5db157e",
+										"id": "4e2a42fc-1b14-4c7d-a97f-90e4c405c8a1",
 										"exec": [
 											"// pm.variables.set(\"message\", \"Invalid values passed:     Currency.currencyCode: value 'TOO_LONG_NAME' - size must be between 0 and 3;\");\r",
 											"pm.variables.set(\"message\", \"Invalid values passed:     Currency.currencyCode: value 'TOO_LONG_NAME' - la taille doit être comprise entre 0 et 3;\");"
@@ -3216,7 +3216,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9f992800-1c71-4754-aafa-2669bf7f74d1",
+										"id": "019141dd-dfce-48a2-9259-40b08b9b6cd7",
 										"exec": [
 											""
 										],
@@ -3226,7 +3226,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7dd0d7e4-259a-4726-a29a-1797d0065dd6",
+										"id": "61d68e31-406c-4b6a-a61f-ae54183135c9",
 										"exec": [
 											"pm.variables.set(\"message\", \"ERROR: null value in column \\\"description_en\\\" violates not-null constraint\");"
 										],
@@ -3289,7 +3289,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b3a37f3a-8058-4702-a598-4a86639a222d",
+										"id": "7cc02755-3e9b-4147-bc44-8da4f3ef3e44",
 										"exec": [
 											""
 										],
@@ -3299,7 +3299,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7653504c-3777-471c-b06f-3b0c979fd477",
+										"id": "59fa24a1-0cbb-468a-aeeb-161c9076cf84",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -3361,7 +3361,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "dd788e1f-933f-4d96-8ada-782722ff238c",
+								"id": "1a9a52e8-a784-40ee-b007-2a77ebb544e1",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityCode\", pm.variables.get(\"suffix\"));"
@@ -3371,7 +3371,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "033b0526-c2cf-4585-b1cf-6ff1374a2054",
+								"id": "a5c8c717-6ce7-46dd-948e-c6698ada84e5",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -3391,7 +3391,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "46f21851-3382-45b3-89c3-47eb1d98b0a8",
+										"id": "90aa701b-097c-421d-a2cc-7a26617f7439",
 										"exec": [
 											""
 										],
@@ -3454,7 +3454,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6fe08a46-9300-401d-8df9-363ccae41ca9",
+										"id": "7d36d4a8-e9c1-4309-b24e-b92c80d53800",
 										"exec": [
 											""
 										],
@@ -3525,7 +3525,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cf04e088-901c-46bb-b682-fab7535df999",
+										"id": "2ac9ab52-b052-4706-ba6f-a4d04e0a87c0",
 										"exec": [
 											""
 										],
@@ -3535,7 +3535,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "8c65107d-1e39-46b3-8674-22432266891d",
+										"id": "a327d9ad-45ac-4079-a625-0bdb6290dc2b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Language with code=TST already exists.\");"
 										],
@@ -3597,7 +3597,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7a2c7311-2afb-4a00-867f-7d4578157000",
+										"id": "3af7f87b-6dc8-42dc-a15f-2c1e44839608",
 										"exec": [
 											""
 										],
@@ -3659,7 +3659,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "252c49a6-cb62-4991-a3cf-a088e14451a8",
+										"id": "04594c3a-8e10-4639-9a22-9fadaa9cf439",
 										"exec": [
 											""
 										],
@@ -3721,7 +3721,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "24e2caaa-f57f-47ae-9499-2cc1bcf0e44f",
+										"id": "e678acad-02dd-4ef2-b377-12055d01f221",
 										"exec": [
 											""
 										],
@@ -3784,7 +3784,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ad17169e-ac0e-446c-b07c-703b15e85d4e",
+										"id": "28f8e417-ba75-41f1-bf37-7cd47ebeab77",
 										"exec": [
 											""
 										],
@@ -3855,7 +3855,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ff507612-4c27-476f-8372-39a1db32defb",
+										"id": "d6c99a9f-03e2-479a-aa5e-a4559a3c1730",
 										"exec": [
 											""
 										],
@@ -3865,7 +3865,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7ef208d9-ba1e-4cf9-955d-c322d552cc22",
+										"id": "889b7fd4-ba7a-4b5d-b4bb-0d1c69a3c743",
 										"exec": [
 											"pm.variables.set(\"message\", \"Invalid values passed:     Language.languageCode: value 'TOO_LONG_NAME' - la taille doit être comprise entre 0 et 3;\");"
 										],
@@ -3928,7 +3928,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4692b0bd-9d0a-43b6-82d9-000457bbf47b",
+										"id": "c4f4a157-c6ad-4e15-b92d-69433d6d1365",
 										"exec": [
 											""
 										],
@@ -3938,7 +3938,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1ced156d-e53f-4e03-9b65-d440037bb4e4",
+										"id": "899aa07f-b243-41d7-b642-141e32a1b70a",
 										"exec": [
 											"pm.variables.set(\"message\", \"ERROR: null value in column \\\"description_en\\\" violates not-null constraint\");"
 										],
@@ -4001,7 +4001,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d7756ab9-d22f-49e2-827d-123fae3a317d",
+										"id": "a361474c-08c1-4975-a809-6c66e714a3e3",
 										"exec": [
 											""
 										],
@@ -4011,7 +4011,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5474b5e7-e94f-45fa-882d-672f98c67f4a",
+										"id": "d03ad944-9ceb-4aba-ac84-80d90513a10d",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -4073,7 +4073,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "08183ee6-1881-4f52-9f5f-599c1c53510e",
+								"id": "009191f4-4553-4907-b337-c42c6adad059",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityCode\", pm.variables.get(\"suffix\"));"
@@ -4083,7 +4083,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5d2174eb-535d-4033-83d0-1c5613d3a45d",
+								"id": "381c9c0c-9afc-42f9-83e3-0ef2a56abb82",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -4103,7 +4103,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "13c9acd9-2fcf-4e29-aab8-b06ad8565f6b",
+										"id": "c2c36512-7558-4593-bfdf-c66246a48127",
 										"exec": [
 											""
 										],
@@ -4113,7 +4113,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "8915550f-3c06-4ccd-9c38-151224d4928e",
+										"id": "948e25b1-42ba-4b24-8c90-f9b55f8c93c0",
 										"exec": [
 											"pm.variables.set(\"message\", \"There should already be a provider setup\");"
 										],
@@ -4175,7 +4175,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5679496a-3df6-4349-bca7-5e25a67193cc",
+										"id": "ab290669-5fe2-4e4d-8677-44f4c927781a",
 										"exec": [
 											""
 										],
@@ -4237,7 +4237,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4e34f4e6-6a4c-49ed-847f-71053acf81b6",
+										"id": "7cdbf64d-7288-4e21-8443-865692fa5a8d",
 										"exec": [
 											""
 										],
@@ -4302,7 +4302,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e3be5447-b852-4de3-9599-bfde44840124",
+										"id": "5e903f48-d3e0-49b3-bc2e-cfbd5628a658",
 										"exec": [
 											""
 										],
@@ -4364,7 +4364,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6e80d010-0c72-4723-99ca-2c6af4b132d1",
+										"id": "acaac6ef-8d55-4df9-b6e1-200997f8e168",
 										"exec": [
 											""
 										],
@@ -4429,7 +4429,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3a7bccf2-aac9-4f4c-9ed7-9b653e4f7c5d",
+										"id": "94aca95c-a8b5-4c70-a992-606e47aa2d49",
 										"exec": [
 											""
 										],
@@ -4439,7 +4439,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c16620b5-6e91-440d-9a2f-d40c373e1408",
+										"id": "97924f87-f4a4-4e91-82c4-355d2e729a8d",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -4501,7 +4501,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d566e50f-2e6c-4969-b495-9ed4e6d81fee",
+										"id": "189f8036-68d9-4f51-a4a6-ab2b65db7a78",
 										"exec": [
 											""
 										],
@@ -4511,7 +4511,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7fad2506-5257-44bf-b3a3-698fbbe8f10f",
+										"id": "864fafc6-1f49-4fd7-ba67-eb3bf8fb15c2",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Integer` from String\");"
 										],
@@ -4572,7 +4572,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "82eff1cc-638c-4c0a-90b5-e476cdb612e9",
+								"id": "2d67a594-0e93-41a1-bb73-064bd1a67767",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -4582,7 +4582,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "91d2eb73-40a9-44c1-af7f-b203fa3b64b3",
+								"id": "7013e466-5409-477f-94ad-47b360891cca",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -4602,7 +4602,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "86d4b887-c887-4f28-b004-1068916adf7d",
+										"id": "1248a6d1-e084-47b1-baa3-a6532c788b0e",
 										"exec": [
 											""
 										],
@@ -4665,7 +4665,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "45ebdb1d-efce-4629-a403-14f53f721ca5",
+										"id": "5a289785-d895-4373-99f9-89558acad8a3",
 										"exec": [
 											""
 										],
@@ -4736,7 +4736,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d5bc2e43-18c0-4515-a8dd-46a73370dd21",
+										"id": "72807dff-39df-4a64-96a2-6a5fd9698d89",
 										"exec": [
 											""
 										],
@@ -4746,7 +4746,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "3b1dd700-65ab-455c-954b-ea35d57bf148",
+										"id": "06f195e0-7269-4b86-833f-eef9318b6fba",
 										"exec": [
 											"pm.variables.set(\"message\", \"Role with role name=\"+pm.variables.get(\"entityCode\")+\" already exists.\");"
 										],
@@ -4808,7 +4808,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3bd0d20f-65e8-4b15-bc10-ca5a9bb5befd",
+										"id": "761e9eec-04b3-4b7e-ba1f-d58cc772e164",
 										"exec": [
 											""
 										],
@@ -4818,7 +4818,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "cf4536da-50ff-49b7-85a5-bc7419a7fd96",
+										"id": "d55891d4-18b6-4ce0-b0d2-d16f8cdfa70a",
 										"exec": [
 											"pm.variables.set(\"message\", \"Role with name=NOT_EXIST does not exists.\");"
 										],
@@ -4880,7 +4880,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4912ad1c-0b37-4809-9360-abeb3fffd005",
+										"id": "83c5077c-d9d8-497a-ad67-60fae627f246",
 										"exec": [
 											""
 										],
@@ -4942,7 +4942,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4eabd47d-8a27-49f0-a25f-eec9e9e0b599",
+										"id": "1db7c21b-6fb2-4c26-8ade-e20ff8a74854",
 										"exec": [
 											""
 										],
@@ -5005,7 +5005,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "80a62350-b57f-4378-a427-8cb06634ff81",
+										"id": "4a456a02-3fd7-4c16-982d-ca2c6b9f14ea",
 										"exec": [
 											""
 										],
@@ -5076,7 +5076,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0cb8fe70-96d2-44a9-818e-200c6f7eaae5",
+										"id": "cc13e009-2133-4371-9bd0-afa0398b318f",
 										"exec": [
 											""
 										],
@@ -5086,7 +5086,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "80ffea25-eda6-4011-8afd-baa07410e4bb",
+										"id": "a46088b9-11ac-4366-8562-34fe55791af5",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize instance of `java.util.ArrayList` out of VALUE_STRING\");"
 										],
@@ -5149,7 +5149,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d56e5f24-1c5c-47c3-9edd-d0157e79b395",
+										"id": "54df29aa-c77d-48f5-bb16-308729e00ad2",
 										"exec": [
 											""
 										],
@@ -5159,7 +5159,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "def0175c-0fd4-4102-b1e8-11756f0aef59",
+										"id": "d05e3074-cdbd-4fc1-a30c-a05228d468a7",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: name.\");"
 										],
@@ -5222,7 +5222,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cc5563a3-68ff-4756-a0bf-e7b5eabd9bd3",
+										"id": "455e006b-895a-43ef-8409-7affa4136be1",
 										"exec": [
 											""
 										],
@@ -5232,7 +5232,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "95b73234-6825-4741-ad43-e62af71eb5c3",
+										"id": "3317450e-c0bd-438d-8c93-ab922a9b26f9",
 										"exec": [
 											"pm.variables.set(\"message\", \"Permission with name=NOT_EXIST does not exists.\");"
 										],
@@ -5294,7 +5294,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "4f57fe26-7959-4a05-a127-4eade74344a5",
+								"id": "02a83c9a-9067-4d1a-9ee1-9b5a4c57c84b",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"roleDto\");",
@@ -5305,7 +5305,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3f9af176-5ab3-434c-a86b-19d0304dbcd1",
+								"id": "0be33350-b7f7-4a47-8f13-8e6010ac3189",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -5325,7 +5325,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "00f7b35e-6946-447a-acce-3e82335bb6aa",
+										"id": "a7ca5fe4-bb1f-403e-9e3c-349c3c5f0094",
 										"exec": [
 											""
 										],
@@ -5388,7 +5388,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "76147cd2-d23d-44c6-b04e-922388c8658b",
+										"id": "3ed408a0-a44c-4546-b813-41cd455a1f12",
 										"exec": [
 											""
 										],
@@ -5459,7 +5459,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3add8dfc-9a95-417c-986b-0b39ffb651c8",
+										"id": "7b2c7dd3-eaa3-4e9b-8200-af2bbf84437e",
 										"exec": [
 											""
 										],
@@ -5521,7 +5521,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e3589d60-08c1-4fe7-883b-49e12d5a1786",
+										"id": "be34edcb-a15d-49ee-9973-d43d3a7a9256",
 										"exec": [
 											""
 										],
@@ -5583,7 +5583,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "82a33002-dc48-4fcb-a80f-deaf271cc98d",
+										"id": "21281b69-a01d-4498-b404-b8ecf6148bb1",
 										"exec": [
 											""
 										],
@@ -5645,7 +5645,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e4fa197b-2ac1-404e-be11-aaab9b12b2f0",
+										"id": "77fc2b42-912d-43e0-9419-a4480cfb383c",
 										"exec": [
 											""
 										],
@@ -5708,7 +5708,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cb546f90-5507-49e9-9932-deb49136d544",
+										"id": "ff068cd8-e167-4fe7-87be-5f54a6d5a6eb",
 										"exec": [
 											""
 										],
@@ -5779,7 +5779,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b5044775-1024-4142-96d9-cd3fc94a5431",
+										"id": "d7ae192d-b247-4755-ae64-1e6469c0217c",
 										"exec": [
 											""
 										],
@@ -5789,7 +5789,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "970bb06f-434d-4daf-87bc-b4da34972fac",
+										"id": "2fe01d63-8370-4cc6-aa81-21a6418f698b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.math.BigDecimal` from String\");"
 										],
@@ -5852,7 +5852,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "470223e3-f737-4c92-9ead-87bbc41489ee",
+										"id": "040fcee1-ec6c-4aef-8540-95b7c31f18c6",
 										"exec": [
 											""
 										],
@@ -5862,7 +5862,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "188796f0-d8bc-4247-8a1b-0a8364d81c05",
+										"id": "bfd4aa2f-7eda-4830-a7a2-70f48a00bec1",
 										"exec": [
 											"pm.variables.set(\"message\", \"Language INVALID is not supported by the provider.\");"
 										],
@@ -5925,7 +5925,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5df02072-d9da-4bc0-8652-6ddf7d84195c",
+										"id": "2799536b-ae0d-4e3a-aa01-5870fdd9a07d",
 										"exec": [
 											""
 										],
@@ -5935,7 +5935,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b7624690-5170-41be-9869-d610b1368c8d",
+										"id": "cab393c2-31a6-4a8e-9f90-0e9a14452147",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: percent.\");"
 										],
@@ -5998,7 +5998,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7d4fd412-b8d0-4182-b426-b4ebc9884eee",
+										"id": "9fbc0361-f56e-438f-ad42-cd05482a37e6",
 										"exec": [
 											""
 										],
@@ -6008,7 +6008,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "482ebf28-f113-4421-8edb-665fb49e0b7a",
+										"id": "bb4ccee5-4dd7-4e90-8e38-92b6e2834f8a",
 										"exec": [
 											"pm.variables.set(\"message\", \"AccountingCode with code=NOT_EXIST does not exists.\");"
 										],
@@ -6078,7 +6078,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5b27640e-0d83-42b3-abb4-1ee56c3cfcb0",
+										"id": "7b2b3dda-4266-434a-ad4f-8e41b5654339",
 										"exec": [
 											""
 										],
@@ -6141,7 +6141,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "da8ed10c-bb6c-43dc-87c2-f7e1e641d450",
+										"id": "d3d83089-267f-427e-89e6-f6d7433f7c93",
 										"exec": [
 											""
 										],
@@ -6151,7 +6151,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c0f93056-84e6-40da-b432-69eaff77c1c5",
+										"id": "35a33828-1db0-4454-baf8-72837cacf0f0",
 										"exec": [
 											"pm.variables.set(\"message\", \"\");"
 										],
@@ -6222,7 +6222,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3aaf6055-8fcc-43b2-bd3a-6543adfe7eec",
+										"id": "a2a7bcca-9a70-49c3-98d8-5d0ae422decf",
 										"exec": [
 											""
 										],
@@ -6284,7 +6284,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f5c70c79-2c73-498c-ba0e-150ad6df5526",
+										"id": "153425c4-c44b-47ee-beb3-0da526ac722e",
 										"exec": [
 											""
 										],
@@ -6346,7 +6346,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9a85e684-71ae-4f4a-8c1e-9b2c177c17d8",
+										"id": "0534ebf6-b6ac-45a9-9588-685a9ae85495",
 										"exec": [
 											""
 										],
@@ -6408,7 +6408,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8493236f-1bb7-4df2-938f-d409ddfa44f3",
+										"id": "ca46999a-e0eb-475c-a111-45a28e90cbe0",
 										"exec": [
 											""
 										],
@@ -6471,7 +6471,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c45a0cce-8e19-4d5e-9482-fe852ab66f76",
+										"id": "47adbbe6-0d07-4c8d-8090-56a3bc004dc3",
 										"exec": [
 											""
 										],
@@ -6481,7 +6481,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f8abf4e7-1f97-4a0b-b58d-8bea728af389",
+										"id": "9c475bb1-a602-4f72-9730-3a7d836f8ece",
 										"exec": [
 											"pm.variables.set(\"message\", \"\");"
 										],
@@ -6552,7 +6552,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f7ea3ed1-e19c-40f7-9311-383aeac39f5b",
+										"id": "40aeb2f4-2779-4a54-badf-d5d81b3f1e03",
 										"exec": [
 											""
 										],
@@ -6562,7 +6562,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "80f9efe7-60af-4a38-a8fb-26bd9c4e8320",
+										"id": "ad893e34-fbcb-40d6-9b86-2f501f496145",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -6625,7 +6625,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7ec32a12-dbb2-4746-bda4-8cfc807dc142",
+										"id": "82b67218-c7e8-4ff5-86f5-1d85f3f3de52",
 										"exec": [
 											""
 										],
@@ -6635,7 +6635,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "8e5ee844-56ef-4211-8c58-2b6dfa5b713a",
+										"id": "c9865f8a-6bfa-4ff3-91cf-06d727ed16fd",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -6698,7 +6698,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5a5bc729-7575-41f3-bfea-7000506215ef",
+										"id": "dcfe8d3f-c4ff-491f-95ec-5828dafa415a",
 										"exec": [
 											""
 										],
@@ -6708,7 +6708,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "225553c0-6101-43fb-9acf-6aae80e03191",
+										"id": "717c276a-1abe-47d2-b4ea-eb11348635b2",
 										"exec": [
 											"pm.variables.set(\"message\", \"EmailTemplate with code=NOT_EXIST does not exists.\");"
 										],
@@ -6771,7 +6771,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "effda855-77a6-4e85-8daf-079287d2403e",
+										"id": "f73d1399-641c-4b8f-916c-abbf61601266",
 										"exec": [
 											""
 										],
@@ -6781,7 +6781,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c14707fc-adae-4131-b4ae-8ca7520eea85",
+										"id": "0da3e842-7b5b-41d4-a389-799efe14ed6c",
 										"exec": [
 											"pm.variables.set(\"message\", \"InvoiceSequence with code=NOT_EXIST does not exists.\");"
 										],
@@ -6844,7 +6844,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cf998083-f1ba-4a11-b064-ec5011ef84e6",
+										"id": "3f5b1fa3-c2d4-4951-8d54-80efcc2171ae",
 										"exec": [
 											""
 										],
@@ -6854,7 +6854,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "bedc36b4-24e8-4a6e-a199-a27855b33f8f",
+										"id": "40a6fc6f-2271-4093-a65f-99a818f3b18a",
 										"exec": [
 											"pm.variables.set(\"message\", \"OCCTemplate with code=NOT_EXIST does not exists.\");"
 										],
@@ -6917,7 +6917,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "af405538-0a99-431a-98f0-bc4b0a3ed6cb",
+										"id": "851c0a7b-36da-46c8-9ba7-751eb02d4584",
 										"exec": [
 											""
 										],
@@ -6927,7 +6927,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4b56aa4d-bb0a-4457-b69d-6dc57a7dcd18",
+										"id": "3a5e9d6d-03a4-4906-970f-240c4f5b8623",
 										"exec": [
 											"pm.variables.set(\"message\", \"OCCTemplate with code=NOT_EXIST does not exists.\");"
 										],
@@ -6989,7 +6989,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "77e1acfd-45bc-43db-8df5-0a907f8074fa",
+								"id": "11d7375a-e9b3-4c8a-8536-a599ae311a45",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"invoiceTypeDto\");"
@@ -6999,7 +6999,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e6d8c69b-df7b-4ae3-94b1-d80a43fe1b68",
+								"id": "b943774d-a434-4141-91ba-c5144b474b4e",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -7019,7 +7019,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7cad6b07-34dd-466c-a873-53dae4d2326a",
+										"id": "d92b1b6f-cf73-4333-944a-780752f48ae0",
 										"exec": [
 											"//pm.globals.set(\"bc_code\",pm.variables.get(\"entityCode\"));\r",
 											"//console.log(\"bc_code\",pm.globals.get(\"bc_code\"));"
@@ -7083,7 +7083,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b4387fc3-be76-4e6e-9abd-cebde2be2167",
+										"id": "a2790e1c-4fee-43b4-bf5c-089d3e6054fc",
 										"exec": [
 											""
 										],
@@ -7145,7 +7145,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b914f436-afd7-42bd-8bea-26cb4c42fb82",
+										"id": "7811ca88-5afb-4445-ae6e-45520b237f01",
 										"exec": [
 											""
 										],
@@ -7216,7 +7216,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "323b7a79-e7cd-4663-b3be-bb0ccd4fdbd7",
+										"id": "0e4c55e4-5e1b-4554-b429-eb41d57bef5f",
 										"exec": [
 											""
 										],
@@ -7278,7 +7278,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8321c8b4-8430-4a9b-9902-105b83995b6d",
+										"id": "7c0648c1-7e4c-44df-b718-04239c1241d8",
 										"exec": [
 											""
 										],
@@ -7340,7 +7340,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e66af628-c114-4a46-91a4-2b71678adca1",
+										"id": "82e0f834-575e-455e-ae64-cab301cb7906",
 										"exec": [
 											""
 										],
@@ -7403,7 +7403,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "05cedbf5-bf4a-4b27-9311-05c95cfb029b",
+										"id": "44ae8163-9f6c-440d-a6f3-5acc188fdca4",
 										"exec": [
 											""
 										],
@@ -7474,7 +7474,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1a715a88-0b8a-455a-847f-3870ab32288b",
+										"id": "71e0fbd9-6f77-4260-be36-362e341df07d",
 										"exec": [
 											""
 										],
@@ -7484,7 +7484,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d39a45f5-5357-431c-95da-7af8d077feb5",
+										"id": "e8c35cd3-93df-428d-a563-750d37e6fcdd",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: calendar.\");"
 										],
@@ -7547,7 +7547,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a0742988-6bdd-41ba-abd4-fe1cb44fe0f7",
+										"id": "0bfd26e1-74ee-407b-8714-72fb7e925702",
 										"exec": [
 											""
 										],
@@ -7557,7 +7557,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4394ba7a-d417-454f-ab8f-7e21b2fb4a26",
+										"id": "1b495696-6777-4ca5-bfd9-83a031502859",
 										"exec": [
 											"pm.variables.set(\"message\", \"Calendar with code=NOT_EXIST does not exists.\");"
 										],
@@ -7619,7 +7619,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a9fac052-4d29-4cb1-b41c-c2f6e09eb681",
+								"id": "19282f08-82b0-459e-adc6-11e48081f54c",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"billingCycleCode\", pm.variables.get(\"entityCode\"));"
@@ -7629,7 +7629,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7a88ea12-ea0f-4445-b888-e2f58d5dfc13",
+								"id": "cfc90759-5f13-4201-aca7-cfb9d0a98515",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -7649,7 +7649,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4dac8b58-fa01-4d1e-bc91-f49605f4aab7",
+										"id": "b74e9515-5803-43a8-8746-93e1011b3df6",
 										"exec": [
 											""
 										],
@@ -7712,7 +7712,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4a4d4db9-c337-4f7e-b528-ed470f06d3e6",
+										"id": "64b58886-3b27-4b5d-87a6-4649ca9fc78a",
 										"exec": [
 											""
 										],
@@ -7774,7 +7774,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "706926c1-ab22-4fc4-a382-eb3cf0ce06b3",
+										"id": "de70741b-b8b8-4d66-8c11-4e39a5f08a20",
 										"exec": [
 											""
 										],
@@ -7845,7 +7845,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a220f55f-4da7-47fb-9331-8bc62802bc57",
+										"id": "3565cb94-aa6a-4f10-a0c8-dc531b825fa6",
 										"exec": [
 											""
 										],
@@ -7907,7 +7907,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d9cd8b69-f74b-41b0-880e-6573f6618863",
+										"id": "4b1f2fb6-b95b-4ebc-858d-d0a8d5ba0541",
 										"exec": [
 											""
 										],
@@ -7969,7 +7969,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "17b07563-e23d-4b05-a316-3aa58fb89a9c",
+										"id": "5641bba3-89c1-45aa-aed9-65b753732837",
 										"exec": [
 											""
 										],
@@ -8040,7 +8040,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1c0e79be-0050-4185-a857-54897894e296",
+										"id": "420f7ff5-a58f-48f8-a12d-53b75b1014cb",
 										"exec": [
 											""
 										],
@@ -8103,7 +8103,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "59bc6d30-c61e-406d-ae88-d7e4731fe551",
+										"id": "f38d09e3-637c-4a03-b0a9-534ffed5cca9",
 										"exec": [
 											""
 										],
@@ -8113,7 +8113,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1145186e-fb60-43b3-ab54-0cf9286d3876",
+										"id": "ea261642-2dc0-459b-b3f3-8d96d579c481",
 										"exec": [
 											"pm.variables.set(\"message\", \"Seller with code=NOT_EXIST does not exists.\");"
 										],
@@ -8175,7 +8175,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1cd27c02-039e-4620-ac61-d0967a0d9fa5",
+								"id": "037ca22a-6be2-46d4-88f8-07807d33ade3",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"sellerCode\", pm.variables.get(\"entityCode\"));"
@@ -8185,7 +8185,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a0785eb6-5359-4d39-a6ee-194240b9d3bc",
+								"id": "092276a0-d510-4255-9494-6bded4fd2e31",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -8205,7 +8205,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "02678ec2-b0a4-4a98-a9f8-2893769a8269",
+										"id": "63ed7f46-b937-4771-b707-a19e132cffe7",
 										"exec": [
 											""
 										],
@@ -8269,7 +8269,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "725cbe25-b973-48f6-a16b-37ab565f9268",
+										"id": "0149605f-6b79-4ec6-b4ef-8eab2ef087fa",
 										"exec": [
 											""
 										],
@@ -8333,7 +8333,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4d8b2419-100e-400f-b055-4d8cf8b29aef",
+										"id": "7a4e1a5c-fa16-464b-ba94-2ff2999b55f4",
 										"exec": [
 											""
 										],
@@ -8397,7 +8397,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0c1c00dd-d9c3-48f1-bab2-89794c0bd680",
+										"id": "04961114-f5f1-4245-9b17-ffe67fd004cd",
 										"exec": [
 											""
 										],
@@ -8461,7 +8461,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8cfa46d0-4a06-4b12-92ad-60e9c879624a",
+										"id": "e2c58172-6ba3-45e7-b2c4-df65d1a95751",
 										"exec": [
 											""
 										],
@@ -8525,7 +8525,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3f8fcb44-a98f-471e-801a-5d4ccb03309e",
+										"id": "38a486fe-6834-4338-b644-27e2f8e02e70",
 										"exec": [
 											""
 										],
@@ -8535,7 +8535,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "05328f2e-0964-4e38-9d0d-9c5a6c6ec645",
+										"id": "d79f5c4c-4564-4732-bbd7-c00c619a7cb5",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -8598,7 +8598,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "6d836e85-b638-4a48-9315-6f998b4f3490",
+								"id": "03a3d307-aa1c-4fe6-aaeb-6a34b966a1d7",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"customerBrandCode\", pm.variables.get(\"entityCode\"));"
@@ -8608,7 +8608,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9f71f567-ac4e-43db-ac94-118337e1cb8e",
+								"id": "0033f8d6-c310-4ca0-bd96-55f18c47f653",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -8628,7 +8628,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1fd360e5-c96f-4c5f-9531-9fe05958de17",
+										"id": "1f997832-3e46-4645-9a91-ec90c165ff75",
 										"exec": [
 											""
 										],
@@ -8692,7 +8692,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "10b606e3-b744-4150-9392-d1d65db3d02d",
+										"id": "40a1c3f6-65d0-4093-99ed-1e1af9f75396",
 										"exec": [
 											""
 										],
@@ -8760,7 +8760,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "33b84a42-9435-476a-bb38-803f8902d860",
+										"id": "0fcedc03-3d14-408c-b59c-d64ae30f58eb",
 										"exec": [
 											""
 										],
@@ -8824,7 +8824,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "057c6025-1cf3-4d4b-a52a-c757ac334f9e",
+										"id": "ac9d3d69-052d-4c03-98ff-45170a652a99",
 										"exec": [
 											""
 										],
@@ -8888,7 +8888,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c0a8cde4-4172-46ae-828e-a5f8d06409a5",
+										"id": "ff246cde-1615-4a56-84c1-7f48eb0056cb",
 										"exec": [
 											""
 										],
@@ -8952,7 +8952,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f4070666-f2d2-4aec-8860-9c3651d3c3bc",
+										"id": "b311d4ba-2d52-4736-8364-302834d71e56",
 										"exec": [
 											""
 										],
@@ -9016,7 +9016,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ac322df4-00d2-49b9-adde-e918ca076c41",
+										"id": "cf398401-9beb-41cc-97a9-6f8f1637d93d",
 										"exec": [
 											""
 										],
@@ -9084,7 +9084,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b11597b2-b30f-4bb2-b639-cd0ccd0d9512",
+										"id": "594ab7e4-d28e-4269-a241-09ab5624e4aa",
 										"exec": [
 											""
 										],
@@ -9094,7 +9094,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "9b09ce1c-c2cf-4197-9e40-465c5fe419b2",
+										"id": "fffc3e84-a968-4487-a869-7df77dd93ec3",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -9158,7 +9158,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "24710c85-e36d-4a07-83d4-40d77e46f453",
+										"id": "7d27fc25-bff3-4bc2-b33f-206c008fb4c0",
 										"exec": [
 											""
 										],
@@ -9168,7 +9168,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "2cc50254-3768-47cb-8d55-bd49172fb4d0",
+										"id": "4e357054-2444-4dea-9ac3-320b53ac28fa",
 										"exec": [
 											"pm.variables.set(\"message\", \"AccountingCode with code=NOT_EXIST does not exists.\");"
 										],
@@ -9232,7 +9232,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cdf470f5-6f80-481f-828a-9f60830fb479",
+										"id": "6ef93277-4366-43d0-ab5d-f80af0fa7a53",
 										"exec": [
 											""
 										],
@@ -9242,7 +9242,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b6ad8cc9-559f-4e3d-aeb0-2fa5a2b8d077",
+										"id": "55887ecd-e243-4577-ac53-5f2654efca20",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -9305,7 +9305,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "aa134232-8634-4227-b15f-fdea3c847b57",
+								"id": "a1e9a637-e338-48e8-aa92-d01f5f97e7b3",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"customerCategoryCode\", pm.variables.get(\"entityCode\"));"
@@ -9315,7 +9315,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a25bc36b-a7b7-43c9-b70e-f9702bbbdba1",
+								"id": "f48aaa27-60b0-4a2f-a491-e692344223f9",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -9335,7 +9335,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "26a24904-7b02-4e86-a6d5-71e8d4126cf7",
+										"id": "db0bea14-81f4-40c8-a0ea-6672f2d01f0b",
 										"exec": [
 											""
 										],
@@ -9398,7 +9398,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "874d5c04-c096-4f16-86cc-505e4ffbed30",
+										"id": "0649c945-c2e1-4be7-9352-5e6af7ca09fe",
 										"exec": [
 											""
 										],
@@ -9408,7 +9408,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1dfa441f-40e1-4c3e-a232-89d2438d0ab7",
+										"id": "43cc4b7e-1740-438d-a124-be493d5ecba6",
 										"exec": [
 											""
 										],
@@ -9479,7 +9479,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "42febef9-036a-4864-9fab-4879aa31f92c",
+										"id": "0f8c2c5d-52a6-4fe9-b406-7c7c10c58c7d",
 										"exec": [
 											""
 										],
@@ -9541,7 +9541,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "13a75cb2-4c1a-4096-8ec1-443e18890cfd",
+										"id": "53766ca8-f2eb-4ae3-ad96-d8a83ff1d550",
 										"exec": [
 											""
 										],
@@ -9603,7 +9603,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "81254b01-ebd2-488a-bfa1-c206aa87a2a2",
+										"id": "662b9464-edc0-4b81-aee1-b7b1a6d9a811",
 										"exec": [
 											""
 										],
@@ -9665,7 +9665,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "965c7512-92fd-40fa-9836-ae9e733f37af",
+										"id": "f5effb08-9e56-4899-bcf4-7e6bf110aa73",
 										"exec": [
 											""
 										],
@@ -9728,7 +9728,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e3a23623-0113-4531-bb69-0f8660e1aa71",
+										"id": "53056643-5578-4040-8255-4d1ac1c1348d",
 										"exec": [
 											""
 										],
@@ -9799,7 +9799,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cbd9eab6-a6e5-4e0d-82a3-930ee354735c",
+										"id": "74b8aa28-3de0-4f3b-9454-e1a765e701fb",
 										"exec": [
 											""
 										],
@@ -9809,7 +9809,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "ff8433a9-9f15-4d46-85b2-1b0c631590b4",
+										"id": "091bd2e4-2e0b-4a4e-8c82-c1961a9a6e40",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize instance of `java.util.ArrayList` out of VALUE_STRING token\");"
 										],
@@ -9871,7 +9871,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "b16e3ee8-4c14-43ef-9cd0-418c4b031496",
+								"id": "5c9a8428-1cd3-4a78-819d-6930a946a030",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"dto\");",
@@ -9882,7 +9882,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "493d7d00-03a5-4be2-9e4e-2202d4ef7ace",
+								"id": "c0919a58-5ae1-4be5-b583-f5eb3976c766",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -9908,7 +9908,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e0be2f1a-4e77-4f2b-a6e8-9969e0fe4fbe",
+										"id": "46a358fe-f3b6-4a72-a6c2-1804272cc6e3",
 										"exec": [
 											""
 										],
@@ -9974,7 +9974,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "dcb0437f-67d5-44a0-af23-3290dd607f8c",
+										"id": "e8d371d9-ee7f-4dfc-8ea4-8bf7bb3e2678",
 										"exec": [
 											""
 										],
@@ -10046,7 +10046,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ef4f586b-0f20-4dc1-8389-bf223c65d526",
+										"id": "0e6fd493-7eb1-432c-9090-ff64daa68f39",
 										"exec": [
 											""
 										],
@@ -10109,7 +10109,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "62b47b47-c4ab-4561-84b5-8188a255c949",
+										"id": "da2d0f06-7bfc-41b4-96a5-f870e68ada8e",
 										"exec": [
 											""
 										],
@@ -10172,7 +10172,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f1a5bcaa-6ca1-4450-990e-ad6d7a22da14",
+										"id": "2fe0c30f-33ae-42c5-9ad6-463656b53f5e",
 										"exec": [
 											""
 										],
@@ -10235,7 +10235,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c0e5aa75-97b8-4740-89bf-00bb31992cc0",
+										"id": "211b2e92-422e-4817-8bef-bc0db0520d88",
 										"exec": [
 											""
 										],
@@ -10299,7 +10299,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "da4c28dd-8fa4-42f8-9790-b6032384a0fa",
+										"id": "1fd2e933-82cf-4722-9509-819d6596f0de",
 										"exec": [
 											""
 										],
@@ -10371,7 +10371,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "bc3b5694-92bb-47f1-9aa4-bf9c6c7563aa",
+										"id": "76f8412f-21f6-4bc1-aeea-efb147ca062b",
 										"exec": [
 											""
 										],
@@ -10381,7 +10381,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d3b6c765-d37f-4f95-bd3f-24d111040c33",
+										"id": "2fe7bdd6-c887-45d7-9fb4-ceeb1ddf8f00",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: chartOfAccountTypeEnum, chartOfAccountViewTypeEnum.\");"
 										],
@@ -10445,7 +10445,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8229bbca-8a26-403e-a153-19facebc727d",
+										"id": "881a7711-5d28-43bd-9f55-93bf9e401f9c",
 										"exec": [
 											""
 										],
@@ -10455,7 +10455,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "0cf868a4-88be-4f86-bd0b-f8d4591502c5",
+										"id": "e78a3c0c-4fe9-4af2-9255-36e3ccd03a9c",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.billing.ChartOfAccountViewTypeEnum` from String\");"
 										],
@@ -10518,7 +10518,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "fa894acb-fbcb-499d-9cd2-454748ab183d",
+								"id": "d25f2157-e746-4275-876b-07d0f69b8373",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"accountingCodeCode\", pm.variables.get(\"entityCode\"));"
@@ -10528,7 +10528,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7eb3bfa4-cfa7-46f8-abde-9734d9439198",
+								"id": "68347270-3e01-4b9d-96ae-ad0230727041",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -10548,7 +10548,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c5cb605e-30de-4209-9d3c-73b9ace44266",
+										"id": "f488aa07-1d49-46fa-bd84-6e9f55024469",
 										"exec": [
 											""
 										],
@@ -10611,7 +10611,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a8006bc5-9597-40f2-9d71-08b0070cb522",
+										"id": "91b6cf19-c2f2-465c-8219-e53108843be6",
 										"exec": [
 											""
 										],
@@ -10673,7 +10673,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ceb67503-ac0f-4461-b92c-cfae271e58dc",
+										"id": "9c598483-5eaa-4c04-81e9-7396705789be",
 										"exec": [
 											""
 										],
@@ -10735,7 +10735,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2c5f12fc-948a-4b44-bb09-aa3674e0205a",
+										"id": "824b21f9-3859-4549-b776-946c70f06765",
 										"exec": [
 											""
 										],
@@ -10797,7 +10797,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "58367c97-ba5e-4309-8ad7-0d3ca3e52787",
+										"id": "092df68b-099c-45c2-b41f-e6d1cf233b8c",
 										"exec": [
 											""
 										],
@@ -10860,7 +10860,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d84ad8b7-5cd7-4eb7-97ec-1d39d5166589",
+										"id": "b1954e44-1ce7-4851-9b4e-29b7f7d8561c",
 										"exec": [
 											""
 										],
@@ -10870,7 +10870,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "31b0fa47-a45a-4eb7-b0c9-a2517a084ad0",
+										"id": "5374e05e-b251-48be-be16-b576fad17a81",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: accountCode / accountingCode.\");"
 										],
@@ -10933,7 +10933,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6205cfc5-ed2e-43ff-a93e-68ff93959810",
+										"id": "21a33934-9f21-417b-b1a7-1f0990f40cb0",
 										"exec": [
 											""
 										],
@@ -10943,7 +10943,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4c0e7be2-0878-4615-8d63-4b6452a58e2a",
+										"id": "9825c3db-5088-432d-89dd-cb07aa74757f",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.payments.OperationCategoryEnum` from String\");"
 										],
@@ -11005,7 +11005,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "e1b860e4-4f27-446b-ab84-2151a18c46d2",
+								"id": "a9925126-2d38-46bb-9366-555242948c5f",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -11015,7 +11015,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f49e219f-3901-4e9b-b7c9-9a2af2037ade",
+								"id": "223ada1f-383e-4477-bc68-6e4452b5eacd",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -11041,12 +11041,9 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d810b012-2e71-4b12-be04-b1778e3b6d32",
+										"id": "65d3f46d-074d-46f6-b957-c564cf5bdd1a",
 										"exec": [
-											"let req_body_c = JSON.parse(pm.request.body);\r",
-											"pm.globals.set(\"req_body_c\",req_body_c);\r",
-											"// _.forEach(req_body_c, (value, key) => pm.globals.set(key, JSON.stringify(value)));\r",
-											"console.log(\"request body \",req_body_c);"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -11054,7 +11051,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d89899df-a45c-4d41-a635-c2fce9509db7",
+										"id": "14732992-883d-4a75-a96d-9417ed97987c",
 										"exec": [
 											""
 										],
@@ -11118,18 +11115,9 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c69b9a8f-9ed4-4bfc-aed4-67ca7f5c1ade",
+										"id": "8c18adcc-b409-4dc1-a9b9-03436b5e3f7e",
 										"exec": [
-											"let res_body_c = JSON.parse(responseBody).customer;\r",
-											"// console.log(\"response body \",res_body_c);\r",
-											"\r",
-											"pm.test(request.name + \" - Data Match\", function () {\r",
-											"    _.forEach(pm.globals.get(\"req_body_c\"), (val, key) => {\r",
-											"        console.log(\"request: key and val\",key,val);\r",
-											"        console.log(\"response: key and val\",key, res_body_c[key]);\r",
-											"        expect({ key: res_body_c[val]}).to.have.members({ key: val });\r",
-											"    });\r",
-											"});"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -11199,7 +11187,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "244715ea-5e16-44ca-aa3e-2d20369a0dd8",
+										"id": "2a526546-f3f0-4188-8ba1-9893de1f7772",
 										"exec": [
 											""
 										],
@@ -11262,7 +11250,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "887b9ef8-4f0a-4cb3-a592-29377c6a74cf",
+										"id": "4e14427b-9de8-409c-b02d-55c906913a29",
 										"exec": [
 											""
 										],
@@ -11325,7 +11313,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6eef5145-da31-44a9-ac66-af93bcb66fad",
+										"id": "9bfee555-1387-4ba0-8373-09dec8a53268",
 										"exec": [
 											""
 										],
@@ -11388,7 +11376,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4e89985f-15f2-4a27-ba48-e36837512753",
+										"id": "8d19c050-b523-4bcb-bbc1-c3c7c587787f",
 										"exec": [
 											""
 										],
@@ -11451,7 +11439,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5bdd1e8c-b482-4852-898b-f8f6b4a5810a",
+										"id": "fb61a0ec-8066-42a3-9a95-d00d53003a6c",
 										"exec": [
 											""
 										],
@@ -11515,7 +11503,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "fa35102e-6f53-43a5-a46c-492d3fac7899",
+										"id": "deb6b8c5-a841-416c-9826-6407b62c5990",
 										"exec": [
 											""
 										],
@@ -11587,7 +11575,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9af15473-e333-4e20-b36a-61dea5fe4e5c",
+										"id": "49318628-bd40-4b8e-8057-65065f23a4cd",
 										"exec": [
 											""
 										],
@@ -11597,7 +11585,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b2a64344-343f-49ad-8ffa-c4e9ee8285a7",
+										"id": "ad273b8a-cdb5-47b6-95e4-071b722768a8",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: customerCategory.\");"
 										],
@@ -11661,7 +11649,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0be6900e-b5eb-4e9a-be33-51d21037f0f2",
+										"id": "3c1b7ddd-e6f9-4dcd-916a-349b0f088f56",
 										"exec": [
 											""
 										],
@@ -11671,7 +11659,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d3ebcb8e-4f51-4c78-8f5f-da51922be37a",
+										"id": "8b448f88-29db-4acb-bcb3-c510f4c3c62b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Seller with code=NOT_EXIST does not exists.\");"
 										],
@@ -11735,7 +11723,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d6de6d9c-236e-4f40-b683-a351786efed4",
+										"id": "92a2c6d9-bd4c-4acd-8025-26282c9bd774",
 										"exec": [
 											""
 										],
@@ -11745,7 +11733,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "928163b7-dde2-4589-bb33-c16c01e8f852",
+										"id": "54bef1fb-847d-423b-9263-312b80669c49",
 										"exec": [
 											"pm.variables.set(\"message\", \"CustomerCategory with code=NOT_EXIST does not exists.\");"
 										],
@@ -11809,7 +11797,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f115dbf9-5e6f-4cc4-af74-b6c9f853c535",
+										"id": "7d8a6dea-f381-4330-9679-75b0d70a7799",
 										"exec": [
 											""
 										],
@@ -11819,7 +11807,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "dad700fe-be7d-4014-bc53-ee252b10af77",
+										"id": "6de7c1a2-48e3-4690-bf31-cfff6d772198",
 										"exec": [
 											"pm.variables.set(\"message\", \"CustomerBrand with code=NOT_EXIST does not exists.\");"
 										],
@@ -11882,7 +11870,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "d0113698-653d-40d1-8702-52b7f4792e16",
+								"id": "50d0a8c5-5378-45ac-ac8b-817597e8714a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"customerCode\", pm.variables.get(\"entityCode\"));"
@@ -11892,7 +11880,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1ff91d6a-0609-4dcb-8435-a068b22094cd",
+								"id": "711c9eb0-08d2-4b89-b69e-e5236a81c5aa",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -11912,7 +11900,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "acb07107-f76a-46c3-9954-7d73d237dda0",
+										"id": "9abde932-936b-4eab-a945-923e80ee8eb8",
 										"exec": [
 											""
 										],
@@ -11922,7 +11910,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "be31e40c-9740-41c3-9112-61a972249d30",
+										"id": "38efb90b-c96f-4487-b354-2a73ef1bff06",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: customer.\");"
 										],
@@ -11986,7 +11974,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d23b6c63-9c35-423d-a8c3-3d59e2673ad1",
+										"id": "db9dfb6e-90f4-4acb-8669-05b37c327c36",
 										"exec": [
 											""
 										],
@@ -12050,7 +12038,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4fbcb62e-adff-42fd-8625-77de9cfc61d9",
+										"id": "5e9db8d4-4f35-43de-b38a-301917f82fc8",
 										"exec": [
 											""
 										],
@@ -12122,7 +12110,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1d6167bb-203d-49ca-a09c-db29793236b6",
+										"id": "516985a5-59bc-48a7-b148-69ba5dd3c394",
 										"exec": [
 											""
 										],
@@ -12185,7 +12173,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8b6ee205-4da5-4e72-a90f-f5578786e1cf",
+										"id": "724a24f6-7ef7-4cbc-82c1-6262bee0de81",
 										"exec": [
 											""
 										],
@@ -12248,7 +12236,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "85f53195-3fda-425c-b298-2d494b4211e2",
+										"id": "b882e803-5d90-4cdb-ab6b-8321ae30a487",
 										"exec": [
 											""
 										],
@@ -12311,7 +12299,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "06a1a189-0b7e-4684-996d-393fb7593095",
+										"id": "c931fc54-181b-46d2-bbea-32f814cfd47f",
 										"exec": [
 											""
 										],
@@ -12375,7 +12363,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "468e1220-ab72-4198-8f6b-52cf8a144217",
+										"id": "89051ec6-54fe-440e-b790-254e3d48c9d6",
 										"exec": [
 											""
 										],
@@ -12447,7 +12435,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "681e8c0c-7624-417b-a877-c02115dada62",
+										"id": "0023a8be-75fa-4004-bd2f-aaf2a6ca36c3",
 										"exec": [
 											""
 										],
@@ -12457,7 +12445,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "23b2ee6d-162a-4d3f-ab33-287ebcc577f7",
+										"id": "e9c4eb07-fd06-4243-ade6-6bf5472b3009",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.payments.CustomerAccountStatusEnum\");"
 										],
@@ -12521,7 +12509,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ed00a498-0ef6-436e-a77b-cf47502a44ba",
+										"id": "e733c02d-57a6-44f3-bc98-539183567de8",
 										"exec": [
 											""
 										],
@@ -12531,7 +12519,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "49ad919f-3445-4d72-92fa-352a1738ad32",
+										"id": "607e9b58-e952-44c5-b8ca-ce9f52032445",
 										"exec": [
 											"pm.variables.set(\"message\", \"Customer with code=NOT_EXIST does not exists.\");"
 										],
@@ -12594,7 +12582,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "4694e412-8f4e-48b3-b2bd-b26449716480",
+								"id": "03a30653-b4ea-4ecb-8c06-f8b962ad7b8a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"customerAccountCode\", pm.variables.get(\"entityCode\"));"
@@ -12604,7 +12592,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b481013b-a2cb-413e-a0e0-c70c0ba5778f",
+								"id": "98c34cac-1e9c-47ac-be46-9d0da07ec2c3",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -12624,7 +12612,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d2fff935-33f3-4769-aa60-f704617b0857",
+										"id": "473b9141-7747-408b-ae83-52802e4cd6ad",
 										"exec": [
 											""
 										],
@@ -12688,7 +12676,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8b8f27b5-f704-4e5a-aa1b-3b588442805a",
+										"id": "5e60fae1-e899-430b-89df-938d2e849321",
 										"exec": [
 											""
 										],
@@ -12760,7 +12748,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1fc477b3-17db-47ea-beee-1611254c8c67",
+										"id": "66c7734e-431c-4b5b-ab41-9c31adbb51e5",
 										"exec": [
 											""
 										],
@@ -12823,7 +12811,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "df5bac99-188d-427f-b208-b50c208958f7",
+										"id": "6d852722-ea69-4f0c-ad84-b9181f90ab2c",
 										"exec": [
 											""
 										],
@@ -12886,7 +12874,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d5eaec02-b8da-4b07-80b7-1da7d58dcab6",
+										"id": "8286ceca-8a77-4240-9c64-de757782ff67",
 										"exec": [
 											""
 										],
@@ -12949,7 +12937,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4d8a7e9f-b5b4-448f-9711-af3d51d5e585",
+										"id": "10448811-d44c-4fe7-bd24-5dc833675438",
 										"exec": [
 											""
 										],
@@ -13013,7 +13001,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5185fcd1-0b12-4e52-9aa3-8438f5b842d2",
+										"id": "0594f7b6-fee3-47ad-a620-0afd8815e1c7",
 										"exec": [
 											""
 										],
@@ -13085,7 +13073,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "268223a3-30b7-4113-ad88-7cd512261047",
+										"id": "8be585cd-ca10-4671-9dfc-231230a3db75",
 										"exec": [
 											""
 										],
@@ -13095,7 +13083,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "86ec2310-2e75-4656-9250-9e98bf930cc9",
+										"id": "82582c2e-9ff0-45cb-ae50-df6652512df9",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: country, language.\");"
 										],
@@ -13159,7 +13147,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d396a8bc-b739-4999-9c0b-5cf143efcb74",
+										"id": "6aadcfb7-4a7a-40cb-a718-379916d319c8",
 										"exec": [
 											""
 										],
@@ -13169,7 +13157,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d6929e93-6713-47da-bde6-04205d87a4ed",
+										"id": "1688a5d8-9571-4451-bab7-099a49e9144e",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.billing.AccountStatusEnum` from String\");"
 										],
@@ -13233,7 +13221,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "03ffd43c-d466-4c63-85dd-18d5ac2e3843",
+										"id": "f07e0f9e-4552-4277-b079-afd8d0590286",
 										"exec": [
 											""
 										],
@@ -13243,7 +13231,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "2b0cc7b8-06b5-41cc-949b-8c48860a0cbf",
+										"id": "5580fde0-9aef-426f-9a2f-6711c728db95",
 										"exec": [
 											"pm.variables.set(\"message\", \"CustomerAccount with code=NOT_EXIST does not exists.\");"
 										],
@@ -13306,7 +13294,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "32b078ef-a5d8-4eac-a391-902ae33a5531",
+								"id": "4093086e-da29-46fb-8256-f2b5fa851216",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"billingAccountCode\", pm.variables.get(\"entityCode\"));"
@@ -13316,7 +13304,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0ae936b7-4af0-4d69-a45c-e08a974507e8",
+								"id": "b7f71b09-c8b5-489e-911b-d222270572d2",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -13336,7 +13324,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8417546f-7f14-4871-93f5-14b584468daf",
+										"id": "f41ce053-79b9-493c-975c-7e3c3c92bf9d",
 										"exec": [
 											"// used in subscription suite\r",
 											"pm.globals.set(\"user_acc\",pm.variables.get(\"entityCode\"));"
@@ -13401,7 +13389,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "48f4b31e-8f57-4809-b7bb-52b520f778d5",
+										"id": "00576534-1865-4499-919f-dc45ed6307ab",
 										"exec": [
 											""
 										],
@@ -13473,7 +13461,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "30a26621-7a55-4659-a0f8-db3753eff108",
+										"id": "e1fb96a0-e75e-4aa5-a707-41ac76de42b8",
 										"exec": [
 											""
 										],
@@ -13483,7 +13471,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c8b72501-acf1-45b1-8cc5-df15c3831721",
+										"id": "1f924c44-036e-4a1e-b623-d4a647476796",
 										"exec": [
 											"pm.variables.set(\"code\",500);\r",
 											"pm.variables.set(\"errorCode\",\"BUSINESS_API_EXCEPTION\");\r",
@@ -13548,7 +13536,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cd3ba677-c117-4fc6-8634-fa2add37878b",
+										"id": "0627adce-3add-4708-8f73-b26d5683d4bf",
 										"exec": [
 											""
 										],
@@ -13611,7 +13599,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e6aee1d4-7fc2-44f7-9aea-5a8f8ece424e",
+										"id": "54b53045-7867-4848-8730-18a2f0c4dbc3",
 										"exec": [
 											""
 										],
@@ -13674,7 +13662,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4b82ab08-8a5e-492f-b894-05e5dac976f5",
+										"id": "b6a64598-f844-4efd-a320-e12c1dc1a0dc",
 										"exec": [
 											""
 										],
@@ -13738,7 +13726,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "dfcaae41-ef8e-4f8d-a77c-c280a60e8df9",
+										"id": "a7441cfe-9341-46bf-a280-c50ab8f14e33",
 										"exec": [
 											""
 										],
@@ -13810,7 +13798,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ba063cb9-9e78-4fd6-bf69-614421d05156",
+										"id": "dd56b1f0-53f5-47a6-a41c-47dc32058cf7",
 										"exec": [
 											""
 										],
@@ -13820,7 +13808,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5742d06c-64ea-43b8-bf5f-90982ee810c0",
+										"id": "98c5d8a7-74aa-4c51-9a0e-4054c8f71c5f",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: billingAccount.\");"
 										],
@@ -13884,7 +13872,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ebf42323-56ea-4286-9deb-dff897d5b77a",
+										"id": "f5680ddd-0b9b-4f8b-88b4-33ecb64c7b62",
 										"exec": [
 											""
 										],
@@ -13894,7 +13882,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "e71a4c26-e3fc-40f6-9e00-ed5131baa805",
+										"id": "5bc44c7e-2bd9-4c0a-a3b0-fec8bbda7d34",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.billing.AccountStatusEnum` from String\");"
 										],
@@ -13958,7 +13946,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c7a471aa-0294-4554-892c-42e8acb86494",
+										"id": "866f3cf8-ecba-4721-b931-5084197a6ac3",
 										"exec": [
 											""
 										],
@@ -13968,7 +13956,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "3ec45485-54f0-40b9-be8d-81c93c5ef837",
+										"id": "12ea7caa-e96b-4672-b741-19e2070af181",
 										"exec": [
 											"pm.variables.set(\"message\", \"BillingAccount with code=NOT_EXIST does not exists.\");"
 										],
@@ -14031,7 +14019,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9a2ad80c-b9d5-458b-ad91-e694aed8a94f",
+								"id": "6cb2cc65-99ba-4430-9931-4ac0de0df32d",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"userAccountCode\", pm.variables.get(\"entityCode\"));"
@@ -14041,7 +14029,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cda88972-9d1d-4958-a415-ccce483354d0",
+								"id": "c2565660-fc5e-4cbe-b5c9-c7f0943a9035",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -14061,7 +14049,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b0ee9337-de2d-477a-92aa-bb59a635e7e3",
+										"id": "9bd10c35-68f9-4072-85a6-e37628af89bd",
 										"exec": [
 											""
 										],
@@ -14125,7 +14113,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "56e68007-3463-4ebf-bd83-08ab31812e41",
+										"id": "d51a3be7-1d1c-4144-bb6a-4a6a351e5319",
 										"exec": [
 											""
 										],
@@ -14197,7 +14185,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4e5c1f8e-1373-4c83-9f34-85f8af98a462",
+										"id": "47757a82-da3c-46de-b3a9-00bd79e01349",
 										"exec": [
 											""
 										],
@@ -14260,7 +14248,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b4f8eec2-2f96-4556-aa25-d1438ce222dd",
+										"id": "b68bd99e-ee80-44ef-97b6-7e50d89ad665",
 										"exec": [
 											""
 										],
@@ -14323,7 +14311,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "31188cf2-751f-4c09-8503-5466ba4dd7cf",
+										"id": "bdd83dcb-14a3-4189-b101-aedb91ebb3c2",
 										"exec": [
 											""
 										],
@@ -14386,7 +14374,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "860b129c-2155-4866-9850-099965b5c336",
+										"id": "81bd8a78-88a7-4a56-b654-edcbf3a00442",
 										"exec": [
 											""
 										],
@@ -14450,7 +14438,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2cc633d5-1802-4106-b5ed-305360761c27",
+										"id": "57a6e456-3d0d-470e-8a23-91128d9fef0b",
 										"exec": [
 											""
 										],
@@ -14522,7 +14510,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "09f505ee-8fa7-47dc-bd7d-e9731dc95d82",
+										"id": "6585c5dc-d986-4384-a151-c03de3abbb4e",
 										"exec": [
 											""
 										],
@@ -14532,7 +14520,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7c556597-9628-4abb-8ba2-dbb9bae817cf",
+										"id": "5e748be1-3ade-4a18-87cc-d58da77ab98d",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: description.\");"
 										],
@@ -14596,7 +14584,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d17810bf-543c-4333-af97-fb311d009e5f",
+										"id": "d95689b3-cf52-4920-8c53-b51f2b6673a8",
 										"exec": [
 											""
 										],
@@ -14606,7 +14594,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1d4f331d-cd48-41e4-99be-e4e160b0a165",
+										"id": "dd660a28-b4c6-4632-a216-7c8cf081169f",
 										"exec": [
 											"pm.variables.set(\"statusCode\", 500);\r",
 											"pm.variables.set(\"message\", \"At least 1 of the field in Contact Information tab is required [email, genericEmail, phone, mobile].\");"
@@ -14670,7 +14658,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c76d8f42-5c98-4be3-b17e-3dae87dfc5d0",
+										"id": "9297e2d7-5bc3-46d7-82b6-51880f352bb2",
 										"exec": [
 											""
 										],
@@ -14680,7 +14668,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1a5508eb-82ed-4f58-acbd-d9d3fff542f4",
+										"id": "0dfe639f-efe9-4e2e-9c0e-b979e88cff69",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot construct instance of `org.meveo.api.dto.account.AddressDto`\");"
 										],
@@ -14742,7 +14730,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "3467064b-48ef-4ced-8f1e-5b6afda97aec",
+								"id": "10179c75-165a-44c6-b1df-a0410601d029",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -14752,7 +14740,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "506ff41c-6d38-4f35-8859-73b2cf8467d9",
+								"id": "38057fa8-9121-4259-bcba-db9ed639dbbf",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -14772,7 +14760,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ebcafc03-9e18-40fd-bdd2-4a80d36ce22d",
+										"id": "795cc72d-c6be-4444-8a4d-7e5926e904f6",
 										"exec": [
 											""
 										],
@@ -14782,7 +14770,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "32829f26-5b14-4f79-89af-0b7c7aa67614",
+										"id": "4b4c2c1c-53f7-4b02-a7f9-572f2f53728b",
 										"exec": [
 											"pm.variables.set(\"description\", );"
 										],
@@ -14846,7 +14834,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e04024ae-22c2-42ae-8cb1-9df5a2d2a39c",
+										"id": "f9a584e7-7db8-4549-8f2f-9e5bf5e04f01",
 										"exec": [
 											""
 										],
@@ -14856,7 +14844,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4e9811cc-e914-415c-8327-b42fdefd40e3",
+										"id": "9ab7fb49-6402-4967-8fa2-d4bce5064935",
 										"exec": [
 											""
 										],
@@ -14928,7 +14916,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5886b4c9-4628-4140-a416-56be836a2d46",
+										"id": "3d7875f2-11c1-49d4-b8cd-9243877ed6c7",
 										"exec": [
 											""
 										],
@@ -14938,7 +14926,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5cc5e661-1807-4689-a482-a820db6645c0",
+										"id": "a0811c28-81c5-47e7-966c-dd8c2fc2fe9c",
 										"exec": [
 											"pm.variables.set(\"message\", \"Customer with code=\"+pm.variables.get(\"entityCode\")+\" already exists.\")"
 										],
@@ -15001,7 +14989,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "091198c1-290d-412f-997a-9e839be6b3f2",
+										"id": "e5a1c024-143a-40ed-be12-533632dfbc82",
 										"exec": [
 											""
 										],
@@ -15011,7 +14999,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "bcd5273f-95b1-417a-bc6d-e23d9ed12d21",
+										"id": "0cd3f005-c6ed-4738-9b9c-be80d07dcdd7",
 										"exec": [
 											"pm.variables.set(\"message\", \"Customer with code=NOT_EXIST does not exists.\");"
 										],
@@ -15074,7 +15062,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f80d9273-2c7e-4643-809d-999bfa79798a",
+										"id": "fc018811-739d-4028-9b1a-85e6748d6d4e",
 										"exec": [
 											""
 										],
@@ -15137,7 +15125,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4c6d6426-398a-4ccc-97cf-5c2c2b33924b",
+										"id": "6cd6f232-9310-4f66-abc4-9e7c10d9359e",
 										"exec": [
 											""
 										],
@@ -15201,7 +15189,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f02de914-44c1-49c0-8e52-bb718375bfdf",
+										"id": "8e85e94a-6c7f-4c0e-8c4d-ca2c1e7331df",
 										"exec": [
 											""
 										],
@@ -15211,7 +15199,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "db472de3-033a-4c54-b088-b887c123fa7b",
+										"id": "81f0a035-7db5-41a3-bb28-44177bfd7bdd",
 										"exec": [
 											"pm.variables.set(\"haveDescription\", false);"
 										],
@@ -15283,7 +15271,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cc376a5b-d00a-4f7e-9bbb-511d96a9a873",
+										"id": "bfad6676-8df9-4588-83f0-ec9f46a32529",
 										"exec": [
 											""
 										],
@@ -15293,7 +15281,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1974b7b6-773d-47d6-b8b3-e0199635445d",
+										"id": "bc594400-b314-42f2-b053-1f78160db9f3",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: customerCode, customerCategoryCode, sellerCode, currencyCode, countryCode, billingCycleCode, languageCode, email.\");"
 										],
@@ -15356,7 +15344,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e25b1281-e2ef-44c6-8987-78be5db70b4f",
+										"id": "1be51f2f-fc6f-48eb-a90a-00970cecabef",
 										"exec": [
 											""
 										],
@@ -15366,7 +15354,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "27ef7e81-367d-43e8-ab72-22bae82b8fde",
+										"id": "e571c13c-1656-492a-8e5c-91fad836f871",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: customerCategoryCode, sellerCode, currencyCode, countryCode, billingCycleCode, languageCode, email.\");"
 										],
@@ -15429,7 +15417,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "27f11e79-a69d-45b9-b4b2-f2959ea04acf",
+										"id": "2ddabbc5-508e-476a-8754-c1e11b21eed8",
 										"exec": [
 											""
 										],
@@ -15439,7 +15427,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "717a60eb-846d-4c84-82b3-117039848d74",
+										"id": "cfddd86b-489a-485e-97ea-1a5b2c0555bd",
 										"exec": [
 											"pm.variables.set(\"message\", \"Seller with code=NOT_EXIST does not exists.\");"
 										],
@@ -15502,7 +15490,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a1a123cb-a30f-4baa-993e-9fac1de4ddf1",
+										"id": "ddad7309-4386-4d93-a890-8f0c99e8da45",
 										"exec": [
 											""
 										],
@@ -15512,7 +15500,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "ba198806-2704-4d6d-845b-a14023144580",
+										"id": "c0fecd5b-0a5c-4397-aeed-97e7bc835adc",
 										"exec": [
 											"pm.variables.set(\"message\", \"Seller with code=NOT_EXIST does not exists.\");"
 										],
@@ -15575,7 +15563,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "bd873380-7565-4ae5-9631-ffdc0fa31db4",
+										"id": "b74e5c98-95f7-4c83-a23a-344e17f97da0",
 										"exec": [
 											""
 										],
@@ -15585,7 +15573,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5b1c9095-b3bf-43ff-9dcb-8cdd9266dbac",
+										"id": "77b751df-e3c3-49cc-bc52-bf97bab6a293",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.payments.PaymentMethodEnum` from String\");"
 										],
@@ -15648,7 +15636,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "535e8cb7-85ec-4eb2-af96-21433c3e0775",
+								"id": "361c89fe-c6c9-49d2-8bec-7a14d04edd29",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"customer\");",
@@ -15660,7 +15648,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2a059309-116d-4140-9115-3dafec533231",
+								"id": "5bf86ecc-77fa-49bd-bd37-086207b2b210",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -15686,7 +15674,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6e69801c-ea0b-41d2-898e-dd52f967980f",
+										"id": "1e0dcd56-12d4-41ee-9bd9-dfb48bc14540",
 										"exec": [
 											""
 										],
@@ -15749,7 +15737,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c2cf31d6-9b0a-4da0-a276-b6e391e8704d",
+										"id": "957fd770-8111-435f-97b9-086720937cb0",
 										"exec": [
 											""
 										],
@@ -15820,7 +15808,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2def6a09-c5d0-41bb-8d24-63f80a601541",
+										"id": "e2398489-5a42-4159-8162-1807dad4fb9a",
 										"exec": [
 											""
 										],
@@ -15830,7 +15818,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d2251a04-692c-486e-b340-1583c7198e40",
+										"id": "45472c06-c4a1-4787-bd88-99684a5d9363",
 										"exec": [
 											""
 										],
@@ -15892,7 +15880,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b6a413c3-eca3-4613-abe2-d8a532227931",
+										"id": "bdc5dc44-387e-44a9-b961-ea286ed33b98",
 										"exec": [
 											""
 										],
@@ -15954,7 +15942,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d66d735e-e1c4-4990-9182-2f4b668f3595",
+										"id": "21123711-2b62-4d6a-a274-497e5c4276c9",
 										"exec": [
 											""
 										],
@@ -16016,7 +16004,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "93908d26-2ade-4c85-beca-c51de04ed609",
+										"id": "fd03f320-ecc7-4f35-8339-d136387eabc8",
 										"exec": [
 											""
 										],
@@ -16079,7 +16067,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2f7ff012-de1e-4688-bf0d-9e36a41f8fb3",
+										"id": "89e4e12d-fe04-4ad4-8a60-4447387a4e29",
 										"exec": [
 											""
 										],
@@ -16149,7 +16137,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "d620f234-3ce6-46b5-9ad4-d08a8d80125d",
+								"id": "0b2c9561-1865-4abc-9391-cbe52f1fc20e",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -16159,7 +16147,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dcf5fc97-2604-4906-a04b-a33b93326fbb",
+								"id": "58e4fd04-f492-42b1-99ca-930b12ad759b",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -16179,7 +16167,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2c9d34da-9dfe-4b7b-b784-67ede1b84c32",
+										"id": "688bb00f-c1ea-46a3-8c52-297407eb15cf",
 										"exec": [
 											""
 										],
@@ -16242,7 +16230,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7b736cf9-defd-45d6-97fb-c45502124f4a",
+										"id": "5480b349-ed47-4057-a6e9-17994240f3c8",
 										"exec": [
 											""
 										],
@@ -16313,7 +16301,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "73e87632-2255-4cc8-b9f6-fe004f85ee68",
+										"id": "87612ed5-4466-46e7-87b2-611d96cb6249",
 										"exec": [
 											""
 										],
@@ -16376,7 +16364,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a27e7c8e-2d1f-4b0e-889f-3b7d169b6655",
+										"id": "0c68dfac-0979-442f-bea9-d1c8a4ce7567",
 										"exec": [
 											""
 										],
@@ -16386,7 +16374,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f1b8f9c2-0196-4a7a-87b4-5ced90ace16d",
+										"id": "2b0161c6-0a1b-4feb-9491-d561c1d55769",
 										"exec": [
 											"pm.variables.set(\"message\",\"JobTemplate with code 'NOT_EXIST' doesn't exist.\")"
 										],
@@ -16449,7 +16437,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f1821216-2da1-43a5-80be-4c29991c9e69",
+										"id": "07a67610-1738-4687-b20f-23c28f05c7a9",
 										"exec": [
 											""
 										],
@@ -16512,7 +16500,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3965cb56-e796-42d6-92dd-eb3d2d0683f5",
+										"id": "12d85995-a902-4d54-a387-e11196e2b6fc",
 										"exec": [
 											""
 										],
@@ -16575,7 +16563,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e8300054-380d-479d-b173-dcab30cbc214",
+										"id": "73e616a7-3c12-45bc-bc6b-e13578098e83",
 										"exec": [
 											""
 										],
@@ -16646,7 +16634,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "35a6f0a2-badf-4541-8c59-b82f43c2f3aa",
+										"id": "c1460dbd-1472-4dc4-ab61-3ed56eb80f19",
 										"exec": [
 											""
 										],
@@ -16656,7 +16644,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5db1cf0e-7f73-40b5-90b9-baca11063196",
+										"id": "380ea043-52c0-414b-be31-28ba712c4a41",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: SepaJob_ddRequestBuilder.\");"
 										],
@@ -16719,7 +16707,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2dfbcf10-8925-4bcb-a9a1-3233a9827671",
+										"id": "6777f849-beb5-4eb3-8968-5fbdef5fd3c4",
 										"exec": [
 											""
 										],
@@ -16729,7 +16717,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "11877910-f948-451b-9e5e-882d82290f01",
+										"id": "9a101e7c-1316-4bd9-af40-cd822b6a1449",
 										"exec": [
 											"pm.variables.set(\"message\", \"JobTemplate with code 'NOT_EXIST' doesn't exist.\");"
 										],
@@ -16791,7 +16779,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "09c41acc-4ed2-4a21-bbd4-c45d301ab306",
+								"id": "a5e2d780-9879-4014-9e6f-29dd7ce4f78a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"jobInstanceDto\");",
@@ -16802,7 +16790,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "36869718-07d5-4283-bf28-807d89988db5",
+								"id": "6ea9f913-3db2-4ba0-9e19-6a70e9cc5f8a",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -16828,7 +16816,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "50710325-a184-4f76-9ddb-c3e59e166b3c",
+										"id": "e63d78d0-55db-492b-9697-1380d42cf3fc",
 										"exec": [
 											""
 										],
@@ -16892,7 +16880,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "09d3de66-cd2a-479f-bb4b-cc6282ce3108",
+										"id": "ba94c4ab-2038-4e61-9782-fc4bdac827ec",
 										"exec": [
 											""
 										],
@@ -16964,7 +16952,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f63c400c-7ae7-4229-8adb-00c3a49dbbed",
+										"id": "423eeedb-a26e-4873-ba40-b964d9ca29cb",
 										"exec": [
 											""
 										],
@@ -17027,7 +17015,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1cd10860-9137-4dfc-92e9-ae976b806446",
+										"id": "c2dfe1db-f5c2-4950-adb2-880f68d24481",
 										"exec": [
 											""
 										],
@@ -17090,7 +17078,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f1db6ceb-2fcf-4872-9422-87521ef337ba",
+										"id": "050a53af-eb83-4599-808c-7de0c234b804",
 										"exec": [
 											""
 										],
@@ -17153,7 +17141,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "eb10d6fc-a39e-4423-b184-ee16ddb9302b",
+										"id": "dffa2657-7e35-4bb9-9edb-0256fe10bdd9",
 										"exec": [
 											""
 										],
@@ -17217,7 +17205,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b12b7a9a-5a41-4816-8287-79ec32bba046",
+										"id": "b451add8-418d-4ff5-9552-1f30d8df3eb0",
 										"exec": [
 											""
 										],
@@ -17289,7 +17277,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c312f58b-6c03-45a3-aaa2-d9830fb96dbf",
+										"id": "5beb1062-c9ec-4683-b655-42e603431621",
 										"exec": [
 											""
 										],
@@ -17299,7 +17287,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "2b87ca7f-ed31-4f20-b9b2-af7ca2bf6727",
+										"id": "4b4fe71c-0ad5-4e2a-8612-e9ef12233ae6",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: invoiceSubCategory, calendar, taxClassCode.\");"
 										],
@@ -17363,7 +17351,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9d319965-af23-4369-97ed-854ec56f0009",
+										"id": "92934e0c-6477-4ba6-8683-c1cb6fed9ac5",
 										"exec": [
 											""
 										],
@@ -17373,7 +17361,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4832a35e-0dbb-4119-83af-d950ac0bb69f",
+										"id": "e37bd074-5a96-4f03-9eea-c6d45662fb9d",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -17436,7 +17424,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "58eac924-64c6-48c2-829c-c04fe5beec33",
+								"id": "245d086a-210d-4619-88f8-a0d742690431",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"recurringChargeTemplateCode\", pm.variables.get(\"entityCode\"));"
@@ -17446,7 +17434,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1b89dde0-8f6d-47cc-b2c9-5f58e5b4909b",
+								"id": "1489320a-24ef-4ee1-a705-931e19fa71b6",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -17466,7 +17454,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5e71bbb8-3f4e-453d-97a7-93cb184630e5",
+										"id": "da73d70b-0987-4abd-9357-8c02018cc521",
 										"exec": [
 											""
 										],
@@ -17530,7 +17518,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "118a346a-5aec-4bf8-94e3-6694eb9a23a6",
+										"id": "93bd021c-e393-43ea-b3b5-aede09984198",
 										"exec": [
 											""
 										],
@@ -17602,7 +17590,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ca59eb5c-1126-49a7-a753-0afec0470bdb",
+										"id": "7a038f59-71e1-4e32-8fb1-c884a6786904",
 										"exec": [
 											""
 										],
@@ -17612,7 +17600,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "44ae5d16-46b1-4260-a49a-46c2834fecab",
+										"id": "23b3bbfc-9e8c-4ef1-98d8-080d1680feab",
 										"exec": [
 											"pm.variables.set(\"message\",\"ServiceTemplateService with code=TEST_ST already exists.\");"
 										],
@@ -17675,7 +17663,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2fc22f50-14f4-4c50-a765-0414717bb6fc",
+										"id": "e79ab4ab-f4fc-4f9a-8bb0-c58380903493",
 										"exec": [
 											""
 										],
@@ -17685,7 +17673,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7ba5eb69-34e9-4bd9-a51e-0e3715c0f812",
+										"id": "a7c1e5e2-3bfa-469a-99cb-5eaeaa5785d3",
 										"exec": [
 											"pm.variables.set(\"message\", \"ServiceTemplateService with code=NOT_EXIST does not exists.\");"
 										],
@@ -17748,7 +17736,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "662c78d9-085b-49cf-830b-42217536bd5e",
+										"id": "4ee951c4-6d55-4f8e-94aa-1c513ba6c3dd",
 										"exec": [
 											""
 										],
@@ -17811,7 +17799,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e08d9512-31da-4f3e-8d28-978d32663e16",
+										"id": "ef8e761b-895f-4d26-a78b-7b425469d88a",
 										"exec": [
 											""
 										],
@@ -17875,7 +17863,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "119ec116-3aa1-44e0-ad05-d21c2c2acabe",
+										"id": "7227c698-d0f1-4c55-9e31-1cce8fffd52a",
 										"exec": [
 											""
 										],
@@ -17947,7 +17935,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "93613122-fe83-4506-b4c7-9311705ebbd2",
+										"id": "990c8b8e-02a7-4c9e-8d3c-b7c42c0518b8",
 										"exec": [
 											""
 										],
@@ -17957,7 +17945,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4cb8e21b-1c1a-4897-b8fb-db5f2718fca2",
+										"id": "ff328e24-b9d1-4cf7-9b1e-0bfd32ba304b",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -18021,7 +18009,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d7ef7fd9-f663-4d12-8aff-0fffe33c8d1c",
+										"id": "30d6f92b-a9d3-4833-a766-f843a0b63986",
 										"exec": [
 											""
 										],
@@ -18031,7 +18019,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "a8ba7c61-5641-411d-829a-7b398ceec92d",
+										"id": "fbd74f99-bf6f-4692-bf15-bb0da8227538",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `boolean` from String\");"
 										],
@@ -18094,7 +18082,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "72a5af85-cf93-43de-945e-1ed735619834",
+								"id": "e1721e85-012e-4873-9e0a-150bbd86e2c4",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -18104,7 +18092,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "967363ec-71a6-42ff-aa09-195c16c58ab2",
+								"id": "637398e5-1d3d-44ad-9dab-5520f2e5a072",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -18124,7 +18112,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7e817366-a6df-4a93-8bb6-49224673cfb5",
+										"id": "c958e64b-3e3d-4dbd-85b4-eb2843b5869b",
 										"exec": [
 											""
 										],
@@ -18188,7 +18176,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a6680a23-eaf1-451d-bf12-faf4bcc39509",
+										"id": "9d78bda0-3deb-431a-9a67-c074be579101",
 										"exec": [
 											"var data = pm.response.json();",
 											"pm.test(request.name + \" - Check Data\", function () {",
@@ -18272,7 +18260,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "60da9a84-f698-47ca-b962-516ee23118ff",
+										"id": "ca8fa727-901e-4c1b-8b54-b2c94e7e297a",
 										"exec": [
 											""
 										],
@@ -18282,7 +18270,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "1f3b6550-bee2-4fa1-8a23-3c30ad15aebf",
+										"id": "c0287ca0-6314-4f7d-81c5-92a1229c5711",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);\r",
 											"pm.variables.set(\"message\", \"OfferTemplate with code=\" + pm.variables.get(\"entityCode\")+\" / Wed Jan 01\");"
@@ -18346,7 +18334,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7d94e46c-b71b-419d-bb8f-ef3a62a69742",
+										"id": "802d776c-3f3e-4aa1-bb90-54714f8756d1",
 										"exec": [
 											""
 										],
@@ -18356,7 +18344,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "933589aa-f371-4a88-9810-0a30d60a4405",
+										"id": "6e0066af-9112-4b92-9354-6d3ba26ae91c",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);\r",
 											"pm.variables.set(\"message\", \"OfferTemplate with code=NOT_EXIST\");"
@@ -18420,7 +18408,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8e22e79c-7875-43e5-8099-aba8208a3d03",
+										"id": "31967f57-2fe0-49eb-9e5b-721b407f601f",
 										"exec": [
 											""
 										],
@@ -18483,7 +18471,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8177e78b-47e3-4264-b0d3-cd9c330a5689",
+										"id": "a3a7af36-637f-400e-991b-5d602a173709",
 										"exec": [
 											""
 										],
@@ -18547,7 +18535,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d2bab3b7-8b96-4f42-a847-f45b443b4fa4",
+										"id": "1aaa0279-d63f-463a-90a9-da96e05b37de",
 										"exec": [
 											"var data = pm.response.json();",
 											"pm.test(request.name + \" - Check Data \", function () {",
@@ -18631,7 +18619,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "dd554a5e-06e5-4ca7-9e3c-14f8a8b56b14",
+										"id": "08098fd7-4ddf-4f84-8af0-cebdc826b6a0",
 										"exec": [
 											""
 										],
@@ -18641,7 +18629,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "6806a464-aef6-48e2-b18c-3f30a5771746",
+										"id": "8189fdf0-7383-43ba-9762-7ff08b4544d7",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.catalog.LifeCycleStatusEnum` from String\");"
 										],
@@ -18705,7 +18693,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cca828b1-b512-4c06-af29-84121bb1a340",
+										"id": "bdb78ea1-7aea-4fde-8c60-3e325a1e795a",
 										"exec": [
 											""
 										],
@@ -18715,7 +18703,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b90ee3e3-bc99-425b-9ae6-285628391f05",
+										"id": "54c542c5-5986-4f09-b888-b7c9b9fa7594",
 										"exec": [
 											"pm.variables.set(\"message\", \"An offer, valid on 01/01/2020 - , already exists. Please change the validity dates of an existing offer first.\");"
 										],
@@ -18786,7 +18774,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2ba70f0e-2a6b-4f90-b3e6-183861fec417",
+										"id": "7f0be669-93ef-48ea-8c68-fa51932411cb",
 										"exec": [
 											""
 										],
@@ -18850,7 +18838,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "80112412-84fb-4ca4-ae0d-d70fa9593932",
+										"id": "8aaef0c6-8d24-4ddb-bfa6-eebf5b1f4b2f",
 										"exec": [
 											""
 										],
@@ -18922,7 +18910,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "022fe4ca-165a-4462-9339-e55aa2ca37ba",
+										"id": "8c007800-469e-4ac4-80e5-215bce6f3c5a",
 										"exec": [
 											""
 										],
@@ -18985,7 +18973,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d9993da6-f952-4491-8c58-de95273a3656",
+										"id": "1af2545a-b5cd-40cd-9f61-552320b04584",
 										"exec": [
 											""
 										],
@@ -19048,7 +19036,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "84491078-fe81-4ec8-b116-5ea4e72097a7",
+										"id": "67b36487-381d-4c46-86d5-302b38322d63",
 										"exec": [
 											""
 										],
@@ -19111,7 +19099,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2ff27bda-27ed-40c4-a90c-9370ae4f7eea",
+										"id": "8f2e9cfb-7608-49e5-9192-ab307718d569",
 										"exec": [
 											""
 										],
@@ -19175,7 +19163,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "738c1f59-6c8a-4c45-b1f5-1abb2b108236",
+										"id": "4f988f1e-33bf-45d1-bc71-9cb488bf9f48",
 										"exec": [
 											""
 										],
@@ -19247,7 +19235,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8da00f95-4184-4d51-b33c-e0b6e45c2b90",
+										"id": "4925cecd-3b85-4dcd-a70f-3cf05cf7d12c",
 										"exec": [
 											""
 										],
@@ -19257,7 +19245,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "cc9d6148-ce76-410a-8cc0-173008ddb9e8",
+										"id": "f08971b7-19dd-4bb8-a5f1-3115c800ad73",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: eventCode, amountWithoutTax.\");"
 										],
@@ -19321,7 +19309,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5b386dd9-89b9-45bf-9c35-dbd7ccb16692",
+										"id": "760b8652-f92b-415f-ba18-eacaaa4bbcc4",
 										"exec": [
 											""
 										],
@@ -19331,7 +19319,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "28d15b97-12ab-4067-ba94-0aafbe341774",
+										"id": "803c68cb-9c87-4d83-b110-cac68019790b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.math.BigDecimal` from String\");"
 										],
@@ -19395,7 +19383,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d1c56561-6d0c-4465-8bf9-30029b6115f3",
+										"id": "acbc2c2f-1d47-41b8-9d24-50f140b289b1",
 										"exec": [
 											""
 										],
@@ -19459,7 +19447,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6c8c02d0-304b-4687-b99f-40780b9f237f",
+										"id": "6efa6e18-8a18-455a-92d0-afa885dddd97",
 										"exec": [
 											""
 										],
@@ -19522,7 +19510,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "63bbb828-29ae-42c1-b943-553c04a75498",
+								"id": "ab5db6cb-4286-42d6-b194-4eb976d61d50",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"pricePlan\");",
@@ -19533,7 +19521,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2a17acb0-82db-4065-8ab0-a504387b6c02",
+								"id": "043e0b4d-2c6f-4e99-812b-baa56e99c5da",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -19553,7 +19541,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "bbac5ced-53a8-4019-8d91-d2521d7c50bd",
+										"id": "68ee0190-b999-4926-a2e1-dfb2009d3f8a",
 										"exec": [
 											""
 										],
@@ -19617,7 +19605,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b7a4abcd-a005-45bb-8f8f-3be88e8020f6",
+										"id": "049c16df-92bf-4945-a633-b5612c90ad26",
 										"exec": [
 											""
 										],
@@ -19689,7 +19677,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "139b60bf-da4f-4c83-882a-835e76343604",
+										"id": "197ede13-def6-40f9-8eb7-dc319e4e3a3e",
 										"exec": [
 											""
 										],
@@ -19752,7 +19740,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7041b787-9f25-491a-9a2c-047e2b348499",
+										"id": "77479bb9-33ac-48a3-b962-48d85fd54267",
 										"exec": [
 											""
 										],
@@ -19815,7 +19803,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "781c302e-a11c-463a-a085-02e8cd0935d6",
+										"id": "c1693277-35ca-4268-873d-6e3e08462174",
 										"exec": [
 											""
 										],
@@ -19878,7 +19866,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0593cc3f-35d5-4e18-b16d-c68e32f5e99a",
+										"id": "cc5e618b-b2d1-4fb9-9899-4c288dd8a511",
 										"exec": [
 											""
 										],
@@ -19942,7 +19930,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6b315b23-af81-483a-87f2-0fde05b58815",
+										"id": "74c214e3-0b69-4e92-af4f-9632f29c7a2b",
 										"exec": [
 											""
 										],
@@ -20014,7 +20002,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f6df3d7f-991a-46ef-8471-431e7fa4dd3e",
+										"id": "c11c2ff0-bb3c-434f-b28b-b0edc70c5d2f",
 										"exec": [
 											""
 										],
@@ -20024,7 +20012,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b7d59395-febe-4d67-9763-f123b980a87f",
+										"id": "211b8484-8350-4106-8455-a347f2d94358",
 										"exec": [
 											"pm.variables.set(\"message\", \"was expecting 'null', 'true', 'false' or NaN\\n at [Source: (io.undertow.servlet.spec.ServletInputStreamImpl);\");"
 										],
@@ -20088,7 +20076,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "196fdcf0-a56b-418e-8821-7e2fe48dfcda",
+										"id": "543349d6-c6a2-430d-ae80-750d9e1f4857",
 										"exec": [
 											""
 										],
@@ -20157,7 +20145,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4d4a43b2-6a3e-4691-a528-e1026e480826",
+										"id": "00079e70-2f29-4064-bcfd-595fe745fb65",
 										"exec": [
 											""
 										],
@@ -20225,7 +20213,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "9fcdb6bf-5113-4a50-8c04-105b41cc6247",
+								"id": "99b1ee92-c646-4e3d-81c8-7de048f5173b",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"discountPlanDto\");",
@@ -20236,7 +20224,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3064ebe5-5dd4-4fea-8fec-1b41b994cb8c",
+								"id": "8cd0dc0e-ae04-4601-855e-fdc2947cae8a",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -20259,7 +20247,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ece2a34b-576d-4693-9970-d470ca5be998",
+								"id": "bf0f6357-6898-4e24-8f69-9a7abfebcb6e",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20269,7 +20257,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c11a10ff-1fc9-4edd-8c3b-bc23f43343af",
+								"id": "aa428780-babe-483a-9776-d3a650c8d1bf",
 								"exec": [
 									""
 								],
@@ -20333,7 +20321,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "11aafb74-ee65-429c-b1a8-f8d6849f3c2c",
+								"id": "288d4552-67c9-4032-8b9b-425a0d51bbae",
 								"exec": [
 									""
 								],
@@ -20343,7 +20331,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "4560ad18-4a42-4122-9c60-762f21f7ba24",
+								"id": "1d930555-cc25-44c1-b25c-e0fbda3134c6",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20415,7 +20403,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c742acdf-a828-4bd8-8885-5962d078d3db",
+								"id": "e202a66c-d1ea-4e04-9047-6e983ca50605",
 								"exec": [
 									""
 								],
@@ -20425,7 +20413,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ca5da1ce-88bf-4c4b-9de3-bcb42edfa020",
+								"id": "a4f29f36-f0a4-46ce-a61f-3662834946c7",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20488,7 +20476,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ed6e8cdb-e24b-4506-a3a4-a32d14c2402c",
+								"id": "2c1306cb-5cad-4c27-b2ac-be9e7c65bce5",
 								"exec": [
 									""
 								],
@@ -20498,7 +20486,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "18233f8d-cdca-49fe-ac50-5930145733e1",
+								"id": "34d81e15-b328-45d3-a8af-2308585b692a",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20570,7 +20558,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cf58fcc9-84c2-4f58-9767-d9cfb082975d",
+								"id": "b71c5860-c702-413b-b5f5-c71ac65f76b4",
 								"exec": [
 									""
 								],
@@ -20580,7 +20568,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "fcf0ad78-88cc-4bcb-9837-7fa9de44315a",
+								"id": "4848d80e-208e-42a5-a6bb-1a246fe86217",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20643,7 +20631,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8ef65c0d-cb74-4b8c-bd57-afc05c77e15a",
+								"id": "01c57a2f-f73d-479a-aabd-70b5578a91ec",
 								"exec": [
 									""
 								],
@@ -20653,7 +20641,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "be8a8a2a-c2c1-4c45-a8cf-d472a34a3162",
+								"id": "666e1b99-f2c2-43d1-af68-fc94be1edbcb",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));\r",
 									"pm.variables.set(\"message\",\"Subscription with code=\"+pm.variables.get(\"entityCode\")+\" already exists.\");"
@@ -20717,7 +20705,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c821fe95-3555-49e9-89be-47bcda3e9936",
+								"id": "be53bf9f-ea0f-448c-84a5-30fb078e1f56",
 								"exec": [
 									""
 								],
@@ -20727,7 +20715,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "45733b8d-7ab1-4f5b-8d69-452f05b257c2",
+								"id": "b4579d19-5a1f-4dce-8ac8-e9e78d0f952e",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -20791,7 +20779,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9937e1ae-54e9-4cfa-be30-5e01722e059d",
+								"id": "451e7be4-ac6d-4f91-8ad7-476efeeaf65e",
 								"exec": [
 									""
 								],
@@ -20801,7 +20789,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "447099eb-8fd1-4e91-b720-9796d76ec7e8",
+								"id": "c9e2e171-b7ca-4567-a2fd-3c735abf8bf2",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));\r",
 									"pm.variables.set(\"message\", \"UserAccount with code=NOT_EXIST does not exists.\");"
@@ -20866,7 +20854,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9e06c62f-02a7-4080-9627-f5a0eb359b4a",
+								"id": "c2eb1c87-242b-4b32-bc16-9988590a9e9e",
 								"exec": [
 									""
 								],
@@ -20876,7 +20864,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "956a90be-3131-49be-bbb9-1f3527e07b19",
+								"id": "d9df40c6-72cd-4189-82c7-c3fb34107cfd",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));\r",
 									"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: subscriptionDate.\");"
@@ -20941,7 +20929,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7a89f986-5e17-4c0d-aa4a-94759cec2061",
+								"id": "6a53fc2e-876a-48ee-9358-7f5563d76549",
 								"exec": [
 									""
 								],
@@ -20951,7 +20939,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "32fe1c8b-7724-4ed1-8532-5cb92107a45a",
+								"id": "e49392f4-1b8b-499c-b6ec-55cac61bddb3",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));\r",
 									"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.billing.SubscriptionStatusEnum` from String \\\"INVALID\\\"\");"
@@ -21016,7 +21004,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0cad36e0-1863-43e1-ab12-f8b344925150",
+								"id": "b0338bc9-2e6a-419b-96d4-bc8060004ab4",
 								"exec": [
 									""
 								],
@@ -21026,7 +21014,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "74197865-84a9-4e90-8f93-e02ac8fc5ea0",
+								"id": "9a7e260b-88f9-41db-805a-0fa57930f04d",
 								"exec": [
 									""
 								],
@@ -21090,7 +21078,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "29e013ae-1a78-4247-85e2-2a7d373f31d8",
+								"id": "7a679d54-bb51-49b3-8502-14bd1a2264ba",
 								"exec": [
 									""
 								],
@@ -21100,7 +21088,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a2f7921e-a3b7-47b7-ac3f-ec8f9746ff20",
+								"id": "8ed2f17d-81ea-491d-ab15-8bd2110b71bd",
 								"exec": [
 									""
 								],
@@ -21164,7 +21152,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4ed8153a-df86-4a3a-92c1-694bf508bc9f",
+								"id": "47eddbdc-1bff-4ba8-9c5b-2b28dad118d7",
 								"exec": [
 									""
 								],
@@ -21174,7 +21162,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "2feb794a-b31c-4810-aacb-d48e205a4d2c",
+								"id": "d59ea5f7-bfbd-4360-94be-7595e8500d9c",
 								"exec": [
 									"pm.variables.set(\"entityCode\",pm.variables.get(\"entityCode\")+pm.collectionVariables.get(\"i\"));"
 								],
@@ -21238,7 +21226,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "03e2281e-428f-4a66-baff-295f93ef2011",
+								"id": "4dbfdef0-979f-4d3d-8791-ebc1d7ae50cd",
 								"exec": [
 									"//pm.collectionVariables.set(\"i\",pm.collectionVariables.get(\"i\")+1);"
 								],
@@ -21248,7 +21236,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "28b75299-fd0d-462f-9f52-93262eee8868",
+								"id": "f1bee746-87cb-4fb5-a6b3-ed124ee6c101",
 								"exec": [
 									"pm.variables.set(\"code\", 500);\r",
 									"pm.variables.set(\"errorCode\", );\r",
@@ -21314,7 +21302,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2b3385ed-5c3a-42f2-9417-6e14b0af9473",
+						"id": "a46d67d9-d431-45ea-a592-794c78a7b34c",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -21324,7 +21312,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4d4e7554-1852-435c-80e3-a0bb81ca62e4",
+						"id": "3f75beb9-fd75-4c44-b46e-45730faa7987",
 						"type": "text/javascript",
 						"exec": [
 							"pm.globals.set(\"sub_code\",pm.variables.get(\"entityCode\"));",
@@ -21349,7 +21337,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "67ce432c-1585-4161-aaf6-50829fbe4562",
+										"id": "c59d1c3c-0803-40a8-913b-bfc05a52e727",
 										"exec": [
 											""
 										],
@@ -21412,7 +21400,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "09d8d472-27f6-4a57-9870-761cbd983e87",
+										"id": "978190b7-b5ef-447b-bc67-54909ca75505",
 										"exec": [
 											""
 										],
@@ -21483,7 +21471,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "97025f33-6e42-4d13-bd4d-5cbaf9c67ae1",
+										"id": "54698ced-0df7-465f-99ab-57eb815a6402",
 										"exec": [
 											""
 										],
@@ -21545,7 +21533,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2dbf1290-7291-4f1f-bf4b-5553e5d2e08d",
+										"id": "278c7bb0-5c1b-4724-ab3a-5b2740ffd384",
 										"exec": [
 											""
 										],
@@ -21607,7 +21595,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4a070ad8-8d60-4757-853d-b16f2756846d",
+										"id": "56165459-3cd6-4d40-80f0-14057e8de913",
 										"exec": [
 											""
 										],
@@ -21669,7 +21657,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "60023bfb-a3b2-4f2a-a5e2-0a174f0f20dc",
+										"id": "544645bf-6a86-449f-a485-129ef4356501",
 										"exec": [
 											""
 										],
@@ -21732,7 +21720,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ca7f033e-5ac3-48d3-83ef-24e7de2df50b",
+										"id": "377f2252-5b3e-4936-b8e8-21499732f03c",
 										"exec": [
 											""
 										],
@@ -21803,7 +21791,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cfe21d30-59aa-436c-a732-94850b86c3f9",
+										"id": "7af5f8e2-143d-469c-895c-243f649062e7",
 										"exec": [
 											""
 										],
@@ -21813,7 +21801,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "451be72b-710e-43f7-bebe-0332a50be438",
+										"id": "63e17e7d-1577-47f9-a89a-b373bbc95ed9",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -21876,7 +21864,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c4c7774f-a8a8-4de0-b881-969cdea75169",
+										"id": "5e54b1dd-1dfe-45a6-8c7b-ccdb250338ce",
 										"exec": [
 											""
 										],
@@ -21886,7 +21874,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "756c24b3-07e7-42d1-823b-8d526370e15c",
+										"id": "c9a01ad2-9ad1-4dab-9933-d6711a0ad953",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot construct instance of `org.meveo.api.dto.CustomFieldsDto`\");"
 										],
@@ -21948,7 +21936,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "fdded59f-6125-4650-be9f-f11b978d79aa",
+								"id": "1f0284fa-ced4-4269-b62c-d6f438bd8daf",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"invoiceCategoryCode\", pm.variables.get(\"entityCode\"));"
@@ -21958,7 +21946,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "17c0a12a-a596-4354-ac31-8b52333407f3",
+								"id": "89dcbcbf-52ba-4984-a9dd-73bfb535368f",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -21978,7 +21966,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "66f9b42e-6e07-4404-b189-0c8c361868d4",
+										"id": "14fd8ccb-77d3-48c0-92c6-f3c8ee5b7095",
 										"exec": [
 											""
 										],
@@ -22041,7 +22029,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "21a8d22a-d6cf-4798-909f-f6a673cb2ed1",
+										"id": "fac62c10-6fee-487a-bc7f-7bbc617a55ad",
 										"exec": [
 											""
 										],
@@ -22112,7 +22100,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c043e6ff-f39a-42a6-91dd-4bd56ca10e30",
+										"id": "6873fbc1-0960-4304-82c5-280dbee8bdbc",
 										"exec": [
 											""
 										],
@@ -22174,7 +22162,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e866e140-c1e3-476e-b76d-80cf2979cfbe",
+										"id": "867604d5-bc1b-41fd-bd53-8265267fd9b7",
 										"exec": [
 											""
 										],
@@ -22236,7 +22224,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "216e3721-4011-41cc-a4f6-b3ab0d413ef3",
+										"id": "5f707576-524b-4a8e-80f4-0f878132e6a6",
 										"exec": [
 											""
 										],
@@ -22298,7 +22286,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2aca003a-6c35-4792-ba34-2cd51edfe69d",
+										"id": "c33f8bcb-5f34-4e52-801c-85030af85b76",
 										"exec": [
 											""
 										],
@@ -22361,7 +22349,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "27c5a15a-45c7-4af1-b31f-523ba4cf649f",
+										"id": "9fd87731-f6c0-455a-a107-860c1d9bf143",
 										"exec": [
 											""
 										],
@@ -22432,7 +22420,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e0963de7-8fa5-4a20-9c26-e99e1a1cd748",
+										"id": "afbf5844-8e6b-43c8-9f84-c650f26e4a18",
 										"exec": [
 											""
 										],
@@ -22442,7 +22430,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "506ee582-8744-4639-b264-f0a9bf1f994c",
+										"id": "3f601464-6e0a-40c4-9bd4-dcfafb22e68a",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: invoiceCategory.\");"
 										],
@@ -22505,7 +22493,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "307b2dca-05f1-4c5c-bf4a-8299c4c0008a",
+										"id": "4af495e5-6b72-48ee-8892-e5b0c6a532ec",
 										"exec": [
 											""
 										],
@@ -22515,7 +22503,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c83a3284-810d-47b9-a713-b119f35fae4b",
+										"id": "4b677cea-5b13-4d72-9741-e546d6e01746",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot construct instance of `org.meveo.api.dto.CustomFieldsDto`\");"
 										],
@@ -22578,7 +22566,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4c50ae88-53e5-4b6d-bcb5-d24a37c815ac",
+										"id": "1783f84f-23bd-431c-a898-60b0fb6cdc33",
 										"exec": [
 											""
 										],
@@ -22588,7 +22576,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "78c59e4f-cd92-4fe2-98b7-246f2770aeda",
+										"id": "c08c4dc4-fc8b-43e2-9044-0f38d81809a8",
 										"exec": [
 											"pm.variables.set(\"message\", \"InvoiceCategory with code=NOT_EXIST does not exists.\");"
 										],
@@ -22650,7 +22638,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "b8690717-af21-4e3d-89fe-a130cf1c6e21",
+								"id": "5b758003-19be-4329-bd1e-89ed28b574d3",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"invoiceSubCategoryCode\", pm.variables.get(\"entityCode\"));"
@@ -22660,7 +22648,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b260d449-27c5-45da-bea5-0bb8774cf699",
+								"id": "b467bbf9-9ada-40ec-88d5-ee2bc668246c",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -22680,7 +22668,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "f0664a9d-4879-411b-9819-aeb0d5f41a7a",
+										"id": "f31efe73-af89-423b-b7e0-c36df094e59c",
 										"exec": [
 											""
 										],
@@ -22743,7 +22731,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "50d64ccd-e948-4cfb-99dd-db1846d2dcb3",
+										"id": "2ac95a0d-d6b6-4fbb-99d2-1c6792c5dcd7",
 										"exec": [
 											""
 										],
@@ -22753,7 +22741,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "0e269952-bb0e-47d8-aa1e-7e2ec8deea12",
+										"id": "05096998-0f6d-45f8-a412-1eb310223e10",
 										"exec": [
 											"pm.variables.set(\"message\", \"\");"
 										],
@@ -22824,7 +22812,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "076e06f3-acb0-4a62-9f7d-acf5aea9e37c",
+										"id": "246af4ae-aad7-477f-ae17-7a9ee282261d",
 										"exec": [
 											""
 										],
@@ -22886,7 +22874,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6b3bb228-e61a-4379-97d7-d565e9193fac",
+										"id": "35a8c2b7-b6bd-4c17-a7d1-464aa77ad37f",
 										"exec": [
 											""
 										],
@@ -22948,7 +22936,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a524be71-c753-4ec8-895a-4f2888993424",
+										"id": "deeea468-7325-428c-90ed-8c905e31b53e",
 										"exec": [
 											""
 										],
@@ -23010,7 +22998,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "bcb9f5f5-3dff-4d49-be8a-66b9b11d399d",
+										"id": "5571a2d3-03c1-4f46-97f6-a933538d9ec3",
 										"exec": [
 											""
 										],
@@ -23073,7 +23061,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2f8f7f39-3d72-457c-9dd8-b37b7a9388b7",
+										"id": "48ae8878-c613-441c-a4ce-c494b3a00d56",
 										"exec": [
 											""
 										],
@@ -23083,7 +23071,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "a5c4c654-fc69-4309-a291-dcb748aa4e3a",
+										"id": "479f0c23-be44-4a50-adbc-27a68b7e3999",
 										"exec": [
 											"pm.variables.set(\"message\", \"\");"
 										],
@@ -23154,7 +23142,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5414c403-9886-4989-b951-609c216dd18b",
+										"id": "b5e9315b-8ace-4d38-941e-fc8b6f8d393d",
 										"exec": [
 											""
 										],
@@ -23164,7 +23152,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "2e8d3897-617b-4a14-8bed-2fdcb134a3dc",
+										"id": "cba6ae81-0c62-42e8-9494-42b2aecd7605",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -23227,7 +23215,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d1d8e52e-73e3-4c01-9e66-1efa38f1b9fd",
+										"id": "5e22a5fe-cb9e-4b4d-abda-a66ab2754746",
 										"exec": [
 											""
 										],
@@ -23237,7 +23225,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c02ca954-87a7-46e4-8f9d-0c53b3fcdbf2",
+										"id": "9aa14554-502e-41df-9dea-0ed5ae93792d",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Integer` from String\");"
 										],
@@ -23299,7 +23287,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "7c683f3e-13af-40ab-bbb6-2f01926d5269",
+								"id": "c941c949-b451-49c7-95dc-4b4bcee0d455",
 								"type": "text/javascript",
 								"exec": [
 									"pm.globals.set(\"invoiceSequenceCode\", pm.variables.get(\"entityCode\"));",
@@ -23310,7 +23298,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4b848623-3957-48b3-b5f2-3f17a7cf0a24",
+								"id": "29c860dc-addb-4280-89cc-b3d4b9504d3e",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -23330,7 +23318,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a3dcc5f0-6576-4029-a54f-a45a7a735a5c",
+										"id": "e4ba8c1d-f424-40fe-a07c-a7ab0309f64b",
 										"exec": [
 											""
 										],
@@ -23394,7 +23382,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c4e84e0e-7fd9-4fa1-834a-7ce12a0c3089",
+										"id": "55ce80a3-a82d-4410-811f-bbe599abed01",
 										"exec": [
 											""
 										],
@@ -23404,7 +23392,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "22aec74c-1c24-4992-9bbc-d80fa613799f",
+										"id": "2bf7e68e-988d-4498-91bf-abaa8cc3a454",
 										"exec": [
 											""
 										],
@@ -23468,7 +23456,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e9bc4d36-7f64-41bf-9fa8-09293b2f6d3d",
+										"id": "eba6296b-5d3e-42ea-ac4b-cc1a6a1d0ce9",
 										"exec": [
 											""
 										],
@@ -23478,7 +23466,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "e6902d7f-a3cf-4a8a-915c-c462d7bdd6a5",
+										"id": "c6391146-f244-4afd-9ea1-7bff982e342b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.billing.OperationTypeEnum` from String\");"
 										],
@@ -23536,6 +23524,158 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create|WalletOperation|WLT|SUCCESS|Generic",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3fe8da0e-5902-4953-89e2-c6f134c87444",
+										"exec": [
+											"pm.globals.set(\"wo_id\",JSON.parse(responseBody).id);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "8fde7b67-edf3-4a1f-b8ba-d9160f2f6fea",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{opencell.password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{opencell.username}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"CH_CLASSIC_REC_FLAT\",\r\n    \"description\": \"A description for WO Generic\",\r\n    \"chargeInstance\": {\r\n        \"id\": 48,\r\n        \"chargeType\": \"U\"\r\n    },\r\n    \"tax\": {\r\n        \"id\": 6\r\n    },\r\n    \"taxPercent\": 20.000000000000,\r\n    \"quantity\": 0.387096774194,\r\n    \"seller\": {\r\n        \"id\": 5\r\n    }\r\n}\r\n",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/v2/generic/walletOperation",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"v2",
+										"generic",
+										"walletOperation"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read|WalletOperation|WLT|SUCCESS|Generic",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e6ed0cd8-c3c5-46e0-ae7a-21b104f23ce5",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "911e3c9e-4421-4d11-a294-fbd8446ebf32",
+										"exec": [
+											"var inc = pm.collectionVariables.get(\"inc\");\r",
+											"if(!null){\r",
+											"pm.collectionVariables.set(\"inc\",inc+1);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{opencell.password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{opencell.username}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic b3BlbmNlbGwuYWRtaW46b3BlbmNlbGwuYWRtaW4="
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{opencell.url}}/v2/generic/walletOperation/{{wo_id}}",
+									"host": [
+										"{{opencell.url}}"
+									],
+									"path": [
+										"v2",
+										"generic",
+										"walletOperation",
+										"{{wo_id}}"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -23556,7 +23696,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "76b63d6c-003c-4773-a654-6de8b66b9d89",
+										"id": "2247e367-646a-4fe4-acbe-c8faf34ea743",
 										"exec": [
 											""
 										],
@@ -23620,7 +23760,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "46b30d7b-c64d-401a-a6ae-c78f29bbf4d0",
+										"id": "c23e90f5-3d2a-4b94-9828-15760d80d765",
 										"exec": [
 											""
 										],
@@ -23630,7 +23770,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "8f257f7b-ad05-4104-bb80-76b5765f06c0",
+										"id": "afbd445f-d68d-4dd3-a692-25aa00170603",
 										"exec": [
 											""
 										],
@@ -23702,7 +23842,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2e094975-17a5-49b0-af17-ddbeeb9ab54f",
+										"id": "7ba2a90d-5764-4fd4-99e4-503165fd4feb",
 										"exec": [
 											""
 										],
@@ -23765,7 +23905,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d9e9ece7-9912-403b-9848-e753c21c3543",
+										"id": "fa06cfcb-fda4-4b4e-98a5-1c56e0bb4a77",
 										"exec": [
 											""
 										],
@@ -23828,7 +23968,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c679a2fe-1303-44e6-84c0-e0137591fbf9",
+										"id": "1cf55643-e66a-4184-bee6-c58714f0ceae",
 										"exec": [
 											""
 										],
@@ -23891,7 +24031,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5ea1d777-14ed-4a95-a070-44ca9e6c326c",
+										"id": "79b961f4-0548-4513-96d4-0d0afbc66451",
 										"exec": [
 											""
 										],
@@ -23955,7 +24095,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6cc53707-fed0-4c8a-97f2-4b9c36e854bf",
+										"id": "35bfa850-c127-4e11-af5b-4017b9fb3e8e",
 										"exec": [
 											""
 										],
@@ -24027,7 +24167,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "65a4cc10-122a-4b76-891b-6798675f5445",
+										"id": "a25ea4e0-fb19-4ba6-889b-f25608b7106d",
 										"exec": [
 											""
 										],
@@ -24037,7 +24177,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "36a782c0-0994-466f-91cb-734423f31edb",
+										"id": "67043576-ec91-4c46-9613-e5cbdde74336",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code.\");"
 										],
@@ -24100,7 +24240,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "f3e0269e-255e-4abc-b255-58f865938e3f",
+								"id": "40ef6ba0-7992-43de-987d-a535c3a4872f",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -24110,7 +24250,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e2dc10d9-84ca-4a06-80ce-e9f0f06ffb0d",
+								"id": "edafb4b6-7831-4439-9105-d744df304701",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -24130,7 +24270,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "905b9eaf-5e7e-4999-bec1-45f11b42610e",
+										"id": "9e883815-2fe9-4619-8085-398749c44dbf",
 										"exec": [
 											""
 										],
@@ -24140,7 +24280,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "faffc70d-9822-4cf7-ba0f-b717ef2a7a71",
+										"id": "a56a1e9a-a36c-4e79-acca-9b1826ecbd5c",
 										"exec": [
 											"pm.variables.set(\"message\", );"
 										],
@@ -24204,7 +24344,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "df02b796-ebce-4cbb-a1e2-dc4c24338b4a",
+										"id": "3703da23-1a28-4587-9cd3-c6b7bfd183f9",
 										"exec": [
 											""
 										],
@@ -24214,7 +24354,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "48626bf7-37a6-4596-8e2a-81f117a7aeb0",
+										"id": "5cf230a5-84b7-4fd7-8adf-dd3b9cc74f84",
 										"exec": [
 											"pm.variables.set(\"haveDescription\", false);\r",
 											"pm.variables.set(\"haveCode\", false);"
@@ -24287,7 +24427,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "41b58ebf-6666-4cbe-ba35-c6a03fc9f9d4",
+										"id": "7b53a1f2-6314-456a-8ef0-064730ed7299",
 										"exec": [
 											""
 										],
@@ -24350,7 +24490,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c6d92817-3043-4d78-98c8-17d28b0a2243",
+										"id": "5bf2c3df-95d1-4dd5-ad3d-1425f35210a9",
 										"exec": [
 											""
 										],
@@ -24413,7 +24553,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "fdee476d-fb19-40e7-8b00-30bb9f1fb8d7",
+										"id": "fe8d2972-0e73-4a5e-a474-c13e77e74e7a",
 										"exec": [
 											""
 										],
@@ -24476,7 +24616,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c1864b58-39f4-48e8-8af7-91452c868403",
+										"id": "53062b3f-d3d5-4425-8411-3c2f327f68e9",
 										"exec": [
 											""
 										],
@@ -24486,7 +24626,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "3b3f0d2a-9de3-4ff6-8954-9cf53481d047",
+										"id": "c6d8c772-9402-47b8-aa18-a41bf385ec91",
 										"exec": [
 											"pm.variables.set(\"message\", );"
 										],
@@ -24550,7 +24690,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "90619af7-9853-46f4-9436-98b698683217",
+										"id": "bf504804-2de1-4c6d-8298-60a585b1f6ff",
 										"exec": [
 											""
 										],
@@ -24560,7 +24700,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "880e79a9-9e47-40b0-b2af-c91b3b4a4717",
+										"id": "a26a8bed-aa20-455c-8135-c1a8b5a0e4aa",
 										"exec": [
 											"pm.variables.set(\"haveDescription\", false);\r",
 											"pm.variables.set(\"haveCode\", false);"
@@ -24633,7 +24773,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7880b685-3d55-4992-91a0-604c86da356d",
+										"id": "189ee395-ee24-4b0c-a7f6-6871282baad3",
 										"exec": [
 											""
 										],
@@ -24643,7 +24783,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "fbc1ffe1-9bed-4461-b8b4-19e8ddba57d5",
+										"id": "3613ef48-4256-410f-8fc3-935dfdbb09b7",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code, type, paymentMethodType, sellerCode.\");"
 										],
@@ -24707,7 +24847,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9349156e-3cbd-44a9-876c-83481f8d6a75",
+										"id": "d9936f29-e0d4-437b-bdc1-9d6653e6fc2b",
 										"exec": [
 											""
 										],
@@ -24717,7 +24857,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "30d7774c-b8e4-4376-834e-5569fdcedf0e",
+										"id": "23bd6f35-128e-4e7a-a5f6-fdac43079f0b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `org.meveo.model.payments.PaymentGatewayTypeEnum` from String\")"
 										],
@@ -24780,7 +24920,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "47c0fa5c-57cd-4650-a276-7a930944db04",
+								"id": "21a6b716-11a0-4772-8d23-6bdf66c6d508",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -24790,7 +24930,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cfcc125c-ae74-49df-b54c-014fe80085dc",
+								"id": "ae9b5f3f-c2dd-40e9-9f7f-375afdcf5e2c",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -24810,7 +24950,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a340be13-e7f1-41f9-8725-2cee89a86f11",
+										"id": "157e20aa-4d91-48ed-96d4-afa8b725431e",
 										"exec": [
 											"var jsonData = pm.response.json();",
 											"pm.globals.set(\"id_PST\", jsonData.message);",
@@ -24822,7 +24962,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7a1fe2fc-0e69-4495-98a0-5a156fd46d60",
+										"id": "6121d230-f4ad-43f1-bd69-f40f75e882f5",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);"
 										],
@@ -24886,7 +25026,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2103c57e-21bc-429c-8c68-a1a820380f46",
+										"id": "dc8ffe82-0466-4d96-b8ba-21ad2d52a16b",
 										"exec": [
 											"",
 											"pm.test(request.name + \" - Id is equal \"+pm.globals.get(\"id_PST\"), function () {",
@@ -24962,7 +25102,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a3ec9623-354d-4a26-8a1f-9f11b9ce0cba",
+										"id": "c739b76f-8a27-407e-8fc7-ff0dea02b445",
 										"exec": [
 											""
 										],
@@ -25025,7 +25165,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "a7a13ace-2ae5-4151-9eca-07817618946f",
+										"id": "f533bc73-f20c-46bb-93ab-3ccd069ebf82",
 										"exec": [
 											""
 										],
@@ -25088,7 +25228,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c9b6c955-9406-4c4c-a9be-db3b8afca90b",
+										"id": "c0a1c9ec-29a3-4f42-a341-0f2f94047304",
 										"exec": [
 											""
 										],
@@ -25098,7 +25238,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "e0a040e2-f30b-4c5e-87fb-8d456cd1b5f9",
+										"id": "6b5118b1-d12b-4726-a7bf-60205d9e3ed6",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);"
 										],
@@ -25161,7 +25301,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6a71df59-941c-485a-bc24-7dba121ed06b",
+										"id": "b5de8a4e-5abb-4f19-bd6f-99d63ff00fb3",
 										"exec": [
 											""
 										],
@@ -25171,7 +25311,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "0666cc3f-7432-4280-8ef1-2c358bf893fc",
+										"id": "f554e05c-28f6-48a5-af33-0a69342e8a28",
 										"exec": [
 											"pm.variables.set(\"messageEql\", false);"
 										],
@@ -25235,7 +25375,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ccdc7e31-7c66-44a0-95c4-c4766cb5188b",
+										"id": "e3a3e702-0393-4378-8a3e-5ff5a3300ac4",
 										"exec": [
 											"pm.test(request.name + \" - Id is equal \"+pm.globals.get(\"id_PST\"), function () {",
 											"    var jsonData = pm.response.json();",
@@ -25310,7 +25450,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c72e1d2e-71f5-463b-aca5-d86a6d6d81c5",
+										"id": "09529845-75cf-4763-9870-4ff306090cd3",
 										"exec": [
 											""
 										],
@@ -25320,7 +25460,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "36d29098-0d63-42d4-a9b4-bf7771fff495",
+										"id": "dd1f5d98-cd94-43d7-b6dc-fbdde975a1e7",
 										"exec": [
 											"pm.variables.set(\"message\", \"The following parameters are required or contain invalid values: code, calendarCode, serviceTemplateCode, paymentDayInMonth, amount, paymentLabel, advancePaymentInvoiceTypeCode, advancePaymentInvoiceSubCategoryCode, doPayment.\");"
 										],
@@ -25384,7 +25524,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cfd5961c-8d73-4ab5-871a-b33e8db44541",
+										"id": "9398eb91-8536-4a54-8798-d6f583495cc0",
 										"exec": [
 											""
 										],
@@ -25394,7 +25534,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "237f41d2-fb91-4009-a894-28a809e16e9c",
+										"id": "1c8b8d34-975b-48a7-8b0c-e8daf007aa79",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Integer` from String\");"
 										],
@@ -25458,7 +25598,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "58b031a4-5b11-40a9-acd7-9d5fb32f1f3b",
+										"id": "b6024fb1-5cbf-40dc-b237-0e8befb7aee0",
 										"exec": [
 											""
 										],
@@ -25468,7 +25608,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "3903ef6d-ccc5-46a5-8d62-8e633a11b819",
+										"id": "d1ec730c-80aa-4ab1-8eea-d38791bb1ccc",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Boolean` from String\");"
 										],
@@ -25532,7 +25672,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "71fdc337-6e6f-4dc7-bbdc-93083576b206",
+										"id": "f4cc85f4-bf31-460e-883d-20e32d294562",
 										"exec": [
 											""
 										],
@@ -25542,7 +25682,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f65bd065-a7a1-415f-8819-193bf9ead10f",
+										"id": "2c08147e-ab8c-47c3-aee3-16591674c3b9",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.math.BigDecimal` from String\");"
 										],
@@ -25606,7 +25746,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "06970437-b9cf-44c1-9423-169ee17fda63",
+										"id": "25a309b6-12a4-4bbf-b50e-b405a361ea3c",
 										"exec": [
 											""
 										],
@@ -25616,7 +25756,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "c286085c-09bd-48a3-8954-739cb82a46c8",
+										"id": "7a878c90-a727-4476-b19a-d3fb37090068",
 										"exec": [
 											"pm.variables.set(\"message\", \"Cannot deserialize value of type `java.lang.Integer` from String\");"
 										],
@@ -25680,7 +25820,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "40b6c70b-1e6e-4ca3-90c7-aaff5884a8a7",
+										"id": "29f36288-1964-4c2d-8374-d8d8109e3a1d",
 										"exec": [
 											""
 										],
@@ -25690,7 +25830,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "02604072-0fb5-4a4a-87df-b0b326bf8d1a",
+										"id": "be23d2a1-d639-45e9-af71-012d3a76bbcb",
 										"exec": [
 											"pm.variables.set(\"message\", \"InvoiceSubCategory with code=NOT_EXIST does not exists.\");"
 										],
@@ -25754,7 +25894,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "19662cfc-2d9f-48b4-9eaf-d3cfdb3e3bf2",
+										"id": "f5abf731-b041-4bdb-8fff-4c2c2e552825",
 										"exec": [
 											""
 										],
@@ -25764,7 +25904,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "6d415154-9628-4e30-8285-4592314d92bd",
+										"id": "1d4e87d8-f2d0-4ed9-bd59-0423c4585c1a",
 										"exec": [
 											"pm.variables.set(\"message\", \"InvoiceType with code=NOT_EXIST does not exists.\");"
 										],
@@ -25828,7 +25968,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "6afd6211-acc9-4ba5-843c-b458dccde252",
+										"id": "5fbc0e58-f1ba-4300-a45f-99d8b942a306",
 										"exec": [
 											""
 										],
@@ -25838,7 +25978,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "83ce42ea-0c6b-4e34-a596-3cde25da5bb9",
+										"id": "912e5422-e52b-47ee-b009-ef299ebf9db9",
 										"exec": [
 											"pm.variables.set(\"message\", \"Calendar with code=NOT_EXIST does not exists.\");"
 										],
@@ -25902,7 +26042,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d6d936d7-848c-493b-8873-6d9f87371fca",
+										"id": "47ca347b-ca68-4559-812f-bcc267ca8656",
 										"exec": [
 											""
 										],
@@ -25912,7 +26052,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "2d71619f-78a4-4ed2-8991-cdeb0c46ce2a",
+										"id": "5955788b-91f3-40ba-ab2d-38c21a0fdc10",
 										"exec": [
 											"pm.variables.set(\"message\", \"ServiceTemplate with code=NOT_EXIST does not exists.\");"
 										],
@@ -25975,7 +26115,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "cffc9e28-a86d-4a40-ad77-1feb19f17842",
+								"id": "40077345-b892-4d9e-9ab3-3f9ce92470b8",
 								"type": "text/javascript",
 								"exec": [
 									"pm.variables.set(\"entityRead\", \"paymentScheduleTemplateDto\");"
@@ -25985,7 +26125,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4b79c8cd-897e-405e-a04b-9a427bebbca2",
+								"id": "919f6e45-d1e2-4cd5-9e98-00b39fd28650",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -26011,7 +26151,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b11d94cd-45c4-422d-af90-739cf57d0eda",
+										"id": "fa894e1a-2c52-4ffe-94c0-3c88f4270226",
 										"exec": [
 											""
 										],
@@ -26075,7 +26215,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3ac3078c-fd89-47c7-8a9c-792fa415ac25",
+										"id": "27923baa-4d34-4163-8d99-f62bd318e4fa",
 										"exec": [
 											""
 										],
@@ -26139,7 +26279,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d832c504-2fc3-4562-a5f8-19633bb4c47b",
+										"id": "01412674-8333-44fa-9b91-a33a898e1c74",
 										"exec": [
 											""
 										],
@@ -26202,7 +26342,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9cfeb2ba-683a-418e-af50-c4a83f6c2e2f",
+										"id": "1d2c4052-6b00-4c0d-8ff9-c437cdde2b68",
 										"exec": [
 											""
 										],
@@ -26265,7 +26405,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ad36a2c5-bbc0-42c3-b0b3-879e3bc9d277",
+										"id": "145882ab-bbb0-4835-8ed1-b06872f9247c",
 										"exec": [
 											""
 										],
@@ -26334,7 +26474,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "287ea81e-ca57-458b-8213-9770212ebf48",
+										"id": "8032534a-dfe7-41f9-a840-68c2ed066763",
 										"exec": [
 											""
 										],
@@ -26397,7 +26537,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d07d9278-f58d-4bb0-a5ab-6fc40f03f4dd",
+										"id": "cf711995-a6f2-4949-bfe9-b710fda6f409",
 										"exec": [
 											""
 										],
@@ -26407,7 +26547,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "40d80ccd-49c5-48cd-b0a2-1a10a922fd9e",
+										"id": "8f2a6025-afb0-4c8c-a444-1a915a774299",
 										"exec": [
 											"pm.variables.set(\"message\", \"Country with code=\"+pm.variables.get(\"entityCode\")+\" does not exists.\");"
 										],
@@ -26470,7 +26610,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c1edb736-88fe-4ff2-90ce-be2d76ed9a63",
+										"id": "90603e29-2e7b-4ab7-abfe-c2cf8ed6d63e",
 										"exec": [
 											""
 										],
@@ -26539,7 +26679,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2bbcaec1-5a19-48a0-9378-31fdcb320590",
+										"id": "51f073db-77ab-4d23-8d77-cbc9416a2d93",
 										"exec": [
 											""
 										],
@@ -26549,7 +26689,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "5fbf407d-f21c-4c31-94b1-41c24d6b1fc9",
+										"id": "36dd31f3-ccef-4b22-bf19-1a99c518bd75",
 										"exec": [
 											"pm.variables.set(\"entityCode\",pm.variables.get(\"suffix\"));"
 										],
@@ -26612,7 +26752,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0b142ed6-9ebd-4402-a6da-4ee1dc10ec29",
+										"id": "21390ab0-6cc5-4364-9cf1-fefceff9b5f1",
 										"exec": [
 											""
 										],
@@ -26622,7 +26762,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "26061fd5-1264-48a3-8957-e01f615553fd",
+										"id": "bcd5f74e-d225-44fa-9558-76c043a0f609",
 										"exec": [
 											"pm.variables.set(\"message\", \"Currency with code=TEST_TST does not exists.\");"
 										],
@@ -26685,7 +26825,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "57f668ef-c638-47c7-b1b4-02f9cafff636",
+										"id": "d6765473-eba6-4cfb-97bc-eef2aa58adb8",
 										"exec": [
 											""
 										],
@@ -26695,7 +26835,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "aafff5a3-7398-4194-b3a9-001720ddda8c",
+										"id": "0fc2d3a4-e5d7-49b6-b742-084996588d90",
 										"exec": [
 											"pm.variables.set(\"entityCode\",pm.variables.get(\"suffix\"));"
 										],
@@ -26758,7 +26898,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "557afac8-d84d-47dc-9c07-97ec7d20aa1c",
+										"id": "6bdf865b-12d7-4900-9ec0-3d18f6212789",
 										"exec": [
 											""
 										],
@@ -26768,7 +26908,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4abad648-e3a2-4dbd-a9e0-53380ac301b2",
+										"id": "fe7a64cb-0e8a-49c2-9b72-65f538c3341d",
 										"exec": [
 											"pm.variables.set(\"message\", \"Language with code=TEST_TST does not exists.\");"
 										],
@@ -26831,7 +26971,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "8c258380-b935-4ff7-822d-6812e873b612",
+										"id": "8f0a374b-a832-4597-bba6-674975c34a76",
 										"exec": [
 											""
 										],
@@ -26894,7 +27034,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4d991f23-358c-4b17-ad1f-33702de75495",
+										"id": "b4a0fd8e-1366-41fb-b03d-077bc5623ac1",
 										"exec": [
 											""
 										],
@@ -26904,7 +27044,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "70151394-9361-49f1-b8b8-265d01efff9a",
+										"id": "03022a38-a750-4b99-96b7-f05e086c603b",
 										"exec": [
 											"pm.variables.set(\"message\", \"Role with name=TEST_ROLE does not exists.\");"
 										],
@@ -26967,7 +27107,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "434a29d1-8d33-4fa4-b5f5-e7a299fe90bd",
+										"id": "ba0b3ddc-97eb-44ab-a5ca-5cf351ff2109",
 										"exec": [
 											""
 										],
@@ -27030,7 +27170,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7b0f204e-6b69-42dc-8045-6179c051c67a",
+										"id": "b1dbc780-2196-4d0a-87c7-a0e416b61f48",
 										"exec": [
 											""
 										],
@@ -27093,7 +27233,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "247cd0d8-99dd-4288-a51b-3ad261e3955b",
+										"id": "9952f887-f62b-4331-a189-bcbc3f4c297d",
 										"exec": [
 											""
 										],
@@ -27156,7 +27296,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1739e217-c724-4490-9962-3e64948e7dd1",
+										"id": "c1bbf74d-1405-4689-9738-3f11122d2a83",
 										"exec": [
 											""
 										],
@@ -27219,7 +27359,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "91a6e0a2-9818-44f0-ac5f-093c6fe2d77d",
+										"id": "521ba647-c2a9-4de9-9510-35dc674a6f86",
 										"exec": [
 											""
 										],
@@ -27282,7 +27422,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "68c1fea9-e0ad-4834-97ff-923d38b3f7e6",
+										"id": "9de32090-845b-4606-a0ae-a08055d0e007",
 										"exec": [
 											""
 										],
@@ -27345,7 +27485,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2217ee68-db78-4af9-8497-1feb900aa69b",
+										"id": "a6b17b17-6d29-4c55-a1ca-a9ade8bb1309",
 										"exec": [
 											""
 										],
@@ -27408,7 +27548,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9db4cc71-41bd-4c2d-9376-1256783bdc20",
+										"id": "4eda59a2-4890-4bb6-89f1-6eabb48cec55",
 										"exec": [
 											""
 										],
@@ -27471,7 +27611,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b00712db-425b-472f-ab53-24f7a78e90fd",
+										"id": "40252280-bdb3-4e73-aca3-7da087dad77b",
 										"exec": [
 											""
 										],
@@ -27536,7 +27676,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "52ca0074-b848-4bae-a54f-6deee189886c",
+										"id": "c16e9032-39ed-4ccb-9e8b-e3a0f5bc87b9",
 										"exec": [
 											""
 										],
@@ -27546,7 +27686,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "fe5b7461-c678-44b1-ade4-56bb20df44a9",
+										"id": "8b2a01df-24f2-4bba-9743-e49e75371c6f",
 										"exec": [
 											"pm.variables.set(\"message\", \"CustomerBrand with code=\"+pm.globals.get(\"customerBrandCode\")+\" does not exists.\")"
 										],
@@ -27611,7 +27751,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7789df0d-793d-4ad6-8eb2-23cd3e8b35ce",
+										"id": "4d51ee92-4560-42eb-8567-f3fc8bec0e1c",
 										"exec": [
 											""
 										],
@@ -27621,7 +27761,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "7391ecc9-2598-4068-81ac-176b677fd9db",
+										"id": "b90cc8cf-24eb-4c3a-a61d-a569d992fd67",
 										"exec": [
 											"pm.variables.set(\"message\", \"CustomerBrand with code=\"+pm.globals.get(\"customerBrandCode\")+\" is referenced.\")"
 										],
@@ -27693,7 +27833,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b2b40029-76e1-4d8c-b61d-02b23d27eb0b",
+										"id": "35050bf2-0c26-4c91-aca9-17bf924a9f15",
 										"exec": [
 											""
 										],
@@ -27757,7 +27897,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "21dd274d-450a-49b7-b668-1ef478a3e56f",
+										"id": "bb973294-c1bb-463a-851d-b0734c2c3d4b",
 										"exec": [
 											""
 										],
@@ -27821,7 +27961,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "85ae4190-22a3-4bc3-bb5b-d979de02a6ee",
+										"id": "d7d02b08-2b2c-4040-9b4c-00508917910f",
 										"exec": [
 											""
 										],
@@ -27890,7 +28030,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e2658e94-1697-4db1-83cb-674474943576",
+										"id": "c1fbecf2-a1ca-43e4-97f3-765b71297297",
 										"exec": [
 											""
 										],
@@ -27959,7 +28099,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c8ea0bd0-67da-45bd-9ce5-d1c243f523ff",
+										"id": "37e05a11-b64a-4a57-bfbe-d26612ad3460",
 										"exec": [
 											""
 										],
@@ -28028,7 +28168,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d1293998-7491-48cc-8c97-0a885f050a11",
+										"id": "4adef641-638f-4787-8534-2294bdbab31f",
 										"exec": [
 											""
 										],
@@ -28104,7 +28244,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1b08d625-235d-413a-acf9-f16c133d7b8a",
+										"id": "9a56aecc-c821-426a-b6a8-075767ae07ae",
 										"exec": [
 											""
 										],
@@ -28114,7 +28254,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f50a56c5-90a7-4814-a822-630176940f32",
+										"id": "d3d5ffa7-6c7c-4444-b844-f1b7ddcda5ea",
 										"exec": [
 											"pm.variables.set(\"message\", \"ERROR: update or delete on table \\\"billing_invoice_cat\\\" violates foreign key constraint\");"
 										],
@@ -28177,7 +28317,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3ae6860a-dc2d-4b46-8d09-6def96b5520f",
+										"id": "d5939d3a-b6c5-45e0-8151-4b105c2b34e5",
 										"exec": [
 											""
 										],
@@ -28240,7 +28380,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "95ee5b24-4d75-4a5f-b1c8-835d2935984f",
+										"id": "3cf55fda-0d77-446a-b810-65f4a770dbd5",
 										"exec": [
 											""
 										],
@@ -28303,7 +28443,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0eb10334-52d1-453a-bc43-64e8032deb85",
+										"id": "912cce79-ec3b-470e-89fe-a2f01a86ab92",
 										"exec": [
 											""
 										],
@@ -28366,7 +28506,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "d6809ca7-8b2d-4793-a8ca-a469d555e7b0",
+										"id": "7769fb28-d13b-4380-bfd9-2c49ab2ce416",
 										"exec": [
 											""
 										],
@@ -28436,7 +28576,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3217ee63-895d-4e9c-854d-6ebce3e23464",
+										"id": "61855a73-2737-4e28-afbb-a386ffdba395",
 										"exec": [
 											""
 										],
@@ -28500,7 +28640,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ca5c529c-2bc5-4ef1-a082-4df3d66ce9ea",
+										"id": "b3ed504f-27d4-48fd-a925-9f552fc92ee5",
 										"exec": [
 											""
 										],
@@ -28510,7 +28650,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "829813ca-ac36-42d8-9478-90af21b4269f",
+										"id": "8aa211d8-4e51-44c1-b339-20f8e2ff7362",
 										"exec": [
 											"pm.variables.set(\"message\", \"OfferTemplate with code=TEST_OT /  /  does not exists.\");"
 										],
@@ -28574,7 +28714,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3f68ed41-0f4f-492a-9512-b2aab205b4e6",
+										"id": "e22e5aae-2b7f-44ed-946f-1a71bf665381",
 										"exec": [
 											""
 										],
@@ -28584,7 +28724,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "b8fc38c7-d3d4-46ab-94f7-edfad2a3b2cd",
+										"id": "6786f38e-c9ec-4215-804a-aeb560c75799",
 										"exec": [
 											"pm.variables.set(\"message\", \"ERROR: update or delete on table \\\"billing_tax_class\\\" violates foreign key constraint\");"
 										],
@@ -28647,7 +28787,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3d3d6e61-43f2-4a7e-917e-4a2a4d07bbc6",
+										"id": "b1ece27c-c7d9-4722-9991-a56717ec880f",
 										"exec": [
 											""
 										],
@@ -28657,7 +28797,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "a0e6008b-1391-45d9-b90e-7014205e4b24",
+										"id": "ace193e7-77e2-486c-9626-5f4d9864d4a0",
 										"exec": [
 											"pm.variables.set(\"message\", \"ERROR: update or delete on table \\\"cat_charge_template\\\" violates foreign key constraint\");"
 										],
@@ -28721,7 +28861,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "21b775a2-9fe6-4e9d-900d-58a280636079",
+										"id": "042adebf-34b9-4e5a-81f2-3013ac30f213",
 										"exec": [
 											""
 										],
@@ -28785,7 +28925,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "fdc4f3c4-7778-4554-b6ae-f7f545c3c2ea",
+										"id": "155ac179-4f8c-4dda-beee-55cd9ad8edce",
 										"exec": [
 											""
 										],
@@ -28849,7 +28989,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "66420ffe-6186-4c3e-a4e7-c93126c76755",
+										"id": "2705faba-93e3-4bb2-bff0-78aedac0948f",
 										"exec": [
 											""
 										],
@@ -28913,7 +29053,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "da24c3e6-e24a-4edb-834e-1a5b839b3977",
+										"id": "426782cc-c2dd-4c23-8f7a-4c864090543f",
 										"exec": [
 											""
 										],
@@ -28977,7 +29117,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5167d4a4-e78f-4c48-b940-c5a6bece906b",
+										"id": "a31b4992-560e-4a94-b5b6-b6c12cb1f5d7",
 										"exec": [
 											""
 										],
@@ -29040,7 +29180,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "44df7e36-dfe4-4c9e-8140-8eb3abb362a2",
+										"id": "ec3901e7-0a2a-49bd-9bbc-a0db19868c45",
 										"exec": [
 											""
 										],
@@ -29110,7 +29250,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0c200f16-a416-449d-b8ef-8beb8922f1f2",
+										"id": "5fe039cf-9b77-49dd-841c-21c88cd1a0fd",
 										"exec": [
 											""
 										],
@@ -29173,7 +29313,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5cbf30e0-a229-4c46-ae47-63fb95672fbe",
+										"id": "ab4ab00b-7e4d-4aeb-b4b6-455002311c8e",
 										"exec": [
 											""
 										],
@@ -29236,7 +29376,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b37a9035-64a4-4fe6-a16d-67990d13fc4d",
+										"id": "e314c2fc-33f4-4bd8-a54d-25a916f6003a",
 										"exec": [
 											""
 										],
@@ -29299,7 +29439,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3cd654da-b3b7-4001-8ed8-76ff2ebc827e",
+										"id": "9868e900-97c9-465c-a71b-9fc9148c05c0",
 										"exec": [
 											""
 										],
@@ -29369,7 +29509,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e8e00b34-be62-43e1-bb8e-1349afd0cb09",
+										"id": "b5dbd0f7-e140-4810-b83a-432d0893b75c",
 										"exec": [
 											""
 										],
@@ -29433,7 +29573,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "120087ba-4110-48fd-8811-9e95d7490507",
+										"id": "74c118ef-4c70-4110-a183-44f9c6e2f557",
 										"exec": [
 											""
 										],
@@ -29497,7 +29637,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "20272f81-487b-494b-9206-88e593da1f0d",
+										"id": "80183e1a-32c1-4390-836f-d3d6f8a56201",
 										"exec": [
 											""
 										],
@@ -29561,7 +29701,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "c8507c6a-c5f3-4283-b03c-ca579a84f307",
+										"id": "45c2f92c-5a80-4252-9718-182b890912f5",
 										"exec": [
 											""
 										],
@@ -29625,7 +29765,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "415d11cf-d77e-48f6-b531-36d1f999285e",
+										"id": "08985483-56b7-4d35-b4c3-cb0d04dfba7d",
 										"exec": [
 											""
 										],
@@ -29689,7 +29829,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "55c393ec-c9a8-4cf7-b05d-563d6e1f27b2",
+										"id": "584cce3d-2220-46b8-bdb0-e985153bf1cb",
 										"exec": [
 											""
 										],
@@ -29753,7 +29893,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "70bcc581-6595-4780-8316-3f326ca35e37",
+										"id": "d85f2e56-3a2f-4b6a-8de8-b002f5d2f6e3",
 										"exec": [
 											""
 										],
@@ -29817,7 +29957,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "e06d4dc1-92f8-413e-90e5-44bffc246667",
+										"id": "b48f2301-0fb8-4f3f-80ed-630c3e7784a8",
 										"exec": [
 											""
 										],
@@ -29881,7 +30021,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "74cae76f-cec3-4781-86ab-c6ea89b8e247",
+										"id": "1c1d09a6-7590-4352-89d7-50944558e89d",
 										"exec": [
 											""
 										],
@@ -29945,7 +30085,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "9568bdbf-4362-4681-9043-9ef0767c6ddf",
+										"id": "d538ab6e-f66e-47c7-8cee-18aae2fcfa0a",
 										"exec": [
 											""
 										],
@@ -30009,7 +30149,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3f764218-c13b-411f-b8cc-577340b21b4d",
+										"id": "7e33af36-e01c-4ad0-9cd1-9a7d86d58b41",
 										"exec": [
 											""
 										],
@@ -30073,7 +30213,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ce943477-dcbc-4e3f-8870-8b9ee2dc3278",
+										"id": "5fac44e7-bedd-43eb-a760-fe326fc41693",
 										"exec": [
 											""
 										],
@@ -30083,7 +30223,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4e005102-c019-455b-beb0-4f99f6d9fa9b",
+										"id": "d042ae29-1e6b-4277-8327-480206eee84c",
 										"exec": [
 											"pm.variables.set(\"message\", \"Customer with code=\"+pm.variables.get(\"entityCode\")+\" does not exists.\");"
 										],
@@ -30146,7 +30286,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "b6113f90-a2cc-40a0-846a-3a803bfd08b6",
+								"id": "10d00bd8-f401-4d33-bb94-e129fdd0fee6",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -30156,7 +30296,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a3b17a2e-b067-4f25-b5f2-1d34e6ad8e70",
+								"id": "c2e23232-541c-4940-9c89-294eb3c433a1",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -30176,7 +30316,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "7d3fd56a-3f47-49d1-8ede-1346f2332c3a",
+										"id": "e01cb5c1-dc92-43d5-8072-5eb3229ac4f9",
 										"exec": [
 											""
 										],
@@ -30240,7 +30380,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "cd6803dd-38c7-44b3-ba42-f1c0d9045605",
+										"id": "794de694-6798-4c82-be35-eaa98ab076eb",
 										"exec": [
 											""
 										],
@@ -30304,7 +30444,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "68368627-babb-4541-b7e3-cccd9a3130b4",
+										"id": "de8881a9-dc2e-43ab-a814-aa4fb033dca4",
 										"exec": [
 											""
 										],
@@ -30367,7 +30507,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "28931df8-02f6-4eef-8a73-9eac361b6f6b",
+										"id": "e25ea042-1671-4c03-af48-0e2c821d5ab2",
 										"exec": [
 											""
 										],
@@ -30436,7 +30576,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "1cbbc797-63d8-419b-aad1-cac880f3a83f",
+				"id": "e91363f1-9973-4ce8-9791-fb5436affa6c",
 				"type": "text/javascript",
 				"exec": [
 					"var parts = pm.info.requestName.split(\"|\");",
@@ -30536,7 +30676,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "98605ea9-14b1-4e9f-820c-fadf3350fd7d",
+				"id": "79e1c139-ee1c-485b-8774-1ec4f3b5a426",
 				"type": "text/javascript",
 				"exec": [
 					"var jsonData = pm.response.json();",
