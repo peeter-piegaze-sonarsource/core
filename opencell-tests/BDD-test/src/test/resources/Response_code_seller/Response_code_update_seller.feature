@@ -1,6 +1,9 @@
 @TestResponseStatusForUpdateSeller
-   # The objective of this test is to verify whether there exists a seller
-   # with id in database.
+   # The objective of this scenario is to verify whether
+   # there exists a seller with id in database.
+   # If it is the case, the test is PASSED
+   # Otherwise, the test is FAILED
+
 Feature: Testing method Update on entity Seller
 
    Background:  System is configured.

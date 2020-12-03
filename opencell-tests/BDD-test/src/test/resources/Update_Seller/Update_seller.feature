@@ -1,5 +1,5 @@
-@TestResponseStatusForUpdateSeller
-   # The objective of this test is to verify
+@TestUpdateSeller
+   # The objective of this scenario is to verify whether
 Feature: Testing method Update on entity Seller
 
    Background:  System is configured.
@@ -16,4 +16,4 @@ Feature: Testing method Update on entity Seller
 
       Examples:
          | server               | id | code               | description     | tradingCurrencyId | status |
-         | localhost:8080       | 5  | Seller_ThangNguyen | new description | -1                | 200    |
+         | tnn.d2.opencell.work       | 5  | Seller_ThangNguyen | new description | -1                | 200    |
