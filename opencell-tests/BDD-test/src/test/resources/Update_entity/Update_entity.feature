@@ -6,7 +6,7 @@ Feature: Testing method Update on entity Seller
 
    Scenario Outline: Update a seller
 
-      Given  Update seller on "<server>"
+      Given  Update seller on "<env>"
       When   Field id filled by "<id>"
       And    Field code filled by "<code>"
       And    Field description filled by "<description>"
@@ -15,5 +15,6 @@ Feature: Testing method Update on entity Seller
 
 
       Examples:
-         | server               | id | code               | description     | tradingCurrencyId | status |
-         | tnn.d2.opencell.work       | 5  | Seller_ThangNguyen | new description | -1                | 200    |
+         | env                   | id | code               | description     | tradingCurrencyId | status |
+         | http://localhost:8080 | 3  | Seller_ThangNguNgu | new description | -1                | 200    |
+         | http://localhost:8080 | 7  | Seller_ThangHoolaa | new description | -1                | 200    |

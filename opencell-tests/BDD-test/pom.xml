@@ -16,6 +16,19 @@
 
         <cucumber.version>6.8.1</cucumber.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- setting up Cucumber parameters -->
+        <opencell.keycloak.url>http://localhost:8080/auth</opencell.keycloak.url>
+        <opencell.keycloak.secret>afe07e5a-68cb-4fb0-8b75-5b6053b07dc3</opencell.keycloak.secret>
+        <opencell.keycloak.realm>opencell</opencell.keycloak.realm>
+        <opencell.keycloak.clientId>opencell-web</opencell.keycloak.clientId>
+
+<!--        &lt;!&ndash; setting up URL and credentials parameters &ndash;&gt;-->
+<!--        <opencell.url>http://tests.i.opencellsoft.com/opencell</opencell.url>-->
+<!--        <adminUsername>opencell.admin</adminUsername>-->
+<!--        <adminPassword>opencell.admin</adminPassword>-->
+<!--        <superUsername>opencell.superadmin</superUsername>-->
+<!--        <superPassword>opencell.superadmin</superPassword>-->
     </properties>
 
     <dependencies>
@@ -51,7 +64,6 @@
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -64,7 +76,75 @@
             <version>6.8.1</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-authz-client</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>xml-path</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Adding Hamcrest which is a framework for writing matcher
+        objects allowing 'match' rules to be defined declaratively -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>cucumber-suites</id>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                        <version>2.22.1</version>-->
+<!--                        <configuration>-->
+<!--                            <skipTests>false</skipTests>-->
+<!--                            <systemPropertyVariables>-->
+<!--                                <opencell.url>${opencell.url}</opencell.url>-->
+<!--                                <adminUsername>${adminUsername}</adminUsername>-->
+<!--                                <adminPassword>${adminPassword}</adminPassword>-->
+<!--                                <superUsername>${superUsername}</superUsername>-->
+<!--                                <superPassword>${superPassword}</superPassword>-->
+<!--                                <opencell.keycloak.secret>${opencell.keycloak.secret}</opencell.keycloak.secret>-->
+<!--                                <opencell.keycloak.url>${opencell.keycloak.url}</opencell.keycloak.url>-->
+<!--                                <opencell.keycloak.realm>${opencell.keycloak.realm}</opencell.keycloak.realm>-->
+<!--                                <opencell.keycloak.clientId>${opencell.keycloak.clientId}</opencell.keycloak.clientId>-->
+<!--                            </systemPropertyVariables>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
+<!--    </profiles>-->
 
     <build>
         <plugins>
