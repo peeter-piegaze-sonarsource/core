@@ -2494,13 +2494,13 @@ public class InvoiceService extends PersistenceService<Invoice> {
             billingCycle = billingRun.getBillingCycle();
         }
         billingCycle = PersistenceUtils.initializeAndUnproxy(billingCycle);
-        if (billingRun == null || !billingRun.isComputeDatesAtValidation()) {
+        if (billingRun == null || !billingRun.getComputeDatesAtValidation()) {
             return;
         }
-        if (billingRun.isComputeDatesAtValidation() == null && !billingCycle.isComputeDatesAtValidation()) {
+        if (billingRun.getComputeDatesAtValidation() == null && !billingCycle.isComputeDatesAtValidation()) {
             return;
         }
-        if (billingRun.isComputeDatesAtValidation() || (billingRun.isComputeDatesAtValidation() == null && billingCycle.isComputeDatesAtValidation())) {
+        if (billingRun.getComputeDatesAtValidation() || (billingRun.getComputeDatesAtValidation() == null && billingCycle.isComputeDatesAtValidation())) {
             recalculateDate(invoice, billingRun, billingAccount, billingCycle);
             update(invoice);
         }

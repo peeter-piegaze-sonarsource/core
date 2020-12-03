@@ -309,7 +309,6 @@ public class BillingRun extends AuditableEntity implements ICustomFieldEntity, I
      * To decide whether or not dates should be recomputed at invoice validation.
      */
     @Column(name = "compute_dates_validation")
-    @Type(type = "numeric_boolean")
     private Boolean computeDatesAtValidation = false;
 
     /**
@@ -733,7 +732,7 @@ public class BillingRun extends AuditableEntity implements ICustomFieldEntity, I
     /**
      * @return
      */
-    public Boolean isComputeDatesAtValidation() {
+    public Boolean getComputeDatesAtValidation() {
         return computeDatesAtValidation;
     }
 
