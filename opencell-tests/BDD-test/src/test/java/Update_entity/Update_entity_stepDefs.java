@@ -10,14 +10,14 @@ import org.apache.http.HttpStatus;
 
 public class Update_entity_stepDefs {
 
-    // These fields are required in the generation process
+    // These fields are required in the generation process of the request UPDATE
     private String entity;
     private String id;
     private String env;
     private String payload;
     private String status;
 
-    // These fields might not be required
+    // These might not be required in the generation process of the request UPDATE
     private String code;
     private String description;
 

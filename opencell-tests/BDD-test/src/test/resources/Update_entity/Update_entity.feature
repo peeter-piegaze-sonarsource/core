@@ -11,8 +11,10 @@ Feature: Testing method Update on an entity
       When   Fields filled by "<code>", "<description>"
       Then   The status is "<status>"
 
-
       Examples:
          | entity   | env                   | id  | code               | description   | status |
          | seller   | http://localhost:8080 | 3   | Seller_ThangNguNgu | A description | 200    |
          | provider | http://localhost:8080 | 1   | Prov_ThangNguNgu   | A Prov Desc   | 200    |
+
+
+

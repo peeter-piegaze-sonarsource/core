@@ -14,7 +14,6 @@ public class RestApiUtils {
     public static ValidatableResponse post(String uri, String body) {
         RestAssured.defaultParser = Parser.JSON;
 
-System.out.println("uri in ValidatableResponse : " + uri);
         return RestAssured.given()
                 .auth().oauth2(KeyCloakAuthenticationHook.getToken())
                 .contentType("application/json")
