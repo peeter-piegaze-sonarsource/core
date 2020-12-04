@@ -18,5 +18,5 @@ Feature: Testing method Update on an entity
          | user            | https://tnn.d2.opencell.work | 3   | A_new_User_Nguyen  | A User Desc   | 200    |
          | tradingCurrency | https://tnn.d2.opencell.work | -2  | A_new_User_Nguyen  | BA MA CHI     | 200    |
 
-
+# Now, nested entities should be taken into account
 

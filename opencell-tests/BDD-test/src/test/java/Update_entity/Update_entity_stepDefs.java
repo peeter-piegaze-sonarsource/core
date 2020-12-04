@@ -55,9 +55,6 @@ public class Update_entity_stepDefs {
         // In payload, we need to determine
         payload = Payload.constructPayload( this );
 
-//        payload = "{\"" + somethingHere1 + "\":\"" + code + "\",\"" +
-//                somethingHere2 + "\":\"" + description + "\"}";
-
         // This line is to update the entity and to execute the assertion
         RestApiUtils.put( url, payload ).assertThat().statusCode( status );
 
