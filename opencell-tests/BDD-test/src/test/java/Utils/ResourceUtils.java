@@ -27,6 +27,7 @@ public class ResourceUtils {
     public static File getFileFromClasspathResource(String resource) {
         return new File(findFilePathFromClasspathResource(resource));
     }
+
     public static String findFilePathFromClasspathResource(String resource) {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(resource);

@@ -1,9 +1,6 @@
 package Update_entity;
 
-import Utils.Constants;
-import Utils.KeyCloakAuthenticationHook;
-import Utils.RestApiUtils;
-import Utils.SystemProperties;
+import Utils.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -16,7 +13,7 @@ public class Update_entity_stepDefs {
     private String id;
     private String env;
     private String payload;
-    private String status;
+    private int status;
 
     // These might not be required in the generation process of the request UPDATE
     private String code;
@@ -48,16 +45,21 @@ public class Update_entity_stepDefs {
         description = arg1;
     }
 
-    @Then("The status is {string}")
-    public void theStatusIs(String arg0) {
+    @Then("The status is {int}")
+    public void theStatusIs(Integer arg0) throws IllegalAccessException {
         status = arg0;
 
         String url = env + Constants.PREFIX_API_V2 + entity +
                 Constants.SEPARATOR_SLASH + id;
-        payload = "{\"code\":\"" + code + "\",\"description\":\"" + description + "\"}";
+
+        // In payload, we need to determine
+        payload = Payload.constructPayload( this );
+
+//        payload = "{\"" + somethingHere1 + "\":\"" + code + "\",\"" +
+//                somethingHere2 + "\":\"" + description + "\"}";
 
         // This line is to update the entity and to execute the assertion
-        RestApiUtils.put( url, payload ).assertThat().statusCode( Integer.valueOf( status ) );
+        RestApiUtils.put( url, payload ).assertThat().statusCode( status );
 
     }
 }
