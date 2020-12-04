@@ -2494,13 +2494,20 @@ public class InvoiceService extends PersistenceService<Invoice> {
             billingCycle = billingRun.getBillingCycle();
         }
         billingCycle = PersistenceUtils.initializeAndUnproxy(billingCycle);
-        if (billingRun == null || !billingRun.getComputeDatesAtValidation()) {
+        if (billingRun == null) {
             return;
         }
-        if (billingRun.getComputeDatesAtValidation() == null && !billingCycle.isComputeDatesAtValidation()) {
+        if (billingRun.getComputeDatesAtValidation() != null && !billingRun.getComputeDatesAtValidation()) {
             return;
         }
-        if (billingRun.getComputeDatesAtValidation() || (billingRun.getComputeDatesAtValidation() == null && billingCycle.isComputeDatesAtValidation())) {
+        if (billingRun.getComputeDatesAtValidation() == null && !billingCycle.getComputeDatesAtValidation()) {
+            return;
+        }
+        if (billingRun.getComputeDatesAtValidation() != null && billingRun.getComputeDatesAtValidation()) {
+            recalculateDate(invoice, billingRun, billingAccount, billingCycle);
+            update(invoice);
+        }
+        if (billingRun.getComputeDatesAtValidation() == null && billingCycle.getComputeDatesAtValidation()) {
             recalculateDate(invoice, billingRun, billingAccount, billingCycle);
             update(invoice);
         }
@@ -3628,7 +3635,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
             return new Object[]{recalculatedTax, !tax.getId().equals(recalculatedTax.getId())};
         }
     }
-    
+
     /**
      * Create an invoice from an InvoiceDto
      *
@@ -3654,7 +3661,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
      * @param seller
      * @param billingAccount
      * @param invoiceType
-     * @param subscription 
+     * @param subscription
      * @return invoice
      * @throws EntityDoesNotExistsException
      * @throws BusinessApiException

@@ -249,7 +249,7 @@ public class BillingCycleDto extends BusinessEntityDto {
             	thresholdPerEntity=billingCycleEntity.isThresholdPerEntity();
             }
             collectionDateDelayEl = billingCycleEntity.getCollectionDateDelayEl();
-            computeDatesAtValidation = billingCycleEntity.isComputeDatesAtValidation();
+            computeDatesAtValidation = billingCycleEntity.getComputeDatesAtValidation() == null ? null : billingCycleEntity.getComputeDatesAtValidation();
         }
     }
 

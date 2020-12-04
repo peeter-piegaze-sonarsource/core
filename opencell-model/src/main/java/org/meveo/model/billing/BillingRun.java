@@ -309,7 +309,7 @@ public class BillingRun extends AuditableEntity implements ICustomFieldEntity, I
      * To decide whether or not dates should be recomputed at invoice validation.
      */
     @Column(name = "compute_dates_validation")
-    private Boolean computeDatesAtValidation = false;
+    private Boolean computeDatesAtValidation;
 
     /**
      * EL to compute invoice.initialCollectionDate delay.
