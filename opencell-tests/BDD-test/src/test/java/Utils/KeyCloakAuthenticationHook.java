@@ -39,8 +39,9 @@ public class KeyCloakAuthenticationHook {
 
     private void setToken(String login, String password) {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        if (tokens.get(login) != null) {
-            token = tokens.get(login);
+
+        if (tokens.get( SystemProperties.getENV() + login ) != null) {
+            token = tokens.get(SystemProperties.getENV() + login);
             return;
         }
         Map<String, Object> clientCredentials = new HashMap<>();
@@ -51,9 +52,12 @@ public class KeyCloakAuthenticationHook {
 
         AuthzClient authzClient = AuthzClient.create(config);
         AccessTokenResponse response = authzClient.obtainAccessToken(login, password);
+
+        // generate a new token for each environment, for example for two env 'baq' and 'tnn'
+        // we need two tokens
         if (response.getToken() != null) {
             token = response.getToken();
-            tokens.put(login, token);
+            tokens.put(SystemProperties.getENV() + login, token);
         } else {
             throw new CucumberException("Could not acquire the KC token, please check if the KC is running");
         }

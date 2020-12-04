@@ -31,13 +31,13 @@ public class Update_entity_stepDefs {
         //--------------------------------------------------------------------
         // This piece of code tests creates a new instance of Keycloak token
         KeyCloakAuthenticationHook single_instance = KeyCloakAuthenticationHook.getInstance();
-        SystemProperties systemProperties = new SystemProperties();
-        systemProperties.setKeycloakURL( env );
+        SystemProperties.setENV( env );
         single_instance.authenticateAsAdmin();
 
         // A request POST tests existence of entity with id
         String url = env + Constants.PREFIX_API_V2 + entity +
                 Constants.SEPARATOR_SLASH + id;
+
         RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE ).
                 assertThat().statusCode( HttpStatus.SC_OK );
     }
