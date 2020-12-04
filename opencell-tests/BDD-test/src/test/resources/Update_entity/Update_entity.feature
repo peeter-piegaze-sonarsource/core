@@ -13,8 +13,9 @@ Feature: Testing method Update on an entity
 
       Examples:
          | entity   | env                   | id  | code               | description   | status |
-         | seller   | http://localhost:8080 | 3   | Seller_ThangNguNgu | A description | 200    |
-         | provider | http://localhost:8080 | 1   | Prov_ThangNguNgu   | A Prov Desc   | 200    |
+         | seller   | https://tnn.d2.opencell.work | 3   | Seller_ThangNguNgu | A description | 200    |
+         | provider | https://tnn.d2.opencell.work | 1   | Prov_ThangNguNgu   | A Prov Desc   | 200    |
+         | user     | https://tnn.d2.opencell.work | 3   | A_new_User_Nguyen  | A User Desc   | 200    |
 
 
 

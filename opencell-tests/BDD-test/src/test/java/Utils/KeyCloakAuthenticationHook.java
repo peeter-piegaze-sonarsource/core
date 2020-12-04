@@ -27,25 +27,14 @@ public class KeyCloakAuthenticationHook {
         if (single_instance == null)
             single_instance = new KeyCloakAuthenticationHook();
 
-        single_instance.authenticateAsAdmin();
-
         return single_instance;
     }
 
     @Before("@admin")
     public void authenticateAsAdmin() {
-        setProperties();// TODO to be removed after test, just for debug
-        String adminUser = System.getProperty("adminUsername");
-        String adminPassword = System.getProperty("adminPassword");
+        String adminUser = SystemProperties.getUsername();
+        String adminPassword = SystemProperties.getPassword();
         setToken(adminUser, adminPassword);
-    }
-
-    @Before("@superAdmin")
-    public void authenticateAsSuperAdmin() {
-        setProperties();// TODO to be removed after test, just for debug
-        String superAdminUser = System.getProperty("superUsername");
-        String superAdminPassword = System.getProperty("superPassword");
-        setToken(superAdminUser, superAdminPassword);
     }
 
     private void setToken(String login, String password) {
@@ -55,9 +44,9 @@ public class KeyCloakAuthenticationHook {
             return;
         }
         Map<String, Object> clientCredentials = new HashMap<>();
-        clientCredentials.put("secret", System.getProperty("opencell.keycloak.secret"));
-        Configuration config = new Configuration(System.getProperty("opencell.keycloak.url"),
-                System.getProperty("opencell.keycloak.realm"), System.getProperty("opencell.keycloak.clientId"),
+        clientCredentials.put("secret", SystemProperties.getKeycloakSecret());
+        Configuration config = new Configuration(SystemProperties.getKeycloakURL(),
+                SystemProperties.getKeycloakRealm(), SystemProperties.getKeycloakClientId(),
                 clientCredentials, HttpClients.createDefault());
 
         AuthzClient authzClient = AuthzClient.create(config);
@@ -70,17 +59,17 @@ public class KeyCloakAuthenticationHook {
         }
     }
 
-    private void setProperties() {
-        System.setProperty("adminUsername", "opencell.admin");
-        System.setProperty("adminPassword", "opencell.admin");
-        System.setProperty("superUsername", "opencell.superadmin");
-        System.setProperty("superPassword", "opencell.superadmin");
-        System.setProperty("opencell.keycloak.secret", "afe07e5a-68cb-4fb0-8b75-5b6053b07dc3");
-        System.setProperty("opencell.keycloak.url", "http://localhost:8080/auth");
-        System.setProperty("opencell.keycloak.realm", "opencell");
-        System.setProperty("opencell.keycloak.clientId", "opencell-web");
-        System.setProperty("opencell.url", "http://localhost:8080/opencell");
-    }
+//    private void setProperties() {
+//        System.setProperty("adminUsername", "opencell.admin");
+//        System.setProperty("adminPassword", "opencell.admin");
+//        System.setProperty("superUsername", "opencell.superadmin");
+//        System.setProperty("superPassword", "opencell.superadmin");
+//        System.setProperty("opencell.keycloak.secret", "afe07e5a-68cb-4fb0-8b75-5b6053b07dc3");
+//        System.setProperty("opencell.keycloak.url", "http://localhost:8080/auth");
+//        System.setProperty("opencell.keycloak.realm", "opencell");
+//        System.setProperty("opencell.keycloak.clientId", "opencell-web");
+//        System.setProperty("opencell.url", "http://localhost:8080/opencell");
+//    }
 
     public static String getToken() {
         return token;

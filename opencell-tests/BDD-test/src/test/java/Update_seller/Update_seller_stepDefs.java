@@ -3,6 +3,7 @@ package Update_seller;
 import Utils.Constants;
 import Utils.KeyCloakAuthenticationHook;
 import Utils.RestApiUtils;
+import Utils.SystemProperties;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -53,6 +54,8 @@ public class Update_seller_stepDefs {
         //--------------------------------------------------------------------
         // This piece of code tests creates a new Http client with credentials
         KeyCloakAuthenticationHook keyCloak = new KeyCloakAuthenticationHook();
+        SystemProperties systemProperties = new SystemProperties();
+        systemProperties.setKeycloakURL( env );
         keyCloak.authenticateAsAdmin();
 
         String url = env + Constants.PREFIX_API_V2 + id;

@@ -3,6 +3,7 @@ package Update_entity;
 import Utils.Constants;
 import Utils.KeyCloakAuthenticationHook;
 import Utils.RestApiUtils;
+import Utils.SystemProperties;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -29,7 +30,10 @@ public class Update_entity_stepDefs {
 
         //--------------------------------------------------------------------
         // This piece of code tests creates a new instance of Keycloak token
-        KeyCloakAuthenticationHook.getInstance();
+        KeyCloakAuthenticationHook single_instance = KeyCloakAuthenticationHook.getInstance();
+        SystemProperties systemProperties = new SystemProperties();
+        systemProperties.setKeycloakURL( env );
+        single_instance.authenticateAsAdmin();
 
         // A request POST tests existence of entity with id
         String url = env + Constants.PREFIX_API_V2 + entity +
