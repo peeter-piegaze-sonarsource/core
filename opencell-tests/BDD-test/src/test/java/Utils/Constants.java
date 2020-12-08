@@ -11,7 +11,8 @@ public class Constants {
     public static final String PASSWORD_OC_SPADMIN = "opencell.superadmin";
 
     // prefix of API v2
-    public static final String PREFIX_API_V2 = "/opencell/api/rest/v2/generic/";
+    public static final String PREFIX_PUT_API_V2 = "/opencell/api/rest/v2/generic/";
+    public static final String PREFIX_POST_ALL_API_V2 = "/opencell/api/rest/v2/generic/all/";
 
     // other constants
     public static final String SEPARATOR_SLASH = "/";

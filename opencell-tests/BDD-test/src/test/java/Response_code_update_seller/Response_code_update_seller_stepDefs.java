@@ -32,7 +32,7 @@ public class Response_code_update_seller_stepDefs {
     @Then("The status is {string}")
     public void theStatusIs(String arg0) throws IOException {
         HttpUriRequest request = new HttpGet( env +
-                Constants.PREFIX_API_V2 + id );
+                Constants.PREFIX_PUT_API_V2 + id );
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
         status = arg0;
 

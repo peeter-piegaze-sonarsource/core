@@ -58,7 +58,7 @@ public class Update_seller_stepDefs {
         systemProperties.setKeycloakURL( env );
         keyCloak.authenticateAsAdmin();
 
-        String url = env + Constants.PREFIX_API_V2 + id;
+        String url = env + Constants.PREFIX_PUT_API_V2 + id;
         body = "{\"code\":\"" + code + "\",\"description\":\"" + description + "\"}";
 
         // This line is to update the entity and to execute the assertion

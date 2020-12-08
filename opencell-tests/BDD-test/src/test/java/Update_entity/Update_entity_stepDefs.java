@@ -4,7 +4,14 @@ import Utils.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.response.ExtractableResponse;
 import org.apache.http.HttpStatus;
+import org.json.simple.parser.ParseException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class Update_entity_stepDefs {
 
@@ -13,14 +20,14 @@ public class Update_entity_stepDefs {
     private String id;
     private String env;
     private String payload;
+    private String url;
     private int status;
 
-    // These might not be required in the generation process of the request UPDATE
-    private String code;
+    // These fields are not required in the generation process of the request UPDATE
     private String description;
 
     @Given("Update {string} with {string} on {string}")
-    public void updateWithOn(String arg0, String arg1, String arg2) {
+    public void updateWithOn(String arg0, String arg1, String arg2) throws ParseException {
         entity = arg0;
         id = arg1;
         env = arg2;
@@ -31,32 +38,57 @@ public class Update_entity_stepDefs {
         SystemProperties.setENV( env );
         single_instance.authenticateAsAdmin();
 
-        // A request POST tests existence of entity with id
-        String url = env + Constants.PREFIX_API_V2 + entity +
-                Constants.SEPARATOR_SLASH + id;
+        url = env + Constants.PREFIX_PUT_API_V2 + entity + Constants.SEPARATOR_SLASH + id;
 
-        RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE ).
-                assertThat().statusCode( HttpStatus.SC_OK );
+        ExtractableResponse aResponse =
+                RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE ).extract();
+
+        // A request POST tests existence of entity based on id
+        assertEquals( aResponse.statusCode(), HttpStatus.SC_OK );
+
+        // Create the new payload from the response of the request POST
+        payload = Payload.generatePayload( aResponse.asString(), env );
     }
 
-    @When("Fields filled by {string}, {string}")
-    public void fieldsFilledBy(String arg0, String arg1) {
-        code = arg0;
-        description = arg1;
+    @When("Fields filled by {string}")
+    public void fieldsFilledBy(String arg0) throws ParseException {
+        description = arg0;
+        Map<String, String> updatedFields = new HashMap<>();
+
+        updatedFields.put( "description", description );
+        payload = Payload.updatePayload( payload, updatedFields );
+
+        // Read payload from json file indicated in parameter
+//        payloadPath = arg0;
+//
+//        StringBuilder contentBuilder = new StringBuilder();
+//
+//        try (Stream<String> stream =
+//                     Files.lines( Paths.get(payloadPath), StandardCharsets.UTF_8))
+//        {
+//            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        payload = contentBuilder.toString();
     }
 
     @Then("The status is {int}")
-    public void theStatusIs(Integer arg0) throws IllegalAccessException {
+    public void theStatusIs(Integer arg0) throws ParseException {
         status = arg0;
 
-        String url = env + Constants.PREFIX_API_V2 + entity +
-                Constants.SEPARATOR_SLASH + id;
-
-        // In payload, we need to determine
-        payload = Payload.constructPayload( this );
-
-        // This line is to update the entity and to execute the assertion
+        // This line is used to update the entity and to execute the assertion
         RestApiUtils.put( url, payload ).assertThat().statusCode( status );
 
+        // This piece of code is used to verify if the request has updated the entity
+        String aResult = RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE )
+                .extract().asString();
+        boolean resultCompare = Payload.comparePayloadToResult( payload, aResult );
+
+//        System.out.println( "resultCompare : " + resultCompare );
+        assertEquals( resultCompare, true );
     }
 }
