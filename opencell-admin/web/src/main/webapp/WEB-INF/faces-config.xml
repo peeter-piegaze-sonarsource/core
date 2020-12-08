@@ -1218,6 +1218,10 @@ http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
 		<redirect include-view-params="true" />
 	</navigation-case>
 	<navigation-case>
+		<from-outcome>gWFTransitions</from-outcome>
+		<to-view-id>/pages/admin/workflow/actions.xhtml</to-view-id>
+	</navigation-case>
+	<navigation-case>
 		<from-outcome>genericWorkflows</from-outcome>
 		<to-view-id>/pages/admin/workflow/genericWorkflows.xhtml</to-view-id>
 	</navigation-case>
@@ -1648,10 +1652,21 @@ http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
 	</navigation-case>
 
 	<navigation-case>
+		<from-outcome>dataCollectors</from-outcome>
+		<to-view-id>/pages/reporting/dwh/dataCollectors.xhtml</to-view-id>
+		<redirect/>
+	</navigation-case>
+	<navigation-case>
+		<from-outcome>chartDetail</from-outcome>
+		<to-view-id>/pages/reporting/dwh/dataCollectorDetail.xhtml</to-view-id>
+		<redirect />
+	</navigation-case>
+
+	<navigation-case>
 		<from-outcome>notificationDetail</from-outcome>
 		<to-view-id>/pages/notification/notificationDetail.xhtml
 		</to-view-id>
-		<redirect />
+		<redirect/>
 	</navigation-case>
 
 	<navigation-case>

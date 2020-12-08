@@ -95,7 +95,7 @@ public class InvoiceDto extends AuditableEntityDto {
 
     /** The category invoice aggregates. */
     @XmlElementWrapper
-    @XmlElement(name = "categoryInvoiceAgregate", required = true)
+    @XmlElement(name = "categoryInvoiceAgregate")
     protected List<CategoryInvoiceAgregateDto> categoryInvoiceAgregates = new ArrayList<CategoryInvoiceAgregateDto>();
 
     /** The tax aggregates */
@@ -156,7 +156,7 @@ public class InvoiceDto extends AuditableEntityDto {
     /**
      * A request-only parameter. True if PDF should be delivered by email. Defaults to True.
      */
-    private boolean sendByEmail = true;
+    private Boolean sendByEmail;
 
     /**
      * A request-only parameter. True if currently due balance should be returned
@@ -204,25 +204,25 @@ public class InvoiceDto extends AuditableEntityDto {
 
     /**
      * list of related payment schedule instances
-     * 
+     *
      */
     protected PaymentScheduleInstancesDto paymentScheduleInstancesDto;
 
     /**
      * associated dunning creation date
-     * 
+     *
      */
     protected Date dunningEntryDate;
 
     /**
      * associated dunning last update date
-     * 
+     *
      */
     protected Date dunningLastModification;
 
     /**
      * associated dunning current status
-     * 
+     *
      */
     protected String dunningStatus;
 
@@ -238,16 +238,20 @@ public class InvoiceDto extends AuditableEntityDto {
     protected List<Long> ratedTransactionsToLink;
     /**
      * paymentIncident
-     * 
+     *
      */
     protected List<String> paymentIncidents;
 
     /**
      * sendPaymentDate
-     * 
+     *
      */
     protected Date sendPaymentDate;
 
+    /**
+     * Invoice payment collection date.
+     */
+    private Date intialCollectionDate;
     /**
      * sum off writeOff accountOperations amounts
      */
@@ -580,7 +584,7 @@ public class InvoiceDto extends AuditableEntityDto {
      * @return the categoryInvoiceAgregates
      */
     public List<CategoryInvoiceAgregateDto> getCategoryInvoiceAgregates() {
-        return categoryInvoiceAgregates;
+        return categoryInvoiceAgregates == null ? new ArrayList<>() : categoryInvoiceAgregates;
     }
 
     /**
@@ -649,14 +653,14 @@ public class InvoiceDto extends AuditableEntityDto {
     /**
      * @return A request-only parameter. True if PDF should be delivered by email. Defaults to True.
      */
-    public boolean isSendByEmail() {
+    public Boolean getSendByEmail() {
         return sendByEmail;
     }
 
     /**
      * @param sendByEmail A request-only parameter. True if PDF should be delivered by email. Defaults to True.
      */
-    public void setSendByEmail(boolean sendByEmail) {
+    public void setSendByEmail(Boolean sendByEmail) {
         this.sendByEmail = sendByEmail;
     }
 
@@ -931,5 +935,13 @@ public class InvoiceDto extends AuditableEntityDto {
      */
     public void setRealTimeStatus(InvoiceStatusEnum realTimeStatus) {
         this.realTimeStatus = realTimeStatus;
+    }
+
+    public Date getIntialCollectionDate() {
+        return intialCollectionDate;
+    }
+
+    public void setIntialCollectionDate(Date intialCollectionDate) {
+        this.intialCollectionDate = intialCollectionDate;
     }
 }

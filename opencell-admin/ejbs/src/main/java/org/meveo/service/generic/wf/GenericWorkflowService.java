@@ -17,6 +17,16 @@
  */
 package org.meveo.service.generic.wf;
 
+import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
+import static org.meveo.admin.job.GenericWorkflowJob.*;
+import static org.meveo.service.base.ValueExpressionWrapper.evaluateExpression;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.ACTION_SCRIPT;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.LOG;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.UPDATE_FIELD;
+import static org.meveo.api.dto.generic.wf.ActionTypesEnum.NOTIFICATION;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,28 +36,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.commons.utils.EjbUtils;
 import org.meveo.commons.utils.ReflectionUtils;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.BaseEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.WorkflowedEntity;
 import org.meveo.model.customEntities.CustomEntityInstance;
-import org.meveo.model.generic.wf.GWFTransition;
-import org.meveo.model.generic.wf.GenericWorkflow;
-import org.meveo.model.generic.wf.WFStatus;
-import org.meveo.model.generic.wf.WorkflowInstance;
-import org.meveo.model.generic.wf.WorkflowInstanceHistory;
+import org.meveo.model.generic.wf.*;
+import org.meveo.model.notification.Notification;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.service.base.BusinessService;
+import org.meveo.service.base.PersistenceService;
 import org.meveo.service.base.ValueExpressionWrapper;
+import org.meveo.service.notification.DefaultNotificationService;
 import org.meveo.service.script.Script;
 import org.meveo.service.script.ScriptInstanceService;
 import org.meveo.service.script.ScriptInterface;
-
-import static org.meveo.admin.job.GenericWorkflowJob.*;
 
 @Stateless
 public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
@@ -66,6 +76,9 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
 
     @Inject
     private WorkflowInstanceHistoryService workflowInstanceHistoryService;
+
+    @Inject
+    private DefaultNotificationService defaultNotificationService;
 
     static Set<Class<?>> WORKFLOWED_CLASSES = ReflectionUtils.getClassesAnnotatedWith(WorkflowedEntity.class, "org.meveo");
 
@@ -144,46 +157,25 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
                 for (GWFTransition gWFTransition : listByFromStatus) {
 
                     if (matchExpression(gWFTransition.getConditionEl(), iwfEntity) && isInSameBranch(gWFTransition, executedTransition, genericWorkflow)) {
-
                         log.debug("Processing transition: {} on entity {}", gWFTransition, workflowInstance);
-                        WorkflowInstanceHistory wfHistory = new WorkflowInstanceHistory();
+                        WorkflowInstanceHistory wfHistory;
                         if (genericWorkflow.isEnableHistory()) {
-                            wfHistory.setActionDate(new Date());
-                            wfHistory.setWorkflowInstance(workflowInstance);
-                            wfHistory.setFromStatus(gWFTransition.getFromStatus());
-                            wfHistory.setToStatus(gWFTransition.getToStatus());
-                            wfHistory.setTransitionName(gWFTransition.getDescription());
-                            wfHistory.setWorkflowInstance(workflowInstance);
-
+                            wfHistory = processTransition(workflowInstance, gWFTransition);
                             workflowInstanceHistoryService.create(wfHistory);
                         }
-
-                        WFStatus toStatus = wfStatusService.findByCodeAndGWF(gWFTransition.getToStatus(), genericWorkflow);
 
                         if (gWFTransition.getActionScript() != null) {
                             ScriptInstance scriptInstance = gWFTransition.getActionScript();
                             String scriptCode = scriptInstance.getCode();
-                            ScriptInterface script = scriptInstanceService.getScriptInstance(scriptCode);
-                            Map<String, Object> methodContext = new HashMap<String, Object>();
-                            methodContext.put(GENERIC_WF, genericWorkflow);
-                            methodContext.put(WF_INS, workflowInstance);
-                            methodContext.put(IWF_ENTITY, iwfEntity);
-                            methodContext.put(Script.CONTEXT_ACTION, scriptCode);
-                            methodContext.put(TO_STATUS, toStatus);
-                            if (script == null) {
-                                log.error("Script is null");
-                                throw new BusinessException("script is null");
-                            }
-                            script.execute(methodContext);
+                            executeActionScript(iwfEntity, workflowInstance, genericWorkflow, gWFTransition, scriptCode);
                         }
 
-
+                        WFStatus toStatus = wfStatusService.findByCodeAndGWF(gWFTransition.getToStatus(), genericWorkflow);
                         workflowInstance.setCurrentStatus(toStatus);
 
                         log.trace("Entity status will be updated to {}. Entity {}", workflowInstance, gWFTransition.getToStatus());
                         workflowInstance = workflowInstanceService.update(workflowInstance);
                         executedTransition.add(gWFTransition);
-
                     }
                 }
             }
@@ -194,6 +186,33 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
         }
 
         return workflowInstance;
+    }
+
+    private WorkflowInstanceHistory processTransition(WorkflowInstance workflowInstance, GWFTransition gWFTransition) {
+        WorkflowInstanceHistory wfHistory = new WorkflowInstanceHistory();
+        wfHistory.setActionDate(new Date());
+        wfHistory.setWorkflowInstance(workflowInstance);
+        wfHistory.setFromStatus(gWFTransition.getFromStatus());
+        wfHistory.setToStatus(gWFTransition.getToStatus());
+        wfHistory.setTransitionName(gWFTransition.getDescription());
+        wfHistory.setWorkflowInstance(workflowInstance);
+        return wfHistory;
+    }
+
+    private void executeActionScript(BusinessEntity iwfEntity, WorkflowInstance workflowInstance, GenericWorkflow genericWorkflow,
+                                     GWFTransition gWFTransition, String scriptCode) {
+        ScriptInterface script = scriptInstanceService.getScriptInstance(scriptCode);
+        Map<String, Object> methodContext = new HashMap<>();
+        methodContext.put(GENERIC_WF, genericWorkflow);
+        methodContext.put(WF_INS, workflowInstance);
+        methodContext.put(IWF_ENTITY, iwfEntity);
+        methodContext.put(Script.CONTEXT_ACTION, scriptCode);
+        methodContext.put(WF_ACTUAL_TRANSITION, gWFTransition);
+        if (script == null) {
+            log.error("Script is null");
+            throw new BusinessException("script is null");
+        }
+        script.execute(methodContext);
     }
 
     private List<GWFTransition> getExecutedTransitions(GenericWorkflow genericWorkflow, WorkflowInstance workflowInstance, List<GWFTransition> listByFromStatus) {
@@ -257,5 +276,154 @@ public class GenericWorkflowService extends BusinessService<GenericWorkflow> {
 
         previousTransitions.retainAll(executedTransition);
         return 0 < previousTransitions.size();
+    }
+
+    public WorkflowInstance executeTransition(GWFTransition transition, BusinessEntity entity,
+                                              GenericWorkflow genericWorkflow, boolean ignoreConditionEL) {
+        WorkflowInstance workflowInstance = ofNullable(workflowInstanceService
+                .findByEntityIdAndGenericWorkflow(entity.getId(), genericWorkflow))
+                .orElseThrow(() -> new BusinessException("No workflow instance found for business entity " + entity.getId()));
+        if (ignoreConditionEL) {
+            return executeTransition(transition, entity, workflowInstance, genericWorkflow);
+        } else {
+            return executeTransitionWithConditionEL(transition, entity, workflowInstance, genericWorkflow);
+        }
+    }
+
+    public WorkflowInstance executeTransition(GWFTransition transition, BusinessEntity entity,
+                                              WorkflowInstance workflowInstance, GenericWorkflow genericWorkflow) {
+
+        if (genericWorkflow.isEnableHistory()) {
+            WorkflowInstanceHistory workflowInstanceHistory = processTransition(workflowInstance, transition);
+            workflowInstanceHistoryService.create(workflowInstanceHistory);
+        }
+        if (transition.getActionScript() != null) {
+            ScriptInstance scriptInstance = transition.getActionScript();
+            String scriptCode = scriptInstance.getCode();
+            executeActionScript(entity, workflowInstance, genericWorkflow, transition, scriptCode);
+        }
+        if(transition.getActions() != null) {
+            executeActions(entity, workflowInstance, genericWorkflow, transition);
+        }
+        WFStatus toStatus = wfStatusService.findByCodeAndGWF(transition.getToStatus(), genericWorkflow);
+        workflowInstance.setCurrentStatus(toStatus);
+        workflowInstance = workflowInstanceService.update(workflowInstance);
+        return workflowInstance;
+    }
+
+    public WorkflowInstance executeTransitionWithConditionEL(GWFTransition transition, BusinessEntity entity,
+                                                             WorkflowInstance workflowInstance,
+                                                             GenericWorkflow genericWorkflow) {
+        if (matchExpression(transition.getConditionEl(), entity)) {
+            return executeTransition(transition, entity, workflowInstance, genericWorkflow);
+        } else {
+            return null;
+        }
+    }
+
+    private void executeActions(BusinessEntity entity, WorkflowInstance workflowInstance,
+                                GenericWorkflow genericWorkflow, GWFTransition transition) {
+        Map<Object, Object> context = new HashMap<>();
+        context.put("entity", entity);
+        context.put("transition", transition);
+        context.put("workflowInstance ", workflowInstance);
+
+        for (Action action : transition.getActions()) {
+            try {
+                if(action.isAsynchronous()) {
+                    asyncExecution(entity, workflowInstance, genericWorkflow, transition, action, context);
+                } else {
+                    syncExecution(entity, workflowInstance, genericWorkflow, transition, action, context);
+                }
+            } catch (Exception exception) {
+                log.error(format("Action failed priority [%d] description : %s",
+                        action.getPriority(), action.getDescription()));
+                log.error(exception.getMessage());
+            }
+        }
+    }
+
+    @Asynchronous
+    private void asyncExecution(BusinessEntity entity, WorkflowInstance workflowInstance,
+                                           GenericWorkflow genericWorkflow, GWFTransition transition, Action action,
+                                           Map<Object, Object> context) {
+        try {
+            if(action.getType().equalsIgnoreCase(ACTION_SCRIPT.name())) {
+                ScriptInstance scriptInstance = action.getActionScript();
+                String scriptCode = scriptInstance.getCode();
+                executeActionScript(entity, workflowInstance, genericWorkflow, transition, scriptCode);
+            }
+            if(action.getType().equalsIgnoreCase(LOG.name())) {
+                String inputToLog = evaluateExpression(action.getValueEL(), context, String.class);
+                log(inputToLog, action.getLogLevel());
+            }
+            if(action.getType().equalsIgnoreCase(UPDATE_FIELD.name())) {
+                Object result = evaluateExpression(action.getValueEL(), context, Object.class);
+                updateEntity(entity, action.getFieldToUpdate(), result);
+            }
+            if (action.getType().equalsIgnoreCase(NOTIFICATION.name())) {
+                Notification notification = action.getNotification();
+                defaultNotificationService.fireNotificationAsync(notification, entity);
+            }
+        } catch (Exception exception) {
+            throw exception;
+        }
+    }
+
+    private void syncExecution(BusinessEntity entity, WorkflowInstance workflowInstance, GenericWorkflow genericWorkflow,
+                                GWFTransition transition, Action action, Map<Object, Object> context) {
+
+        if(action.getType().equalsIgnoreCase(ACTION_SCRIPT.name())) {
+            ScriptInstance scriptInstance = action.getActionScript();
+            String scriptCode = scriptInstance.getCode();
+            executeActionScript(entity, workflowInstance, genericWorkflow, transition, scriptCode);
+        }
+        if(action.getType().equalsIgnoreCase(LOG.name())) {
+            String inputToLog = evaluateExpression(action.getValueEL(), context, String.class);
+            log(inputToLog, action.getLogLevel());
+        }
+
+        if(action.getType().equalsIgnoreCase(UPDATE_FIELD.name())) {
+            Object result = evaluateExpression(action.getValueEL(), context, Object.class);
+            updateEntity(entity, action.getFieldToUpdate(), result);
+        }
+
+        if (action.getType().equalsIgnoreCase(NOTIFICATION.name())) {
+            Notification notification = action.getNotification();
+            defaultNotificationService.fireNotification(notification, entity);
+        }
+    }
+
+    private void log(String inputToLog, String level) {
+        try {
+            log.getClass().getMethod(level.toLowerCase(), String.class).invoke(log, inputToLog);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
+            throw new BusinessException(exception);
+        }
+    }
+
+    private void updateEntity(BusinessEntity entity, String fieldToUpdate, Object valueToSet) {
+        try {
+            String methodName = "set" + org.apache.commons.lang3.StringUtils.capitalize(fieldToUpdate);
+            Class<?> current = entity.getClass();
+            PersistenceService persistenceService = (PersistenceService) EjbUtils.getServiceInterface(entity.getClass());
+            persistenceService.refreshOrRetrieve(entity);
+            boolean updated = false;
+            do {
+                try {
+                    current.getMethod(methodName, current.getDeclaredField(fieldToUpdate).getType())
+                            .invoke(entity, valueToSet);
+                    updated = true;
+                } catch (NoSuchFieldException e) {
+                    current = current.getSuperclass();
+                }
+            } while(current != BaseEntity.class && !updated);
+            if (!updated) {
+                throw new BusinessException("Filed does not exists");
+            }
+            persistenceService.update(entity);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }
