@@ -46,6 +46,7 @@ import org.meveo.api.dto.payment.PaymentMethodDto;
 import org.meveo.api.dto.payment.PaymentMethodTokenDto;
 import org.meveo.api.dto.payment.PaymentMethodTokensDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstanceDto;
+import org.meveo.api.dto.payment.PaymentScheduleInstanceItemDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstanceResponseDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstancesDto;
 import org.meveo.api.dto.payment.PaymentScheduleTemplateDto;
@@ -855,15 +856,15 @@ public class PaymentRsImpl extends BaseRs implements PaymentRs {
         return result;
     }
 
-	@Override
-	public ActionStatus paymentCallback(PaymentCallbackDto paymentCallbackDto) {
-		ActionStatus result = new ActionStatus();
+    @Override
+    public ActionStatus paymentCallback(PaymentCallbackDto paymentCallbackDto) {
+        ActionStatus result = new ActionStatus();
 
-		try {
-			paymentApi.paymentCallback(paymentCallbackDto);
-		} catch (Exception e) {
-			processException(e, result);
-		}
+        try {
+            paymentApi.paymentCallback(paymentCallbackDto);
+        } catch (Exception e) {
+            processException(e, result);
+        }
 
         return result;
     }
@@ -902,6 +903,17 @@ public class PaymentRsImpl extends BaseRs implements PaymentRs {
             processException(e, result);
         }
 
-		return result;
-	}
+        return result;
+    }
+
+    /**
+     * Update Payment schedule instance item, the update is only about amount and requestPaymentDate.
+     *
+     * @param paymentScheduleInstanceItemDto
+     * @return
+     */
+    @Override
+    public ActionStatus updatePaymentScheduleInstanceItem(Long paymentScheduleInstanceId, PaymentScheduleInstanceItemDto paymentScheduleInstanceItemDto) {
+        return null;
+    }
 }
