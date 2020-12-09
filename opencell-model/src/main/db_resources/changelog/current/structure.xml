@@ -3954,6 +3954,9 @@ END $$;]]>
             <column name="article_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+            <column name="rated_transaction_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="product_code" type="varchar(255)"/>
             <column name="service_code" type="varchar(255)"/>
             <column name="charge_code" type="varchar(255)"/>
@@ -3961,6 +3964,11 @@ END $$;]]>
             <column name="parameter_2" type="varchar(255)"/>
             <column name="parameter_3" type="varchar(255)"/>
         </createTable>
+
+        <addColumn tableName="billing_rated_transaction">
+            <column name="article_id" type="bigint"/>
+        </addColumn>
+
         <addForeignKeyConstraint baseColumnNames="tax_class_id" baseTableName="billing_article"
                                  constraintName="fk_billing_article_tax_class" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
@@ -4000,5 +4008,13 @@ END $$;]]>
                                  constraintName="fk_billing_article_mapping_line_article" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="billing_article" />
+        <addForeignKeyConstraint baseColumnNames="rated_transaction_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_rated_transaction" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="billing_rated_transaction" />
+
+        <addForeignKeyConstraint baseTableName="billing_rated_transaction" baseColumnNames="article_id"
+                                 constraintName="rated_transaction_article_fk" referencedTableName="billing_article"
+                                 referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

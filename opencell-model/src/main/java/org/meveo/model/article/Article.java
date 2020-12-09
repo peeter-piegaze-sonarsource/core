@@ -9,6 +9,7 @@ import org.meveo.model.BusinessEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.billing.AccountingCode;
 import org.meveo.model.billing.InvoiceSubCategory;
+import org.meveo.model.billing.WalletOperation;
 import org.meveo.model.crm.custom.CustomFieldValues;
 import org.meveo.model.tax.TaxClass;
 
@@ -46,6 +47,19 @@ public class Article extends BusinessEntity {
     @Type(type = "cfjson")
     @Column(name = "cf_values", columnDefinition = "text")
     private CustomFieldValues cfValues;
+
+    private Article(){}
+
+    public Article(String code, String description, TaxClass taxClass, InvoiceSubCategory invoiceSubCategory) {
+        this.code = code;
+        this.description = description;
+        this.taxClass = taxClass;
+        this.invoiceSubCategory = invoiceSubCategory;
+    }
+
+    public Article(WalletOperation wo) {
+        this(wo.getCode(), wo.getDescription(), wo.getTaxClass(), wo.getInvoiceSubCategory());
+    }
 
     public TaxClass getTaxClass() {
         return taxClass;

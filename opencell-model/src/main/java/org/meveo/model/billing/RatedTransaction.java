@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -50,6 +52,7 @@ import org.meveo.model.ICustomFieldEntity;
 import org.meveo.model.ISearchable;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.admin.Seller;
+import org.meveo.model.article.Article;
 import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.catalog.PricePlanMatrix;
 import org.meveo.model.catalog.RoundingModeEnum;
@@ -519,6 +522,11 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
     @Size(max = 60)
     @NotNull
     private String uuid;
+
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name ="article_id")
+    private Article article;
 
     public RatedTransaction() {
         super();
@@ -1273,6 +1281,14 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
 
     public void setType(RatedTransactionTypeEnum type) {
         this.type = type;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 
     @Override

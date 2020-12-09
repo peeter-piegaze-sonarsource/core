@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.meveo.model.admin.Seller;
+import org.meveo.model.article.ArticleMappingLine;
 import org.meveo.model.payments.PaymentMethod;
 
 /**
@@ -31,7 +32,7 @@ import org.meveo.model.payments.PaymentMethod;
  * @author Andrius Karpavicius
  */
 @SuppressWarnings("serial")
-public class RatedTransactionGroup implements Serializable {
+public class ArticleMappingLineGroup implements Serializable {
 
     /**
      * Billing account
@@ -70,9 +71,9 @@ public class RatedTransactionGroup implements Serializable {
     /**
      * Rated transactions
      */
-    private List<RatedTransaction> ratedTransactions = new ArrayList<RatedTransaction>();
+    private List<ArticleMappingLine> articleMappingLines = new ArrayList<>();
 
-    public RatedTransactionGroup() {
+    public ArticleMappingLineGroup() {
 
     }
 
@@ -85,7 +86,7 @@ public class RatedTransactionGroup implements Serializable {
      * @param invoiceType Invoice type
      * @param prepaid Is this for prepaid transactions
      */
-    public RatedTransactionGroup(BillingAccount billingAccount, Seller seller, BillingCycle billingCycle, InvoiceType invoiceType, boolean prepaid) {
+    public ArticleMappingLineGroup(BillingAccount billingAccount, Seller seller, BillingCycle billingCycle, InvoiceType invoiceType, boolean prepaid) {
         this.billingAccount = billingAccount;
         this.seller = seller;
         this.billingCycle = billingCycle;
@@ -104,8 +105,8 @@ public class RatedTransactionGroup implements Serializable {
      * @param invoiceKey     invoice key
      * @param paymentMethod  Payment method
      */
-    public RatedTransactionGroup(BillingAccount billingAccount, Seller seller, BillingCycle billingCycle, InvoiceType invoiceType, boolean prepaid, String invoiceKey,
-            PaymentMethod paymentMethod) {
+    public ArticleMappingLineGroup(BillingAccount billingAccount, Seller seller, BillingCycle billingCycle, InvoiceType invoiceType, boolean prepaid, String invoiceKey,
+                                   PaymentMethod paymentMethod) {
 
         this(billingAccount, seller, billingCycle, invoiceType, prepaid);
         this.invoiceKey = invoiceKey;
@@ -143,15 +144,15 @@ public class RatedTransactionGroup implements Serializable {
     /**
      * @return Rated transactions
      */
-    public List<RatedTransaction> getRatedTransactions() {
-        return ratedTransactions;
+    public List<ArticleMappingLine> getArticleMappingLines() {
+        return articleMappingLines;
     }
 
     /**
-     * @param ratedTransactions Rated transactions
+     * @param articleMappingLines Rated transactions
      */
-    public void setRatedTransactions(List<RatedTransaction> ratedTransactions) {
-        this.ratedTransactions = ratedTransactions;
+    public void setArticleMappingLines(List<ArticleMappingLine> articleMappingLines) {
+        this.articleMappingLines = articleMappingLines;
     }
 
     /**

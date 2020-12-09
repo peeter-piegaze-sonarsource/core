@@ -2230,4 +2230,11 @@ public class ValidateBRScript extends Script {
         </update>
     </changeSet>
 
+    <changeSet id="#FEAT-761-2020-10-19-DATA" author="NabilOUACHI">
+        <insert tableName="billing_article_mapping">
+            <column name="id" value="-1"></column>
+            <column name="code" value="DEF_ART_MAP"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
