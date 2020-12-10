@@ -37,7 +37,6 @@ import org.meveo.cache.CdrEdrProcessingCacheContainerProvider;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.BaseEntity;
-import org.meveo.model.billing.RatedTransactionGroup;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.rating.EDR;
 import org.meveo.model.rating.EDRStatusEnum;
