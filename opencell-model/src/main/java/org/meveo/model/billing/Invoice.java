@@ -1112,8 +1112,8 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
      *
      * @return Invoice payment collection date
      */
-    public Date getIntialCollectionDate() {
-        return intialCollectionDate;
+    public Date getInitialCollectionDate() {
+        return initialCollectionDate;
     }
 
     public void setDraftRatedTransactions(List<RatedTransaction> draftRatedTransactions) {

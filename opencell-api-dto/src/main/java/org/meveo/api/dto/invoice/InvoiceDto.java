@@ -269,11 +269,6 @@ public class InvoiceDto extends AuditableEntityDto {
     public void setPaymentIncidents(List<String> paymentIncidents) {
         this.paymentIncidents = paymentIncidents;
     }
-
-    /**
-     * Invoice payment collection date.
-     */
-    private Date intialCollectionDate;
     public void addPaymentIncidents(String paymentIncident) {
         this.paymentIncidents.add(paymentIncident);
     }
@@ -887,6 +882,8 @@ public class InvoiceDto extends AuditableEntityDto {
         this.sentByEmail = sentByEmail;
     }
 
+    public Date getInitialCollectionDate() {
+        return initialCollectionDate;
     public Long getSubscriptionId() {
         return subscriptionId;
     }
