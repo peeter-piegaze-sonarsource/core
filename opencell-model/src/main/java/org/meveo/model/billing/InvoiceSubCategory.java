@@ -30,7 +30,7 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.article.Article;
+import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.payments.OCCTemplate;
 
 /**
@@ -81,7 +81,7 @@ public class InvoiceSubCategory extends BusinessCFEntity {
     private Integer sortIndex;
 
     @OneToOne(mappedBy = "invoiceSubCategory")
-    private Article article;
+    private AccountingArticle accountingArticle;
 
     public AccountingCode getAccountingCode() {
         return accountingCode;

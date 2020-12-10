@@ -25,7 +25,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.meveo.model.*;
-import org.meveo.model.article.Article;
+import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.article.ArticleFamily;
 
 /**
@@ -89,7 +89,7 @@ public class AccountingCode extends EnableBusinessEntity implements ISearchable{
     private boolean migrated = false;
 
     @OneToOne(mappedBy = "accountingCode")
-    private Article article;
+    private AccountingArticle accountingArticle;
 
     @OneToOne(mappedBy = "accountingCode")
     private ArticleFamily articleFamily;
@@ -142,12 +142,12 @@ public class AccountingCode extends EnableBusinessEntity implements ISearchable{
         this.migrated = migrated;
     }
 
-    public Article getArticle() {
-        return article;
+    public AccountingArticle getAccountingArticle() {
+        return accountingArticle;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
+    public void setAccountingArticle(AccountingArticle accountingArticle) {
+        this.accountingArticle = accountingArticle;
     }
 
     public ArticleFamily getArticleFamily() {

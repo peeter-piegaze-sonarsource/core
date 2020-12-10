@@ -5,35 +5,50 @@ import static javax.persistence.FetchType.LAZY;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.meveo.model.BaseEntity;
+import org.meveo.model.BusinessEntity;
+import org.meveo.model.catalog.ChargeTemplate;
+import org.meveo.model.catalog.OfferTemplate;
+import org.meveo.model.catalog.ProductTemplate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "billing_article_mapping_line")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = { @org.hibernate.annotations.Parameter(name = "sequence_name", value = "billing_article_mapping_line_seq"), })
-public class ArticleMappingLine extends BaseEntity {
+public class ArticleMappingLine extends BusinessEntity {
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "article_mapping_id")
     private ArticleMapping articleMapping;
 
-    @OneToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "article_id")
-    private Article article;
+    private AccountingArticle accountingArticle;
 
-    @Column(name = "product_code")
-    private String productCode;
+    @OneToMany(mappedBy = "articleMappingLine", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AttributeMapping> attributesMapping;
 
-    @Column(name = "service_code")
-    private String serviceCode;
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "offer_template_id")
+    private OfferTemplate offerTemplate;
 
-    @Column(name = "charge_code")
-    private String chargeCode;
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "product_template_id")
+    private ProductTemplate productTemplate;
+
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "charge_template_id")
+    private ChargeTemplate chargeTemplate;
 
     @Column(name = "parameter_1")
     private String parameter1;
@@ -52,36 +67,36 @@ public class ArticleMappingLine extends BaseEntity {
         this.articleMapping = articleMapping;
     }
 
-    public Article getArticle() {
-        return article;
+    public AccountingArticle getAccountingArticle() {
+        return accountingArticle;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
+    public void setAccountingArticle(AccountingArticle accountingArticle) {
+        this.accountingArticle = accountingArticle;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public OfferTemplate getOfferTemplate() {
+        return offerTemplate;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setOfferTemplate(OfferTemplate offerTemplate) {
+        this.offerTemplate = offerTemplate;
     }
 
-    public String getServiceCode() {
-        return serviceCode;
+    public ProductTemplate getProductTemplate() {
+        return productTemplate;
     }
 
-    public void setServiceCode(String serviceCode) {
-        this.serviceCode = serviceCode;
+    public void setProductTemplate(ProductTemplate productTemplate) {
+        this.productTemplate = productTemplate;
     }
 
-    public String getChargeCode() {
-        return chargeCode;
+    public ChargeTemplate getChargeTemplate() {
+        return chargeTemplate;
     }
 
-    public void setChargeCode(String chargeCode) {
-        this.chargeCode = chargeCode;
+    public void setChargeTemplate(ChargeTemplate chargeTemplate) {
+        this.chargeTemplate = chargeTemplate;
     }
 
     public String getParameter1() {

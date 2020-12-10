@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -50,6 +51,7 @@ import org.meveo.model.ICustomFieldEntity;
 import org.meveo.model.ISearchable;
 import org.meveo.model.ObservableEntity;
 import org.meveo.model.admin.Seller;
+import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.catalog.PricePlanMatrix;
 import org.meveo.model.catalog.RoundingModeEnum;
@@ -410,6 +412,9 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private AccountingArticle accountingArticle;
     /**
      * Subcategory invoice aggregate that Rated transaction was invoiced under
      */
@@ -1273,6 +1278,14 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
 
     public void setType(RatedTransactionTypeEnum type) {
         this.type = type;
+    }
+
+    public AccountingArticle getAccountingArticle() {
+        return accountingArticle;
+    }
+
+    public void setAccountingArticle(AccountingArticle accountingArticle) {
+        this.accountingArticle = accountingArticle;
     }
 
     @Override

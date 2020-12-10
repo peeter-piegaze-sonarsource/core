@@ -31,7 +31,7 @@ import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
 import org.meveo.model.ISearchable;
-import org.meveo.model.article.Article;
+import org.meveo.model.article.AccountingArticle;
 
 /**
  * Tax class
@@ -57,7 +57,7 @@ public class TaxClass extends BusinessCFEntity implements Serializable, ISearcha
     private Map<String, String> descriptionI18n;
 
     @OneToOne(mappedBy = "accountingCode")
-    private Article article;
+    private AccountingArticle accountingArticle;
 
     /**
      * @param descriptionI18n Translated descriptions in JSON format with language code as a key and translated description as a value

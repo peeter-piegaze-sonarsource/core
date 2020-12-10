@@ -3942,6 +3942,7 @@ END $$;]]>
             </column>
             <column name="mapping_script_id" type="bigint" />
         </createTable>
+
         <createSequence sequenceName="billing_article_mapping_line_seq" startValue="1" />
         <createTable tableName="billing_article_mapping_line">
             <column name="id" type="bigint">
@@ -3954,16 +3955,30 @@ END $$;]]>
             <column name="article_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="rated_transaction_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_code" type="varchar(255)"/>
-            <column name="service_code" type="varchar(255)"/>
-            <column name="charge_code" type="varchar(255)"/>
+            <column name="offer_template_id" type="bigint"></column>
+            <column name="charge_template_id" type="bigint"></column>
+            <column name="product_template_id" type="bigint"></column>
+
             <column name="parameter_1" type="varchar(255)"/>
             <column name="parameter_2" type="varchar(255)"/>
             <column name="parameter_3" type="varchar(255)"/>
         </createTable>
+
+        <createSequence sequenceName="billing_attribute_mapping_seq" startValue="1" />
+        <createTable tableName="billing_attribute_mapping">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="billing_attribute_mapping_pk"/>
+            </column>
+            <column name="version" type="int4" />
+
+            <column name="article_mapping_line_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="attribute" type="varchar(30)"/>
+            <column name="attribute_value" type="varchar(255)"/>
+        </createTable>
+
 
         <addColumn tableName="billing_rated_transaction">
             <column name="article_id" type="bigint"/>
@@ -4010,8 +4025,27 @@ END $$;]]>
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="billing_article" />
 
+        <addForeignKeyConstraint baseColumnNames="charge_template_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_charge_template" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="cat_charge_template" />
+
+        <addForeignKeyConstraint baseColumnNames="offer_template_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_service_template" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="cat_service_template" />
+
+        <addForeignKeyConstraint baseColumnNames="product_template_id" baseTableName="billing_article_mapping_line"
+                                 constraintName="fk_billing_article_mapping_line_product_template" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="cat_service_template" />
+
         <addForeignKeyConstraint baseTableName="billing_rated_transaction" baseColumnNames="article_id"
                                  constraintName="rated_transaction_article_fk" referencedTableName="billing_article"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="billing_attribute_mapping" baseColumnNames="article_mapping_line_id"
+                                 constraintName="attribute_mapping_article_mapping_line_fk" referencedTableName="billing_article_mapping_line"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

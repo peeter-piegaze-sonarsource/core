@@ -17,12 +17,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Map;
 
 @Entity@CustomFieldEntity(cftCodePrefix = "Article")
 @Table(name = "billing_article")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = { @org.hibernate.annotations.Parameter(name = "sequence_name", value = "billing_article_seq"), })
-public class Article extends BusinessEntity {
+public class AccountingArticle extends BusinessEntity {
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "tax_class_id")
@@ -46,6 +47,20 @@ public class Article extends BusinessEntity {
     @Type(type = "cfjson")
     @Column(name = "cf_values", columnDefinition = "text")
     private CustomFieldValues cfValues;
+
+    @Type(type = "json")
+    @Column(name = "description_i18n", columnDefinition = "text")
+    private Map<String, String> descriptionI18n;
+
+    private AccountingArticle() {
+    }
+
+    public AccountingArticle(String code, String description, TaxClass taxClass, InvoiceSubCategory invoiceSubCategory) {
+        this.code = code;
+        this.description = description;
+        this.taxClass = taxClass;
+        this.invoiceSubCategory = invoiceSubCategory;
+    }
 
     public TaxClass getTaxClass() {
         return taxClass;
@@ -93,5 +108,13 @@ public class Article extends BusinessEntity {
 
     public void setArticleMappingLine(ArticleMappingLine articleMappingLine) {
         this.articleMappingLine = articleMappingLine;
+    }
+
+    public Map<String, String> getDescriptionI18n() {
+        return descriptionI18n;
+    }
+
+    public void setDescriptionI18n(Map<String, String> descriptionI18n) {
+        this.descriptionI18n = descriptionI18n;
     }
 }
