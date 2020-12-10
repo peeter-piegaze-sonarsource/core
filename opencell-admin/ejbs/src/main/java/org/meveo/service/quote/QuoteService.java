@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,8 +30,6 @@ import javax.inject.Inject;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.RatingException;
 import org.meveo.admin.exception.ValidationException;
-import org.meveo.model.article.Article;
-import org.meveo.model.article.ArticleMappingLine;
 import org.meveo.model.billing.BillingAccount;
 import org.meveo.model.billing.CategoryInvoiceAgregate;
 import org.meveo.model.billing.Invoice;
@@ -48,12 +45,10 @@ import org.meveo.model.billing.Subscription;
 import org.meveo.model.billing.TaxInvoiceAgregate;
 import org.meveo.model.billing.UserAccount;
 import org.meveo.model.billing.WalletOperation;
-import org.meveo.model.billing.WalletOperationStatusEnum;
 import org.meveo.model.quote.Quote;
 import org.meveo.model.rating.CDR;
 import org.meveo.model.rating.EDR;
 import org.meveo.service.base.BusinessService;
-import org.meveo.service.billing.impl.article.ArticleMappingLineService;
 import org.meveo.service.billing.impl.InvoiceService;
 import org.meveo.service.billing.impl.InvoiceTypeService;
 import org.meveo.service.billing.impl.OneShotChargeInstanceService;
@@ -96,9 +91,6 @@ public class QuoteService extends BusinessService<Quote> {
     @Inject
     private InvoiceTypeService invoiceTypeService;
 
-    @Inject
-    private ArticleMappingLineService articleMappingLineService;
-
     /**
      * Create a simulated invoice for quote.
      *
@@ -127,6 +119,7 @@ public class QuoteService extends BusinessService<Quote> {
         for (Entry<String, List<QuoteInvoiceInfo>> invoiceInfoEntry : quoteInvoiceInfos.entrySet()) {
 
             List<WalletOperation> walletOperations = new ArrayList<>();
+            List<RatedTransaction> ratedTransactions = new ArrayList<>();
             BillingAccount billingAccount = null;
 
             for (QuoteInvoiceInfo quoteInvoiceInfo : invoiceInfoEntry.getValue()) {
@@ -259,12 +252,11 @@ public class QuoteService extends BusinessService<Quote> {
                     }
                 }
             }
-
-            List<ArticleMappingLine> articleMappingLines = walletOperations.stream()
-                    .map(wo -> mapToArticleMappingLine(wo))
-                    .collect(Collectors.toList());
-
-            Invoice invoice = invoiceService.createAgregatesAndInvoiceVirtual(articleMappingLines, billingAccount, invoiceTypeService.getDefaultQuote());
+            // Create rated transactions from wallet operations
+            for (WalletOperation walletOperation : walletOperations) {
+                ratedTransactions.add(ratedTransactionService.createRatedTransaction(walletOperation, true));
+            }
+            Invoice invoice = invoiceService.createAgregatesAndInvoiceVirtual(ratedTransactions, billingAccount, invoiceTypeService.getDefaultQuote());
             File xmlInvoiceFile = xmlInvoiceCreator.createXMLInvoice(invoice, true);
 
             if (generatePdf) {
@@ -302,12 +294,6 @@ public class QuoteService extends BusinessService<Quote> {
             invoices.add(invoice);
         }
         return invoices;
-    }
-
-    private ArticleMappingLine mapToArticleMappingLine(WalletOperation walletOperation) {
-        RatedTransaction ratedTransaction = new RatedTransaction(walletOperation);
-        walletOperation.changeStatus(WalletOperationStatusEnum.TREATED);
-        return articleMappingLineService.map(ratedTransaction, new Article(walletOperation.getCode(), walletOperation.getDescription(), walletOperation.getTaxClass(), walletOperation.getInvoiceSubCategory()));
     }
 
     @Override

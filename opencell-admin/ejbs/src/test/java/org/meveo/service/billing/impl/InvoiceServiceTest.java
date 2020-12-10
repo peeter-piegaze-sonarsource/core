@@ -25,8 +25,6 @@ import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.jpa.EntityManagerWrapper;
 import org.meveo.model.IBillableEntity;
 import org.meveo.model.admin.Seller;
-import org.meveo.model.article.Article;
-import org.meveo.model.article.ArticleMappingLine;
 import org.meveo.model.billing.AccountingCode;
 import org.meveo.model.billing.BillingAccount;
 import org.meveo.model.billing.BillingCycle;
@@ -38,7 +36,7 @@ import org.meveo.model.billing.InvoiceCategory;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.billing.InvoiceType;
 import org.meveo.model.billing.RatedTransaction;
-import org.meveo.model.billing.ArticleMappingLineGroup;
+import org.meveo.model.billing.RatedTransactionGroup;
 import org.meveo.model.billing.RatedTransactionStatusEnum;
 import org.meveo.model.billing.SubCategoryInvoiceAgregate;
 import org.meveo.model.billing.Subscription;
@@ -60,8 +58,6 @@ import org.meveo.model.payments.PaymentMethod;
 import org.meveo.model.tax.TaxClass;
 import org.meveo.security.CurrentUser;
 import org.meveo.security.MeveoUser;
-import org.meveo.service.billing.impl.article.ArticleMappingLineService;
-import org.meveo.service.billing.impl.article.ArticleMappingLineServiceMock;
 import org.meveo.service.tax.TaxMappingService;
 import org.meveo.service.tax.TaxMappingService.TaxInfo;
 import org.meveo.util.ApplicationProvider;
@@ -103,8 +99,6 @@ public class InvoiceServiceTest {
     @Mock
     private ParamBeanFactory paramBeanFactory;
 
-    private ArticleMappingLineService articleMappingLineService;
-
     @Before
     public void setUp() {
         when(ratedTransactionService.listRTsToInvoice(any(), any(), any(), any(), anyInt())).thenAnswer(new Answer<List<RatedTransaction>>() {
@@ -122,8 +116,6 @@ public class InvoiceServiceTest {
         });
 
         when(emWrapper.getEntityManager()).thenReturn(entityManager);
-
-        articleMappingLineService = new ArticleMappingLineServiceMock();
 
     }
 
@@ -151,12 +143,12 @@ public class InvoiceServiceTest {
         BillingCycle bc = mock(BillingCycle.class);
         InvoiceType invoiceType = mock(InvoiceType.class);
         PaymentMethod paymentMethod = mock(PaymentMethod.class);
-        InvoiceService.ArticleMappingLinesToInvoice articleMappingLinesToInvoice = invoiceService.getArticleMappingLinesGroups(subscription, ba, null, bc, invoiceType, null, null, null, false, paymentMethod);
-        assertThat(articleMappingLinesToInvoice).isNotNull();
-        Assert.assertEquals(articleMappingLinesToInvoice.articleMappingLineGroups.size(), 3);
-        ArticleMappingLineGroup articleMappingLineGroup = articleMappingLinesToInvoice.articleMappingLineGroups.get(0);
-        Assert.assertEquals(articleMappingLineGroup.getBillingAccount(), ba);
-        Assert.assertEquals(articleMappingLineGroup.getInvoiceKey().split("_").length, 5);
+        InvoiceService.RatedTransactionsToInvoice ratedTransactionsToInvoice = invoiceService.getRatedTransactionGroups(subscription, ba, null, bc, invoiceType, null, null, null, false, paymentMethod);
+        assertThat(ratedTransactionsToInvoice).isNotNull();
+        Assert.assertEquals(ratedTransactionsToInvoice.ratedTransactionGroups.size(), 3);
+        RatedTransactionGroup ratedTransactionGroup = ratedTransactionsToInvoice.ratedTransactionGroups.get(0);
+        Assert.assertEquals(ratedTransactionGroup.getBillingAccount(), ba);
+        Assert.assertEquals(ratedTransactionGroup.getInvoiceKey().split("_").length, 5);
     }
 
     @Test
@@ -165,12 +157,12 @@ public class InvoiceServiceTest {
         BillingCycle bc = mock(BillingCycle.class);
         InvoiceType invoiceType = mock(InvoiceType.class);
         PaymentMethod paymentMethod = mock(PaymentMethod.class);
-        InvoiceService.ArticleMappingLinesToInvoice articleMappingLinesToInvoice = invoiceService.getArticleMappingLinesGroups(ba, ba, null, bc, invoiceType, null, null, null, false, paymentMethod);
-        assertThat(articleMappingLinesToInvoice).isNotNull();
-        Assert.assertEquals(articleMappingLinesToInvoice.articleMappingLineGroups.size(), 3);
-        ArticleMappingLineGroup articleMappingLineGroup = articleMappingLinesToInvoice.articleMappingLineGroups.get(0);
-        Assert.assertEquals(articleMappingLineGroup.getBillingAccount(), ba);
-        Assert.assertEquals(articleMappingLineGroup.getInvoiceKey().split("_").length, 5);
+        InvoiceService.RatedTransactionsToInvoice ratedTransactionsToInvoice = invoiceService.getRatedTransactionGroups(ba, ba, null, bc, invoiceType, null, null, null, false, paymentMethod);
+        assertThat(ratedTransactionsToInvoice).isNotNull();
+        Assert.assertEquals(ratedTransactionsToInvoice.ratedTransactionGroups.size(), 3);
+        RatedTransactionGroup ratedTransactionGroup = ratedTransactionsToInvoice.ratedTransactionGroups.get(0);
+        Assert.assertEquals(ratedTransactionGroup.getBillingAccount(), ba);
+        Assert.assertEquals(ratedTransactionGroup.getInvoiceKey().split("_").length, 5);
     }
 
     @Test
@@ -182,13 +174,13 @@ public class InvoiceServiceTest {
         InvoiceType invoiceType = new InvoiceType();
         PaymentMethod paymentMethod = new CardPaymentMethod();
 
-        InvoiceService.ArticleMappingLinesToInvoice articleMappingLinesToInvoice = invoiceService.getArticleMappingLinesGroups(order, ba, new BillingRun(), bc, invoiceType, mock(Filter.class), mock(Date.class),
+        InvoiceService.RatedTransactionsToInvoice ratedTransactionsToInvoice = invoiceService.getRatedTransactionGroups(order, ba, new BillingRun(), bc, invoiceType, mock(Filter.class), mock(Date.class),
             mock(Date.class), false, paymentMethod);
 
-        assertThat(articleMappingLinesToInvoice).isNotNull();
-        Assert.assertEquals(articleMappingLinesToInvoice.articleMappingLineGroups.size(), 3);
-        ArticleMappingLineGroup articleMappingLineGroup = articleMappingLinesToInvoice.articleMappingLineGroups.get(0);
-        Assert.assertEquals(articleMappingLineGroup.getInvoiceKey().split("_").length, 5);
+        assertThat(ratedTransactionsToInvoice).isNotNull();
+        Assert.assertEquals(ratedTransactionsToInvoice.ratedTransactionGroups.size(), 3);
+        RatedTransactionGroup ratedTransactionGroup = ratedTransactionsToInvoice.ratedTransactionGroups.get(0);
+        Assert.assertEquals(ratedTransactionGroup.getInvoiceKey().split("_").length, 5);
     }
 
     @Test
@@ -208,7 +200,7 @@ public class InvoiceServiceTest {
 
         ba.setTradingLanguage(tradingLanguage);
 
-        List<ArticleMappingLine> articleMappingLines = new ArrayList<>();
+        List<RatedTransaction> rts = new ArrayList<RatedTransaction>();
 
         UserAccount ua1 = new UserAccount();
         WalletInstance wallet1 = new WalletInstance();
@@ -285,49 +277,49 @@ public class InvoiceServiceTest {
             RatedTransactionStatusEnum.OPEN, ua1.getWallet(), ba, ua1, subCat11, null, null, null, null, null, subscription1, null, null, null, null, null, "rt111", "RT111", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt111.setId(20L);
-        articleMappingLines.add(mapToArticleMappingLine(rt111, subCat11, taxClass));
+        rts.add(rt111);
 
         RatedTransaction rt112 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua1.getWallet(), ba, ua1, subCat12, null, null, null, null, null, subscription1, null, null, null, null, null, "rt112", "RT112", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt112.setId(21L);
-        articleMappingLines.add(mapToArticleMappingLine(rt112, subCat12, taxClass));
+        rts.add(rt112);
 
         RatedTransaction rt121 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua1.getWallet(), ba, ua1, subCat21, null, null, null, null, null, subscription1, null, null, null, null, null, "rt121", "RT121", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt121.setId(22L);
-        articleMappingLines.add(mapToArticleMappingLine(rt121, subCat21, taxClass));
+        rts.add(rt121);
 
         RatedTransaction rt122 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua1.getWallet(), ba, ua1, subCat22, null, null, null, null, null, subscription1, null, null, null, null, null, "rt122", "RT122", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt122.setId(23L);
-        articleMappingLines.add(mapToArticleMappingLine(rt122, subCat22, taxClass));
+        rts.add(rt122);
 
         RatedTransaction rt211 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua2.getWallet(), ba, ua2, subCat11, null, null, null, null, null, subscription2, null, null, null, null, null, "rt211", "RT211", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt211.setId(24L);
-        articleMappingLines.add(mapToArticleMappingLine(rt211, subCat11, taxClass));
+        rts.add(rt211);
 
         RatedTransaction rt212 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua2.getWallet(), ba, ua2, subCat12, null, null, null, null, null, subscription2, null, null, null, null, null, "rt212", "RT212", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt212.setId(25L);
-        articleMappingLines.add(mapToArticleMappingLine(rt212, subCat12, taxClass));
+        rts.add(rt212);
 
         RatedTransaction rt221 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua2.getWallet(), ba, ua2, subCat21, null, null, null, null, null, subscription2, null, null, null, null, null, "rt221", "RT221", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt221.setId(26L);
-        articleMappingLines.add(mapToArticleMappingLine(rt221, subCat21, taxClass));
+        rts.add(rt221);
 
         RatedTransaction rt222 = new RatedTransaction(new Date(), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1), new BigDecimal(2), new BigDecimal(15), new BigDecimal(16), new BigDecimal(1),
             RatedTransactionStatusEnum.OPEN, ua2.getWallet(), ba, ua2, subCat22, null, null, null, null, null, subscription2, null, null, null, null, null, "rt222", "RT222", new Date(), new Date(), seller, tax,
             tax.getPercent(), null, taxClass, accountingCode, null);
         rt222.setId(27L);
-        articleMappingLines.add(mapToArticleMappingLine(rt222, subCat22, taxClass));
+        rts.add(rt222);
 
         when(billingAccountService.isExonerated(any())).thenReturn(false);
         TaxInfo taxInfo = taxMappingService.new TaxInfo();
@@ -350,7 +342,7 @@ public class InvoiceServiceTest {
         Invoice invoice = new Invoice();
         invoice.setInvoiceType(invoiceType);
         invoice.setBillingAccount(ba);
-        invoiceService.appendInvoiceAgregates(ba, ba, invoice, articleMappingLines, false, null, false);
+        invoiceService.appendInvoiceAgregates(ba, ba, invoice, rts, false, null, false);
 
         assertThat(invoice.getInvoiceAgregates().size()).isEqualTo(13);
         assertThat(((SubCategoryInvoiceAgregate) invoice.getInvoiceAgregates().get(0)).getInvoiceSubCategory().getCode()).isEqualTo("subCat11");
@@ -416,7 +408,7 @@ public class InvoiceServiceTest {
         invoice = new Invoice();
         invoice.setInvoiceType(invoiceType);
         invoice.setBillingAccount(ba);
-        invoiceService.appendInvoiceAgregates(ba, ba, invoice, articleMappingLines, false, null, false);
+        invoiceService.appendInvoiceAgregates(ba, ba, invoice, rts, false, null, false);
 
         assertThat(invoice.getInvoiceAgregates().size()).isEqualTo(7);
         assertThat(((SubCategoryInvoiceAgregate) invoice.getInvoiceAgregates().get(0)).getInvoiceSubCategory().getCode()).isEqualTo("subCat11");
@@ -448,14 +440,6 @@ public class InvoiceServiceTest {
         assertThat(((CategoryInvoiceAgregate) invoice.getInvoiceAgregates().get(5)).getSubCategoryInvoiceAgregates().size()).isEqualTo(2);
 
         assertThat(((TaxInvoiceAgregate) invoice.getInvoiceAgregates().get(6)).getTax().getCode()).isEqualTo("tax1");
-    }
-
-    private ArticleMappingLine mapToArticleMappingLine(RatedTransaction rt, InvoiceSubCategory invoiceSubCategory, TaxClass taxClass) {
-        return articleMappingLineService.map(rt, createArticle(taxClass, invoiceSubCategory));
-    }
-
-    private Article createArticle(TaxClass taxClass, InvoiceSubCategory invoiceSubCategory) {
-        return new Article("Code", "Description", taxClass, invoiceSubCategory);
     }
 
     @Test
@@ -536,7 +520,7 @@ public class InvoiceServiceTest {
 
         ba.setTradingLanguage(tradingLanguage);
 
-        List<ArticleMappingLine> articleMappingLines = new ArrayList<>();
+        List<RatedTransaction> rts = new ArrayList<RatedTransaction>();
 
         UserAccount ua1 = new UserAccount();
         WalletInstance wallet1 = new WalletInstance();
@@ -591,7 +575,7 @@ public class InvoiceServiceTest {
                     null, null, subscription1, null, null, null, null, null, "rt_" + subCategory.getCode() + "_" + i, "RT", new Date(), new Date(), seller, (Tax) rtData[3], ((Tax) rtData[3]).getPercent(), null,
                     (TaxClass) rtData[4], accountingCode, null);
                 rt.setId(i);
-                articleMappingLines.add(mapToArticleMappingLine(rt, subCategory, (TaxClass) rtData[4]));
+                rts.add(rt);
                 i++;
             }
         }
@@ -622,7 +606,7 @@ public class InvoiceServiceTest {
         Invoice invoice = new Invoice();
         invoice.setInvoiceType(invoiceType);
         invoice.setBillingAccount(ba);
-        invoiceService.appendInvoiceAgregates(ba, ba, invoice, articleMappingLines, false, null, false);
+        invoiceService.appendInvoiceAgregates(ba, ba, invoice, rts, false, null, false);
 
         assertThat(invoice.getInvoiceAgregates().size()).isEqualTo(12);
         SubCategoryInvoiceAgregate subAggr11 = (SubCategoryInvoiceAgregate) invoice.getInvoiceAgregates().get(0);
