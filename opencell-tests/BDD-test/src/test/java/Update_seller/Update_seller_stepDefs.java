@@ -9,6 +9,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.io.IOException;
+
 public class Update_seller_stepDefs {
 
     // These fields are required in the generation process
@@ -48,7 +50,7 @@ public class Update_seller_stepDefs {
     }
 
     @Then("The status is {string}")
-    public void theStatusIs(String arg0) {
+    public void theStatusIs(String arg0) throws IOException {
         status = arg0;
 
         //--------------------------------------------------------------------

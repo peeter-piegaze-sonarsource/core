@@ -1,4 +1,4 @@
-package Utils;
+package BDDexperimentation.Utils;
 
 import io.restassured.response.ExtractableResponse;
 import org.apache.http.HttpStatus;
@@ -80,6 +80,7 @@ public class Payload {
         JSONObject jsonPayload = (JSONObject) parser.parse( payload );
         JSONObject jsonResponse = (JSONObject) parser.parse(
                 ( (JSONObject) parser.parse( result ) ).get("data").toString() );
+        boolean compared = true;
 
         System.out.println( Constants.ANSI_BLUE + "========================================" );
         System.out.println( Constants.ANSI_RESET + "For the entity : " + Constants.ANSI_RED + entity );
@@ -88,10 +89,13 @@ public class Payload {
 
             if ( ! jsonPayload.get(key).toString()
                     .equals( jsonResponse.get(key).toString() ) ) {
+                compared = false;
                 System.out.println( Constants.ANSI_RESET + "Field is not updated : "
                         + Constants.ANSI_RED + key );
             }
         }
+        if ( compared )
+            System.out.println( Constants.ANSI_RESET + "All fields are correctly updated !" );
         System.out.println( Constants.ANSI_BLUE + "========================================" );
     }
 
@@ -102,7 +106,6 @@ public class Payload {
      * @version 1.0
      * @since   2020-12-07
      * @param payload : the initial payload
-     * @param env : the environment on that all requests are executed
      * @return the method returns the new payload whose fields have been updated
      * @throws ParseException
      */

@@ -1,6 +1,9 @@
-package Update_entity;
+package BDDexperimentation.Update_entity;
 
-import Utils.*;
+import BDDexperimentation.Utils.Constants;
+import BDDexperimentation.Utils.KeyCloakAuthenticationHook;
+import BDDexperimentation.Utils.Payload;
+import BDDexperimentation.Utils.RestApiUtils;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -9,8 +12,10 @@ import org.apache.http.HttpStatus;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,11 +25,10 @@ public class Update_entity_stepDefs {
     private String entity;
     private String id;
     private String payload;
+    private String jsonPath;
     private String url;
     private int status;
-
-    // These fields are not required in the generation process of the request UPDATE
-    private String description;
+    private ExtractableResponse aResponse;
 
     @Given("Update {string} with {string}")
     public void updateWith(String arg0, String arg1) throws ParseException, IOException {
@@ -39,47 +43,35 @@ public class Update_entity_stepDefs {
 
         url = Constants.PREFIX_PUT_API_V2 + entity + Constants.SEPARATOR_SLASH + id;
 
-        ExtractableResponse aResponse =
-                RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE ).extract();
+        aResponse = RestApiUtils.post( url, Constants.EMPTY_PAYLOAD_TO_VERIFY_EXISTENCE ).extract();
 
         // A request POST tests existence of entity based on id
         assertEquals( aResponse.statusCode(), HttpStatus.SC_OK );
-
-        // Create the new payload from the response of the request POST
-        payload = Payload.generatePayload( aResponse.asString() );
-
-//System.out.println( "payload : " + payload );
-    }
-
-    @When("All fields tested")
-    public void allFieldsTested() {
-
     }
 
     @When("Fields filled by {string}")
     public void fieldsFilledBy(String arg0) throws ParseException {
-        description = arg0;
-        Map<String, String> updatedFields = new HashMap<>();
+        // Read payload from jsonFile
+        jsonPath = arg0;
+        StringBuilder contentBuilder = new StringBuilder();
+        try (Stream<String> stream =
+                     Files.lines( Paths.get(jsonPath), StandardCharsets.UTF_8))
+        {
+            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
-        updatedFields.put( "description", description );
-        payload = Payload.updatePayload( payload, updatedFields );
+        payload = contentBuilder.toString();
+    }
 
-        // Read payload from json file indicated in parameter
-//        payloadPath = arg0;
-//
-//        StringBuilder contentBuilder = new StringBuilder();
-//
-//        try (Stream<String> stream =
-//                     Files.lines( Paths.get(payloadPath), StandardCharsets.UTF_8))
-//        {
-//            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//        payload = contentBuilder.toString();
+    @When("All fields tested")
+    public void allFieldsTested() throws ParseException {
+        // Create the new payload from the response of the request POST
+        // This payload is created when user needs to test all fields ("All fields tested")
+        payload = Payload.generatePayload( aResponse.asString() );
     }
 
     @Then("The status is {int}")

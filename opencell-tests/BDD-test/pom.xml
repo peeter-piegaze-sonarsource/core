@@ -9,6 +9,12 @@
     <version>11.0.0-SNAPSHOT</version>
     <name>BDD-test</name>
 
+<!--    <parent>-->
+<!--        <groupId>info.opencell.tests</groupId>-->
+<!--        <artifactId>opencell-tests</artifactId>-->
+<!--        <version>11.0.0-SNAPSHOT</version>-->
+<!--    </parent>-->
+
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -18,17 +24,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- setting up Cucumber parameters -->
-        <opencell.keycloak.url>http://localhost:8080/auth</opencell.keycloak.url>
+        <opencell.keycloak.url>https://tnn.d2.opencell.work/auth</opencell.keycloak.url>
         <opencell.keycloak.secret>afe07e5a-68cb-4fb0-8b75-5b6053b07dc3</opencell.keycloak.secret>
         <opencell.keycloak.realm>opencell</opencell.keycloak.realm>
         <opencell.keycloak.clientId>opencell-web</opencell.keycloak.clientId>
 
-<!--        &lt;!&ndash; setting up URL and credentials parameters &ndash;&gt;-->
-<!--        <opencell.url>http://tests.i.opencellsoft.com/opencell</opencell.url>-->
-<!--        <adminUsername>opencell.admin</adminUsername>-->
-<!--        <adminPassword>opencell.admin</adminPassword>-->
-<!--        <superUsername>opencell.superadmin</superUsername>-->
-<!--        <superPassword>opencell.superadmin</superPassword>-->
+        <!-- setting up URL and credentials parameters -->
+        <opencell.url>https://tnn.d2.opencell.work</opencell.url>
+        <adminUsername>opencell.admin</adminUsername>
+        <adminPassword>opencell.admin</adminPassword>
+        <superUsername>opencell.superadmin</superUsername>
+        <superPassword>opencell.superadmin</superPassword>
     </properties>
 
     <dependencies>
@@ -117,6 +123,32 @@
 
     </dependencies>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <!--                            <skipTests>false</skipTests>-->
+                    <systemPropertyVariables>
+                        <buildDirectory>${project.build.directory}</buildDirectory>
+                        <opencell.url>${opencell.url}</opencell.url>
+                        <adminUsername>${adminUsername}</adminUsername>
+                        <adminPassword>${adminPassword}</adminPassword>
+                        <superUsername>${superUsername}</superUsername>
+                        <superPassword>${superPassword}</superPassword>
+                        <opencell.keycloak.secret>${opencell.keycloak.secret}</opencell.keycloak.secret>
+                        <opencell.keycloak.url>${opencell.keycloak.url}</opencell.keycloak.url>
+                        <opencell.keycloak.realm>${opencell.keycloak.realm}</opencell.keycloak.realm>
+                        <opencell.keycloak.clientId>${opencell.keycloak.clientId}</opencell.keycloak.clientId>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 <!--    <profiles>-->
 <!--        <profile>-->
 <!--            <id>cucumber-suites</id>-->
@@ -125,9 +157,9 @@
 <!--                    <plugin>-->
 <!--                        <groupId>org.apache.maven.plugins</groupId>-->
 <!--                        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                        <version>2.22.1</version>-->
+<!--                        <version>2.19.1</version>-->
 <!--                        <configuration>-->
-<!--                            <skipTests>false</skipTests>-->
+<!--&lt;!&ndash;                            <skipTests>false</skipTests>&ndash;&gt;-->
 <!--                            <systemPropertyVariables>-->
 <!--                                <opencell.url>${opencell.url}</opencell.url>-->
 <!--                                <adminUsername>${adminUsername}</adminUsername>-->
@@ -145,9 +177,4 @@
 <!--            </build>-->
 <!--        </profile>-->
 <!--    </profiles>-->
-
-    <build>
-        <plugins>
-        </plugins>
-    </build>
 </project>

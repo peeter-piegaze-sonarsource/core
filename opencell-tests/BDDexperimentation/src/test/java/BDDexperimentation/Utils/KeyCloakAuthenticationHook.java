@@ -1,4 +1,4 @@
-package Utils;
+package BDDexperimentation.Utils;
 
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.java.Before;
@@ -10,7 +10,6 @@ import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +31,8 @@ public class KeyCloakAuthenticationHook {
     }
 
     @Before("@admin")
-    public void authenticateAsAdmin() throws IOException {
-        String adminUser = System.getProperty( "adminUsername" );
+    public void authenticateAsAdmin() {
+        String adminUser = System.getProperty( Constants.USERNAME_OC_ADMIN );
         String adminPassword = System.getProperty( Constants.PASSWORD_OC_ADMIN );
 
         setToken(adminUser, adminPassword);
@@ -51,7 +50,6 @@ public class KeyCloakAuthenticationHook {
         Configuration config = new Configuration( System.getProperty( Constants.KCL_URL ),
                 System.getProperty( Constants.KCL_REALM ), System.getProperty( Constants.KCL_CLIENT_ID ),
                 clientCredentials, HttpClients.createDefault());
-
         AuthzClient authzClient = AuthzClient.create(config);
         AccessTokenResponse response = authzClient.obtainAccessToken(login, password);
 
