@@ -3867,7 +3867,7 @@ END $$;]]>
 
 
     <changeSet id = "#FEAT-761-2020-10-19" author = "ZBariki">
-        <createSequence sequenceName="billing_article_seq" startValue="1" />
+        <createSequence sequenceName="billing_accouting_article_seq" startValue="1" />
         <createTable tableName="billing_article" >
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="billing_article_pk"/>
@@ -3885,6 +3885,9 @@ END $$;]]>
             <column name="description" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name ="analytic_code_1" type="varchar(255)"></column>
+            <column name ="analytic_code_2" type="varchar(255)"></column>
+            <column name ="analytic_code_3" type="varchar(255)"></column>
             <column name="tax_class_id" type="bigint">
                 <constraints nullable="false"/>
             </column>

@@ -62,6 +62,10 @@ public class ArticleFamily extends BusinessEntity implements ICustomFieldEntity 
     private ArticleFamily() {
     }
 
+    public ArticleFamily(Long id){
+        this.id = id;
+    }
+
     public ArticleFamily(String code, String description, AccountingCode accountingCode) {
         this.code = code;
         this.description = description;

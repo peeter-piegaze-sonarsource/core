@@ -21,15 +21,15 @@ public interface AccountingArticle extends Resource {
     String getDescription();
 
     @Nonnull
-    String getTaxClassCode();
+    Resource getTaxClass();
 
     @Nonnull
-    String getInvoiceSubCategoryCode();
+    Resource getInvoiceSubCategory();
 
     @Nonnull
-    String getAccountingCodeCode();
+    Resource getAccountingCode();
 
-    String getArticleFamilyCode();
+    Resource getArticleFamily();
 
     String getAnalyticCode1();
 

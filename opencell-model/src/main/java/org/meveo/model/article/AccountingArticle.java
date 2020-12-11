@@ -44,6 +44,15 @@ public class AccountingArticle extends BusinessEntity {
     @OneToOne(mappedBy = "article")
     private ArticleMappingLine articleMappingLine;
 
+    @Column(name = "analytic_code_1")
+    private String analyticCode1;
+
+    @Column(name = "analytic_code_2")
+    private String analyticCode2;
+
+    @Column(name = "analytic_code_3")
+    private String analyticCode3;
+
     @Type(type = "cfjson")
     @Column(name = "cf_values", columnDefinition = "text")
     private CustomFieldValues cfValues;
@@ -116,5 +125,29 @@ public class AccountingArticle extends BusinessEntity {
 
     public void setDescriptionI18n(Map<String, String> descriptionI18n) {
         this.descriptionI18n = descriptionI18n;
+    }
+
+    public String getAnalyticCode1() {
+        return analyticCode1;
+    }
+
+    public void setAnalyticCode1(String analyticCode1) {
+        this.analyticCode1 = analyticCode1;
+    }
+
+    public String getAnalyticCode2() {
+        return analyticCode2;
+    }
+
+    public void setAnalyticCode2(String analyticCode2) {
+        this.analyticCode2 = analyticCode2;
+    }
+
+    public String getAnalyticCode3() {
+        return analyticCode3;
+    }
+
+    public void setAnalyticCode3(String analyticCode3) {
+        this.analyticCode3 = analyticCode3;
     }
 }
