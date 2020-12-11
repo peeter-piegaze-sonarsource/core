@@ -3,7 +3,6 @@ package org.meveo.apiv2.article;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.meveo.apiv2.models.Document;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -12,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/document")
+@Path("/article")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface AccountingArticleResource {

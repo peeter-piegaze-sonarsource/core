@@ -4,9 +4,11 @@ import org.meveo.apiv2.ordering.common.LinkGenerator;
 import org.meveo.apiv2.ordering.services.AccountingArticleService;
 import org.meveo.model.article.AccountingArticle;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+@Stateless
 public class AccountingArticleResourceImpl implements AccountingArticleResource {
 
     @Inject
