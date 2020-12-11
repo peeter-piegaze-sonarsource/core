@@ -64,6 +64,10 @@ public class AccountingArticle extends BusinessEntity {
     private AccountingArticle() {
     }
 
+    public AccountingArticle(Long id) {
+        this.id = id;
+    }
+
     public AccountingArticle(String code, String description, TaxClass taxClass, InvoiceSubCategory invoiceSubCategory) {
         this.code = code;
         this.description = description;

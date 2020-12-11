@@ -27,6 +27,14 @@ public class AttributeMapping extends BusinessEntity{
     @Column(name = "attribute_value")
     private String attributeValue;
 
+    public AttributeMapping() {
+    }
+
+    public AttributeMapping(String attribute, String attributeValue) {
+        this.attribute = attribute;
+        this.attributeValue = attributeValue;
+    }
+
     public ArticleMappingLine getArticleMappingLine() {
         return articleMappingLine;
     }

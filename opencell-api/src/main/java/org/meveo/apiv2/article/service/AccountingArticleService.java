@@ -11,11 +11,13 @@ import org.meveo.service.billing.impl.article.ArticleFamilyService;
 import org.meveo.service.catalog.impl.InvoiceSubCategoryService;
 import org.meveo.service.tax.TaxClassService;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import java.util.List;
 import java.util.Optional;
 
+@Stateless
 public class AccountingArticleService implements ApiService<AccountingArticle> {
 
     @Inject
@@ -67,7 +69,7 @@ public class AccountingArticleService implements ApiService<AccountingArticle> {
 
     @Override
     public Optional<AccountingArticle> findById(Long id) {
-        return Optional.empty();
+        return Optional.of(accountingArticleService.findById(id));
     }
 
     @Override

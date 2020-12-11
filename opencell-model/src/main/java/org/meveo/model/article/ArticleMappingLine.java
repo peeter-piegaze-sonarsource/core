@@ -1,10 +1,6 @@
 package org.meveo.model.article;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-
 import org.hibernate.annotations.GenericGenerator;
-import org.meveo.model.BaseEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.OfferTemplate;
@@ -20,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "billing_article_mapping_line")
@@ -58,6 +57,9 @@ public class ArticleMappingLine extends BusinessEntity {
 
     @Column(name = "parameter_3")
     private String parameter3;
+
+    @Column(name = "mapping_key_el")
+    private String mappingKelEL;
 
     public ArticleMapping getArticleMapping() {
         return articleMapping;
@@ -121,5 +123,21 @@ public class ArticleMappingLine extends BusinessEntity {
 
     public void setParameter3(String parameter3) {
         this.parameter3 = parameter3;
+    }
+
+    public List<AttributeMapping> getAttributesMapping() {
+        return attributesMapping;
+    }
+
+    public void setAttributesMapping(List<AttributeMapping> attributesMapping) {
+        this.attributesMapping = attributesMapping;
+    }
+
+    public String getMappingKelEL() {
+        return mappingKelEL;
+    }
+
+    public void setMappingKelEL(String mappingKelEL) {
+        this.mappingKelEL = mappingKelEL;
     }
 }

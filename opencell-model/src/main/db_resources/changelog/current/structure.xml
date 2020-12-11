@@ -3965,6 +3965,7 @@ END $$;]]>
             <column name="parameter_1" type="varchar(255)"/>
             <column name="parameter_2" type="varchar(255)"/>
             <column name="parameter_3" type="varchar(255)"/>
+            <column name="mapping_key_el" type="varchar(255)"/>
         </createTable>
 
         <createSequence sequenceName="billing_attribute_mapping_seq" startValue="1" />

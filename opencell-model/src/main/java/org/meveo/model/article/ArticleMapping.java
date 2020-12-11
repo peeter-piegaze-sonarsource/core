@@ -21,6 +21,12 @@ public class ArticleMapping extends BusinessEntity {
     @JoinColumn(name = "mapping_script_id")
     private ScriptInstance mappingScript;
 
+    public ArticleMapping(){}
+
+    public ArticleMapping(Long id) {
+        this.id = id;
+    }
+
     public ScriptInstance getMappingScript() {
         return mappingScript;
     }
