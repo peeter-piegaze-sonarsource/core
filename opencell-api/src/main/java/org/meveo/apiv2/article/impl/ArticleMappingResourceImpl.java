@@ -1,9 +1,7 @@
 package org.meveo.apiv2.article.impl;
 
 import org.meveo.apiv2.article.ArticleMapping;
-import org.meveo.apiv2.article.ImmutableAccountingArticle;
 import org.meveo.apiv2.article.ImmutableArticleMapping;
-import org.meveo.apiv2.article.resource.AccountingArticleResource;
 import org.meveo.apiv2.article.resource.ArticleMappingResource;
 import org.meveo.apiv2.article.service.ArticleMappingService;
 import org.meveo.apiv2.ordering.common.LinkGenerator;
