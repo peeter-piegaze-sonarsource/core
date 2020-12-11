@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 

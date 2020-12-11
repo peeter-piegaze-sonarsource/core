@@ -1,5 +1,6 @@
-package org.meveo.apiv2.article;
+package org.meveo.apiv2.article.impl;
 
+import org.meveo.apiv2.article.ImmutableAccountingArticle;
 import org.meveo.apiv2.models.ImmutableResource;
 import org.meveo.apiv2.ordering.ResourceMapper;
 import org.meveo.model.article.AccountingArticle;

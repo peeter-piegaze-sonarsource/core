@@ -1,5 +1,6 @@
-package org.meveo.apiv2.ordering.services;
+package org.meveo.apiv2.article.service;
 
+import org.meveo.apiv2.ordering.services.ApiService;
 import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.article.ArticleFamily;
 import org.meveo.model.billing.AccountingCode;

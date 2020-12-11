@@ -1,8 +1,9 @@
-package org.meveo.apiv2.article;
+package org.meveo.apiv2.article.resource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.meveo.apiv2.article.AccountingArticle;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -22,8 +23,8 @@ public interface AccountingArticleResource {
             tags = { "AccountingArticle" },
             description ="create new accounting article",
             responses = {
-                    @ApiResponse(responseCode="200", description = "the document successfully created, and the id is returned in the response"),
-                    @ApiResponse(responseCode = "400", description = "bad request when document information contains an error")
+                    @ApiResponse(responseCode="200", description = "the article successfully created, and the id is returned in the response"),
+                    @ApiResponse(responseCode = "400", description = "bad request when article information contains an error")
             })
     Response createAccountingArticle(@Parameter(description = "the accounting article object", required = true) AccountingArticle accountingArticle);
 }

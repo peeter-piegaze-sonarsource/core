@@ -1,7 +1,9 @@
-package org.meveo.apiv2.article;
+package org.meveo.apiv2.article.impl;
 
+import org.meveo.apiv2.article.ImmutableAccountingArticle;
+import org.meveo.apiv2.article.resource.AccountingArticleResource;
 import org.meveo.apiv2.ordering.common.LinkGenerator;
-import org.meveo.apiv2.ordering.services.AccountingArticleService;
+import org.meveo.apiv2.article.service.AccountingArticleService;
 import org.meveo.model.article.AccountingArticle;
 
 import javax.ejb.Stateless;
