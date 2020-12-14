@@ -60,6 +60,15 @@ public class JsonGenericMapper extends ObjectMapper{
         }
     }
 
+    public String toJson(Class entityClass, Object dtoToSerialize) {
+        setFilterProvider(this.simpleFilterProvider);
+        try {
+            return writeValueAsString(dtoToSerialize);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("json formatting exception", e);
+        }
+    }
+
     public IEntity parseFromJson(String jsonDto, Class entityClass) {
         return  (IEntity) readValue(jsonDto, entityClass);
     }

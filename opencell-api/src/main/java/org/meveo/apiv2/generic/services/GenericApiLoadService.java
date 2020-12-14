@@ -49,4 +49,15 @@ public class GenericApiLoadService {
                         .toJson(genericFields, entityClass, Collections.singletonMap("data", entity)));
     }
 
+    public Optional<String> findByClassNameAndId(Class entityClass, Long id) {
+        checkId(id);
+        IEntity iEntity = persistenceDelegate.find(entityClass, id);
+
+        return Optional
+                .ofNullable(iEntity)
+                .map(entity -> JsonGenericMapper.Builder.getBuilder()
+                        .build()
+                        .toJson(entityClass, Collections.singletonMap("data", entity)));
+    }
+
 }

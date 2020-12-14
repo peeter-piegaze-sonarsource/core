@@ -120,4 +120,17 @@ public interface GenericResource {
     Response getAllEntity(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
                     @Parameter(description = "requestDto carries the wanted fields ex: {genericFields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
 
+    @HEAD
+    @Path("/{entityName}/{id}")
+    @Operation(summary = "Generic single endpoint to check existence of a resource by ID",
+            tags = { "Generic" },
+            description ="specify the entity name, the record id",
+            responses = {
+                    @ApiResponse(responseCode="200", description = "paginated results successfully retrieved with hypermedia links"),
+                    @ApiResponse(responseCode = "404", description = "baseEntityObject not found", content = @Content(schema = @Schema(implementation = ApiException.class))),
+                    @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
+            })
+    Response head(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
+                       @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id);
+
 }

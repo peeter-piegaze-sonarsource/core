@@ -64,6 +64,14 @@ public class GenericResourceImpl implements GenericResource {
     public Response getEntity(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
         return get(entityName, id, searchConfig);
     }
+
+    @Override
+    public Response head(String entityName, Long id) {
+        Class entityClass = GenericHelper.getEntityClass(entityName);
+        return loadService.findByClassNameAndId(entityClass, id)
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
+                .orElseThrow(() -> new NotFoundException("entity " + entityName + " with id "+id+ " not found."));
+    }
     
     @Override
     public Response update(String entityName, Long id, String dto) {
