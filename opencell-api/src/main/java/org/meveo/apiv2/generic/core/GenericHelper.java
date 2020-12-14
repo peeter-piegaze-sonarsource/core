@@ -8,8 +8,7 @@ import javax.persistence.Entity;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.meveo.apiv2.generic.ValidationUtils.checkEntityClass;
-import static org.meveo.apiv2.generic.ValidationUtils.checkEntityName;
+import static org.meveo.apiv2.generic.ValidationUtils.*;
 
 
 public class GenericHelper {
@@ -28,7 +27,7 @@ public class GenericHelper {
      * @return map of entities classes with their simple names as keys
      */
     private static Map<String, Class> populateEntitiesToHandleByGenericApi() {
-        Map<String, Class> entitiesByName  = ReflectionUtils.getClassesAnnotatedWith(Entity.class).stream().collect(Collectors.toMap(clazz -> clazz.getSimpleName().toLowerCase(), clazz -> clazz));
+        Map<String, Class> entitiesByName  = ReflectionUtils.getClassesAnnotatedWith(Entity.class).stream().collect(Collectors.toMap(clazz -> clazz.getSimpleName(), clazz -> clazz));
         populateNonBaseEntityClass(entitiesByName);
         return entitiesByName;
     }
@@ -39,7 +38,7 @@ public class GenericHelper {
      * @param entitiesByName
      */
     private static void populateNonBaseEntityClass(Map<String, Class> entitiesByName) {
-        entitiesByName.put(OfferServiceTemplate.class.getSimpleName().toLowerCase(), OfferServiceTemplate.class);
+        entitiesByName.put(OfferServiceTemplate.class.getSimpleName(), OfferServiceTemplate.class);
     }
 
     /**
@@ -49,7 +48,9 @@ public class GenericHelper {
      */
     public static Class getEntityClass(String entityName) {
         checkEntityName(entityName);
-        Class entityClass = entitiesByName.get(entityName.toLowerCase());
+        checkEntityFormat(entityName);
+        entityName = Character.toUpperCase(entityName.charAt(0)) + entityName.substring(1);
+        Class entityClass = entitiesByName.get(entityName);
         checkEntityClass(entityClass);
         return entityClass;
     }

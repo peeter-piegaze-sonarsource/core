@@ -59,12 +59,24 @@ public class StringUtils {
 
     /**
      * Value is null or empty
-     * 
+     *
      * @param value Value to check
      * @return True if value is null or is empty
      */
     public static boolean isBlank(String value) {
         return (value == null || value.trim().isEmpty());
+    }
+
+    /**
+     * Check if value is well-formed (minuscules for one word and camelCase for compound words) or not
+     *
+     * @param value Value to check
+     * @return True if value is NOT well-formed and false otherwise
+     */
+    public static boolean isWellFormed(String value) {
+        if ( Character.isUpperCase(value.charAt(0)) )
+            return true;
+        return false;
     }
 
     public static boolean isNotBlank(String value) {

@@ -11,9 +11,15 @@ import java.util.function.Supplier;
 
 public class ValidationUtils {
     private static ValidationUtils INSTANCE = new ValidationUtils();
-    
+
     public static ValidationUtils checkEntityName(String entityName) {
         return check(entityName, StringUtils::isBlank, () -> new NotFoundException("The entityName should not be null or empty"));
+    }
+
+    public static ValidationUtils checkEntityFormat(String entityName) {
+        return check(entityName, StringUtils::isWellFormed,
+                () -> new NotFoundException("The entityName " + entityName
+                        + " should be in lowercase, except for compound words"));
     }
     
     public static ValidationUtils checkId(Long id) {
