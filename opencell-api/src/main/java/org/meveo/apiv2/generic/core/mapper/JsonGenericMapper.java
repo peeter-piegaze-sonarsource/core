@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -54,6 +52,7 @@ public class JsonGenericMapper extends ObjectMapper{
         }
         setFilterProvider(this.simpleFilterProvider);
         try {
+            configure( SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false );
             return writeValueAsString(dtoToSerialize);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("json formatting exception", e);
