@@ -2243,7 +2243,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
      * @throws BusinessException business exception
      */
     public void cancelInvoiceWithoutDelete(Invoice invoice) throws BusinessException {
-        cancelInvoice(invoice, true);
+        cancelInvoice(invoice, false);
     }
 
 	public void cancelInvoice(Invoice invoice, boolean remove) {
@@ -2253,25 +2253,19 @@ public class InvoiceService extends PersistenceService<Invoice> {
         ratedTransactionService.deleteSupplementalRTs(invoice);
         ratedTransactionService.uninvoiceRTs(invoice);
         invoice.setBillingRun(null);
+        invoice.setStatus(InvoiceStatusEnum.CANCELED);
         if(remove) {
         	super.remove(invoice);
+        } else {
+        	super.update(invoice);
         }
         log.debug("Invoice canceled {}", invoice.getTemporaryInvoiceNumber());
 	}
 
-    
-    
     public void validateInvoice(Invoice invoice) {
         invoice.setStatus(InvoiceStatusEnum.DRAFT);
         update(invoice);
     }
-    
-    public void inValidateInvoice(Invoice invoice) {
-    	ratedTransactionService.invalidateRTs(invoice);
-        invoice.setStatus(InvoiceStatusEnum.CANCELED);
-        update(invoice);
-    }
-    
     
 	/**
 	 * @param billingRunId
@@ -2386,6 +2380,7 @@ public class InvoiceService extends PersistenceService<Invoice> {
 
     public void rebuildInvoice(Invoice invoice) {
     	applyAutomaticInvoiceCheck(Arrays.asList(invoice), true);
+    	update(invoice);
     }
     
     /**
