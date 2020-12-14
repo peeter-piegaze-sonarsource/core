@@ -18,16 +18,9 @@
 
 package org.meveo.admin.action.frontend;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
+import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.service.crm.impl.ProviderService;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -36,10 +29,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.meveo.commons.utils.ParamBeanFactory;
-import org.meveo.service.crm.impl.ProviderService;
-import org.slf4j.Logger;
+import java.io.*;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 /* originally from @author BalusC in LGPL licence
 ** @link http://balusc.blogspot.com/2009/02/fileservlet-supporting-resume-and.html
