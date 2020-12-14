@@ -39,6 +39,11 @@ public class GenericResourceImpl implements GenericResource {
         return Response.ok().entity(loadService.findPaginatedRecords(entityClass, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth()))
                 .links(buildPaginatedResourceLink(entityName)).build();
     }
+
+    @Override
+    public Response getAllEntity(String entityName, GenericPagingAndFiltering searchConfig) {
+        return getAll(entityName, searchConfig);
+    }
     
     @Override
     public Response get(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
@@ -53,6 +58,11 @@ public class GenericResourceImpl implements GenericResource {
         return loadService.findByClassNameAndId(entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
                 .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
                 .orElseThrow(() -> new NotFoundException("entity " + entityName + " with id "+id+ " not found."));
+    }
+
+    @Override
+    public Response getEntity(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
+        return get(entityName, id, searchConfig);
     }
     
     @Override
