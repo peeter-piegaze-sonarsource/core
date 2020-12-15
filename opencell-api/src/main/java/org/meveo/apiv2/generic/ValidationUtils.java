@@ -5,7 +5,9 @@ import org.meveo.commons.utils.StringUtils;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -17,9 +19,16 @@ public class ValidationUtils {
     }
 
     public static ValidationUtils checkEntityFormat(String entityName) {
-        return check(entityName, StringUtils::isWellFormed,
+        return check(entityName, StringUtils::isNotWellFormed,
                 () -> new NotFoundException("The entityName " + entityName
                         + " should be in lowercase, except for compound words"));
+    }
+
+    public static ValidationUtils checkISOFormats(Map<String, Object> readValueMap) {
+        StringBuffer fieldName = new StringBuffer();
+        return check(readValueMap, fieldName, StringUtils::isNotISOFormats,
+                () -> new NotFoundException("The entity cannot be created because the field " +
+                        fieldName + " does not comply with ISO format"));
     }
     
     public static ValidationUtils checkId(Long id) {
@@ -43,9 +52,16 @@ public class ValidationUtils {
         check(record, Objects::isNull, () -> new NotFoundException(String.format("%s with code=%s does not exists.", className, id.toString())));
         return record;
     }
-    
+
     private static <T> ValidationUtils check(T object, Predicate<T> condition, Supplier<? extends RuntimeException> ex) {
         if (condition.test(object)) {
+            throw ex.get();
+        }
+        return INSTANCE;
+    }
+
+    private static <T,S> ValidationUtils check(T object1, S object2, BiPredicate<T, S> condition, Supplier<? extends RuntimeException> ex) {
+        if (condition.test(object1, object2)) {
             throw ex.get();
         }
         return INSTANCE;

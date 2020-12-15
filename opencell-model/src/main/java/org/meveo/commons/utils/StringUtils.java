@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,9 @@ public class StringUtils {
 
     public static final String CODE_REGEX = "^[ @A-Za-z0-9_\\.\\/-]+$";
     public static final String EMPTY = "";
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phone";
+    public static final String MOBILE = "mobile";
 
     /**
      * Checks if string is in array of strings.
@@ -73,9 +77,44 @@ public class StringUtils {
      * @param value Value to check
      * @return True if value is NOT well-formed and false otherwise
      */
-    public static boolean isWellFormed(String value) {
+    public static boolean isNotWellFormed(String value) {
         if ( Character.isUpperCase(value.charAt(0)) )
             return true;
+        return false;
+    }
+
+    /**
+     * Check if readValueMap follows ISO format (for email, telephone number, etc.) or not
+     *
+     * @param readValueMap valueMap to check
+     * @return True if value do NOT follow ISO format and false otherwise
+     */
+    public static boolean isNotISOFormats(Map<String, Object> readValueMap, StringBuffer fieldName) {
+        for ( String key : readValueMap.keySet()) {
+            if ( key.equalsIgnoreCase(EMAIL) ) {
+                String regexEmail = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+                String valueEmail = readValueMap.get(key).toString();
+                if ( ! valueEmail.matches(regexEmail) ) {
+                    fieldName.append( key );
+                    return true;
+                }
+            }
+            else if ( key.equalsIgnoreCase(PHONE) || key.equalsIgnoreCase(MOBILE) ) {
+                String regexPhone = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
+                        + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
+                        + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$";
+                String valuePhone = readValueMap.get(key).toString();
+                if ( ! valuePhone.matches(regexPhone) ) {
+                    fieldName.append( key );
+                    return true;
+                }
+            }
+
+            if ( readValueMap.get(key) instanceof Map ) {
+                if ( isNotISOFormats( (Map<String, Object>) readValueMap.get(key), fieldName ) )
+                    return true;
+            }
+        }
         return false;
     }
 

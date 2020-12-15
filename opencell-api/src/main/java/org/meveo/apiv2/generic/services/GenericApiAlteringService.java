@@ -33,8 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.meveo.apiv2.generic.ValidationUtils.checkDto;
-import static org.meveo.apiv2.generic.ValidationUtils.checkId;
+import static org.meveo.apiv2.generic.ValidationUtils.*;
 
 @Stateless
 public class GenericApiAlteringService {
@@ -68,6 +67,7 @@ public class GenericApiAlteringService {
         Class entityClass = GenericHelper.getEntityClass(entityName);
         IEntity entityToCreate = JsonGenericMapper.Builder
                 .getBuilder().build().parseFromJson(jsonDto, entityClass);
+        checkISOFormats(JsonGenericMapper.Builder.getBuilder().build().readValue(jsonDto, Map.class));
         refreshEntityWithDotFields(JsonGenericMapper.Builder.getBuilder().build().readValue(jsonDto, Map.class), entityToCreate, entityToCreate);
         persistenceDelegate.create(entityClass, entityToCreate);
         return Optional.ofNullable((Long) entityToCreate.getId());
@@ -153,6 +153,7 @@ public class GenericApiAlteringService {
 
     private Class getGenericClassName(@NotNull String typeName) {
         String className = typeName.substring(typeName.lastIndexOf(".") + 1, typeName.lastIndexOf(">"));
+        className = Character.toLowerCase(className.charAt(0)) + className.substring(1);
         return GenericHelper.getEntityClass(className);
     }
 
