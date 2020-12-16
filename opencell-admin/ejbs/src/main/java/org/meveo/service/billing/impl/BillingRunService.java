@@ -65,6 +65,7 @@ import org.meveo.model.billing.PostInvoicingReportsDTO;
 import org.meveo.model.billing.PreInvoicingReportsDTO;
 import org.meveo.model.billing.RatedTransaction;
 import org.meveo.model.billing.RejectedBillingAccount;
+import org.meveo.model.billing.Subscription;
 import org.meveo.model.billing.ThresholdOptionsEnum;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.jobs.JobExecutionResultImpl;
@@ -163,6 +164,8 @@ public class BillingRunService extends PersistenceService<BillingRun> {
      */
     @Inject
     RejectedBillingAccountService rejectedBillingAccountService;
+
+    private static int rtPaginationSize = 30000;
 
     /**
      * Generate pre invoicing reports.
@@ -946,10 +949,14 @@ public class BillingRunService extends PersistenceService<BillingRun> {
     }
 
     public List<RatedTransaction> loadRTsByBillingRuns(List<BillingRun> billingRuns){
+        List<RatedTransaction> ratedTransactions = new ArrayList<>();
         for(BillingRun billingRun : billingRuns){
             List<? extends IBillableEntity> billableEntities = getEntitiesToInvoice(billingRun);
+            for (IBillableEntity be :  billableEntities){
+                ratedTransactions.addAll(ratedTransactionService.listRTsToInvoice(be, billingRun.getStartDate(), billingRun.getEndDate(), null, rtPaginationSize));
+            }
         }
-        return null;
+        return ratedTransactions;
     }
 
     /**

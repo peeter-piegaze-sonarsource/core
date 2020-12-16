@@ -8,6 +8,7 @@ import org.meveo.api.dto.LanguageIsoDto;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.billing.BillingRun;
+import org.meveo.model.billing.RatedTransaction;
 import org.meveo.model.crm.EntityReferenceWrapper;
 import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.jobs.JobInstance;
@@ -76,6 +77,8 @@ public class ArticleMappingBean extends BaseJobBean {
             filters.put("inList id", billingRunIds);
             PaginationConfiguration paginationConfiguration = new PaginationConfiguration(filters);
             List<BillingRun> billingRuns = billingRunService.list(paginationConfiguration);
+
+            List<RatedTransaction> ratedTransactions = billingRunService.loadRTsByBillingRuns(billingRuns);
         }
 
     }
