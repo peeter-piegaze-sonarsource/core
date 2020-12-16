@@ -522,6 +522,9 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
     @JoinColumn(name = "article_id")
     private AccountingArticle accountingArticle;
 
+    @Column(name = "reject_reason")
+    private String rejectReason;
+
     public RatedTransaction() {
         super();
     }
@@ -1337,5 +1340,9 @@ public class RatedTransaction extends BaseEntity implements ISearchable, ICustom
         if (uuid == null) {
             uuid = UUID.randomUUID().toString();
         }
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
     }
 }

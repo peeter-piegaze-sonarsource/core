@@ -151,13 +151,5 @@ public class ArticleMappingLine extends BusinessEntity {
         this.mappingKelEL = mappingKelEL;
     }
 
-    public boolean match(RatedTransaction ratedTransaction) {
-        if(parameter1 != null || parameter2 != null || parameter3 != null){
-            boolean param1Match = parameter1 != null ? parameter1.equals(ratedTransaction.getParameter1()) : ratedTransaction.getParameter1() == null;
-            boolean param2Match = parameter2 != null ? parameter2.equals(ratedTransaction.getParameter2()) : ratedTransaction.getParameter2() == null;
-            boolean param3Match = parameter3 != null ? parameter3.equals(ratedTransaction.getParameter3()) : ratedTransaction.getParameter3() == null;
-            return param1Match && param2Match && param3Match;
-        }
-        return true;
-    }
+
 }

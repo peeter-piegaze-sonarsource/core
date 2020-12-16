@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -51,6 +53,7 @@ import org.meveo.model.BaseEntity;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.IBillableEntity;
 import org.meveo.model.admin.Seller;
+import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.billing.Amounts;
 import org.meveo.model.billing.ApplyMinimumModeEnum;
 import org.meveo.model.billing.BillingAccount;
@@ -79,6 +82,7 @@ import org.meveo.model.catalog.PricePlanMatrix;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.filter.Filter;
+import org.meveo.model.jobs.JobExecutionResultImpl;
 import org.meveo.model.order.Order;
 import org.meveo.model.payments.CustomerAccount;
 import org.meveo.model.shared.DateUtils;
@@ -1902,5 +1906,42 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
     public void deleteSupplementalRTs(Collection<Long> invoicesIds) {
         getEntityManager().createNamedQuery("RatedTransaction.deleteSupplementalRTByInvoiceIds").setParameter("invoicesIds", invoicesIds).executeUpdate();
 
+    }
+
+    @JpaAmpNewTx
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void matchWithAccountingArticle(RatedTransaction ratedTransaction, Set<AccountingArticle> accountingArticles) {
+        ratedTransaction.setUpdated(new Date());
+        if(accountingArticles.isEmpty()){
+            ratedTransaction.setStatus(RatedTransactionStatusEnum.REJECTED);
+            ratedTransaction.setRejectReason("No matching article");
+            log.error("No Matching article for RatedTransaction[id=" + ratedTransaction.getId() + "]");
+        }else if(accountingArticles.size() > 1) {
+            String accountingCodes = accountingArticles.stream()
+                    .map(c -> "{" + c.getCode() + "}")
+                    .collect(Collectors.joining(","));
+            ratedTransaction.setStatus(RatedTransactionStatusEnum.REJECTED);
+            ratedTransaction.setRejectReason("Multiple matching articles: [" + accountingCodes + "]");
+            log.error("Multiple matching articles for RatedTransaction[id=" + ratedTransaction.getId() + "]"+ ": [" + accountingCodes + "]");
+        } else {
+            ratedTransaction.setStatus(RatedTransactionStatusEnum.BILLED);
+            ratedTransaction.setAccountingArticle(accountingArticles.iterator().next());
+        }
+        updateNoCheck(ratedTransaction);
+    }
+
+    public List<RatedTransaction> listByStatusAndBetweenRange(RatedTransactionStatusEnum status, Date startDate, Date endDate){
+        QueryBuilder qb = new QueryBuilder("Select rt from RatedTransaction rt", "rt");
+        qb.addCriterionEnum("rt.status", status);
+       if(startDate != null)
+           qb.addCriterionDateRangeFromTruncatedToDay("rt.usageDate", startDate, false);
+       if(startDate != null)
+           qb.addCriterionDateRangeToTruncatedToDay("rt.usageDate", endDate,false, false);
+
+        try {
+            return (List<RatedTransaction>) qb.getQuery(getEntityManager()).getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

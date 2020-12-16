@@ -4566,6 +4566,7 @@ END $$;]]>
 
         <addColumn tableName="billing_rated_transaction">
             <column name="article_id" type="bigint"/>
+            <column name="reject_reason" type="varchar(100)"/>
         </addColumn>
 
         <addForeignKeyConstraint baseColumnNames="tax_class_id" baseTableName="billing_accounting_article"
