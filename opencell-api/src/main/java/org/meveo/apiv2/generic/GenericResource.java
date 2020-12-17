@@ -1,5 +1,6 @@
 package org.meveo.apiv2.generic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,8 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.meveo.apiv2.models.ApiException;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 
 @Path("/generic")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -93,6 +93,7 @@ public interface GenericResource {
     Response getVersions();
 
     @GET
+//    @Path("/{entityName: ^(?!all$).*$}/{id}")
     @Path("/{entityName}/{id}")
     @Operation(summary = "Generic single endpoint to retrieve resources by ID",
             tags = { "Generic" },
@@ -107,18 +108,9 @@ public interface GenericResource {
                        @Parameter(description = "requestDto carries the wanted fields ex: {fields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
 
     @GET
-    @Path("/all/{entityName}")
-    @Operation(summary = "Generic single endpoint to retrieve paginated records of an entity",
-            tags = { "Generic" },
-            description ="specify the entity name, and as body, the configuration of the research."
-                    + " also you can define the offset and the limit, you can order by a field and define the sort type"
-                    + " see PagingAndFiltering doc for more details. ",
-            responses = {
-                    @ApiResponse(responseCode="200", description = "paginated results successfully retrieved with hypermedia links"),
-                    @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
-            })
-    Response getAllEntity(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
-                    @Parameter(description = "requestDto carries the wanted fields ex: {genericFields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
+    @Path("/{entityName}")
+    Response getAllEntities(@PathParam("entityName") String entityName,
+                            @Context UriInfo uriInfo, @Context HttpHeaders requestHeaders ) throws JsonProcessingException;
 
     @HEAD
     @Path("/{entityName}/{id}")

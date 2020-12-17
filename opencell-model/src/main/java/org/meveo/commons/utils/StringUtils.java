@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
  * Utils class for working with strings.
  * 
  * @author Ignas Lelys
+ * @author Thang Nguyen
  */
 public class StringUtils {
 
@@ -59,6 +60,16 @@ public class StringUtils {
 
     public static boolean isBlank(Object value) {
         return ((value == null) || ((value instanceof String) && ((String) value).trim().length() == 0));
+    }
+
+    /**
+     * Transform a string of plural form (i.e. sellers) to singular form (i.e. seller)
+     *
+     * @param value name to recover (remove 's' at the end)
+     * @return real name of entity
+     */
+    public static String recoverRealName(String value) {
+        return value.substring(0, value.length() - 1);
     }
 
     /**

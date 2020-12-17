@@ -1,6 +1,7 @@
 package org.meveo.apiv2.generic;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.meveo.apiv2.GenericOpencellRestful;
 import org.meveo.apiv2.generic.common.LinkGenerator;
 import org.meveo.apiv2.generic.core.GenericHelper;
@@ -8,13 +9,12 @@ import org.meveo.apiv2.generic.core.GenericRequestMapper;
 import org.meveo.apiv2.generic.services.GenericApiAlteringService;
 import org.meveo.apiv2.generic.services.GenericApiLoadService;
 import org.meveo.apiv2.generic.services.PersistenceServiceHelper;
+import org.meveo.commons.utils.StringUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -28,6 +28,7 @@ public class GenericResourceImpl implements GenericResource {
 
     @Override
     public Response getAll(String entityName, GenericPagingAndFiltering searchConfig) {
+        entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
         if(searchConfig != null){
@@ -39,14 +40,10 @@ public class GenericResourceImpl implements GenericResource {
         return Response.ok().entity(loadService.findPaginatedRecords(entityClass, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth()))
                 .links(buildPaginatedResourceLink(entityName)).build();
     }
-
-    @Override
-    public Response getAllEntity(String entityName, GenericPagingAndFiltering searchConfig) {
-        return getAll(entityName, searchConfig);
-    }
     
     @Override
     public Response get(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
+        entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
         if(searchConfig != null){
@@ -55,40 +52,66 @@ public class GenericResourceImpl implements GenericResource {
         }
         Class entityClass = GenericHelper.getEntityClass(entityName);
         GenericRequestMapper genericRequestMapper = new GenericRequestMapper(entityClass, PersistenceServiceHelper.getPersistenceService());
+        String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
-                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + entityName + " with id "+id+ " not found."));
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
     }
 
     @Override
     public Response getEntity(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
+System.out.println("getEntity BA MA O DAY NE");
         return get(entityName, id, searchConfig);
     }
 
     @Override
+    public Response getAllEntities( String entityName, @Context UriInfo uriInfo, @Context HttpHeaders requestHeaders )
+            throws JsonProcessingException {
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+
+//        MultivaluedMap<String, String> headerParams = requestHeaders.getRequestHeaders();
+//        System.out.println( "headerParams.size() : " + headerParams.size() );
+//        Iterator<String> it = headerParams.keySet().iterator();
+//
+//        while(it.hasNext()){
+//            String theKey = it.next();
+//            System.out.println( "the Key : "+ theKey + " and value : " + headerParams.get(theKey) );
+//        }
+
+        return getAll(entityName,
+                GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+    }
+
+    @Override
     public Response head(String entityName, Long id) {
+        entityName = StringUtils.recoverRealName(entityName);
         Class entityClass = GenericHelper.getEntityClass(entityName);
+        String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id)
-                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + entityName + " with id "+id+ " not found."));
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
     }
     
     @Override
     public Response update(String entityName, Long id, String dto) {
+        entityName = StringUtils.recoverRealName(entityName);
         return Response.ok().entity(genericApiAlteringService.update(entityName, id, dto)).links(buildSingleResourceLink(entityName, id)).build();
     }
     
     @Override
     public Response create(String entityName, String dto) {
-        return  genericApiAlteringService.create(entityName, dto)
+        entityName = StringUtils.recoverRealName(entityName);
+        String finalEntityName = entityName;
+        return  genericApiAlteringService.create(finalEntityName, dto)
                 .map(entityId -> Response.ok().entity(Collections.singletonMap("id", entityId))
-                .links(buildSingleResourceLink(entityName, entityId))
+                .links(buildSingleResourceLink(finalEntityName, entityId))
                 .build())
                 .get();
     }
 
     @Override
     public Response delete(String entityName, Long id) {
+        entityName = StringUtils.recoverRealName(entityName);
         return Response.ok().entity(genericApiAlteringService.delete(entityName, id))
                         .links(buildSingleResourceLink(entityName, id)).build();
     }
