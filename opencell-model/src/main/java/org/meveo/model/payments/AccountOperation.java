@@ -367,10 +367,6 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 
-    @ManyToOne(optional = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_history_id")
-    private PaymentHistory paymentHistory;
-
     @ManyToMany
     @JoinTable(name = "ar_ao_payment_histories", joinColumns = @JoinColumn(name = "ao_id"), inverseJoinColumns = @JoinColumn(name = "history_id"))
     private List<PaymentHistory> paymentHistories = new ArrayList<PaymentHistory>();
@@ -500,25 +496,27 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
             return true;
         }
         if (code == null) {
-            return other.code == null;
-        } else
-            return code.equals(other.code);
-    }
-
-    public String getType() {
-        return type;
+            if (other.code != null)
+                return false;
+        } else if (!code.equals(other.code))
+            return false;
+        return true;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
-    public List<MatchingAmount> getMatchingAmounts() {
-        return matchingAmounts;
+    public String getType() {
+        return type;
     }
 
     public void setMatchingAmounts(List<MatchingAmount> matchingAmounts) {
         this.matchingAmounts = matchingAmounts;
+    }
+
+    public List<MatchingAmount> getMatchingAmounts() {
+        return matchingAmounts;
     }
 
     /**

@@ -17,17 +17,6 @@
  */
 package org.meveo.service.payments.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
 import org.apache.commons.lang3.SerializationUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.dto.account.TransferAccountOperationDto;
@@ -45,6 +34,16 @@ import org.meveo.model.payments.OtherCreditAndCharge;
 import org.meveo.model.payments.PaymentMethodEnum;
 import org.meveo.model.shared.DateUtils;
 import org.meveo.service.base.PersistenceService;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * AccountOperation service implementation.
@@ -183,7 +182,6 @@ public class AccountOperationService extends PersistenceService<AccountOperation
      * @param customerAccountId the customer account id
      * @return the a os to pay
      */
-    //FIXME TODO
     @SuppressWarnings("unchecked")
     public List<AccountOperation> getAOsToPayOrRefundByCA(Date fromDueDate, Date toDueDate, OperationCategoryEnum opCatToProcess,
             Long customerAccountId) {
@@ -195,6 +193,16 @@ public class AccountOperationService extends PersistenceService<AccountOperation
             return null;
         }
     }
+
+    /**
+     * Gets the a os to pay.
+     *
+     * @param fromDueDate the from due date
+     * @param toDueDate the to due date
+     * @param opCatToProcess the op cat to process
+     * @param customerAccountId the customer account id
+     * @return the a os to pay
+     */
     @SuppressWarnings("unchecked")
     public List<AccountOperation> getAOsToPayOrRefundByCA(PaymentMethodEnum paymentMethodEnum, Date fromDueDate, Date toDueDate, OperationCategoryEnum opCatToProcess,
             Long customerAccountId) {
