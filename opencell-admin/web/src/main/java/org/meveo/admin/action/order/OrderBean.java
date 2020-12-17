@@ -17,28 +17,6 @@
  */
 package org.meveo.admin.action.order;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.jboss.seam.international.status.builder.BundleKey;
 import org.meveo.admin.action.BaseBean;
@@ -99,6 +77,20 @@ import org.tmf.dsmapi.catalog.resource.order.Product;
 import org.tmf.dsmapi.catalog.resource.order.ProductCharacteristic;
 import org.tmf.dsmapi.catalog.resource.order.ProductRelationship;
 import org.tmf.dsmapi.catalog.resource.product.BundledProductReference;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * Standard backing bean for {@link Order} (extends {@link BaseBean} that provides almost all common methods to handle entities filtering/sorting in datatable, their create, edit,
@@ -1056,16 +1048,5 @@ public class OrderBean extends CustomFieldBean<Order> {
 
     public PaymentMethod getPaymentMethodById(String id) {
         return id.isBlank() ? null : listPaymentMethod().stream().filter(pm -> pm.getId().equals(Long.valueOf(id))).findFirst().get();
-    }
-    /**
-     * Get configured payment method's list
-     * @return list of payment methods
-     */
-    public List<PaymentMethod> listPaymentMethod() {
-        if (Objects.nonNull(selectedOrderItem) && Objects.nonNull(selectedOrderItem.getUserAccount()) ) {
-            UserAccount userAccount = userAccountService.findById(selectedOrderItem.getUserAccount().getId());
-            return userAccount.getBillingAccount().getCustomerAccount().getPaymentMethods();
-        }
-        return Collections.emptyList();
     }
 }

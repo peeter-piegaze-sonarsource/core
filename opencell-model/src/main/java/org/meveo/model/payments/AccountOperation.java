@@ -17,11 +17,24 @@
  */
 package org.meveo.model.payments;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.meveo.model.BusinessEntity;
+import org.meveo.model.CustomFieldEntity;
+import org.meveo.model.ICustomFieldEntity;
+import org.meveo.model.ISearchable;
+import org.meveo.model.IWFEntity;
+import org.meveo.model.ObservableEntity;
+import org.meveo.model.WorkflowedEntity;
+import org.meveo.model.admin.Seller;
+import org.meveo.model.audit.AuditChangeTypeEnum;
+import org.meveo.model.audit.AuditTarget;
+import org.meveo.model.billing.AccountingCode;
+import org.meveo.model.billing.Invoice;
+import org.meveo.model.billing.Subscription;
+import org.meveo.model.crm.custom.CustomFieldValues;
+import org.meveo.model.finance.AccountingWriting;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,25 +59,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.meveo.model.BusinessEntity;
-import org.meveo.model.CustomFieldEntity;
-import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.ISearchable;
-import org.meveo.model.IWFEntity;
-import org.meveo.model.ObservableEntity;
-import org.meveo.model.WorkflowedEntity;
-import org.meveo.model.admin.Seller;
-import org.meveo.model.audit.AuditChangeTypeEnum;
-import org.meveo.model.audit.AuditTarget;
-import org.meveo.model.billing.AccountingCode;
-import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.Subscription;
-import org.meveo.model.crm.custom.CustomFieldValues;
-import org.meveo.model.finance.AccountingWriting;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Account operation
@@ -83,30 +82,32 @@ import org.meveo.model.finance.AccountingWriting;
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @Parameter(name = "sequence_name", value = "ar_account_operation_seq"), })
 @CustomFieldEntity(cftCodePrefix = "AccountOperation")
-@NamedQueries({
-    @NamedQuery(name = "AccountOperation.listAoToPayOrRefundWithoutCA", query = "Select distinct(ao)  from AccountOperation as ao,PaymentMethod as pm  where ao.transactionCategory=:opCatToProcessIN and ao.type  in ('I','OCC') and " +
-                "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and " +
-                "                               pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-        @NamedQuery(name = "AccountOperation.listAoToPayOrRefundByCA", query = "Select distinct(ao)  from AccountOperation as ao, PaymentMethod as pm where ao.transactionCategory=:opCatToProcessIN and ao.customerAccount.id=:caIdIN and ao.type  "
-                + "                             in ('I','OCC')  and ao.customerAccount.id = pm.customerAccount.id " +
-                "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and " +
-                "                                pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-    @NamedQuery(name = "AccountOperation.listAoToPayOrRefundWithoutCAbySeller", query = "Select ao  from AccountOperation as ao,PaymentMethod as pm  where ao.seller =:sellerIN and ao.transactionCategory=:opCatToProcessIN and ao.type  in ('I','OCC') and " +
-                "                                (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and " +
-            "                               ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-    @NamedQuery(name = "AccountOperation.listAoToPayOrRefundWithoutCAbySeller", query = "Select distinct(ao)  from AccountOperation as ao,PaymentMethod as pm  where ao.seller =:sellerIN and ao.transactionCategory=:opCatToProcessIN and ao.type  in ('I','OCC') and " +
-                "                                pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-            "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and " +
-            "                                ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-    @NamedQuery(name = "AccountOperation.listAoToPayOrRefundBySeller", query = "Select distinct(ao) from AccountOperation as ao,PaymentMethod as pm  where ao.seller =:sellerIN and ao.transactionCategory=:opCatToProcessIN and ao.customerAccount.id=:caIdIN and ao.type  "
-            + "                             in ('I','OCC')  and " +
-            "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and " +
-                "                               pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-            "                               ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
-    @NamedQuery(name = "AccountOperation.countUnmatchedAOByCA", query = "Select count(*) from AccountOperation as ao where ao.unMatchingAmount <> 0 and ao"
+@NamedQueries({ @NamedQuery(name = "AccountOperation.listAoToPayOrRefundWithoutCA", query =
+        "Select distinct(ao)  from AccountOperation as ao,PaymentMethod as pm  where ao.transactionCategory=:opCatToProcessIN and ao.type  in ('I','OCC') and "
+                + "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and "
+                + "                               pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
+        @NamedQuery(name = "AccountOperation.listAoToPayOrRefundByCA", query =
+                "Select ao  from AccountOperation as ao, PaymentMethod as pm where ao.transactionCategory=:opCatToProcessIN and ao.customerAccount.id=:caIdIN and ao.type  "
+                        + "                             in ('I','OCC')  and ao.customerAccount.id = pm.customerAccount.id "
+                        + "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and "
+                        + "                                pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
+        @NamedQuery(name = "AccountOperation.listAoToPayOrRefund", query =
+                "Select distinct(ao)  from AccountOperation as ao,PaymentMethod as pm  where ao.transactionCategory=:opCatToProcessIN and ao.customerAccount.id=:caIdIN and ao.type  "
+                        + "                             in ('I','OCC')  and "
+                        + "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and "
+                        + "                               ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
+        @NamedQuery(name = "AccountOperation.listAoToPayOrRefundWithoutCAbySeller", query =
+                "Select distinct(ao)  from AccountOperation as ao,PaymentMethod as pm  where ao.seller =:sellerIN and ao.transactionCategory=:opCatToProcessIN and ao.type  in ('I','OCC') and "
+                        + "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and "
+                        + "                                pm.preferred is true and  ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
+        @NamedQuery(name = "AccountOperation.listAoToPayOrRefundBySeller", query =
+                "Select distinct(ao) from AccountOperation as ao,PaymentMethod as pm  where ao.seller =:sellerIN and ao.transactionCategory=:opCatToProcessIN and ao.customerAccount.id=:caIdIN and ao.type  "
+                        + "                             in ('I','OCC')  and "
+                        + "                               (ao.matchingStatus ='O' or ao.matchingStatus ='P') and ao.customerAccount.excludedFromPayment = false and ao.customerAccount.id = pm.customerAccount.id and pm.paymentType =:paymentMethodIN  and "
+                        + "                               pm.preferred is true and ao.dueDate >=:fromDueDateIN and ao.dueDate <:toDueDateIN  "),
+        @NamedQuery(name = "AccountOperation.countUnmatchedAOByCA", query = "Select count(*) from AccountOperation as ao where ao.unMatchingAmount <> 0 and ao"
                 + ".customerAccount=:customerAccount"),
-        @NamedQuery(name = "AccountOperation.listByCustomerAccount", query = "select ao from AccountOperation ao inner join ao.customerAccount ca where ca=:customerAccount")
-})
+        @NamedQuery(name = "AccountOperation.listByCustomerAccount", query = "select ao from AccountOperation ao inner join ao.customerAccount ca where ca=:customerAccount") })
 public class AccountOperation extends BusinessEntity implements ICustomFieldEntity, ISearchable, IWFEntity {
 
     private static final long serialVersionUID = 1L;
@@ -348,7 +349,6 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     @JoinColumn(name = "ddrequest_item_id")
     private DDRequestItem ddRequestItem;
 
-
     @ManyToOne(optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "rejected_payment_id")
     private RejectedPayment rejectedPayment;
@@ -420,9 +420,9 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     }
 
     public void setMatchingAmount(BigDecimal matchingAmount) {
-        if(matchingAmount == null) {
-            this.matchingAmount =BigDecimal.ZERO;
-        }else {
+        if (matchingAmount == null) {
+            this.matchingAmount = BigDecimal.ZERO;
+        } else {
             this.matchingAmount = matchingAmount;
         }
     }
@@ -440,11 +440,11 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     }
 
     public void setUnMatchingAmount(BigDecimal unMatchingAmount) {
-       if(unMatchingAmount == null) {
-           this.unMatchingAmount = BigDecimal.ZERO;
-       }else {
-           this.unMatchingAmount = unMatchingAmount;
-       }
+        if (unMatchingAmount == null) {
+            this.unMatchingAmount = BigDecimal.ZERO;
+        } else {
+            this.unMatchingAmount = unMatchingAmount;
+        }
     }
 
     public CustomerAccount getCustomerAccount() {
@@ -500,27 +500,25 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
             return true;
         }
         if (code == null) {
-            if (other.code != null)
-                return false;
-        } else if (!code.equals(other.code))
-            return false;
-        return true;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+            return other.code == null;
+        } else
+            return code.equals(other.code);
     }
 
     public String getType() {
         return type;
     }
 
-    public void setMatchingAmounts(List<MatchingAmount> matchingAmounts) {
-        this.matchingAmounts = matchingAmounts;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<MatchingAmount> getMatchingAmounts() {
         return matchingAmounts;
+    }
+
+    public void setMatchingAmounts(List<MatchingAmount> matchingAmounts) {
+        this.matchingAmounts = matchingAmounts;
     }
 
     /**
@@ -528,14 +526,14 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
      */
     @PrePersist
     public void setUUIDIfNull() {
-    	if (uuid == null) {
-    		uuid = UUID.randomUUID().toString();
-    	}
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString();
+        }
     }
 
     @Override
     public String getUuid() {
-    	setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
+        setUUIDIfNull(); // setting uuid if null to be sure that the existing code expecting uuid not null will not be impacted
         return uuid;
     }
 
@@ -630,12 +628,12 @@ public class AccountOperation extends BusinessEntity implements ICustomFieldEnti
     }
 
     public List<AccountingWriting> getAccountingWritings() {
-		return accountingWritings;
-	}
+        return accountingWritings;
+    }
 
-	public void setAccountingWritings(List<AccountingWriting> accountingWritings) {
-		this.accountingWritings = accountingWritings;
-	}
+    public void setAccountingWritings(List<AccountingWriting> accountingWritings) {
+        this.accountingWritings = accountingWritings;
+    }
 
     /**
      * @return the amountWithoutTax

@@ -18,17 +18,6 @@
 
 package org.meveo.api.dto.invoice;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.meveo.api.dto.AuditableEntityDto;
 import org.meveo.api.dto.CategoryInvoiceAgregateDto;
 import org.meveo.api.dto.CustomFieldsDto;
@@ -39,26 +28,44 @@ import org.meveo.model.billing.InvoiceModeEnum;
 import org.meveo.model.billing.InvoiceStatusEnum;
 import org.meveo.model.payments.PaymentMethodEnum;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * DTO equivalent of Invoice entity.
- * 
+ *
  * @author anasseh
  */
 @XmlRootElement(name = "Invoice")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InvoiceDto extends AuditableEntityDto {
 
-    /** The Constant serialVersionUID. */
+    /**
+     * The Constant serialVersionUID.
+     */
     private static final long serialVersionUID = 1072382628068718580L;
 
-    /** The invoice id. */
+    /**
+     * The invoice id.
+     */
     protected Long invoiceId;
 
-    /** The invoice type. */
+    /**
+     * The invoice type.
+     */
     @XmlElement(required = true)
     protected String invoiceType;
 
-    /** The billing account code. */
+    /**
+     * The billing account code.
+     */
     @XmlElement(required = true)
     protected String billingAccountCode;
 
@@ -81,182 +88,176 @@ public class InvoiceDto extends AuditableEntityDto {
      * Order number
      */
     protected String orderNumber;
-
-    /** The invoice status. */
-    private InvoiceStatusEnum status;
-
-    /** The due date. */
+    /**
+     * The due date.
+     */
     @XmlElement(required = true)
     protected Date dueDate;
-
-    /** The invoice date. */
+    /**
+     * The invoice date.
+     */
     @XmlElement(required = true)
     protected Date invoiceDate;
-
-    /** The category invoice aggregates. */
+    /**
+     * The category invoice aggregates.
+     */
     @XmlElementWrapper
     @XmlElement(name = "categoryInvoiceAgregate")
     protected List<CategoryInvoiceAgregateDto> categoryInvoiceAgregates = new ArrayList<CategoryInvoiceAgregateDto>();
-
-    /** The tax aggregates */
+    /**
+     * The tax aggregates
+     */
     @XmlElementWrapper
     @XmlElement(name = "taxAggregate", required = true)
     protected List<TaxInvoiceAggregateDto> taxAggregates = new ArrayList<TaxInvoiceAggregateDto>();
-
-    /** The list invoice id to link. */
+    /**
+     * The list invoice id to link.
+     */
     @XmlElementWrapper
     @XmlElement(name = "invoiceIdToLink")
     protected List<Long> listInvoiceIdToLink = new ArrayList<Long>();
-
-    /** The invoice number. */
+    /**
+     * The invoice number.
+     */
     protected String invoiceNumber;
-
-    /** The discount. */
+    /**
+     * The discount.
+     */
     protected BigDecimal discount;
-
-    /** The amount without tax. */
+    /**
+     * The amount without tax.
+     */
     protected BigDecimal amountWithoutTax;
-
-    /** The amount tax. */
+    /**
+     * The amount tax.
+     */
     protected BigDecimal amountTax;
-
-    /** The amount with tax. */
+    /**
+     * The amount with tax.
+     */
     protected BigDecimal amountWithTax;
-
-    /** The payment method. */
+    /**
+     * The payment method.
+     */
     protected PaymentMethodEnum paymentMethod;
-
-    /** The xml filename. */
+    /**
+     * The xml filename.
+     */
     protected String xmlFilename;
-
-    /** The xml. */
+    /**
+     * The xml.
+     */
     protected String xml;
-
-    /** The pdf filename. */
+    /**
+     * The pdf filename.
+     */
     protected String pdfFilename;
-
-    /** The pdf. */
+    /**
+     * The pdf.
+     */
     protected byte[] pdf;
-
     /**
      * A request-only parameter. True if invoice should be assigned a number. Defaults to True.
      */
     protected Boolean autoValidation;
-
     /**
      * A request-only parameter. True if XML invoice should be generated and returned.
      */
     protected Boolean returnXml;
-
     /**
      * A request-only parameter. True if PDF invoice should be generated and returned.
      */
     protected Boolean returnPdf;
-
-    /**
-     * A request-only parameter. True if PDF should be delivered by email. Defaults to True.
-     */
-    private boolean sendByEmail = true;
-
     /**
      * A request-only parameter. True if currently due balance should be returned
      */
     protected Boolean includeBalance;
-
-    /** The recorded invoice dto. */
+    /**
+     * The recorded invoice dto.
+     */
     protected RecordedInvoiceDto recordedInvoiceDto;
-
-    /** The net to pay. */
+    /**
+     * The net to pay.
+     */
     protected BigDecimal netToPay;
-
-    /** The invoice mode. */
+    /**
+     * The invoice mode.
+     */
     @XmlElement(required = true)
     protected InvoiceModeEnum invoiceMode;
-
-    /** The custom fields. */
+    /**
+     * The custom fields.
+     */
     protected CustomFieldsDto customFields;
-
     /**
      * The total due is a snapshot at invoice generation time of the due balance (not exigible) before invoice calculation+invoice amount. Due balance is a "future" dueBalance (the
      * due balance at the invoice due date).
      */
     protected BigDecimal dueBalance;
-
     /**
      * A flag to generate a draft invoice
      */
     protected Boolean isDraft;
-
     /**
      * Before sending the invoice, check if not already sent
      */
     protected boolean checkAlreadySent;
-
     /**
      * Override Email defined in the billing entity
      */
     protected String overrideEmail;
-
     /**
      * True if the invoice was sent by email or delibered by some other electronic means, false otherwise
      */
     protected boolean sentByEmail;
-
     /**
      * list of related payment schedule instances
-     *
      */
     protected PaymentScheduleInstancesDto paymentScheduleInstancesDto;
-
     /**
      * associated dunning creation date
-     *
      */
     protected Date dunningEntryDate;
-
     /**
      * associated dunning last update date
-     *
      */
     protected Date dunningLastModification;
-
     /**
      * associated dunning current status
-     *
      */
     protected String dunningStatus;
-
-    /**
-     * The invoice real time status.
-     */
-    private InvoiceStatusEnum realTimeStatus;
-
     /**
      * list of existing RTs to include, identified by id This option is allowed only if invoiceMode=="DETAILLED"
      */
     protected List<Long> ratedTransactionsToLink;
     /**
      * paymentIncident
-     *
      */
     protected List<String> paymentIncidents;
-
     /**
      * sendPaymentDate
-     *
      */
     protected Date sendPaymentDate;
-
     /**
      * sum off writeOff accountOperations amounts
      */
     protected BigDecimal writeOffAmount;
-
     /**
      * last payment Date
      */
     protected Date paymentDate;
-
+    /**
+     * The invoice status.
+     */
+    private InvoiceStatusEnum status;
+    /**
+     * A request-only parameter. True if PDF should be delivered by email. Defaults to True.
+     */
+    private boolean sendByEmail = true;
+    /**
+     * The invoice real time status.
+     */
+    private InvoiceStatusEnum realTimeStatus;
     /**
      * Invoice payment collection date.
      */
@@ -269,6 +270,7 @@ public class InvoiceDto extends AuditableEntityDto {
     public void setPaymentIncidents(List<String> paymentIncidents) {
         this.paymentIncidents = paymentIncidents;
     }
+
     public void addPaymentIncidents(String paymentIncident) {
         this.paymentIncidents.add(paymentIncident);
     }
@@ -615,7 +617,7 @@ public class InvoiceDto extends AuditableEntityDto {
 
     /**
      * A request-only parameter
-     * 
+     *
      * @return True if XML invoice content should be returned
      */
     public Boolean isReturnXml() {
@@ -882,8 +884,6 @@ public class InvoiceDto extends AuditableEntityDto {
         this.sentByEmail = sentByEmail;
     }
 
-    public Date getInitialCollectionDate() {
-        return initialCollectionDate;
     public Long getSubscriptionId() {
         return subscriptionId;
     }

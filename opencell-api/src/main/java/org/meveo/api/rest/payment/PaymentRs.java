@@ -18,18 +18,6 @@
 
 package org.meveo.api.rest.payment;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.PaymentActionStatus;
 import org.meveo.api.dto.payment.CardPaymentMethodDto;
@@ -37,8 +25,8 @@ import org.meveo.api.dto.payment.CardPaymentMethodTokenDto;
 import org.meveo.api.dto.payment.CardPaymentMethodTokensDto;
 import org.meveo.api.dto.payment.DDRequestBuilderDto;
 import org.meveo.api.dto.payment.DDRequestBuilderResponseDto;
-import org.meveo.api.dto.payment.PaymentCallbackDto;
 import org.meveo.api.dto.payment.MandatInfoDto;
+import org.meveo.api.dto.payment.PaymentCallbackDto;
 import org.meveo.api.dto.payment.PaymentDto;
 import org.meveo.api.dto.payment.PaymentGatewayDto;
 import org.meveo.api.dto.payment.PaymentGatewayResponseDto;
@@ -49,7 +37,6 @@ import org.meveo.api.dto.payment.PaymentMethodDto;
 import org.meveo.api.dto.payment.PaymentMethodTokenDto;
 import org.meveo.api.dto.payment.PaymentMethodTokensDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstanceDto;
-import org.meveo.api.dto.payment.PaymentScheduleInstanceItemDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstanceItemsDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstanceResponseDto;
 import org.meveo.api.dto.payment.PaymentScheduleInstancesDto;
@@ -62,9 +49,18 @@ import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
 import org.meveo.api.dto.response.payment.PaymentGatewayRumSequenceResponseDto;
 import org.meveo.api.dto.sequence.GenericSequenceValueResponseDto;
 import org.meveo.api.rest.IBaseRs;
-import org.meveo.model.payments.PaymentScheduleInstanceItem;
 
-import java.util.List;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  * The Interface PaymentRs.
@@ -722,17 +718,7 @@ public interface PaymentRs extends IBaseRs {
     @Path("/paymentScheduleInstance/cancel")
     public ActionStatus cancelPaymentScheduleInstance(PaymentScheduleInstanceDto paymentScheduleInstanceDto);
 
-    /**
-     * Update Payment schedule instance item, the update is only about amount and requestPaymentDate.
-     *
-     * @param paymentScheduleInstanceItemDto a list of paymentScheduleInstanceItemDto
-     * @param paymentScheduleInstanceId      the paymentScheduleInstance's Id
-     * @return Request processing status
-     */
-    @PUT
-    @Path("/paymentScheduleInstance/{{paymentScheduleInstanceId}}/items")
-    ActionStatus updatePaymentScheduleInstanceItem(@PathParam("paymentScheduleInstanceId") Long paymentScheduleInstanceId,
-            PaymentScheduleInstanceItemDto paymentScheduleInstanceItemDto);
+
 
     /**
      * Gets a created mandate.

@@ -17,13 +17,24 @@
  */
 package org.meveo.model.billing;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.meveo.model.AuditableEntity;
+import org.meveo.model.CustomFieldEntity;
+import org.meveo.model.ICustomFieldEntity;
+import org.meveo.model.ISearchable;
+import org.meveo.model.ObservableEntity;
+import org.meveo.model.admin.Seller;
+import org.meveo.model.audit.AuditChangeTypeEnum;
+import org.meveo.model.audit.AuditTarget;
+import org.meveo.model.crm.custom.CustomFieldValues;
+import org.meveo.model.order.Order;
+import org.meveo.model.payments.PaymentMethod;
+import org.meveo.model.payments.PaymentMethodEnum;
+import org.meveo.model.payments.RecordedInvoice;
+import org.meveo.model.quote.Quote;
+import org.meveo.model.shared.DateUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,29 +59,17 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.meveo.model.AuditableEntity;
-import org.meveo.model.CustomFieldEntity;
-import org.meveo.model.ICustomFieldEntity;
-import org.meveo.model.ISearchable;
-import org.meveo.model.ObservableEntity;
-import org.meveo.model.admin.Seller;
-import org.meveo.model.audit.AuditChangeTypeEnum;
-import org.meveo.model.audit.AuditTarget;
-import org.meveo.model.crm.custom.CustomFieldValues;
-import org.meveo.model.order.Order;
-import org.meveo.model.payments.PaymentMethod;
-import org.meveo.model.payments.PaymentMethodEnum;
-import org.meveo.model.payments.RecordedInvoice;
-import org.meveo.model.quote.Quote;
-import org.meveo.model.shared.DateUtils;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Invoice
- * 
+ *
  * @author Edward P. Legaspi
  * @author Said Ramli
  * @author Abdellatif BARI
@@ -115,289 +114,6 @@ import org.meveo.model.shared.DateUtils;
 public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISearchable {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Billing account that invoice was issued to
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_account_id")
-    private BillingAccount billingAccount;
-
-    /**
-     * Billing run that produced the invoice
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "billing_run_id")
-    private BillingRun billingRun;
-
-    /**
-     * Recorded invoice
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recorded_invoice_id")
-    private RecordedInvoice recordedInvoice;
-
-    /**
-     * Invoice aggregates
-     */
-    @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InvoiceAgregate> invoiceAgregates = new ArrayList<>();
-
-    /**
-     * Invoice number
-     */
-    @Column(name = "invoice_number", length = 50)
-    @Size(max = 50)
-    private String invoiceNumber;
-
-    /**
-     * Temporary invoice number
-     */
-    @Column(name = "temporary_invoice_number", length = 60, unique = true)
-    @Size(max = 60)
-    private String temporaryInvoiceNumber;
-
-    /**
-     * Deprecated in 5.3 for not use.
-     */
-    @Deprecated
-    @Column(name = "product_date")
-    private Date productDate;
-
-    /**
-     * Invoice issue date
-     */
-    @Column(name = "invoice_date")
-    private Date invoiceDate;
-    
-    /**
-     * Invoice status
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 25)
-    @AuditTarget(type = AuditChangeTypeEnum.STATUS, history = true, notif = true)
-    private InvoiceStatusEnum status = InvoiceStatusEnum.CREATED;
-
-    /**
-     * Payment due date
-     */
-    @Column(name = "due_date")
-    private Date dueDate;
-
-    /**
-     * Deprecated in 5.3 for not use.
-     */
-    @Deprecated
-    @Column(name = "amount", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal amount;
-
-    /**
-     * Deprecated in 5.3 for not use.
-     */
-    @Deprecated
-    @Column(name = "discount", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal discount;
-
-    /**
-     * Invoiced amount without tax
-     */
-    @Column(name = "amount_without_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal amountWithoutTax;
-
-    /**
-     * Invoiced tax amount
-     */
-    @Column(name = "amount_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal amountTax;
-
-    /**
-     * Invoiced amount with tax
-     */
-    @Column(name = "amount_with_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal amountWithTax;
-
-    /**
-     * Total amount to pay - amountWith/withoutTax + balanceDue
-     */
-    @Column(name = "net_to_pay", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal netToPay;
-
-    /**
-     * Expected payment method
-     */
-    @Column(name = "payment_method")
-    @Enumerated(EnumType.STRING)
-    private PaymentMethodEnum paymentMethodType;
-
-    /**
-     * IBAN number. Deprecated in 5.3 for not use.
-     */
-    @Deprecated
-    @Column(name = "iban", length = 255)
-    @Size(max = 255)
-    private String iban;
-
-    /**
-     * Alias
-     */
-    @Column(name = "alias", length = 255)
-    @Size(max = 255)
-    private String alias;
-
-    /**
-     * Amount currency
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trading_currency_id")
-    private TradingCurrency tradingCurrency;
-
-    /**
-     * Country that invoice was applied to (for tax purpose)
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trading_country_id")
-    private TradingCountry tradingCountry;
-
-    /**
-     * Language invoice is in
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trading_language_id")
-    private TradingLanguage tradingLanguage;
-
-    /**
-     * Comment
-     */
-    @Column(name = "comment", length = 1200)
-    @Size(max = 1200)
-    private String comment;
-
-    /**
-     * Is this a detailed invoice
-     */
-    @Type(type = "numeric_boolean")
-    @Column(name = "detailed_invoice")
-    private boolean isDetailedInvoice = true;
-
-    /**
-     * Adjusted invoice
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoice_id")
-    private Invoice adjustedInvoice;
-
-    /**
-     * Invoice type
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoice_type_id")
-    private InvoiceType invoiceType;
-
-    /**
-     * Unique identifier - UUID
-     */
-    @Column(name = "uuid", nullable = false, updatable = false, length = 60)
-    @Size(max = 60)
-    @NotNull
-    private String uuid;
-
-    /**
-     * Custom field values in JSON format
-     */
-    @Type(type = "cfjson")
-    @Column(name = "cf_values", columnDefinition = "text")
-    private CustomFieldValues cfValues;
-
-    /**
-     * Accumulated custom field values in JSON format
-     */
-    @Type(type = "cfjson")
-    @Column(name = "cf_values_accum", columnDefinition = "text")
-    private CustomFieldValues cfAccumulatedValues;
-
-    /**
-     * Linked invoices
-     */
-    @ManyToMany
-    @JoinTable(name = "billing_linked_invoices", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "linked_invoice_id") })
-    private Set<Invoice> linkedInvoices = new HashSet<>();
-
-    /**
-     * Orders that produced rated transactions that were included in the invoice
-     */
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "billing_invoices_orders", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "order_id"))
-    private List<Order> orders = new ArrayList<>();
-
-    /**
-     * Quote that invoice was produced for
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quote_id")
-    private Quote quote;
-
-    /**
-     * Subscription that invoice was produced for
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_id")
-    private Subscription subscription;
-
-    /**
-     * Order that invoice was produced for
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    /**
-     * XML file name. Might contain subdirectories relative to directory where all XML files are located.
-     */
-    @Column(name = "xml_filename", length = 255)
-    @Size(max = 255)
-    private String xmlFilename;
-
-    /**
-     * PDF file name. Might contain subdirectories relative to directory where all PDF files are located.
-     */
-    @Column(name = "pdf_filename", length = 255)
-    @Size(max = 255)
-    private String pdfFilename;
-
-    /**
-     * Payment method
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_method_id")
-    private PaymentMethod paymentMethod;
-
-    /**
-     * Balance due
-     */
-    @Column(name = "due_balance", precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal dueBalance;
-
-    /**
-     * Check if the invoice already sent
-     */
-    @Type(type = "numeric_boolean")
-    @Column(name = "already_sent")
-    private boolean alreadySent;
-
-    /**
-     * Dont send the invoice if true.
-     */
-    @Type(type = "numeric_boolean")
-    @Column(name = "dont_send")
-    private boolean dontSend;
-
-    /**
-     * Seller that invoice was issued to
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private Seller seller;
-
     /**
      * Is this a prepaid invoice
      */
@@ -405,7 +121,247 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
     @Column(name = "prepaid", nullable = false)
     @NotNull
     protected boolean prepaid;
-
+    /**
+     * Billing account that invoice was issued to
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billing_account_id")
+    private BillingAccount billingAccount;
+    /**
+     * Billing run that produced the invoice
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billing_run_id")
+    private BillingRun billingRun;
+    /**
+     * Recorded invoice
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recorded_invoice_id")
+    private RecordedInvoice recordedInvoice;
+    /**
+     * Invoice aggregates
+     */
+    @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvoiceAgregate> invoiceAgregates = new ArrayList<>();
+    /**
+     * Invoice number
+     */
+    @Column(name = "invoice_number", length = 50)
+    @Size(max = 50)
+    private String invoiceNumber;
+    /**
+     * Temporary invoice number
+     */
+    @Column(name = "temporary_invoice_number", length = 60, unique = true)
+    @Size(max = 60)
+    private String temporaryInvoiceNumber;
+    /**
+     * Deprecated in 5.3 for not use.
+     */
+    @Deprecated
+    @Column(name = "product_date")
+    private Date productDate;
+    /**
+     * Invoice issue date
+     */
+    @Column(name = "invoice_date")
+    private Date invoiceDate;
+    /**
+     * Invoice status
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 25)
+    @AuditTarget(type = AuditChangeTypeEnum.STATUS, history = true, notif = true)
+    private InvoiceStatusEnum status = InvoiceStatusEnum.CREATED;
+    /**
+     * Payment due date
+     */
+    @Column(name = "due_date")
+    private Date dueDate;
+    /**
+     * Deprecated in 5.3 for not use.
+     */
+    @Deprecated
+    @Column(name = "amount", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal amount;
+    /**
+     * Deprecated in 5.3 for not use.
+     */
+    @Deprecated
+    @Column(name = "discount", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal discount;
+    /**
+     * Invoiced amount without tax
+     */
+    @Column(name = "amount_without_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal amountWithoutTax;
+    /**
+     * Invoiced tax amount
+     */
+    @Column(name = "amount_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal amountTax;
+    /**
+     * Invoiced amount with tax
+     */
+    @Column(name = "amount_with_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal amountWithTax;
+    /**
+     * Total amount to pay - amountWith/withoutTax + balanceDue
+     */
+    @Column(name = "net_to_pay", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal netToPay;
+    /**
+     * Expected payment method
+     */
+    @Column(name = "payment_method")
+    @Enumerated(EnumType.STRING)
+    private PaymentMethodEnum paymentMethodType;
+    /**
+     * IBAN number. Deprecated in 5.3 for not use.
+     */
+    @Deprecated
+    @Column(name = "iban", length = 255)
+    @Size(max = 255)
+    private String iban;
+    /**
+     * Alias
+     */
+    @Column(name = "alias", length = 255)
+    @Size(max = 255)
+    private String alias;
+    /**
+     * Amount currency
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trading_currency_id")
+    private TradingCurrency tradingCurrency;
+    /**
+     * Country that invoice was applied to (for tax purpose)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trading_country_id")
+    private TradingCountry tradingCountry;
+    /**
+     * Language invoice is in
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trading_language_id")
+    private TradingLanguage tradingLanguage;
+    /**
+     * Comment
+     */
+    @Column(name = "comment", length = 1200)
+    @Size(max = 1200)
+    private String comment;
+    /**
+     * Is this a detailed invoice
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "detailed_invoice")
+    private boolean isDetailedInvoice = true;
+    /**
+     * Adjusted invoice
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_id")
+    private Invoice adjustedInvoice;
+    /**
+     * Invoice type
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_type_id")
+    private InvoiceType invoiceType;
+    /**
+     * Unique identifier - UUID
+     */
+    @Column(name = "uuid", nullable = false, updatable = false, length = 60)
+    @Size(max = 60)
+    @NotNull
+    private String uuid;
+    /**
+     * Custom field values in JSON format
+     */
+    @Type(type = "cfjson")
+    @Column(name = "cf_values", columnDefinition = "text")
+    private CustomFieldValues cfValues;
+    /**
+     * Accumulated custom field values in JSON format
+     */
+    @Type(type = "cfjson")
+    @Column(name = "cf_values_accum", columnDefinition = "text")
+    private CustomFieldValues cfAccumulatedValues;
+    /**
+     * Linked invoices
+     */
+    @ManyToMany
+    @JoinTable(name = "billing_linked_invoices", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "linked_invoice_id") })
+    private Set<Invoice> linkedInvoices = new HashSet<>();
+    /**
+     * Orders that produced rated transactions that were included in the invoice
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "billing_invoices_orders", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "order_id"))
+    private List<Order> orders = new ArrayList<>();
+    /**
+     * Quote that invoice was produced for
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quote_id")
+    private Quote quote;
+    /**
+     * Subscription that invoice was produced for
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_id")
+    private Subscription subscription;
+    /**
+     * Order that invoice was produced for
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+    /**
+     * XML file name. Might contain subdirectories relative to directory where all XML files are located.
+     */
+    @Column(name = "xml_filename", length = 255)
+    @Size(max = 255)
+    private String xmlFilename;
+    /**
+     * PDF file name. Might contain subdirectories relative to directory where all PDF files are located.
+     */
+    @Column(name = "pdf_filename", length = 255)
+    @Size(max = 255)
+    private String pdfFilename;
+    /**
+     * Payment method
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod;
+    /**
+     * Balance due
+     */
+    @Column(name = "due_balance", precision = NB_PRECISION, scale = NB_DECIMALS)
+    private BigDecimal dueBalance;
+    /**
+     * Check if the invoice already sent
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "already_sent")
+    private boolean alreadySent;
+    /**
+     * Dont send the invoice if true.
+     */
+    @Type(type = "numeric_boolean")
+    @Column(name = "dont_send")
+    private boolean dontSend;
+    /**
+     * Seller that invoice was issued to
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", nullable = false)
+    private Seller seller;
     /**
      * External reference
      */
@@ -707,20 +663,20 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
     public void setInvoiceAdjustmentCurrentProviderNb(Long invoiceAdjustmentCurrentProviderNb) {
         this.invoiceAdjustmentCurrentProviderNb = invoiceAdjustmentCurrentProviderNb;
     }
-    
-    public InvoiceStatusEnum getStatus() {
-        return status;
-    }
 
-    public InvoiceStatusEnum getRealTimeStatus() {
-    	if(dueDate!=null && dueDate.before( new Date()) && (status==InvoiceStatusEnum.CREATED || status==InvoiceStatusEnum.GENERATED || status==InvoiceStatusEnum.SENT)) {
-    		return InvoiceStatusEnum.UNPAID;
-    	}
+    public InvoiceStatusEnum getStatus() {
         return status;
     }
 
     public void setStatus(InvoiceStatusEnum status) {
         this.status = status;
+    }
+
+    public InvoiceStatusEnum getRealTimeStatus() {
+        if (dueDate != null && dueDate.before(new Date()) && (status == InvoiceStatusEnum.CREATED || status == InvoiceStatusEnum.GENERATED || status == InvoiceStatusEnum.SENT)) {
+            return InvoiceStatusEnum.UNPAID;
+        }
+        return status;
     }
 
     @Override
@@ -735,11 +691,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
         }
 
         Invoice other = (Invoice) obj;
-        if (id != null && other.getId() != null && id.equals(other.getId())) {
-            return true;
-        }
-
-        return false;
+        return id != null && other.getId() != null && id.equals(other.getId());
     }
 
     @Override
@@ -855,19 +807,19 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
 
         return aggregates;
     }
-//
-//    public List<RatedTransaction> getRatedTransactionsForCategory(WalletInstance wallet, InvoiceSubCategory invoiceSubCategory) {
-//
-//        List<RatedTransaction> ratedTransactionsMatched = new ArrayList<>();
-//
-//        for (RatedTransaction ratedTransaction : ratedTransactions) {
-//            if (ratedTransaction.getWallet().equals(wallet) && ratedTransaction.getInvoiceSubCategory().equals(invoiceSubCategory)) {
-//                ratedTransactionsMatched.add(ratedTransaction);
-//            }
-//
-//        }
-//        return ratedTransactionsMatched;
-//    }
+    //
+    //    public List<RatedTransaction> getRatedTransactionsForCategory(WalletInstance wallet, InvoiceSubCategory invoiceSubCategory) {
+    //
+    //        List<RatedTransaction> ratedTransactionsMatched = new ArrayList<>();
+    //
+    //        for (RatedTransaction ratedTransaction : ratedTransactions) {
+    //            if (ratedTransaction.getWallet().equals(wallet) && ratedTransaction.getInvoiceSubCategory().equals(invoiceSubCategory)) {
+    //                ratedTransactionsMatched.add(ratedTransaction);
+    //            }
+    //
+    //        }
+    //        return ratedTransactionsMatched;
+    //    }
 
     /**
      * @return Quote that invoice was produced for
@@ -899,7 +851,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
 
     /**
      * Return a PDF filename without any subdirectories it might contain. E.g. for "a/b/c.pdf", this method will return "c.pdf"
-     * 
+     *
      * @return PDF file name without any subdirectories it might contain.
      */
     public String getPdfFilenameOnly() {
@@ -928,7 +880,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
 
     /**
      * Return a XML filename without any subdirectories it might contain. E.g. for "a/b/c.xml", this method will return "c.xml"
-     * 
+     *
      * @return XML file name without any subdirectories it might contain.
      */
     public String getXmlFilenameOnly() {
@@ -994,7 +946,6 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
     }
 
     /**
-     * 
      * @return Order that invoice was produced for
      */
     public Order getOrder() {
@@ -1020,8 +971,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
     @PostUpdate
     /**
      * Tracks what was the previous invoice number
-     */
-    private void trackPreviousValues() {
+     */ private void trackPreviousValues() {
         previousInvoiceNumber = invoiceNumber;
     }
 
@@ -1116,23 +1066,6 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
         return initialCollectionDate;
     }
 
-    public void setDraftRatedTransactions(List<RatedTransaction> draftRatedTransactions) {
-        this.draftRatedTransactions = draftRatedTransactions;
-    }
-
-    public List<RatedTransaction> getDraftRatedTransactions() {
-        return draftRatedTransactions;
-    }
-
-    /**
-     * Gets the invoice payment collection date
-     *
-     * @return Invoice payment collection date
-     */
-    public Date getInitialCollectionDate() {
-        return initialCollectionDate;
-    }
-
     /**
      * Sets Invoice payment collection date.
      *
@@ -1140,5 +1073,13 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
      */
     public void setInitialCollectionDate(Date initialCollectionDate) {
         this.initialCollectionDate = initialCollectionDate;
+    }
+
+    public List<RatedTransaction> getDraftRatedTransactions() {
+        return draftRatedTransactions;
+    }
+
+    public void setDraftRatedTransactions(List<RatedTransaction> draftRatedTransactions) {
+        this.draftRatedTransactions = draftRatedTransactions;
     }
 }

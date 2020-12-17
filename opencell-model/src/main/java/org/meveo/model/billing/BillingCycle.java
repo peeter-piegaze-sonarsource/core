@@ -17,9 +17,14 @@
  */
 package org.meveo.model.billing;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.meveo.model.BusinessCFEntity;
+import org.meveo.model.CustomFieldEntity;
+import org.meveo.model.ExportIdentifier;
+import org.meveo.model.catalog.Calendar;
+import org.meveo.model.scripts.ScriptInstance;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -32,17 +37,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.meveo.model.BusinessCFEntity;
-import org.meveo.model.CustomFieldEntity;
-import org.meveo.model.ExportIdentifier;
-import org.meveo.model.catalog.Calendar;
-import org.meveo.model.scripts.ScriptInstance;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Billing cycle
@@ -56,7 +54,8 @@ import org.meveo.model.scripts.ScriptInstance;
 @ExportIdentifier({ "code" })
 @CustomFieldEntity(cftCodePrefix = "BillingCycle")
 @Table(name = "billing_cycle", uniqueConstraints = @UniqueConstraint(columnNames = { "code" }))
-@GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "billing_cycle_seq"), })
+@GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+        @Parameter(name = "sequence_name", value = "billing_cycle_seq"), })
 public class BillingCycle extends BusinessCFEntity {
 
     private static final long serialVersionUID = 1L;
@@ -187,29 +186,18 @@ public class BillingCycle extends BusinessCFEntity {
     @Type(type = "numeric_boolean")
     @Column(name = "threshold_per_entity")
     private boolean thresholdPerEntity;
-
-    public boolean isThresholdPerEntity() {
-    	return thresholdPerEntity;
-	}
-
-	public void setThresholdPerEntity(boolean thresholdPerEntity) {
-		this.thresholdPerEntity = thresholdPerEntity;
-	}
-
     /**
      * if true then subscriptions are grouped by paymentMethod and billed separately.
      */
     @Column(name = "split_per_payment_method")
     @Type(type = "numeric_boolean")
     private boolean splitPerPaymentMethod;
-
     /**
      * To decide whether or not dates should be recomputed at invoice validation.
      */
     @Column(name = "compute_dates_validation")
     @Type(type = "numeric_boolean")
     private boolean computeDatesAtValidation;
-
     /**
      * EL to compute invoice.initialCollectionDate delay.
      */
@@ -217,12 +205,13 @@ public class BillingCycle extends BusinessCFEntity {
     @Size(max = 2000)
     private String collectionDateDelayEl;
 
-    /**
-     * To decide whether or not dates should be recomputed at invoice validation.
-     */
-    @Column(name = "compute_dates_validation")
-    @Type(type = "numeric_boolean")
-    private boolean computeDatesAtValidation = false;
+    public boolean isThresholdPerEntity() {
+        return thresholdPerEntity;
+    }
+
+    public void setThresholdPerEntity(boolean thresholdPerEntity) {
+        this.thresholdPerEntity = thresholdPerEntity;
+    }
 
     /**
      * @return Invoicing calendar
@@ -240,7 +229,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * @return Expression to calculate a delay to apply when calculating the maximum date up to which to include rated transactions in the invoice - BillingRun.lastTransactionDate
-     *         value. BillingRun.lastTransactionDate = BillingRun.processDate + BillingCycle.transactionDateDelay (resolved from EL).
+     * value. BillingRun.lastTransactionDate = BillingRun.processDate + BillingCycle.transactionDateDelay (resolved from EL).
      */
     public String getLastTransactionDateDelayEL() {
         return lastTransactionDateDelayEL;
@@ -248,7 +237,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * @param lastTransactionDateDelayEL Expression to calculate a delay to apply when calculating the maximum date up to which to include rated transactions in the invoice -
-     *        BillingRun.lastTransactionDate value. BillingRun.lastTransactionDate = BillingRun.processDate + BillingCycle.transactionDateDelay (resolved from EL).
+     *                                   BillingRun.lastTransactionDate value. BillingRun.lastTransactionDate = BillingRun.processDate + BillingCycle.transactionDateDelay (resolved from EL).
      */
     public void setLastTransactionDateDelayEL(String lastTransactionDateDelayEL) {
         this.lastTransactionDateDelayEL = lastTransactionDateDelayEL;
@@ -256,7 +245,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * @return Expression to calculate the maximum date up to which to include rated transactions in the invoice. BillingRun.lastTransactionDate = BillingCycle.lastTransactionDate
-     *         (resolved from EL)
+     * (resolved from EL)
      */
     public String getLastTransactionDateEL() {
         return lastTransactionDateEL;
@@ -264,7 +253,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * @param lastTransactionDateEL Expression to calculate the maximum date up to which to include rated transactions in the invoice. BillingRun.lastTransactionDate =
-     *        BillingCycle.lastTransactionDate (resolved from EL)
+     *                              BillingCycle.lastTransactionDate (resolved from EL)
      */
     public void setLastTransactionDateEL(String lastTransactionDateEL) {
         this.lastTransactionDateEL = lastTransactionDateEL;
@@ -432,7 +421,7 @@ public class BillingCycle extends BusinessCFEntity {
 
     /**
      * @param referenceDate What reference date to use when calculating the next invoicing date with an invoice calendar as in:
-     *        BillingCycle.calendar.nextCalendarDate(referenceDate)
+     *                      BillingCycle.calendar.nextCalendarDate(referenceDate)
      */
     public void setReferenceDate(ReferenceDateEnum referenceDate) {
         this.referenceDate = referenceDate;
@@ -482,13 +471,6 @@ public class BillingCycle extends BusinessCFEntity {
     }
 
     /**
-     * @param computeDatesAtValidation
-     */
-    public void setComputeDatesAtValidation(boolean computeDatesAtValidation) {
-        this.computeDatesAtValidation = computeDatesAtValidation;
-    }
-
-    /**
      * Gets CollectionDate delay EL.
      *
      * @return ollectionDate delay EL.
@@ -508,6 +490,13 @@ public class BillingCycle extends BusinessCFEntity {
 
     public Boolean getComputeDatesAtValidation() {
         return computeDatesAtValidation;
+    }
+
+    /**
+     * @param computeDatesAtValidation
+     */
+    public void setComputeDatesAtValidation(boolean computeDatesAtValidation) {
+        this.computeDatesAtValidation = computeDatesAtValidation;
     }
 
     public void setComputeDatesAtValidation(Boolean computeDatesAtValidation) {
