@@ -152,4 +152,14 @@ public class ArticleMappingLine extends BusinessEntity {
     }
 
 
+    public boolean matchWithAll() {
+        return parameter1 == null
+                && parameter2 == null
+                && parameter3 == null
+                && mappingKelEL == null
+                && attributesMapping == null
+                && offerTemplate == null
+                && chargeTemplate == null
+                && productTemplate == null;
+    }
 }
