@@ -1,9 +1,11 @@
 package org.meveo.service.billing.impl.article;
 
-import org.meveo.model.BusinessEntity;
 import org.meveo.model.article.ArticleMappingLine;
+import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.RatedTransaction;
+import org.meveo.model.catalog.ChargeTemplate;
 import org.meveo.model.catalog.OfferTemplate;
+import org.meveo.model.catalog.ProductTemplate;
 import org.meveo.service.base.BusinessService;
 import org.meveo.service.base.ValueExpressionWrapper;
 
@@ -14,8 +16,8 @@ import java.util.HashMap;
 public class ArticleMappingLineService extends BusinessService<ArticleMappingLine> {
 
     public boolean match(ArticleMappingLine articleMappingLine, RatedTransaction ratedTransaction) {
-        boolean elMatch = false;
-        boolean parametersMatch = false;
+        boolean elMatch = true;
+        boolean parametersMatch = true;
         if(articleMappingLine.getMappingKelEL() != null){
             HashMap<Object, Object> contextMap = new HashMap<>();
             contextMap.put("ratedTransaction", ratedTransaction);
@@ -27,14 +29,22 @@ public class ArticleMappingLineService extends BusinessService<ArticleMappingLin
             boolean param3Match = articleMappingLine.getParameter3()  != null ? articleMappingLine.getParameter3() .equals(ratedTransaction.getParameter3()) : ratedTransaction.getParameter3() == null;
             parametersMatch = param1Match && param2Match && param3Match;
         }
-        return articleMappingLine.matchWithAll() || elMatch || parametersMatch
-                || match(articleMappingLine.getOfferTemplate(), ratedTransaction.getOfferTemplate())
-                || (ratedTransaction.getChargeInstance() != null && match(articleMappingLine.getProductTemplate(), ratedTransaction.getChargeInstance().getChargeTemplate()))
-                || (ratedTransaction.getChargeInstance() != null && match(articleMappingLine.getChargeTemplate(), ratedTransaction.getChargeInstance().getChargeTemplate()));
+        return articleMappingLine.matchWithAll() || (elMatch && parametersMatch
+                && offerTemplateMatch(articleMappingLine.getOfferTemplate(), ratedTransaction.getOfferTemplate())
+                && productTemplateMatch(articleMappingLine.getProductTemplate(), ratedTransaction.getChargeInstance())
+                && chargeTemplateMatch(articleMappingLine.getChargeTemplate(), ratedTransaction.getChargeInstance()));
     }
 
-    private boolean match(BusinessEntity businessEntity1, BusinessEntity businessEntity2) {
-        return businessEntity1 != null && businessEntity2 != null && businessEntity1.getId().equals(businessEntity2.getId());
+    private boolean offerTemplateMatch(OfferTemplate articleMappingLineOfferTemplate, OfferTemplate ratedTransactionOfferTemplate) {
+        return articleMappingLineOfferTemplate == null || (ratedTransactionOfferTemplate != null && ratedTransactionOfferTemplate.getId().equals(articleMappingLineOfferTemplate.getId()));
+    }
+
+    private boolean productTemplateMatch(ProductTemplate productTemplate, ChargeInstance chargeInstance) {
+        return productTemplate == null || (chargeInstance != null && chargeInstance.getChargeTemplate() != null && productTemplate.getId().equals(chargeInstance.getChargeTemplate().getId()));
+    }
+
+    private boolean chargeTemplateMatch(ChargeTemplate chargeTemplate, ChargeInstance chargeInstance) {
+        return chargeTemplate == null || (chargeInstance != null && chargeInstance.getChargeTemplate() != null && chargeTemplate.getId().equals(chargeInstance.getChargeTemplate().getId()));
     }
 
 
