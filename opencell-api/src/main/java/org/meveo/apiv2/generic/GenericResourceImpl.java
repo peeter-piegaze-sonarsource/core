@@ -28,6 +28,7 @@ public class GenericResourceImpl implements GenericResource {
 
     @Override
     public Response getAll(String entityName, GenericPagingAndFiltering searchConfig) {
+System.out.println("searchConfig in GenericResImpl : " + searchConfig.toString() );
         entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
@@ -60,7 +61,6 @@ public class GenericResourceImpl implements GenericResource {
 
     @Override
     public Response getEntity(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
-System.out.println("getEntity BA MA O DAY NE");
         return get(entityName, id, searchConfig);
     }
 
