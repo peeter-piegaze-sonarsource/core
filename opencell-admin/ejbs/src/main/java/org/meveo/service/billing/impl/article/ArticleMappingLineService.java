@@ -1,5 +1,6 @@
 package org.meveo.service.billing.impl.article;
 
+import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.article.ArticleMappingLine;
 import org.meveo.model.billing.ChargeInstance;
 import org.meveo.model.billing.RatedTransaction;
@@ -8,12 +9,19 @@ import org.meveo.model.catalog.OfferTemplate;
 import org.meveo.model.catalog.ProductTemplate;
 import org.meveo.service.base.BusinessService;
 import org.meveo.service.base.ValueExpressionWrapper;
+import org.meveo.service.script.Script;
+import org.meveo.service.script.ScriptInstanceService;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 
 @Stateless
 public class ArticleMappingLineService extends BusinessService<ArticleMappingLine> {
+
+    @Inject
+    private ScriptInstanceService scriptInstanceService;
 
     public boolean match(ArticleMappingLine articleMappingLine, RatedTransaction ratedTransaction) {
         boolean elMatch = true;
@@ -45,6 +53,17 @@ public class ArticleMappingLineService extends BusinessService<ArticleMappingLin
 
     private boolean chargeTemplateMatch(ChargeTemplate chargeTemplate, ChargeInstance chargeInstance) {
         return chargeTemplate == null || (chargeInstance != null && chargeInstance.getChargeTemplate() != null && chargeTemplate.getId().equals(chargeInstance.getChargeTemplate().getId()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<RatedTransaction> executeArticleMappingScript(String scriptInstanceCode, List<RatedTransaction> ratedTransactions) throws BusinessException {
+
+        HashMap<String, Object> context = new HashMap<String, Object>();
+        context.put(Script.CONTEXT_CURRENT_USER, currentUser);
+        context.put(Script.CONTEXT_APP_PROVIDER, appProvider);
+        context.put("ratedTransactions", ratedTransactions);
+        scriptInstanceService.executeCached(scriptInstanceCode, context);
+        return (List<RatedTransaction>) context.get(Script.RESULT_VALUE);
     }
 
 

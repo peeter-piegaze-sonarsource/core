@@ -6,6 +6,7 @@ import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.article.AccountingArticle;
+import org.meveo.model.article.ArticleMapping;
 import org.meveo.model.article.ArticleMappingLine;
 import org.meveo.model.billing.BillingRun;
 import org.meveo.model.billing.RatedTransaction;
@@ -26,6 +27,7 @@ import javax.interceptor.Interceptors;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -87,12 +89,22 @@ public class ArticleMappingBean extends BaseJobBean {
         result.setNbItemsToProcess(ratedTransactions.size());
 
         List<ArticleMappingLine> articleMappingLines = articleMappingLineService.list();
-        for(RatedTransaction ratedTransaction : ratedTransactions) {
-            Set<AccountingArticle> accountingArticles = articleMappingLines.stream()
-                    .filter(aml -> articleMappingLineService.match(aml, ratedTransaction))
-                    .map(ArticleMappingLine::getAccountingArticle)
-                    .collect(Collectors.toSet());
-            ratedTransactionService.matchWithAccountingArticle(ratedTransaction, accountingArticles);
+
+        Optional<ArticleMapping> articleMapping = articleMappingLines.stream()
+                .filter(ar -> ar.getArticleMapping() != null)
+                .map(ArticleMappingLine::getArticleMapping)
+                .findFirst();
+
+        if(articleMapping.isPresent()){
+            ratedTransactions = articleMappingLineService.executeArticleMappingScript(articleMapping.get().getCode(), ratedTransactions);
+        } else {
+            for (RatedTransaction ratedTransaction : ratedTransactions) {
+                Set<AccountingArticle> accountingArticles = articleMappingLines.stream()
+                        .filter(aml -> articleMappingLineService.match(aml, ratedTransaction))
+                        .map(ArticleMappingLine::getAccountingArticle)
+                        .collect(Collectors.toSet());
+                ratedTransactionService.matchWithAccountingArticle(ratedTransaction, accountingArticles);
+            }
         }
         long rejectedItems = ratedTransactions.stream()
                 .filter(r -> r.getStatus() == RatedTransactionStatusEnum.REJECTED)

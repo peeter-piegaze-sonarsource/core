@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -19,6 +20,7 @@ public class ArticleMapping extends BusinessEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mapping_script_id")
+    @NotNull
     private ScriptInstance mappingScript;
 
     public ArticleMapping(){}
