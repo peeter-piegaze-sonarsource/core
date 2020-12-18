@@ -6,7 +6,6 @@ import org.meveo.apiv2.article.service.AccountingArticleApiService;
 import org.meveo.apiv2.ordering.common.LinkGenerator;
 import org.meveo.model.article.AccountingArticle;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 

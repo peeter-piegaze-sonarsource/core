@@ -38,9 +38,4 @@ public interface AccountingArticle extends Resource {
 
     @Nullable
     List<LanguageDescription> getLanguageDescriptions();
-
-    //CustomFieldsDto getCustomFields();
-
-
-
 }

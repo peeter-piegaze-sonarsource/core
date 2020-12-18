@@ -11,7 +11,6 @@ import org.meveo.model.tax.TaxClass;
 
 public class AccountingArticleMapper extends ResourceMapper<org.meveo.apiv2.article.AccountingArticle, AccountingArticle> {
 
-
     @Override
     protected org.meveo.apiv2.article.AccountingArticle toResource(AccountingArticle entity) {
         return ImmutableAccountingArticle.builder()
@@ -20,8 +19,10 @@ public class AccountingArticleMapper extends ResourceMapper<org.meveo.apiv2.arti
                 .description(entity.getDescription())
                 .taxClass(ImmutableResource.builder().id(entity.getTaxClass().getId()).build())
                 .invoiceSubCategory(ImmutableResource.builder().id(entity.getInvoiceSubCategory().getId()).build())
-                .accountingCode(entity.getAccountingCode() != null ? ImmutableResource.builder().id(entity.getAccountingCode().getId()).build() : null)
-                .articleFamily(entity.getArticleFamily() != null ? ImmutableResource.builder().id(entity.getArticleFamily().getId()).build() : null)
+                .accountingCode(entity.getAccountingCode() != null
+                        ? ImmutableResource.builder().id(entity.getAccountingCode().getId()).build() : null)
+                .articleFamily(entity.getArticleFamily() != null
+                        ? ImmutableResource.builder().id(entity.getArticleFamily().getId()).build() : null)
                 .analyticCode1(entity.getAnalyticCode1())
                 .analyticCode2(entity.getAnalyticCode2())
                 .analyticCode3(entity.getAnalyticCode3())
@@ -34,13 +35,14 @@ public class AccountingArticleMapper extends ResourceMapper<org.meveo.apiv2.arti
         taxClass.setId(resource.getTaxClass().getId());
         InvoiceSubCategory invoiceSubCategory = new InvoiceSubCategory();
         invoiceSubCategory.setId(resource.getInvoiceSubCategory().getId());
-        AccountingArticle accountingArticleEntity = new AccountingArticle(resource.getCode(), resource.getDescription(), taxClass, invoiceSubCategory);
+        AccountingArticle accountingArticleEntity =
+                new AccountingArticle(resource.getCode(), resource.getDescription(), taxClass, invoiceSubCategory);
         if(resource.getAccountingCode() != null) {
             AccountingCode accountingCode = new AccountingCode();
             accountingCode.setId(resource.getAccountingCode().getId());
             accountingArticleEntity.setAccountingCode(accountingCode);
         }
-        if(resource.getArticleFamily() != null){
+        if(resource.getArticleFamily() != null) {
             accountingArticleEntity.setArticleFamily(new ArticleFamily(resource.getArticleFamily().getId()));
         }
         accountingArticleEntity.setAnalyticCode1(resource.getAnalyticCode1());

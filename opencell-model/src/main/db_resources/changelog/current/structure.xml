@@ -4439,6 +4439,7 @@ END $$;]]>
                 <constraints nullable="false" />
             </column>
             <column name="updated" type="datetime" />
+            <column name="uuid" type="varchar(60)" />
             <column name="creator" type="varchar(100)" />
             <column name="updater" type="varchar(100)" />
             <column name="code" type="varchar(255)">
@@ -4459,6 +4460,7 @@ END $$;]]>
             <column name="article_family_id" type="bigint"/>
             <column name="accounting_code_id" type="bigint" />
             <column name="cf_values" type="${type.json}" />
+            <column name="cf_values_accum" type="${type.json}" />
             <column name="description_i18n" type="${type.json}"></column>
         </createTable>
 

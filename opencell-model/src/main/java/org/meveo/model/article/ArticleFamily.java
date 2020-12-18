@@ -59,7 +59,7 @@ public class ArticleFamily extends BusinessEntity implements ICustomFieldEntity 
     @Column(name = "cf_values_accum", columnDefinition = "text")
     private CustomFieldValues cfAccumulatedValues;
 
-    private ArticleFamily() {
+    public ArticleFamily() {
     }
 
     public ArticleFamily(Long id){

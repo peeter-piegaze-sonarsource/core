@@ -1,8 +1,10 @@
 package org.meveo.model.article;
 
+import static javax.persistence.FetchType.LAZY;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.meveo.model.BusinessEntity;
+import org.meveo.model.BusinessCFEntity;
 import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.billing.AccountingCode;
 import org.meveo.model.billing.InvoiceSubCategory;
@@ -16,14 +18,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Map;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-
 @Entity@CustomFieldEntity(cftCodePrefix = "Article")
 @Table(name = "billing_accounting_article")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = { @org.hibernate.annotations.Parameter(name = "sequence_name", value = "billing_accounting_article_seq"), })
-public class AccountingArticle extends BusinessEntity {
+public class AccountingArticle extends BusinessCFEntity {
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "tax_class_id")
