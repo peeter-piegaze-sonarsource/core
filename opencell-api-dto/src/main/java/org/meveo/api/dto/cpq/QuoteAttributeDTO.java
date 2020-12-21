@@ -51,6 +51,10 @@ public class QuoteAttributeDTO extends BaseEntityDto{
 	public String getQuoteAttributeCode() {
 		return quoteAttributeCode;
 	}
+	
+	public QuoteAttributeDTO() {
+		super();
+	}
 
 	public QuoteAttributeDTO(QuoteAttribute quoteAttribue) {
 		super();

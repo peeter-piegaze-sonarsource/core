@@ -237,13 +237,13 @@ public class CpqQuoteApi extends BaseApi {
 				handleMissingParameters();
 				Attribute attribute = attributeService.findByCode(quoteAttributeDTO.getQuoteAttributeCode());
 				if(attribute == null)
-					throw new EntityDoesNotExistsException(QuoteLot.class, quoteAttributeDTO.getQuoteAttributeCode());
+					throw new EntityDoesNotExistsException(Attribute.class, quoteAttributeDTO.getQuoteAttributeCode());
 				QuoteAttribute quoteAttribute = new QuoteAttribute();
 				quoteAttribute.setAttribute(attribute);
 				quoteAttribute.setValue(quoteAttributeDTO.getValue());
 				quoteProduct.getQuoteAttributes().add(quoteAttribute);
-				quoteAttributeService.create(quoteAttribute);
 				quoteAttribute.setQuoteProduct(quoteProduct);
+				quoteAttributeService.create(quoteAttribute);
 				}
 					
 			}
@@ -292,6 +292,7 @@ public class CpqQuoteApi extends BaseApi {
 		quote.setCustomerRef(quoteDto.getExternalId());
 		quote.setValidity(quoteDto.getValidity());
 		quote.setStatus(quoteDto.getStatus());
+		quote.setDescription(quoteDto.getDescription());
 		if(!Strings.isEmpty(quoteDto.getBillableAccountCode())) {
 			quote.setBillableAccount(billingAccountService.findByCode(quoteDto.getBillableAccountCode()));
 		}
@@ -316,6 +317,7 @@ public class CpqQuoteApi extends BaseApi {
 						qv.setBillingPlanCode(quoteVersionDto.getBillingPlanCode());
 					quoteVersionService.update(qv);
 					quoteVersionDto = new QuoteVersionDto(qv);
+					quoteDto.setQuoteVersion(quoteVersionDto);
 				}
 			}
 		}catch(BusinessApiException e) {
@@ -406,7 +408,7 @@ public class CpqQuoteApi extends BaseApi {
 	private GetQuoteDtoResponse populateToDto(CpqQuote quote, boolean loadQuoteOffers, boolean loadQuoteProduct,boolean loadQuoteAttributes) {
 		GetQuoteDtoResponse result=new GetQuoteDtoResponse();
 		result.setQuoteDto(populateQuoteToDto(quote));
-		final List<QuoteVersion> quoteVersions = quoteVersionService.findByQuoteId(quote.getId());
+		final List<QuoteVersion> quoteVersions = quoteVersionService.findByQuoteCode(quote.getCode());
 		QuoteVersionDto quoteVersionDto=null;
 		for(QuoteVersion  version:quoteVersions) {
 			quoteVersionDto=new QuoteVersionDto(version,true,true,true);
@@ -433,11 +435,7 @@ public class CpqQuoteApi extends BaseApi {
 		final QuoteVersion quoteVersion = quoteVersionService.findByQuoteAndVersion(quoteOfferDto.getQuoteCode(), quoteOfferDto.getQuoteVersion());
 		if(quoteVersion == null)
 			throw new EntityDoesNotExistsException(QuoteVersion.class, "(" + quoteOfferDto.getQuoteCode() + "," + quoteOfferDto.getQuoteVersion() + ")");
-		QuoteOffer quoteOffer = quoteOfferService.findByTemplateAndQuoteVersion(quoteOfferDto.getOfferCode(), quoteOfferDto.getQuoteCode(), quoteOfferDto.getQuoteVersion());
-		if(quoteOffer != null)
-			throw new EntityAlreadyExistsException(QuoteOffer.class, quoteOfferDto.getOfferCode() + "," + quoteOfferDto.getOfferCode() + "," + quoteOfferDto.getQuoteVersion() );
-		else
-			quoteOffer = new QuoteOffer();
+		QuoteOffer 	quoteOffer = new QuoteOffer();
 		quoteOffer.setOfferTemplate(offerTemplate);
 		quoteOffer.setQuoteVersion(quoteVersion);
 		if(Strings.isEmpty(quoteOfferDto.getBillableAccountCode()))
@@ -469,7 +467,6 @@ public class CpqQuoteApi extends BaseApi {
 		}
 		
 		// check quote version
-		boolean isUniqueKeyChanged = false;
 		if(!Strings.isEmpty(quoteOfferDTO.getQuoteCode())) {
 			if(quoteOfferDTO.getQuoteVersion() == null)
 				missingParameters.add("quoteVersion");
@@ -481,17 +478,6 @@ public class CpqQuoteApi extends BaseApi {
 			if(quoteVersion == null)
 				throw new EntityDoesNotExistsException("can not find Quote version with qoute code : " + quoteOfferDTO.getQuoteCode() +" and version : " + quoteOfferDTO.getQuoteVersion());
 			quoteOffer.setQuoteVersion(quoteVersion);
-			isUniqueKeyChanged = true;
-		}
-		if(isUniqueKeyChanged) {
-			QuoteOffer tmpQuoteOffer = quoteOfferService.findById(quoteOfferDTO.getQuoteOfferId());
-			if(tmpQuoteOffer.getOfferTemplate().getId() != quoteOffer.getOfferTemplate().getId()  
-					||  tmpQuoteOffer.getQuoteVersion().getId() != quoteOffer.getQuoteVersion().getId()) {
-//				throw new EntityAlreadyExistsException("Quote Offer already exist with offer template : " + 
-//																		tmpQuoteOffer.getOfferTemplate().getCode() + ", and quote version (" + 
-//																				quoteOfferDTO.getQuoteCode() + ", " + quoteOfferDTO.getQuoteVersion()  );
-				
-			}
 		}
 		if(!Strings.isEmpty(quoteOfferDTO.getBillableAccountCode()))
 			quoteOffer.setBillableAccount(billingAccountService.findByCode(quoteOfferDTO.getBillableAccountCode()));
@@ -549,7 +535,7 @@ public class CpqQuoteApi extends BaseApi {
 		ProductVersion productVersion = productVersionService.findByProductAndVersion(quoteProductDTO.getProductCode(), quoteProductDTO.getProductVersion());
 		if(productVersion == null)
 			throw new EntityDoesNotExistsException(ProductVersion.class, "products["+index+"] = " + quoteProductDTO.getProductCode() +","+ quoteProductDTO.getProductVersion());
-		QuoteProduct q = quoteProductService.findByProductVersionAndQuoteOffer(productVersion.getId(), quoteOffer.getId());
+		QuoteProduct q = quoteProductService.findByQuoteVersionAndQuoteOffer(quoteVersion.getId(), quoteOffer.getId());
 		if(q == null)
 			throw new EntityDoesNotExistsException("products["+index+"] : doesn't exist");
 		if(!Strings.isEmpty(quoteProductDTO.getQuoteLotCode())) {
@@ -596,7 +582,7 @@ public class CpqQuoteApi extends BaseApi {
 	private QuoteAttribute getQuoteAttributeFromDto(QuoteAttributeDTO quoteAttributeDTO, QuoteProduct quoteProduct) {
 		Attribute attribute = attributeService.findByCode(quoteAttributeDTO.getQuoteAttributeCode());
 		if(attribute == null)
-			throw new EntityDoesNotExistsException(QuoteLot.class, quoteAttributeDTO.getQuoteAttributeCode());
+			throw new EntityDoesNotExistsException(Attribute.class, quoteAttributeDTO.getQuoteAttributeCode());
 		QuoteAttribute quoteAttribute = quoteAttributeService.findByAttributeAndQuoteProduct(attribute.getId(), quoteProduct.getId());
 		if(quoteAttribute == null) {
 			quoteAttribute = new QuoteAttribute();
