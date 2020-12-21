@@ -35,7 +35,7 @@ public class GenericRequestMapper {
         return new PaginationConfiguration(genericPagingAndFiltering.getOffset().intValue(), genericPagingAndFiltering.getLimitOrDefault(GenericHelper.getDefaultLimit()).intValue(),
                 evaluateFilters(genericPagingAndFiltering.getFilters(), entityClass), genericPagingAndFiltering.getFullTextFilter(),
                 Collections.emptyList(), genericPagingAndFiltering.getSortBy(),
-                org.primefaces.model.SortOrder.valueOf(genericPagingAndFiltering.getSortOrder()));
+                genericPagingAndFiltering.getSortOrder());
     }
     @VisibleForTesting
     public Map<String, Object> evaluateFilters(Map<String, Object> filters, Class<? extends IEntity> entity) {

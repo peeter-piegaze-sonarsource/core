@@ -37,27 +37,42 @@ public class GenericPagingAndFilteringUtils {
             else if ( aKey.equals( OFFSET ) )
                 builder.offset( Long.parseLong( queryParams.get(aKey).get(0) ) );
             else if ( aKey.equals( SORT ) ) {
-                String allSortFields = queryParams.get(aKey).get(0);
+                String allSortFieldsAndOrders = queryParams.get(aKey).get(0);
+                String[] allSortFieldsSplit = allSortFieldsAndOrders.split(MULTI_SORTING_DELIMITER);
+                StringBuilder sortOrders = new StringBuilder();
+                StringBuilder sortFields = new StringBuilder();
 
-                // process sortOrder
-                if ( allSortFields.charAt(0) == DESCENDING_SIGN ) {
-                    builder.sortOrder( DESCENDING_ORDER );
+                for ( int i = 0; i < allSortFieldsSplit.length - 1; i++ ) {
+                    if ( allSortFieldsSplit[i].charAt(0) == DESCENDING_SIGN ) {
+                        sortOrders.append( DESCENDING_ORDER + MULTI_SORTING_DELIMITER );
+
+                        // Remove the sign '-' in case of DESCENDING
+                        sortFields.append( allSortFieldsSplit[i].substring(1) + MULTI_SORTING_DELIMITER );
+                    }
+                    else {
+                        sortOrders.append( ASCENDING_ORDER + MULTI_SORTING_DELIMITER );
+                        sortFields.append( allSortFieldsSplit[i] + MULTI_SORTING_DELIMITER );
+                    }
+                }
+
+                if ( allSortFieldsSplit[allSortFieldsSplit.length - 1].charAt(0) == DESCENDING_SIGN ) {
+                    sortOrders.append( DESCENDING_ORDER );
 
                     // Remove the sign '-' in case of DESCENDING
-                    allSortFields = allSortFields.substring(1);
+                    sortFields.append( allSortFieldsSplit[allSortFieldsSplit.length - 1].substring(1) );
+                }
+                else {
+                    sortOrders.append( ASCENDING_ORDER );
+                    sortFields.append( allSortFieldsSplit[allSortFieldsSplit.length - 1] );
                 }
 
-                // process sortBy
-                String[] allSortFieldsSplit = allSortFields.split(MULTI_SORTING_DELIMITER);
-                for ( int i = 0; i < allSortFieldsSplit.length; i++ ) {
-                    System.out.println( "allSortFieldsSplit[i] : " + allSortFieldsSplit[i] );
-                    builder.sortBy( allSortFieldsSplit[i] );
-                }
+                builder.sortOrder( sortOrders.toString() );
+                builder.sortBy( sortFields.toString() );
+            }
+            else {
 
-//                builder.sortBy();
-//System.out.println( "First element : " + queryParams.get( 0 ).toString() );
-//System.out.println( "Second element : " + queryParams.get( 1 ).toString() );
-//System.out.println( "Third element : " + queryParams.get( 2 ).toString() );
+                // we need to process filters containing other things such as INTERVAL VALUES
+                // (fromRange, toRange, etc.) here
 
             }
         }
