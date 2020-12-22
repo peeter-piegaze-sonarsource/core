@@ -28,7 +28,6 @@ public class GenericResourceImpl implements GenericResource {
 
     @Override
     public Response getAll(String entityName, GenericPagingAndFiltering searchConfig) {
-System.out.println("searchConfig in GenericResImpl : " + searchConfig.toString() );
         entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
@@ -80,6 +79,11 @@ System.out.println("searchConfig in GenericResImpl : " + searchConfig.toString()
 
         return getAll(entityName,
                 GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+    }
+
+    @Override
+    public Response getFullListEntities() {
+        return Response.ok().entity(GenericOpencellRestful.ENTITIES_LIST).type(MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @Override
