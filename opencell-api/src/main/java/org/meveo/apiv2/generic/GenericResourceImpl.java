@@ -18,6 +18,8 @@ import javax.ws.rs.core.*;
 import java.util.Collections;
 import java.util.Set;
 
+import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
+
 @Stateless
 public class GenericResourceImpl implements GenericResource {
     @Inject
@@ -84,6 +86,30 @@ public class GenericResourceImpl implements GenericResource {
     @Override
     public Response getFullListEntities() {
         return Response.ok().entity(GenericOpencellRestful.ENTITIES_LIST).type(MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    @Override
+    public Response getRelatedFieldsOfEntity( String entityName ) {
+//        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+//        GenericPagingAndFiltering searchConfig =
+//                GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams);
+//
+//        Set<String> genericFields = null;
+//        Set<String> nestedEntities = null;
+//        if(searchConfig != null){
+//            genericFields = searchConfig.getGenericFields();
+//            nestedEntities = searchConfig.getNestedEntities();
+//        }
+//        Class entityClass = GenericHelper.getEntityClass(entityName);
+//        GenericRequestMapper genericRequestMapper = new GenericRequestMapper(entityClass, PersistenceServiceHelper.getPersistenceService());
+
+//        return Response.ok().entity( loadService.findRelatedFields(entityClass,
+//                genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities,
+//                searchConfig.getNestedDepth()) )
+//                .links(buildPaginatedResourceLink(entityName)).build();
+
+        Class entityClass = GenericHelper.getEntityClass(entityName);
+        return Response.ok().entity(getPersistenceService(entityClass).listRelatedFields()).type(MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @Override

@@ -49,6 +49,7 @@ import javax.ejb.EJB;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.*;
+import javax.persistence.metamodel.Attribute;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -566,7 +567,8 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
     }
 
     /**
-     * @see org.meveo.service.base.local.IPersistenceService#list(org.meveo.admin.util.pagination.PaginationConfiguration)
+     * @see org.meveo.service.base.loca
+     * l.IPersistenceService#list(org.meveo.admin.util.pagination.PaginationConfiguration)
      */
     @SuppressWarnings({ "unchecked" })
     @Override
@@ -584,6 +586,34 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
             Query query = queryBuilder.getQuery(getEntityManager());
             return query.getResultList();
         }
+    }
+
+    /**
+     * Used to retrieve related fields of an entity
+     */
+    @SuppressWarnings({ "unchecked" })
+    public List<E> listRelatedFields() {
+        List resultList = new ArrayList();
+        Map mapAttributeAndType = new HashMap();
+
+//        String[] attributeNames = ((Session) getEntityManager().getDelegate()).getSessionFactory()
+//                .getClassMetadata( getEntityClass() ).getPropertyNames();
+//        org.hibernate.type.Type[] attributeTypes = ((Session) getEntityManager().getDelegate()).getSessionFactory()
+//                .getClassMetadata( getEntityClass() ).getPropertyTypes();
+//
+//        for ( int i = 0; i < attributeNames.length; i++ ) {
+//            mapAttributeAndType.put( attributeNames[i], attributeTypes[i].getName() );
+//        }
+
+        Set<Attribute<? super E, ?>> aNewSet = ((Session) getEntityManager().getDelegate()).getSessionFactory()
+                .getMetamodel().managedType( getEntityClass() ).getAttributes();
+
+        for ( Attribute<? super E, ?> att : aNewSet )
+            mapAttributeAndType.put( att.getName(), att.getJavaType() );
+
+        resultList.add( mapAttributeAndType );
+
+        return resultList;
     }
 
     /**

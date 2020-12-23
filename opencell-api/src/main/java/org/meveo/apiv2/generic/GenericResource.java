@@ -124,6 +124,18 @@ public interface GenericResource {
             })
     Response getFullListEntities();
 
+    @GET
+    @Path("/entities/{entityName}")
+    @Operation(summary = "This endpoint is used to retrieve the fields of an entity",
+            tags = { "Generic" },
+            description ="specify the entity name, the record id, and as body, the list of the wanted fields",
+            responses = {
+                    @ApiResponse(responseCode="200", description = "paginated results successfully retrieved with hypermedia links"),
+                    @ApiResponse(responseCode = "404", description = "the full list of entities not found",
+                            content = @Content(schema = @Schema(implementation = ApiException.class)))
+            })
+    Response getRelatedFieldsOfEntity( @PathParam("entityName") String entityName );
+
     @HEAD
     @Path("/{entityName}/{id}")
     @Operation(summary = "Generic single endpoint to check existence of a resource by ID",
