@@ -55,11 +55,17 @@ public class InvoiceLineApiService implements ApiService<InvoiceLine> {
 
     @Override
     public Optional<InvoiceLine> findById(Long id) {
-        return Optional.empty();
+        return Optional.of(invoiceLineService.findById(id));
     }
 
     @Override
     public InvoiceLine create(InvoiceLine baseEntity) {
+        setRefObjects(baseEntity);
+        invoiceLineService.create(baseEntity);
+        return baseEntity;
+    }
+
+    private void setRefObjects(InvoiceLine baseEntity) {
         if(baseEntity.getInvoice() != null)
             baseEntity.setInvoice(loadEntityById(invoiceService, baseEntity.getInvoice().getId(), "invoice"));
         if(baseEntity.getBillingRun() != null)
@@ -78,12 +84,39 @@ public class InvoiceLineApiService implements ApiService<InvoiceLine> {
             baseEntity.setTax(loadEntityById(taxService, baseEntity.getTax().getId(), "tax"));
         if(baseEntity.getOrder() != null)
             baseEntity.setOrder(loadEntityById(orderService, baseEntity.getOrder().getId(), "order service"));
-        invoiceLineService.create(baseEntity);
-        return baseEntity;
     }
 
     @Override
     public Optional<InvoiceLine> update(Long id, InvoiceLine baseEntity) {
+        InvoiceLine oldInvoiceLine = invoiceLineService.findById(id);
+        if(oldInvoiceLine != null){
+            setRefObjects(baseEntity);
+            oldInvoiceLine.setInvoice(baseEntity.getInvoice());
+            oldInvoiceLine.setBillingRun(baseEntity.getBillingRun());
+            oldInvoiceLine.setBillingAccount(baseEntity.getBillingAccount());
+            oldInvoiceLine.setAccountingArticle(baseEntity.getAccountingArticle());
+            oldInvoiceLine.setLabel(baseEntity.getLabel());
+            oldInvoiceLine.setQuantity(baseEntity.getQuantity());
+            oldInvoiceLine.setUnitPrice(baseEntity.getUnitPrice());
+            oldInvoiceLine.setDiscountRate(baseEntity.getDiscountRate());
+            oldInvoiceLine.setDiscountAmountWithoutTax(baseEntity.getDiscountAmountWithoutTax());
+            oldInvoiceLine.setAmountWithoutTax(baseEntity.getAmountWithoutTax());
+            oldInvoiceLine.setTaxRate(baseEntity.getTaxRate());
+            oldInvoiceLine.setAmountTax(baseEntity.getAmountTax());
+            oldInvoiceLine.setAmountWithTax(baseEntity.getAmountWithTax());
+            oldInvoiceLine.setInvoice(baseEntity.getInvoice());
+            oldInvoiceLine.setOffer(baseEntity.getOffer());
+            oldInvoiceLine.setProduct(baseEntity.getProduct());
+            oldInvoiceLine.setService(baseEntity.getService());
+            oldInvoiceLine.setStartDate(baseEntity.getStartDate());
+            oldInvoiceLine.setEndDate(baseEntity.getEndDate());
+            oldInvoiceLine.setDiscountPlan(baseEntity.getDiscountPlan());
+            oldInvoiceLine.setTax(baseEntity.getTax());
+            oldInvoiceLine.setOrderNumber(baseEntity.getOrderNumber());
+            oldInvoiceLine.setOrder(baseEntity.getOrder());
+            return Optional.of(invoiceLineService.update(oldInvoiceLine));
+        }
+
         return Optional.empty();
     }
 
@@ -94,6 +127,11 @@ public class InvoiceLineApiService implements ApiService<InvoiceLine> {
 
     @Override
     public Optional<InvoiceLine> delete(Long id) {
+        InvoiceLine invoiceLine = invoiceLineService.findById(id);
+        if(invoiceLine != null) {
+            invoiceLineService.remove(invoiceLine);
+            return Optional.of(invoiceLine);
+        }
         return Optional.empty();
     }
 }
