@@ -1,5 +1,7 @@
 package org.meveo.apiv2.billing.impl;
 
+import org.meveo.apiv2.billing.ImmutableInvoiceLine;
+import org.meveo.apiv2.models.ImmutableResource;
 import org.meveo.apiv2.ordering.ResourceMapper;
 import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.billing.BillingAccount;
@@ -19,7 +21,32 @@ public class InvoiceLineMapper extends ResourceMapper<org.meveo.apiv2.billing.In
 
     @Override
     protected org.meveo.apiv2.billing.InvoiceLine toResource(InvoiceLine entity) {
-        return null;
+
+        return ImmutableInvoiceLine.builder()
+                .invoice(entity.getInvoice() != null ? ImmutableResource.builder().id(entity.getInvoice().getId()).build() : null)
+                .billingRun(entity.getBillingRun() != null ? ImmutableResource.builder().id(entity.getBillingRun().getId()).build() : null)
+                .billingAccount(ImmutableResource.builder().id(entity.getBillingAccount().getId()).build())
+                .accountingArticle(ImmutableResource.builder().id(entity.getAccountingArticle().getId()).build())
+                .label(entity.getLabel())
+                .quantity(entity.getQuantity())
+                .unitPrice(entity.getUnitPrice())
+                .discountRate(entity.getDiscountRate())
+                .discountAmountWithoutTax(entity.getDiscountAmountWithoutTax())
+                .amountWithoutTax(entity.getAmountWithoutTax())
+                .taxRate(entity.getTaxRate())
+                .amountTax(entity.getAmountTax())
+                .amountWithTax(entity.getAmountWithTax())
+                .prestation(entity.getPrestation())
+                .offerTemplate(entity.getOffer() != null ? ImmutableResource.builder().id(entity.getOffer().getId()).build() : null)
+                .productInstance(entity.getProduct() != null ? ImmutableResource.builder().id(entity.getProduct().getId()).build() : null)
+                .serviceInstance(entity.getService() != null ? ImmutableResource.builder().id(entity.getService().getId()).build() : null)
+                .startDate(entity.getStartDate())
+                .endDate(entity.getEndDate())
+                .discountPlan(entity.getDiscountPlan() != null ? ImmutableResource.builder().id(entity.getDiscountPlan().getId()).build() : null)
+                .tax(entity.getTax() != null ? ImmutableResource.builder().id(entity.getTax().getId()).build() : null)
+                .orderNumber(entity.getOrderNumber())
+                .order(entity.getOrder() != null ? ImmutableResource.builder().id(entity.getId()).build() : null)
+                .build();
     }
 
     @Override

@@ -19,7 +19,10 @@
 package org.meveo.apiv2.ordering.services;
 
 import org.meveo.model.BaseEntity;
+import org.meveo.model.IEntity;
+import org.meveo.service.base.PersistenceService;
 
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +34,11 @@ public interface ApiService<T extends BaseEntity> {
     Optional<T> update(Long id, T baseEntity);
     Optional<T> patch(Long id, T baseEntity);
     Optional<T> delete(Long id);
+
+    default <T extends IEntity> T loadEntityById(PersistenceService<T> service, Long id, String entityName){
+        T baseEntity = service.findById(id);
+        if(baseEntity == null)
+            throw new BadRequestException("No " + entityName + " found with id: " + id);
+        return baseEntity;
+    }
 }
