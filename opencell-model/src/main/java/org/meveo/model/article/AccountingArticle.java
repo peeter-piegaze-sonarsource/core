@@ -1,5 +1,15 @@
 package org.meveo.model.article;
 
+import static javax.persistence.FetchType.LAZY;
+
+import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.meveo.model.BusinessEntity;
@@ -9,23 +19,13 @@ import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.crm.custom.CustomFieldValues;
 import org.meveo.model.tax.TaxClass;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import java.util.Map;
-
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-
 @Entity@CustomFieldEntity(cftCodePrefix = "Article")
 @Table(name = "billing_accounting_article")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
         parameters = { @org.hibernate.annotations.Parameter(name = "sequence_name", value = "billing_accounting_article_seq"), })
 public class AccountingArticle extends BusinessEntity {
 
-    @OneToOne(fetch = LAZY)
+	@OneToOne(fetch = LAZY)
     @JoinColumn(name = "tax_class_id")
     private TaxClass taxClass;
 
@@ -61,7 +61,7 @@ public class AccountingArticle extends BusinessEntity {
     @Column(name = "description_i18n", columnDefinition = "text")
     private Map<String, String> descriptionI18n;
 
-    private AccountingArticle() {
+    AccountingArticle() {
     }
 
     public AccountingArticle(Long id) {

@@ -110,6 +110,32 @@ public class DiscountPlanItemDto extends BaseEntityDto implements IEnableDto {
      */
 	private String discountValueElSpark;
 	
+	/**
+     * priority
+     */
+	private Integer priority=0;
+	
+	/**
+     * accountingArticle Code
+     */
+	private String accountingArticleCode;
+	
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public String getAccountingArticleCode() {
+		return accountingArticleCode;
+	}
+
+	public void setAccountingArticleCode(String accountingArticleCode) {
+		this.accountingArticleCode = accountingArticleCode;
+	}
+
 	/** The custom fields. */
     @XmlElement(required = false)
     private CustomFieldsDto customFields;
@@ -139,7 +165,8 @@ public class DiscountPlanItemDto extends BaseEntityDto implements IEnableDto {
 		this.discountValue = discountPlanItem.getDiscountValue();
 		this.discountValueEL = discountPlanItem.getDiscountValueEL();
 		this.discountValueElSpark = discountPlanItem.getDiscountValueElSpark();
-		
+		this.priority=discountPlanItem.getPriority();
+		this.accountingArticleCode = discountPlanItem.getAccountingArticle() != null ? discountPlanItem.getAccountingArticle().getCode() : null;
 		customFields = customFieldInstances;
     }
 

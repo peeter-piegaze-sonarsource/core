@@ -33,11 +33,13 @@ import org.meveo.api.exception.InvalidParameterException;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.exception.MissingParameterException;
 import org.meveo.commons.utils.StringUtils;
+import org.meveo.model.article.AccountingArticle;
 import org.meveo.model.billing.InvoiceCategory;
 import org.meveo.model.billing.InvoiceSubCategory;
 import org.meveo.model.catalog.DiscountPlan;
 import org.meveo.model.catalog.DiscountPlanItem;
 import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
+import org.meveo.service.catalog.impl.AccountingArticleService;
 import org.meveo.service.catalog.impl.DiscountPlanItemService;
 import org.meveo.service.catalog.impl.DiscountPlanService;
 import org.meveo.service.catalog.impl.InvoiceCategoryService;
@@ -63,6 +65,9 @@ public class DiscountPlanItemApi extends BaseApi {
 
     @Inject
     private InvoiceSubCategoryService invoiceSubCategoryService;
+    
+    @Inject
+    AccountingArticleService accountingArticleService;
 
     /**
      * creates a discount plan item
@@ -288,6 +293,17 @@ public class DiscountPlanItemApi extends BaseApi {
 		}
 		if (source.getDiscountPlanItemType() != null) {
 			discountPlanItem.setDiscountPlanItemType(source.getDiscountPlanItemType());
+		}
+		if (source.getPriority() != null) {
+			discountPlanItem.setPriorty(source.getPriority());
+		}
+		String accountingArticleCode = source.getAccountingArticleCode();
+		if (accountingArticleCode != null) {
+			AccountingArticle accountingArticle = accountingArticleService.findByCode(accountingArticleCode);
+            if (accountingArticle == null) {
+                throw new EntityDoesNotExistsException(AccountingArticle.class, accountingArticleCode);
+            }
+			discountPlanItem.setAccountingArticle(accountingArticle);
 		}
 
         return discountPlanItem;

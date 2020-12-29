@@ -4726,7 +4726,7 @@ END $$;]]>
             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_accounting_article" />
             
         <addColumn tableName="cat_discount_plan_item">
-        	<column name="priorty" type="bigint"></column>
+        	<column name="priority" type="int4"></column>
         </addColumn> 
         
         <addColumn tableName="quote_offer">

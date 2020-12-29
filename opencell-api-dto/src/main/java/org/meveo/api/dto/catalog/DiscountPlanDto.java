@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.meveo.api.dto.CustomFieldsDto;
 import org.meveo.api.dto.EnableBusinessDto;
 import org.meveo.model.catalog.DiscountPlan;
+import org.meveo.model.catalog.DiscountPlanTypeEnum;
 import org.meveo.model.catalog.DiscountPlan.DurationPeriodUnitEnum;
 
 /**
@@ -67,6 +68,11 @@ public class DiscountPlanDto extends EnableBusinessDto {
 	@XmlElementWrapper(name = "discountPlanItems")
 	@XmlElement(name = "discountPlanItem")
 	private List<DiscountPlanItemDto> discountPlanItems;
+	
+    /**
+     * discount plan type
+     */
+    private DiscountPlanTypeEnum discountPlanType;
 
     /**
      * Instantiates a new DiscountPlanDto
@@ -88,7 +94,7 @@ public class DiscountPlanDto extends EnableBusinessDto {
 		endDate = discountPlan.getEndDate();
 		defaultDuration = discountPlan.getDefaultDuration();
 		durationUnit = discountPlan.getDurationUnit();
-		
+		discountPlanType = discountPlan.getDiscountPlanType();
 		customFields = customFieldInstances;
 	}
 
@@ -159,7 +165,24 @@ public class DiscountPlanDto extends EnableBusinessDto {
 		if (source.getDefaultDuration() != null) {
 			target.setDefaultDuration(source.getDefaultDuration());
 		}
+        if(source.getDiscountPlanType()!=null) {
+        	target.setDiscountPlanType(source.getDiscountPlanType());
+        }
 
 		return target;
+	}
+
+	/**
+	 * @return the discountPlanType
+	 */
+	public DiscountPlanTypeEnum getDiscountPlanType() {
+		return discountPlanType;
+	}
+
+	/**
+	 * @param discountPlanType the discountPlanType to set
+	 */
+	public void setDiscountPlanType(DiscountPlanTypeEnum discountPlanType) {
+		this.discountPlanType = discountPlanType;
 	}
 }

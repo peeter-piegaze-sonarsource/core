@@ -74,6 +74,7 @@ public class DiscountPlanApi extends BaseCrudApi<DiscountPlan, DiscountPlanDto> 
 		discountPlan.setStartDate(postData.getStartDate());
 		discountPlan.setEndDate(postData.getEndDate());
 		discountPlan.setDefaultDuration(postData.getDefaultDuration());
+        discountPlan.setDiscountPlanType(postData.getDiscountPlanType());
 		if (postData.getDurationUnit() != null) {
 			discountPlan.setDurationUnit(postData.getDurationUnit());
 		}
@@ -113,7 +114,9 @@ public class DiscountPlanApi extends BaseCrudApi<DiscountPlan, DiscountPlanDto> 
         if (description != null) {
             discountPlan.setDescription(description); 
         }
-        
+        if(postData.getDiscountPlanType()!=null) {
+            discountPlan.setDiscountPlanType(postData.getDiscountPlanType());
+        }
         discountPlan.setCode(StringUtils.isBlank(postData.getUpdatedCode()) ? postData.getCode() : postData.getUpdatedCode());
 
 		if (postData.getStartDate() != null) {
