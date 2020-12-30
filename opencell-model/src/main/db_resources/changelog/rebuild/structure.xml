@@ -10025,7 +10025,6 @@ $$ LANGUAGE plpgsql;
         <createSequence sequenceName="cpq_commercial_rule_line_seq" /> 
         <createSequence sequenceName="cpq_grouped_service_seq" /> 
         <createSequence sequenceName="cpq_product_mapping_seq" />
-        <createSequence sequenceName="cpq_accounting_article_seq" />
      </changeSet>  
      
 	<changeSet author="Mbarek-Ay" id="rebuild-mediapost-tbl-01">
@@ -10390,26 +10389,6 @@ $$ LANGUAGE plpgsql;
 		</createTable>
 	</changeSet> 
 	
-	 <changeSet author="Mbarek-Ay" id="rebuild-mediapost-tbl-30">
-        <createTable tableName="cpq_accounting_article">
-            <column name="id" type="bigint" autoIncrement="${id.auto}">
-                <constraints nullable="false" primaryKey="true"
-                    primaryKeyName="cpq_accounting_article_pkey" />
-            </column>
-            <column name="version" type="int4" />
-            <column name="created" type="datetime">
-                <constraints nullable="false" />
-            </column>
-            <column name="updated" type="datetime" />
-            <column name="code" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-            <column name="description" type="varchar(255)" />
-            <column name="creator" type="varchar(100)" />
-            <column name="updater" type="varchar(100)" /> 
-        </createTable>
-    </changeSet>
-    
       <changeSet author="Mbarek-Ay" id="rebuild-mediapost-fk-01">
         <addForeignKeyConstraint baseColumnNames="product_line_id" baseTableName="cpq_product" constraintName="fk_1y8p1q0o8tw5u0vcodfukdbez" deferrable="false" initiallyDeferred="false"
             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_product_line" />
@@ -10840,11 +10819,6 @@ $$ LANGUAGE plpgsql;
       <changeSet author="Mbarek-Ay" id="rebuild-mediapost-fk-33">
         <addForeignKeyConstraint baseColumnNames="attribute_3" baseTableName="cpq_product_mapping" constraintName="fk4-service_template-product_mapping" deferrable="false" initiallyDeferred="false"
             onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cat_service_template" />
-      </changeSet>
-      
-      <changeSet author="Mbarek-Ay" id="rebuild-mediapost-fk-34">
-        <addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cpq_product_mapping" constraintName="fk-accounting_article-product_mapping" deferrable="false" initiallyDeferred="false"
-            onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_accounting_article" />
       </changeSet>
       
        <changeSet author="Mbarek-Ay" id="rebuild-mediapost-fk-35">

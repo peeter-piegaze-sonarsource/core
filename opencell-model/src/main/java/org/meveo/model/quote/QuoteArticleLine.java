@@ -15,8 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.meveo.model.BusinessEntity;
 import org.meveo.model.billing.BillingAccount;
-import org.meveo.model.cpq.CpqAccountingArticle;
-
+import org.meveo.model.article.AccountingArticle;
 
 /**
  * @author Khairi
@@ -52,7 +51,7 @@ public class QuoteArticleLine extends BusinessEntity {
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "accounting_article_id", nullable = false, referencedColumnName = "id")
 	@NotNull
-	private CpqAccountingArticle cpqAccountingArticle;
+	private AccountingArticle accountingArticle;
 
     @Column(name = "quantity", precision = NB_PRECISION, scale = NB_DECIMALS, nullable = false)
     private BigDecimal quantity = BigDecimal.ONE;
@@ -108,15 +107,15 @@ public class QuoteArticleLine extends BusinessEntity {
 	/**
 	 * @return the accountingArticle
 	 */
-	public CpqAccountingArticle getCpqAccountingArticle() {
-		return cpqAccountingArticle;
+	public AccountingArticle getAccountingArticle() {
+		return accountingArticle;
 	}
 
 	/**
 	 * @param cpqAccountingArticle the accountingArticle to set
 	 */
-	public void setCpqAccountingArticle(CpqAccountingArticle cpqAccountingArticle) {
-		this.cpqAccountingArticle = cpqAccountingArticle;
+	public void setAccountingArticle(AccountingArticle accountingArticle) {
+		this.accountingArticle = accountingArticle;
 	}
 
 	/**

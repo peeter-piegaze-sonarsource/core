@@ -3734,9 +3734,6 @@ END $$;]]>
 		    <addForeignKeyConstraint baseColumnNames="service_type_id" baseTableName="cat_service_template" constraintName="fk-product-service_type" deferrable="false" initiallyDeferred="false"
 		       onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_service_type" />  
 		       
-		    <addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cat_service_template" constraintName="fk-product-accounting_article" deferrable="false" initiallyDeferred="false"
-		       onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_accounting_article" />     
-		               
 		           
 		   </changeSet>
 		   
@@ -4098,9 +4095,6 @@ END $$;]]>
 	        <addForeignKeyConstraint baseColumnNames="billable_account_id" baseTableName="cpq_quote_article_line" constraintName="fk_cpq_quote_article_line_quote_billable_account_id" deferrable="false" initiallyDeferred="false"
 	            onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_billing_account" />
 	            
-	        <addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cpq_quote_article_line" constraintName="fk_cpq_quote_article_line_quote_accounting_article_id" deferrable="false" initiallyDeferred="false"
-	            onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cpq_accounting_article" />
-	          
 			<addColumn tableName="cat_service_template">
 	            <column name="sequence" type="INT4" />
 	            <column name="display" type="${type.boolean}" />
@@ -4475,6 +4469,13 @@ END $$;]]>
             <column name="cf_values" type="${type.json}" />
             <column name="description_i18n" type="${type.json}"></column>
         </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cpq_quote_article_line" constraintName="fk_cpq_quote_article_line_quote_accounting_article_id" deferrable="false" initiallyDeferred="false"
+	    		onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_accounting_article" />
+		<addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cat_service_template" constraintName="fk-product-accounting_article" deferrable="false" initiallyDeferred="false"
+				onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_accounting_article" />
+		<addForeignKeyConstraint baseColumnNames="accounting_article_id" baseTableName="cpq_product_mapping" constraintName="fk-accounting_article-product_mapping" deferrable="false" initiallyDeferred="false"
+        		onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="billing_accounting_article" />
 
         <createSequence sequenceName="billing_article_family_seq" startValue="1" />
         <createTable tableName="billing_article_family" >
