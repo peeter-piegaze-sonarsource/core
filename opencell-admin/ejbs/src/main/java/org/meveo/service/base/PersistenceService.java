@@ -592,9 +592,8 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
      * Used to retrieve related fields of an entity
      */
     @SuppressWarnings({ "unchecked" })
-    public List<E> listRelatedFields() {
-        List resultList = new ArrayList();
-        Map mapAttributeAndType = new HashMap();
+    public Map<String, Map<String,String>> mapRelatedFields() {
+        Map<String, Map<String,String>> mapAttributeAndType = new HashMap();
 
 //        String[] attributeNames = ((Session) getEntityManager().getDelegate()).getSessionFactory()
 //                .getClassMetadata( getEntityClass() ).getPropertyNames();
@@ -605,15 +604,17 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
 //            mapAttributeAndType.put( attributeNames[i], attributeTypes[i].getName() );
 //        }
 
-        Set<Attribute<? super E, ?>> aNewSet = ((Session) getEntityManager().getDelegate()).getSessionFactory()
+        Set<Attribute<? super E, ?>> setAttributes = ((Session) getEntityManager().getDelegate()).getSessionFactory()
                 .getMetamodel().managedType( getEntityClass() ).getAttributes();
 
-        for ( Attribute<? super E, ?> att : aNewSet )
-            mapAttributeAndType.put( att.getName(), att.getJavaType() );
+        for ( Attribute<? super E, ?> att : setAttributes ) {
+            Map<String,String> mapStringAndType = new HashMap();
+            mapStringAndType.put( "fullQualifiedName", att.getJavaType().toString() );
+            mapStringAndType.put( "shortName", att.getJavaType().getSimpleName() );
+            mapAttributeAndType.put( att.getName(), mapStringAndType );
+        }
 
-        resultList.add( mapAttributeAndType );
-
-        return resultList;
+        return mapAttributeAndType;
     }
 
     /**

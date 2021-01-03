@@ -18,6 +18,7 @@ public class GenericPagingAndFilteringUtils {
     private static final String LIMIT = "limit";
     private static final String OFFSET = "offset";
     private static final String SORT = "sort";
+    private static final String INTERVAL = "interval";
     private static final char DESCENDING_SIGN = '-';
     private static final char INTERVAL_DELIMITER = ',';
     private static final String ASCENDING_ORDER = "ASCENDING";
@@ -78,12 +79,15 @@ public class GenericPagingAndFilteringUtils {
                 builder.sortOrder( sortOrders.toString() );
                 builder.sortBy( sortFields.toString() );
             }
-            else {
-                // Process filters (fromRange, toRange, etc.)
+            else if ( aKey.equals( INTERVAL ) ) {
+                // Process interval (fromRange, toRange, etc.)
                 Map<String, Object> genericFilters = new HashMap<>();
+System.out.println( "queryParams.get(aKey).getClass() : " + queryParams.get(aKey).getClass().toString() );
                 List<String> aList = queryParams.get(aKey);
+System.out.println( "aList.size() O DAY : " + aList.size() );
 
                 for ( String aValue : aList ) {
+System.out.println( "String aValue : " + aValue );
                     if ( StringUtils.countMatches( aValue, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
                         if ( aValue.charAt(aValue.length() - 1) == INTERVAL_DELIMITER ) {
                             String leftBoundedValue = aValue.substring( 0, aValue.length() - 1 );

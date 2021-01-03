@@ -2,6 +2,7 @@ package org.meveo.apiv2.generic;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.simple.parser.ParseException;
 import org.meveo.apiv2.GenericOpencellRestful;
 import org.meveo.apiv2.generic.common.LinkGenerator;
 import org.meveo.apiv2.generic.core.GenericHelper;
@@ -66,8 +67,30 @@ public class GenericResourceImpl implements GenericResource {
     }
 
     @Override
-    public Response getAllEntities( String entityName, @Context UriInfo uriInfo, @Context HttpHeaders requestHeaders )
-            throws JsonProcessingException {
+    public Response getAllEntities(String entityName, @Context UriInfo uriInfo, @Context HttpHeaders requestHeaders )
+            throws JsonProcessingException, ParseException {
+
+//        System.out.println( "additionalProperties : " + additionalProperties );
+//
+//        MultivaluedMap<String, String> queryParams = new MultivaluedHashMap<>();
+//        System.out.println( "HERE NE getAllEntities 2" );
+//        System.out.println( "HERE NE getAllEntities 3" );
+//
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject) parser.parse(additionalProperties);
+//        Iterator<String> keys = jsonObject.keySet().iterator();
+//
+//        while(keys.hasNext()) {
+//            String key = keys.next();
+//            if ( key.equals( "offset" ) ) {
+//                queryParams.put( "offset", Collections.singletonList( String.valueOf(jsonObject.get( key ))) );
+//            }
+//            else if ( key.equals( "sort" ) )
+//                queryParams.put( "sort", Collections.singletonList( String.valueOf(jsonObject.get( key ))) );
+//        }
+
+
+
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
 //        MultivaluedMap<String, String> headerParams = requestHeaders.getRequestHeaders();
@@ -85,7 +108,7 @@ public class GenericResourceImpl implements GenericResource {
 
     @Override
     public Response getFullListEntities() {
-        return Response.ok().entity(GenericOpencellRestful.ENTITIES_LIST).type(MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok().entity(GenericOpencellRestful.ENTITIES_MAP).type(MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @Override
@@ -109,7 +132,7 @@ public class GenericResourceImpl implements GenericResource {
 //                .links(buildPaginatedResourceLink(entityName)).build();
 
         Class entityClass = GenericHelper.getEntityClass(entityName);
-        return Response.ok().entity(getPersistenceService(entityClass).listRelatedFields()).type(MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok().entity(getPersistenceService(entityClass).mapRelatedFields()).type(MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     @Override

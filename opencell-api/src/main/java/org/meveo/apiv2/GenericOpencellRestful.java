@@ -34,7 +34,7 @@ public class GenericOpencellRestful extends Application {
     private static final String API_LIST_DEFAULT_LIMIT_KEY = "api.list.defaultLimit";
     private static String GENERIC_API_REQUEST_LOGGING_CONFIG;
     public static List<Map<String,String>> VERSION_INFO = new ArrayList<Map<String, String>>();
-    public static List<Map<String,String>> ENTITIES_LIST = new ArrayList<Map<String, String>>();
+    public static Map<String,List<String>> ENTITIES_MAP = new HashMap();
     public static long API_LIST_DEFAULT_LIMIT;
 
     @Inject
@@ -95,19 +95,15 @@ public class GenericOpencellRestful extends Application {
     }
 
     private void loadEntitiesList() {
-        String delimiter = ", ";
         // Get all classes that implement the interface IEntity
         Reflections reflections = new Reflections("org.meveo.model");
         Set<Class<? extends IEntity>> classes = reflections.getSubTypesOf(IEntity.class);
+        List<String> listEntities = new ArrayList<>();
 
-        StringBuilder strBuilder = new StringBuilder();
         for ( Class aClass : classes ) {
-            strBuilder.append( aClass.getSimpleName() + delimiter );
+            listEntities.add( aClass.getSimpleName() );
         }
-        String listEntitiesString = strBuilder.substring( 0, strBuilder.length() - 2 );
 
-        Map<String,String> listEntities = new HashedMap();
-        listEntities.put( "entities", listEntitiesString );
-        ENTITIES_LIST.add( listEntities );
+        ENTITIES_MAP.put( "entities", listEntities );
     }
 }
