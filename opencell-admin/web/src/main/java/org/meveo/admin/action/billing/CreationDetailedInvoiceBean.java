@@ -338,7 +338,10 @@ public class CreationDetailedInvoiceBean extends CustomFieldBean<Invoice> {
 
         ratedTransaction.setInvoice(entity);
         if(selectedAccountingCode != null) {
-            ratedTransaction.setAccountingCode(selectedAccountingCode);
+            ratedTransaction.setAccountingCode(selectedAccountingCode);               
+        }
+        if(selectedAccountingCode != null && entity.getExternalRef() == null && orderNumber != null) {
+            entity.setExternalRef(orderNumber);
         }
 
         aggregateHandler.addRT(entity.getInvoiceDate(), ratedTransaction);
