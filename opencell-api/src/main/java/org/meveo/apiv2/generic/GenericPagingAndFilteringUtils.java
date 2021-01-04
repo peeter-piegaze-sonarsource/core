@@ -20,7 +20,11 @@ public class GenericPagingAndFilteringUtils {
     private static final String SORT = "sort";
     private static final String INTERVAL = "interval";
     private static final char DESCENDING_SIGN = '-';
-    private static final char INTERVAL_DELIMITER = ',';
+    private static final char INTERVAL_DELIMITER = ','; // use as delimiter inside of an interval [id=2,5;description=2,]
+    private static final char FIELD_INTERVAL_DELIMITER = '=';
+    private static final char INTERVALS_DELIMITER = ';'; // use as delimiter between different intervals [id=2,5;description=2,]
+    private static final char INTERVAL_OPEN_HOOK = '[';
+    private static final char INTERVAL_CLOSE_HOOK = ']';
     private static final String ASCENDING_ORDER = "ASCENDING";
     private static final String DESCENDING_ORDER = "DESCENDING";
     private static final String SPACE_DELIMITER = " ";
@@ -80,35 +84,76 @@ public class GenericPagingAndFilteringUtils {
                 builder.sortBy( sortFields.toString() );
             }
             else if ( aKey.equals( INTERVAL ) ) {
-                // Process interval (fromRange, toRange, etc.)
-                Map<String, Object> genericFilters = new HashMap<>();
-System.out.println( "queryParams.get(aKey).getClass() : " + queryParams.get(aKey).getClass().toString() );
                 List<String> aList = queryParams.get(aKey);
-System.out.println( "aList.size() O DAY : " + aList.size() );
 
-                for ( String aValue : aList ) {
-System.out.println( "String aValue : " + aValue );
-                    if ( StringUtils.countMatches( aValue, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
-                        if ( aValue.charAt(aValue.length() - 1) == INTERVAL_DELIMITER ) {
-                            String leftBoundedValue = aValue.substring( 0, aValue.length() - 1 );
-                            genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aKey, leftBoundedValue );
-                        }
-                        else if ( aValue.charAt(0) == INTERVAL_DELIMITER ) {
-                            String rightBoundedValue = aValue.substring( 1 );
-                            genericFilters.put( TO_RANGE + SPACE_DELIMITER + aKey, rightBoundedValue );
+                String intervalString = aList.get(0);
+
+                if ( intervalString.charAt(0) == INTERVAL_OPEN_HOOK &&
+                        intervalString.charAt( intervalString.length() - 1 ) == INTERVAL_CLOSE_HOOK ) {
+                    intervalString = intervalString.substring(1, intervalString.length() - 1);
+                    String[] arrIntervals = intervalString.split( String.valueOf(INTERVALS_DELIMITER) );
+                    Map<String, Object> genericFilters = new HashMap<>();
+
+                    for ( String anIntervalWithField : arrIntervals ) {
+                        String[] fieldAndItsInterval = anIntervalWithField.split( String.valueOf(FIELD_INTERVAL_DELIMITER) );
+                        String anInterval = fieldAndItsInterval[1];
+                        String aField = fieldAndItsInterval[0];
+                        if ( StringUtils.countMatches( anInterval, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
+                            if ( anInterval.charAt(anInterval.length() - 1) == INTERVAL_DELIMITER ) {
+                                String leftBoundedValue = anInterval.substring( 0, anInterval.length() - 1 );
+                                genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aField, leftBoundedValue );
+                            }
+                            else if ( anInterval.charAt(0) == INTERVAL_DELIMITER ) {
+                                String rightBoundedValue = anInterval.substring( 1 );
+                                genericFilters.put( TO_RANGE + SPACE_DELIMITER + aField, rightBoundedValue );
+                            }
+                            else {
+                                String[] bothValues = anInterval.split( String.valueOf(INTERVAL_DELIMITER) );
+                                genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aField, bothValues[0] );
+                                genericFilters.put( TO_RANGE + SPACE_DELIMITER + aField, bothValues[1] );
+                            }
                         }
                         else {
-                            String[] bothValues = aValue.split( String.valueOf(INTERVAL_DELIMITER) );
-                            genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aKey, bothValues[0] );
-                            genericFilters.put( TO_RANGE + SPACE_DELIMITER + aKey, bothValues[1] );
+                            System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
                         }
                     }
-                    else {
-                        System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
-                    }
+
+                    builder.filters( genericFilters );
+                }
+                else {
+                    System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
                 }
 
-                builder.filters( genericFilters );
+
+
+
+
+//                // Process interval (fromRange, toRange, etc.)
+//                Map<String, Object> genericFilters = new HashMap<>();
+//                List<String> aList = queryParams.get(aKey);
+//
+//                for ( String aValue : aList ) {
+//                    if ( StringUtils.countMatches( aValue, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
+//                        if ( aValue.charAt(aValue.length() - 1) == INTERVAL_DELIMITER ) {
+//                            String leftBoundedValue = aValue.substring( 0, aValue.length() - 1 );
+//                            genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aKey, leftBoundedValue );
+//                        }
+//                        else if ( aValue.charAt(0) == INTERVAL_DELIMITER ) {
+//                            String rightBoundedValue = aValue.substring( 1 );
+//                            genericFilters.put( TO_RANGE + SPACE_DELIMITER + aKey, rightBoundedValue );
+//                        }
+//                        else {
+//                            String[] bothValues = aValue.split( String.valueOf(INTERVAL_DELIMITER) );
+//                            genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aKey, bothValues[0] );
+//                            genericFilters.put( TO_RANGE + SPACE_DELIMITER + aKey, bothValues[1] );
+//                        }
+//                    }
+//                    else {
+//                        System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
+//                    }
+//                }
+//
+//                builder.filters( genericFilters );
             }
         }
 

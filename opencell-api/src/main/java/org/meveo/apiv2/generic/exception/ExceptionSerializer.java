@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 class ExceptionSerializer {
@@ -24,7 +25,23 @@ class ExceptionSerializer {
         final List<Cause>  cause = getCause(exception);
         return ImmutableApiException.builder()
                 .status(status)
-                .details(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
+                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
+                .addAllCauses(cause)
+                .build();
+    }
+
+    public ApiException toApiError(Exception exception, Map<String,String> mapInfo) {
+        final List<Cause>  cause = getCause(exception);
+
+        ImmutableApiException.Builder builder = ImmutableApiException.builder();
+
+        for ( Map.Entry<String,String> entry : mapInfo.entrySet() ) {
+            if ( entry.getKey().equals( "path" ) )
+                builder.path( entry.getValue() );
+        }
+
+        return builder.status(status)
+                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
                 .addAllCauses(cause)
                 .build();
     }

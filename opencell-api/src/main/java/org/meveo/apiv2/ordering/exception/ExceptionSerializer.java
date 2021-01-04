@@ -40,7 +40,7 @@ class ExceptionSerializer {
         final List<Cause>  cause = getCause(exception);
         return ImmutableApiException.builder()
                 .code(code)
-                .details(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
+                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
                 .addAllCauses(cause)
                 .build();
     }
