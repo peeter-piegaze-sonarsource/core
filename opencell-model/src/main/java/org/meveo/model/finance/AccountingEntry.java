@@ -52,7 +52,7 @@ import org.meveo.model.payments.AccountOperation;
 @Table(name="ar_accounting_writing")
 @GenericGenerator(name = "ID_GENERATOR", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
         @org.hibernate.annotations.Parameter(name = "sequence_name", value = "ar_accounting_writing_seq"), })
-public class AccountingWriting extends AuditableEntity {
+public class AccountingEntry extends AuditableEntity {
 
     /**
      * Account operations associated with this Acc writing
@@ -66,7 +66,7 @@ public class AccountingWriting extends AuditableEntity {
      */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "origin_writing_id")
-    private AccountingWriting originWriting;
+    private AccountingEntry originEntry;
 
     /**
      * Associated tax
@@ -147,12 +147,12 @@ public class AccountingWriting extends AuditableEntity {
 		this.accountOperations = accountOperations;
 	}
 
-	public AccountingWriting getOriginWriting() {
-		return originWriting;
+	public AccountingEntry getOriginEntry() {
+		return originEntry;
 	}
 
-	public void setOriginWriting(AccountingWriting originWriting) {
-		this.originWriting = originWriting;
+	public void setOriginEntry(AccountingEntry originEntry) {
+		this.originEntry = originEntry;
 	}
 
 	public Tax getTax() {
