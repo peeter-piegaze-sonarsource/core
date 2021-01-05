@@ -151,7 +151,7 @@ public interface PricePlanRs extends IBaseRs {
     @POST
     @Path("/pricePlanMatrixVersion")
     @Operation(summary = "This endpoint allows to create or update a price plan version",
-            tags = { "PricePlan" },
+            tags = { "PricePlanMatrixVersion" },
             description ="create a price plan version if it doesn't exist or update an existing price plan version",
             responses = {
                     @ApiResponse(responseCode="200", description = "the price plan version successfully created or updated",
