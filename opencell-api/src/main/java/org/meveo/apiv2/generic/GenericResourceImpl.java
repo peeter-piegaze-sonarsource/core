@@ -58,7 +58,7 @@ public class GenericResourceImpl implements GenericResource {
         String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
                 .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id " + id + " not found"));
     }
 
     @Override
@@ -142,13 +142,15 @@ public class GenericResourceImpl implements GenericResource {
         String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id)
                 .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id " + id + " not found."));
     }
     
     @Override
     public Response update(String entityName, Long id, String dto) {
         entityName = StringUtils.recoverRealName(entityName);
-        return Response.ok().entity(genericApiAlteringService.update(entityName, id, dto)).links(buildSingleResourceLink(entityName, id)).build();
+        return Response.status(Response.Status.NO_CONTENT).entity(genericApiAlteringService.update(entityName, id, dto))
+                .links(buildSingleResourceLink(entityName, id))
+                .build();
     }
     
     @Override
@@ -156,7 +158,7 @@ public class GenericResourceImpl implements GenericResource {
         entityName = StringUtils.recoverRealName(entityName);
         String finalEntityName = entityName;
         return  genericApiAlteringService.create(finalEntityName, dto)
-                .map(entityId -> Response.ok().entity(Collections.singletonMap("id", entityId))
+                .map(entityId -> Response.status(Response.Status.CREATED).entity(Collections.singletonMap("id", entityId))
                 .links(buildSingleResourceLink(finalEntityName, entityId))
                 .build())
                 .get();
@@ -165,7 +167,7 @@ public class GenericResourceImpl implements GenericResource {
     @Override
     public Response delete(String entityName, Long id) {
         entityName = StringUtils.recoverRealName(entityName);
-        return Response.ok().entity(genericApiAlteringService.delete(entityName, id))
+        return Response.status(Response.Status.NO_CONTENT).entity(genericApiAlteringService.delete(entityName, id))
                         .links(buildSingleResourceLink(entityName, id)).build();
     }
 

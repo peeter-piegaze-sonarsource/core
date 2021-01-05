@@ -65,12 +65,12 @@ public interface GenericResource {
                     @Parameter(description = "The id here is the database primary key of the record to update", required = true) @PathParam("id") Long id,
                     @Parameter(description = "dto the json representation of the object", required = true) String dto);
 
-    @Operation(summary = "Create a resource by giving it's name and Id",
+    @Operation(summary = "Create a resource by giving its name and Id",
             tags = { "Generic" },
             description ="specify the entity name, the record id, and as body, the list of the fields to create",
             responses = {
-                    @ApiResponse(responseCode="200", description = "resource successfully updated but not content exposed except the hypermedia"),
-                    @ApiResponse(responseCode = "400", description = "bad request when input not well formed")
+                    @ApiResponse(responseCode="201", description = "The request has succeeded and a new resource has been created as a result."),
+                    @ApiResponse(responseCode = "400", description = "Bad request when input is not well formed")
     })
     @POST
     @Path("/{entityName}")
