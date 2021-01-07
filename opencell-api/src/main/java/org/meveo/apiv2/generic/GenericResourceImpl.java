@@ -12,12 +12,12 @@ import org.meveo.apiv2.generic.services.GenericApiLoadService;
 import org.meveo.apiv2.generic.services.PersistenceServiceHelper;
 import org.meveo.commons.utils.StringUtils;
 
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.*;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
 
@@ -29,8 +29,17 @@ public class GenericResourceImpl implements GenericResource {
     @Inject
     private GenericApiAlteringService genericApiAlteringService;
 
+    public static final String URI_INFO = "uriInfo";
+    public static final String EXCEPTION_MESSAGE = "message";
+
+    private static Map mapInfoForError = new HashMap();
+    public static Map getMapInfoForError() {
+        return mapInfoForError;
+    }
+
     @Override
     public Response getAll(String entityName, GenericPagingAndFiltering searchConfig) {
+System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig );
         entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
@@ -62,12 +71,16 @@ public class GenericResourceImpl implements GenericResource {
     }
 
     @Override
-    public Response getEntity(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
-        return get(entityName, id, searchConfig);
+    public Response getEntity(String entityName, Long id, @Context UriInfo uriInfo) {
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+        mapInfoForError.put( URI_INFO, uriInfo );
+
+        return get(entityName, id,
+                GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
     }
 
     @Override
-    public Response getAllEntities(String entityName, @Context UriInfo uriInfo, @Context HttpHeaders requestHeaders )
+    public Response getAllEntities(String entityName, @Context UriInfo uriInfo, String inList, @Context HttpHeaders headers )
             throws JsonProcessingException, ParseException {
 
 //        System.out.println( "additionalProperties : " + additionalProperties );
@@ -90,17 +103,30 @@ public class GenericResourceImpl implements GenericResource {
 //        }
 
 
-
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
-//        MultivaluedMap<String, String> headerParams = requestHeaders.getRequestHeaders();
-//        System.out.println( "headerParams.size() : " + headerParams.size() );
-//        Iterator<String> it = headerParams.keySet().iterator();
-//
-//        while(it.hasNext()){
-//            String theKey = it.next();
-//            System.out.println( "the Key : "+ theKey + " and value : " + headerParams.get(theKey) );
+        MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
+
+        Iterator<String> itQueryParams = queryParams.keySet().iterator();
+        System.out.println( "inList DAY NE THANG : " + inList );
+
+        while (itQueryParams.hasNext()){
+            String aKey = itQueryParams.next();
+            if ( aKey.equals( "inList" ) ) {
+                List<String> aList = queryParams.get(aKey);
+
+                String inListString = aList.get(0);
+                System.out.println( "inListString DAY NE THANG : " + inListString );
+            }
+        }
+
+//        for (Map.Entry<String, List<String>> entry : requestHeaders.entrySet()) {
+//            System.out.println("Key = " + entry.getKey() + " and value : ");
+//            for ( String str : entry.getValue() )
+//                System.out.println("str = " + str );
 //        }
+
+        mapInfoForError.put( URI_INFO, uriInfo );
 
         return getAll(entityName,
                 GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
@@ -142,7 +168,7 @@ public class GenericResourceImpl implements GenericResource {
         String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id)
                 .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id " + id + " not found."));
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id " + id + " not found"));
     }
     
     @Override
@@ -154,14 +180,19 @@ public class GenericResourceImpl implements GenericResource {
     }
     
     @Override
-    public Response create(String entityName, String dto) {
+    public Response create(String entityName, String dto, @Context UriInfo uriInfo) {
         entityName = StringUtils.recoverRealName(entityName);
         String finalEntityName = entityName;
+
+        mapInfoForError.put( URI_INFO, uriInfo );
+        mapInfoForError.put( EXCEPTION_MESSAGE, "entity " + finalEntityName + " cannot be created" );
+
         return  genericApiAlteringService.create(finalEntityName, dto)
                 .map(entityId -> Response.status(Response.Status.CREATED).entity(Collections.singletonMap("id", entityId))
                 .links(buildSingleResourceLink(finalEntityName, entityId))
                 .build())
-                .get();
+                .orElseThrow(() ->
+                        new EJBTransactionRolledbackException("entity " + finalEntityName + " cannot be created."));
     }
 
     @Override

@@ -39,6 +39,6 @@ public interface ApiException extends Resource{
     @Nullable
     List<Cause> getCauses();
     @Nullable
-    String getPath();
+    String getInfoURL();
 }
 

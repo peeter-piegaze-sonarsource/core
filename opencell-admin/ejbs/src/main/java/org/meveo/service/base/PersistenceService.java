@@ -567,8 +567,7 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
     }
 
     /**
-     * @see org.meveo.service.base.loca
-     * l.IPersistenceService#list(org.meveo.admin.util.pagination.PaginationConfiguration)
+     * @see org.meveo.service.base.local.IPersistenceService#list(org.meveo.admin.util.pagination.PaginationConfiguration)
      */
     @SuppressWarnings({ "unchecked" })
     @Override
@@ -609,8 +608,8 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
 
         for ( Attribute<? super E, ?> att : setAttributes ) {
             Map<String,String> mapStringAndType = new HashMap();
-            mapStringAndType.put( "fullQualifiedName", att.getJavaType().toString() );
-            mapStringAndType.put( "shortName", att.getJavaType().getSimpleName() );
+            mapStringAndType.put( "fullQualifiedTypeName", att.getJavaType().toString() );
+            mapStringAndType.put( "shortTypeName", att.getJavaType().getSimpleName() );
             mapAttributeAndType.put( att.getName(), mapStringAndType );
         }
 

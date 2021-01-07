@@ -75,7 +75,9 @@ public interface GenericResource {
     @POST
     @Path("/{entityName}")
     Response create(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
-                    @Parameter(description = "dto the json representation of the object", required = true) String dto);
+                    @Parameter(description = "dto the json representation of the object", required = true) String dto,
+                    @Parameter(description = "URIInfo",
+                        schema = @Schema(implementation = UriInfo.class)) @Context UriInfo uriInfo);
 
     @Operation(summary = "Delete a resource by giving it's name and Id",
             tags = { "Generic" },
@@ -105,7 +107,7 @@ public interface GenericResource {
     @Path("/{entityName}/{id}")
     @Operation(summary = "Generic single endpoint to retrieve resources by ID",
             tags = { "Generic" },
-            description ="You need to specify the entity name of **plural form** and the record id" +
+            description ="You need to specify the entity name of **plural form** and the record id. " +
                     "Also, the first character of the entity name is **lowercase**. If the entity name is a " +
                     "single word, its characters should be written in lowercase, for example *sellers*. " +
                     "If the entity name is a compound word, only the first character of its first single word is " +
@@ -130,7 +132,8 @@ public interface GenericResource {
             })
     Response getEntity(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
                        @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id,
-                       @Parameter(description = "requestDto carries the wanted fields ex: {fields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
+                       @Parameter(description = "URIInfo",
+                               schema = @Schema(implementation = UriInfo.class)) @Context UriInfo uriInfo );
 
     @GET
     @Path("/{entityName}")
@@ -160,8 +163,9 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
     Response getAllEntities(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName,
-                            @Parameter(description = "Additional properties such as limit, offset, sort, interval values, etc.",
-                                    schema = @Schema(implementation = UriInfo.class)) @Context UriInfo uriInfo,
+                            @Parameter(description = "URIInfo",
+                                    schema = @Schema(implementation = UriInfo.class)) @Encoded @Context UriInfo uriInfo,
+                                    @Encoded @QueryParam("{inList}") String inList,
 //                            @Parameter(description = "Additional properties such as limit, offset, sort, interval values, etc.",
 //                                    schema = @Schema(implementation = Object.class)) @QueryParam("Additional properties") String additionalProperties,
 //                            @Parameter(description = "Query param offset") @QueryParam("offset") String offset,

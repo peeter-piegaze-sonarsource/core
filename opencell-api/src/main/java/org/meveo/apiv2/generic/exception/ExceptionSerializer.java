@@ -1,21 +1,27 @@
 package org.meveo.apiv2.generic.exception;
 
 
+import org.meveo.apiv2.generic.GenericResourceImpl;
 import org.meveo.apiv2.models.ApiException;
 import org.meveo.apiv2.models.Cause;
 import org.meveo.apiv2.models.ImmutableApiException;
 import org.meveo.apiv2.models.ImmutableCause;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 class ExceptionSerializer {
 
     private final Response.Status status;
+
+    private static final String PATH_SWAGGER_DOC = "pages/docs/";
 
     ExceptionSerializer(Response.Status status) {
         this.status = status;
@@ -23,27 +29,43 @@ class ExceptionSerializer {
 
     public ApiException toApiError(Exception exception) {
         final List<Cause>  cause = getCause(exception);
-        return ImmutableApiException.builder()
-                .status(status)
-                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
-                .addAllCauses(cause)
-                .build();
-    }
 
-    public ApiException toApiError(Exception exception, Map<String,String> mapInfo) {
-        final List<Cause>  cause = getCause(exception);
+        Map<String,Object> mapInfoForError = GenericResourceImpl.getMapInfoForError();
 
-        ImmutableApiException.Builder builder = ImmutableApiException.builder();
+        StringBuilder pathBuilder = new StringBuilder();
+        final String patternFindPath = "^.*?(?=(?i)(?>api)\\/(?>rest)\\/(?>v2).*)";
+        Pattern pattern = Pattern.compile(patternFindPath);
 
-        for ( Map.Entry<String,String> entry : mapInfo.entrySet() ) {
-            if ( entry.getKey().equals( "path" ) )
-                builder.path( entry.getValue() );
+        StringBuilder messageBuilder = new StringBuilder();
+
+        for ( Map.Entry<String,Object> entry : mapInfoForError.entrySet() ) {
+            if ( entry.getKey().equals( GenericResourceImpl.URI_INFO ) ) {
+                UriInfo uriInfo = (UriInfo) entry.getValue();
+                uriInfo.getBaseUri();
+                final Matcher matcherFindPath = pattern.matcher( uriInfo.getBaseUri().toString() );
+                while ( matcherFindPath.find() ) {
+                    pathBuilder.append( matcherFindPath.group(0) );
+                    pathBuilder.append( PATH_SWAGGER_DOC );
+                }
+            }
+            else if ( entry.getKey().equals( GenericResourceImpl.EXCEPTION_MESSAGE ) ) {
+                messageBuilder.append( entry.getValue() );
+            }
         }
 
-        return builder.status(status)
-                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
+        return ImmutableApiException.builder()
+                .status(status)
+                .infoURL( pathBuilder.toString() )
+                .message( messageBuilder.toString() )
                 .addAllCauses(cause)
                 .build();
+
+//        return ImmutableApiException.builder()
+//                .status(status)
+//                .infoURL( pathBuilder.toString() )
+//                .message(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
+//                .addAllCauses(cause)
+//                .build();
     }
 
     private String getStackTrace(StackTraceElement[] stackTrace) {

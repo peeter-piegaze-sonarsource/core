@@ -54,7 +54,7 @@ public class GenericApiAlteringService {
         Class entityClass = GenericHelper.getEntityClass(entityName);
         IEntity iEntity = PersistenceServiceHelper.getPersistenceService(entityClass).findById(id);
         if(iEntity == null) {
-            throw new NotFoundException("entity " + entityName + " with id "+id+ " not found.");
+            throw new NotFoundException("entity " + entityName + " with id " + id + " not found.");
         }
         JsonGenericMapper jsonGenericMapper = JsonGenericMapper.Builder.getBuilder().build();
         refreshEntityWithDotFields(jsonGenericMapper.readValue(jsonDto, Map.class), iEntity, jsonGenericMapper.parseFromJson(jsonDto, iEntity.getClass()));

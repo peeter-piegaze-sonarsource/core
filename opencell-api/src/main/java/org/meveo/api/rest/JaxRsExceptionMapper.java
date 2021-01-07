@@ -18,6 +18,16 @@
 
 package org.meveo.api.rest;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.jboss.resteasy.api.validation.Validation;
+import org.meveo.api.MeveoApiErrorCodeEnum;
+import org.meveo.api.dto.ActionStatus;
+import org.meveo.api.dto.ActionStatusEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.Singleton;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotFoundException;
@@ -27,17 +37,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.jboss.resteasy.api.validation.Validation;
-import org.meveo.api.MeveoApiErrorCodeEnum;
-import org.meveo.api.dto.ActionStatus;
-import org.meveo.api.dto.ActionStatusEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 @Provider
 @Singleton

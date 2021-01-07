@@ -3,10 +3,7 @@ package org.meveo.apiv2.generic;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utils class for working with GenericPagingAndFiltering.
@@ -19,12 +16,15 @@ public class GenericPagingAndFilteringUtils {
     private static final String OFFSET = "offset";
     private static final String SORT = "sort";
     private static final String INTERVAL = "interval";
+    private static final String IN_LIST = "inList";
+
     private static final char DESCENDING_SIGN = '-';
-    private static final char INTERVAL_DELIMITER = ','; // use as delimiter inside of an interval [id=2,5;description=2,]
-    private static final char FIELD_INTERVAL_DELIMITER = '=';
-    private static final char INTERVALS_DELIMITER = ';'; // use as delimiter between different intervals [id=2,5;description=2,]
-    private static final char INTERVAL_OPEN_HOOK = '[';
-    private static final char INTERVAL_CLOSE_HOOK = ']';
+    private static final char COMMA_DELIMITER = ','; // use as delimiter inside of an interval [id=2,5;description=2,]
+    private static final char EQUAL_DELIMITER = '=';
+    private static final char SEMI_COLON_DELIMITER = ';'; // use as delimiter between different intervals [id=2,5;description=2,]
+    private static final char OPEN_HOOK = '[';
+    private static final char CLOSE_HOOK = ']';
+    private static final String COMMA_ENCODE = "%2C";
     private static final String ASCENDING_ORDER = "ASCENDING";
     private static final String DESCENDING_ORDER = "DESCENDING";
     private static final String SPACE_DELIMITER = " ";
@@ -42,6 +42,7 @@ public class GenericPagingAndFilteringUtils {
     constructImmutableGenericPagingAndFiltering(MultivaluedMap<String, String> queryParams) {
         ImmutableGenericPagingAndFiltering.Builder builder = ImmutableGenericPagingAndFiltering.builder();
         Iterator<String> itQueryParams = queryParams.keySet().iterator();
+        Map<String, Object> genericFilters = new HashMap<>();
 
         while (itQueryParams.hasNext()){
             String aKey = itQueryParams.next();
@@ -88,27 +89,26 @@ public class GenericPagingAndFilteringUtils {
 
                 String intervalString = aList.get(0);
 
-                if ( intervalString.charAt(0) == INTERVAL_OPEN_HOOK &&
-                        intervalString.charAt( intervalString.length() - 1 ) == INTERVAL_CLOSE_HOOK ) {
+                if ( intervalString.charAt(0) == OPEN_HOOK &&
+                        intervalString.charAt( intervalString.length() - 1 ) == CLOSE_HOOK ) {
                     intervalString = intervalString.substring(1, intervalString.length() - 1);
-                    String[] arrIntervals = intervalString.split( String.valueOf(INTERVALS_DELIMITER) );
-                    Map<String, Object> genericFilters = new HashMap<>();
+                    String[] arrIntervals = intervalString.split( String.valueOf(SEMI_COLON_DELIMITER) );
 
                     for ( String anIntervalWithField : arrIntervals ) {
-                        String[] fieldAndItsInterval = anIntervalWithField.split( String.valueOf(FIELD_INTERVAL_DELIMITER) );
+                        String[] fieldAndItsInterval = anIntervalWithField.split( String.valueOf(EQUAL_DELIMITER) );
                         String anInterval = fieldAndItsInterval[1];
                         String aField = fieldAndItsInterval[0];
-                        if ( StringUtils.countMatches( anInterval, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
-                            if ( anInterval.charAt(anInterval.length() - 1) == INTERVAL_DELIMITER ) {
+                        if ( StringUtils.countMatches( anInterval, String.valueOf( COMMA_DELIMITER ) ) == 1 ) {
+                            if ( anInterval.charAt(anInterval.length() - 1) == COMMA_DELIMITER ) {
                                 String leftBoundedValue = anInterval.substring( 0, anInterval.length() - 1 );
                                 genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aField, leftBoundedValue );
                             }
-                            else if ( anInterval.charAt(0) == INTERVAL_DELIMITER ) {
+                            else if ( anInterval.charAt(0) == COMMA_DELIMITER ) {
                                 String rightBoundedValue = anInterval.substring( 1 );
                                 genericFilters.put( TO_RANGE + SPACE_DELIMITER + aField, rightBoundedValue );
                             }
                             else {
-                                String[] bothValues = anInterval.split( String.valueOf(INTERVAL_DELIMITER) );
+                                String[] bothValues = anInterval.split( String.valueOf(COMMA_DELIMITER) );
                                 genericFilters.put( FROM_RANGE + SPACE_DELIMITER + aField, bothValues[0] );
                                 genericFilters.put( TO_RANGE + SPACE_DELIMITER + aField, bothValues[1] );
                             }
@@ -117,15 +117,10 @@ public class GenericPagingAndFilteringUtils {
                             System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
                         }
                     }
-
-                    builder.filters( genericFilters );
                 }
                 else {
                     System.out.println("NOT A GOOD FORMAT OF INTERVAL, SHOULD ADD AN EXCEPTION HERE");
                 }
-
-
-
 
 
 //                // Process interval (fromRange, toRange, etc.)
@@ -155,6 +150,35 @@ public class GenericPagingAndFilteringUtils {
 //
 //                builder.filters( genericFilters );
             }
+            else if ( aKey.equals( IN_LIST ) ) {
+                List<String> aList = queryParams.get(aKey);
+
+                String inListString = aList.get(0);
+
+                if ( inListString.charAt(0) == OPEN_HOOK &&
+                        inListString.charAt( inListString.length() - 1 ) == CLOSE_HOOK ) {
+                    inListString = inListString.substring(1, inListString.length() - 1);
+                    String[] arrInList = inListString.split( String.valueOf(SEMI_COLON_DELIMITER) );
+                    for ( String anInlistWithField : arrInList ) {
+                        String[] fieldAndItsInList = anInlistWithField.split( String.valueOf(EQUAL_DELIMITER) );
+                        String aField = fieldAndItsInList[0];
+                        String anInList = fieldAndItsInList[1].substring( 1, fieldAndItsInList[1].length() - 1 );
+                        String[] elementsInList = anInList.split( String.valueOf(COMMA_DELIMITER) );
+                        for ( String anElement : elementsInList ) {
+                            if ( anElement.contains( COMMA_ENCODE ) ) {
+System.out.println( "anElement DAY NE : " + anElement );
+                                anElement.replaceAll( COMMA_ENCODE, String.valueOf(COMMA_DELIMITER) );
+                            }
+                        }
+                        List inList = Arrays.asList(elementsInList);
+                        genericFilters.put( IN_LIST + SPACE_DELIMITER + aField, inList );
+                    }
+                }
+                else {
+                    System.out.println("NOT A GOOD FORMAT OF INLIST, SHOULD ADD AN EXCEPTION HERE");
+                }
+            }
+            builder.filters( genericFilters );
         }
 
         return builder.build();
