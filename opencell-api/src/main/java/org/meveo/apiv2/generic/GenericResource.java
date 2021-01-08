@@ -10,7 +10,8 @@ import org.json.simple.parser.ParseException;
 import org.meveo.apiv2.models.ApiException;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/generic")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -75,9 +76,7 @@ public interface GenericResource {
     @POST
     @Path("/{entityName}")
     Response create(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
-                    @Parameter(description = "dto the json representation of the object", required = true) String dto,
-                    @Parameter(description = "URIInfo",
-                        schema = @Schema(implementation = UriInfo.class)) @Context UriInfo uriInfo);
+                    @Parameter(description = "dto the json representation of the object", required = true) String dto);
 
     @Operation(summary = "Delete a resource by giving it's name and Id",
             tags = { "Generic" },
@@ -103,7 +102,6 @@ public interface GenericResource {
     Response getVersions();
 
     @GET
-//    @Path("/{entityName: ^(?!all$).*$}/{id}")
     @Path("/{entityName}/{id}")
     @Operation(summary = "Generic single endpoint to retrieve resources by ID",
             tags = { "Generic" },
@@ -131,9 +129,7 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
     Response getEntity(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
-                       @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id,
-                       @Parameter(description = "URIInfo",
-                               schema = @Schema(implementation = UriInfo.class)) @Context UriInfo uriInfo );
+                       @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id );
 
     @GET
     @Path("/{entityName}")
@@ -162,16 +158,13 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "404", description = "baseEntityObject not found", content = @Content(schema = @Schema(implementation = ApiException.class))),
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
-    Response getAllEntities(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName,
-                            @Parameter(description = "URIInfo",
-                                    schema = @Schema(implementation = UriInfo.class)) @Encoded @Context UriInfo uriInfo,
-                                    @Encoded @QueryParam("{inList}") String inList,
+    Response getAllEntities(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName
 //                            @Parameter(description = "Additional properties such as limit, offset, sort, interval values, etc.",
 //                                    schema = @Schema(implementation = Object.class)) @QueryParam("Additional properties") String additionalProperties,
 //                            @Parameter(description = "Query param offset") @QueryParam("offset") String offset,
 //                            @Parameter(description = "Query param sort") @QueryParam("sort") String sort,
 //                            @Parameter(description = "Query param interval for data fields") @QueryParam("interval") String interval,
-                            @Parameter(description = "The header request such as Accept-Language, If-Modified-Since, etc.") @Context HttpHeaders requestHeaders )
+                            )
             throws JsonProcessingException, ParseException;
 
     @GET
@@ -198,7 +191,7 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "404", description = "the full list of entities not found",
                             content = @Content(schema = @Schema(implementation = ApiException.class)))
             })
-    Response getRelatedFieldsOfEntity( @Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName );
+    Response getRelatedFieldsAndTypesOfEntity( @Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName );
 
     @HEAD
     @Path("/{entityName}/{id}")

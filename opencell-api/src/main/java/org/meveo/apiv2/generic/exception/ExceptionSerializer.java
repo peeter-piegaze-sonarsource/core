@@ -9,10 +9,7 @@ import org.meveo.apiv2.models.ImmutableCause;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,7 +33,7 @@ class ExceptionSerializer {
         final String patternFindPath = "^.*?(?=(?i)(?>api)\\/(?>rest)\\/(?>v2).*)";
         Pattern pattern = Pattern.compile(patternFindPath);
 
-        StringBuilder messageBuilder = new StringBuilder();
+        StringBuilder messageBuilder = null;
 
         for ( Map.Entry<String,Object> entry : mapInfoForError.entrySet() ) {
             if ( entry.getKey().equals( GenericResourceImpl.URI_INFO ) ) {
@@ -49,14 +46,18 @@ class ExceptionSerializer {
                 }
             }
             else if ( entry.getKey().equals( GenericResourceImpl.EXCEPTION_MESSAGE ) ) {
+                messageBuilder = new StringBuilder();
                 messageBuilder.append( entry.getValue() );
             }
         }
 
+        GenericResourceImpl.getMapInfoForError().clear();
+
         return ImmutableApiException.builder()
                 .status(status)
                 .infoURL( pathBuilder.toString() )
-                .message( messageBuilder.toString() )
+                .message( messageBuilder != null ? messageBuilder.toString() :
+                        ( exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()) ) )
                 .addAllCauses(cause)
                 .build();
 
@@ -77,6 +78,11 @@ class ExceptionSerializer {
     private List<Cause> getCause(Exception exception) {
         List<Throwable> causes = new ArrayList<>();
         Throwable nextCause = exception;
+
+        if ( nextCause != null ) {
+            causes.add(nextCause);
+        }
+
         do{
             causes.add(nextCause.getCause());
             nextCause = nextCause.getCause();
@@ -84,7 +90,7 @@ class ExceptionSerializer {
 
         return causes.stream()
                 .filter(cause -> cause != null && cause.getMessage() != null)
-                .map(cause -> ImmutableCause.builder().causeMessage(cause.getMessage()).build())
+                .map(cause -> ImmutableCause.builder().causeMessage(String.valueOf(cause)).build())
                 .collect(Collectors.toList());
     }
 }
