@@ -17,6 +17,7 @@ public class GenericPagingAndFilteringUtils {
     private static final String SORT = "sort";
     private static final String INTERVAL = "interval";
     private static final String IN_LIST = "inList";
+    private static final String SEARCH = "search";
 
     private static final char DESCENDING_SIGN = '-';
     private static final char COMMA_DELIMITER = ','; // use as delimiter inside of an interval [id=2,5;description=2,]
@@ -43,16 +44,18 @@ public class GenericPagingAndFilteringUtils {
         ImmutableGenericPagingAndFiltering.Builder builder = ImmutableGenericPagingAndFiltering.builder();
         Iterator<String> itQueryParams = queryParams.keySet().iterator();
         Map<String, Object> genericFilters = new HashMap<>();
+        List<String> aList;
 
         while (itQueryParams.hasNext()){
             String aKey = itQueryParams.next();
+            aList = queryParams.get(aKey);
 
             if ( aKey.equals( LIMIT ) )
-                builder.limit( Long.parseLong( queryParams.get(aKey).get(0) ) );
+                builder.limit( Long.parseLong( aList.get(0) ) );
             else if ( aKey.equals( OFFSET ) )
-                builder.offset( Long.parseLong( queryParams.get(aKey).get(0) ) );
+                builder.offset( Long.parseLong( aList.get(0) ) );
             else if ( aKey.equals( SORT ) ) {
-                String allSortFieldsAndOrders = queryParams.get(aKey).get(0);
+                String allSortFieldsAndOrders = aList.get(0);
                 String[] allSortFieldsSplit = allSortFieldsAndOrders.split(MULTI_SORTING_DELIMITER);
                 StringBuilder sortOrders = new StringBuilder();
                 StringBuilder sortFields = new StringBuilder();
@@ -85,7 +88,6 @@ public class GenericPagingAndFilteringUtils {
                 builder.sortBy( sortFields.toString() );
             }
             else if ( aKey.equals( INTERVAL ) ) {
-                List<String> aList = queryParams.get(aKey);
 
                 String intervalString = aList.get(0);
 
@@ -125,7 +127,6 @@ public class GenericPagingAndFilteringUtils {
 
 //                // Process interval (fromRange, toRange, etc.)
 //                Map<String, Object> genericFilters = new HashMap<>();
-//                List<String> aList = queryParams.get(aKey);
 //
 //                for ( String aValue : aList ) {
 //                    if ( StringUtils.countMatches( aValue, String.valueOf( INTERVAL_DELIMITER ) ) == 1 ) {
@@ -151,8 +152,6 @@ public class GenericPagingAndFilteringUtils {
 //                builder.filters( genericFilters );
             }
             else if ( aKey.equals( IN_LIST ) ) {
-                List<String> aList = queryParams.get(aKey);
-
                 String inListString = aList.get(0);
 
                 if ( inListString.charAt(0) == OPEN_HOOK &&
@@ -166,7 +165,6 @@ public class GenericPagingAndFilteringUtils {
                         String[] elementsInList = anInList.split( String.valueOf(COMMA_DELIMITER) );
                         for ( String anElement : elementsInList ) {
                             if ( anElement.contains( COMMA_ENCODE ) ) {
-System.out.println( "anElement DAY NE : " + anElement );
                                 anElement.replaceAll( COMMA_ENCODE, String.valueOf(COMMA_DELIMITER) );
                             }
                         }
@@ -176,6 +174,24 @@ System.out.println( "anElement DAY NE : " + anElement );
                 }
                 else {
                     System.out.println("NOT A GOOD FORMAT OF INLIST, SHOULD ADD AN EXCEPTION HERE");
+                }
+            }
+            else if ( aKey.equals( SEARCH ) ) {
+                String searchString = aList.get(0);
+
+                if ( searchString.charAt(0) == OPEN_HOOK &&
+                        searchString.charAt( searchString.length() - 1 ) == CLOSE_HOOK ) {
+                    searchString = searchString.substring(1, searchString.length() - 1);
+                    String[] arrSearch = searchString.split( String.valueOf(SEMI_COLON_DELIMITER) );
+                    for ( String aSearchWithField : arrSearch ) {
+                        String[] fieldAndItsSearch = aSearchWithField.split( String.valueOf(EQUAL_DELIMITER) );
+                        String aField = fieldAndItsSearch[0];
+                        String aSearch = fieldAndItsSearch[1];
+                        genericFilters.put( aField, aSearch );
+                    }
+                }
+                else {
+                    System.out.println("NOT A GOOD FORMAT OF SEARCH, SHOULD ADD AN EXCEPTION HERE");
                 }
             }
             builder.filters( genericFilters );
