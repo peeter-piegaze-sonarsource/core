@@ -629,7 +629,8 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
                             mapCFValues.put( aCFTmpl.getCode(), mapStringAndType );
                         }
                     }
-                    mapAttributeAndType.put( att.getName(), mapCFValues );
+                    if ( ! mapCFValues.isEmpty() )
+                        mapAttributeAndType.put( att.getName(), mapCFValues );
                 }
             }
         }
