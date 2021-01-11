@@ -174,6 +174,11 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
                         .links(buildSingleResourceLink(entityName, id)).build();
     }
 
+    @Override
+    public Response getVersions() {
+        return Response.ok().entity(GenericOpencellRestful.VERSION_INFO).type(MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
     private Link buildPaginatedResourceLink(String entityName) {
         return new LinkGenerator.SelfLinkGenerator(GenericResource.class)
                 .withGetAction().withPostAction()
