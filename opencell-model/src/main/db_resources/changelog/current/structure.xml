@@ -3685,7 +3685,32 @@ END $$;]]>
             </column>
         </addColumn>  
     </changeSet>
-    
+    <changeSet id="5687_20203011" author="khalidHORRI">
+        <addColumn tableName="billing_cycle">
+            <column name="compute_dates_validation" type="${type.boolean}" defaultValueNumeric="0"/>
+        </addColumn>
+        <addColumn tableName="billing_billing_run">
+            <column name="compute_dates_validation" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="#5680_20201126" author="khalidHORRI">
+        <addColumn tableName="billing_invoice">
+            <column name="initial_collection_date" type="datetime"/>
+        </addColumn>
+        <addColumn tableName="billing_cycle">
+            <column name="collection_date_delay_el" type="varchar(2000)"/>
+        </addColumn>
+        <addColumn tableName="ar_account_operation">
+            <column name="collection_date" type="datetime"/>
+        </addColumn>
+        <addColumn tableName="billing_billing_run">
+            <column name="collection_date" type="datetime"/>
+        </addColumn>
+        <sql>
+            update ${db.schema.adapted}billing_invoice set initial_collection_date = due_date;
+            update ${db.schema.adapted}ar_account_operation set collection_date = due_date;
+        </sql>
+    </changeSet>
     <!-- for MediaPost -->
     
 		   <changeSet id="#5595_20201023" author="Mbarek-Ay">
@@ -4831,6 +4856,40 @@ END $$;]]>
                                  referencedColumnNames="id"/>
        </changeSet>
   
-  
-  
+	<changeSet id="#5627_20201212" author="MohammedELAZZOUZI">
+        <addColumn tableName="billing_billing_run">
+            <column name="skip_validation_script" type="${type.boolean}"/>
+        </addColumn>
+        <addColumn tableName="billing_billing_run">
+            <column name="suspect_auto_action" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="billing_billing_run">
+            <column name="reject_auto_action" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="billing_billing_run">
+            <column name="next_billing_run_id" type="bigint"/>
+        </addColumn>
+        
+        <addColumn tableName="billing_invoice">
+            <column name="reject_reason" type="varchar(255)"/>
+        </addColumn>
+        
+        <addColumn tableName="billing_cycle">
+            <column name="billing_run_validation_script_id" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="billing_invoice_type">
+            <column name="invoice_validation_script_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="next_billing_run_id" baseTableName="billing_billing_run" constraintName="fk_billing_billing_run_next_billing_run"
+              referencedColumnNames="id" referencedTableName="billing_billing_run"/>
+        <addForeignKeyConstraint baseColumnNames="billing_run_validation_script_id" baseTableName="billing_cycle" constraintName="fk_billing_cycle_billing_run_validation_script"
+              referencedColumnNames="id" referencedTableName="meveo_script_instance"/>
+        <addForeignKeyConstraint baseColumnNames="invoice_validation_script_id" baseTableName="billing_invoice_type" constraintName="fk_billing_invoice_type_invoice_validation_script"
+              referencedColumnNames="id" referencedTableName="meveo_script_instance"/>
+    </changeSet>
+    
+    <changeSet id="#5627_20210112" author="MohammedELAZZOUZI">
+        <addDefaultValue columnName="skip_validation_script" tableName="billing_billing_run" defaultValueNumeric="0"/>
+        <sql>UPDATE ${db.schema.adapted}billing_billing_run SET skip_validation_script=0 WHERE skip_validation_script IS NULL</sql>
+    </changeSet>
 </databaseChangeLog>
