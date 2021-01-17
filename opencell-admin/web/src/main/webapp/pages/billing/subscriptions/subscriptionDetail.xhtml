@@ -633,6 +633,8 @@
                                 <hftl:column label="#{messages['walletOperation.status']}" field="status.label" isMessage="true" />
                                 <hftl:column label="#{messages['chargeInstance.chargeDate.usage']}" field="chargeDate" isDate="true" />
                                 <hftl:column label="#{messages['pricePlanMatrix.amountWithoutTax']}" field="amountWithoutTax" isMessage="false" rendered="#{appProvider.entreprise}" />
+                                <hftl:column label="#{messages['usageChargeTemplate.priority']}"
+                                             field="priority" />
                                 <p:column headerText="#{messages['pricePlanMatrix.amountWithTax']}" rendered="#{!appProvider.entreprise}">
                                     <h:outputText value="#{entity.amountWithTax}" converter="#{getConverter.forType(entity.amountWithTax,'4digits')}" />
                                 </p:column>
