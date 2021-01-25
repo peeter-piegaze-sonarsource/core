@@ -76,10 +76,7 @@ public class InvoiceLinesJobBean extends BaseJobBean {
                 } else {
                     AggregationConfiguration aggregationConfiguration = new AggregationConfiguration(appProvider.isEntreprise(),
                             AggregationOption.fromValue(aggregationOption));
-                    List<RatedTransaction> ratedTransactions ;//= billingRunService.loadRTsByBillingRuns(billingRuns);
-                    Map<String, Object> conf = new HashedMap();
-                    conf.put("inList id", List.of(1L,2L,3L,4L));
-                    ratedTransactions = ratedTransactionService.list(new PaginationConfiguration(conf));
+                    List<RatedTransaction> ratedTransactions = billingRunService.loadRTsByBillingRuns(billingRuns);
                     List<Long> ratedTransactionIds = ratedTransactions.stream()
                             .map(RatedTransaction::getId)
                             .collect(toList());
