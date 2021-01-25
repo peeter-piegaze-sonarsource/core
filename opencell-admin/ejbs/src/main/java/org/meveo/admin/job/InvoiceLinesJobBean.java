@@ -7,7 +7,6 @@ import org.meveo.admin.util.pagination.PaginationConfiguration;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.billing.BillingRun;
-import org.meveo.model.billing.BillingRunStatusEnum;
 import org.meveo.model.billing.RatedTransaction;
 import org.meveo.model.cpq.commercial.InvoiceLine;
 import org.meveo.model.crm.EntityReferenceWrapper;
@@ -31,6 +30,7 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static org.meveo.model.billing.BillingRunStatusEnum.NEW;
 
 @Stateless
 public class InvoiceLinesJobBean extends BaseJobBean {
@@ -101,14 +101,12 @@ public class InvoiceLinesJobBean extends BaseJobBean {
     }
 
     private long validateBRList(List<BillingRun> billingRuns, JobExecutionResultImpl result) {
-        long excludedBillingRungCount = 0;
-        for (BillingRun billingRun : billingRuns) {
-            if (billingRun.getStatus() != BillingRunStatusEnum.NEW) {
-                excludedBillingRungCount++;
-                result.registerWarning(format("BillingRun[id={%d}] has been ignored", billingRun.getId()));
-            }
-        }
-        return excludedBillingRungCount;
+        List<BillingRun> excludedBRs = billingRuns.stream()
+                .filter(br -> br.getStatus() != NEW)
+                .collect(toList());
+        excludedBRs.forEach(br -> result.registerWarning(format("BillingRun[id={%d}] has been ignored", br.getId())));
+        billingRuns.removeAll(excludedBRs);
+        return excludedBRs.size();
     }
 
     private List<Map<String, Object>> getGroupedRTs(Map<String, Object> params) {
