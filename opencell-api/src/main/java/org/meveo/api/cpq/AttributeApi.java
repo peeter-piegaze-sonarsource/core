@@ -68,9 +68,11 @@ public class AttributeApi extends BaseCrudApi<Attribute, AttributeDTO> {
 		handleMissingParametersAndValidate(postData);
 
 		// check if groupedAttributes  exists
-		GroupedAttributes groupedAttributes = groupedAttributeService.findByCode(postData.getGroupedAttributeCode());
-		if (groupedAttributes == null) {
-			throw new EntityDoesNotExistsException(GroupedAttributes.class, postData.getGroupedAttributeCode());
+		if (!StringUtils.isBlank(postData.getGroupedAttributeCode())) {
+			GroupedAttributes groupedAttributes = groupedAttributeService.findByCode(postData.getGroupedAttributeCode());
+			if (groupedAttributes == null) {
+				throw new EntityDoesNotExistsException(GroupedAttributes.class, postData.getGroupedAttributeCode());
+			}
 		}
 
 		Attribute attribute = new Attribute();
@@ -97,9 +99,6 @@ public class AttributeApi extends BaseCrudApi<Attribute, AttributeDTO> {
 		if (StringUtils.isBlank(postData.getCode())) {
 			missingParameters.add("code");
 		}
-		if (StringUtils.isBlank(postData.getGroupedAttributeCode())) {
-			missingParameters.add("GroupedAttributeCode");
-		}
 
 		Attribute attribute=attributeService.findByCode(postData.getCode());
 		if (attribute== null) {
@@ -107,10 +106,12 @@ public class AttributeApi extends BaseCrudApi<Attribute, AttributeDTO> {
 		}
 
 		// check if groupedAttributes  exists
-		GroupedAttributes groupedAttributes = groupedAttributeService.findByCode(postData.getGroupedAttributeCode());
-		if (groupedAttributes == null) {
-			throw new EntityDoesNotExistsException(GroupedAttributes.class, postData.getGroupedAttributeCode());
-		}  
+		if (!StringUtils.isBlank(postData.getGroupedAttributeCode())) {
+			GroupedAttributes groupedAttributes = groupedAttributeService.findByCode(postData.getGroupedAttributeCode());
+			if (groupedAttributes == null) {
+				throw new EntityDoesNotExistsException(GroupedAttributes.class, postData.getGroupedAttributeCode());
+			}
+		} 
 		attribute.setCode(StringUtils.isBlank(postData.getUpdatedCode()) ? postData.getCode() : postData.getUpdatedCode());
 		attribute.setDescription(postData.getDescription());
 		attribute.setGroupedAttributes(groupedAttributes);
