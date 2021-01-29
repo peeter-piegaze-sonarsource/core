@@ -43,6 +43,10 @@ public class CustomerService extends AccountService<Customer> {
     
     @Inject
     private SellerService sellerService;
+    
+    static final String AES_ALOGRITHM = "AES";
+    
+    static final String STILL_ENCRYPTED_RETURN = "####";
     /**
      * find customer by code.
      * @param code code of customer
@@ -148,5 +152,32 @@ public class CustomerService extends AccountService<Customer> {
 	public List<Customer> getCustomersByQueryBuilder(QueryBuilder qb) {
 		return qb.getQuery(getEntityManager()).getResultList();
 	}
+	
+	/**
+	 * if field still encrypted, change value to ####
+	 * @param customer
+	 */
+	public void initPersonnalData(Customer customer) {
+		if (customer.getName().getFirstName() != null && customer.getName().getFirstName().startsWith(AES_ALOGRITHM)) {
+			customer.getName().setFirstName(STILL_ENCRYPTED_RETURN);
+		}
+		if (customer.getName().getLastName() != null && customer.getName().getLastName().startsWith(AES_ALOGRITHM)) {
+			customer.getName().setLastName(STILL_ENCRYPTED_RETURN);
+		}
+		if (customer.getContactInformation().getEmail() != null
+				&& customer.getContactInformation().getEmail().startsWith(AES_ALOGRITHM)) {
+			customer.getContactInformation().setEmail(STILL_ENCRYPTED_RETURN);
+		}
+		if (customer.getContactInformation().getMobile() != null
+				&& customer.getContactInformation().getMobile().startsWith(AES_ALOGRITHM)) {
+			customer.getContactInformation().setMobile(STILL_ENCRYPTED_RETURN);
+		}
+		if (customer.getContactInformation().getPhone() != null
+				&& customer.getContactInformation().getPhone().startsWith(AES_ALOGRITHM)) {
+			customer.getContactInformation().setPhone(STILL_ENCRYPTED_RETURN);
+		}
+	}
+	
+	
 	
 }

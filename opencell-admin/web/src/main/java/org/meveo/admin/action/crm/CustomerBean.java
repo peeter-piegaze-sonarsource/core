@@ -82,6 +82,7 @@ public class CustomerBean extends AccountBean<Customer> {
         if (entity.getContactInformation() == null) {
             entity.setContactInformation(new ContactInformation());
         }
+        customerService.initPersonnalData(entity);
         return entity;
     }
 
@@ -153,7 +154,7 @@ public class CustomerBean extends AccountBean<Customer> {
        	if(field == null) {
        		return false;
        	}
-       	Boolean encrypted = field.startsWith("AES");
+       	Boolean encrypted = field.contains("####");
        	if(encrypted && !messageDisplayed) {
        		messages.error(new BundleKey("messages", "decrypt.ko"));
        		messageDisplayed = true;
