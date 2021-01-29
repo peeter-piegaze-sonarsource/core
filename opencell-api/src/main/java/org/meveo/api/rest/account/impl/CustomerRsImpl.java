@@ -18,14 +18,6 @@
 
 package org.meveo.api.rest.account.impl;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-
 import org.meveo.api.account.CustomerApi;
 import org.meveo.api.account.CustomerSequenceApi;
 import org.meveo.api.dto.ActionStatus;
@@ -40,7 +32,6 @@ import org.meveo.api.dto.response.account.CustomersResponseDto;
 import org.meveo.api.dto.response.account.GetCustomerCategoryResponseDto;
 import org.meveo.api.dto.response.account.GetCustomerResponseDto;
 import org.meveo.api.dto.response.billing.GetCountersInstancesResponseDto;
-import org.meveo.api.dto.sequence.CustomerSequenceDto;
 import org.meveo.api.dto.sequence.GenericSequenceDto;
 import org.meveo.api.dto.sequence.GenericSequenceValueResponseDto;
 import org.meveo.api.logging.WsRestApiInterceptor;
@@ -50,6 +41,13 @@ import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.billing.CounterInstance;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.crm.custom.CustomFieldInheritanceEnum;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.interceptor.Interceptors;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Edward P. Legaspi
@@ -346,44 +344,44 @@ public class CustomerRsImpl extends BaseRs implements CustomerRs {
         return result;
     }
 
-    @Override
-    public ActionStatus createCustomerSequence(CustomerSequenceDto postData) {
-        ActionStatus result = new ActionStatus();
-
-        try {
-            customerSequenceApi.createCustomerSequence(postData);
-        } catch (Exception e) {
-            processException(e, result);
-        }
-
-        return result;
-    }
-
-    @Override
-    public ActionStatus updateCustomerSequence(CustomerSequenceDto postData) {
-        ActionStatus result = new ActionStatus();
-
-        try {
-            customerSequenceApi.updateCustomerSequence(postData);
-        } catch (Exception e) {
-            processException(e, result);
-        }
-
-        return result;
-    }
-
-    @Override
-    public GenericSequenceValueResponseDto getNextCustomerSequenceNumber(String code) {
-        GenericSequenceValueResponseDto result = new GenericSequenceValueResponseDto();
-
-        try {
-            result = customerSequenceApi.getNextNumber(code);
-        } catch (Exception e) {
-            processException(e, result.getActionStatus());
-        }
-
-        return result;
-    }
+//    @Override
+//    public ActionStatus createCustomerSequence(CustomerSequenceDto postData) {
+//        ActionStatus result = new ActionStatus();
+//
+//        try {
+//            customerSequenceApi.createCustomerSequence(postData);
+//        } catch (Exception e) {
+//            processException(e, result);
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public ActionStatus updateCustomerSequence(CustomerSequenceDto postData) {
+//        ActionStatus result = new ActionStatus();
+//
+//        try {
+//            customerSequenceApi.updateCustomerSequence(postData);
+//        } catch (Exception e) {
+//            processException(e, result);
+//        }
+//
+//        return result;
+//    }
+//
+//    @Override
+//    public GenericSequenceValueResponseDto getNextCustomerSequenceNumber(String code) {
+//        GenericSequenceValueResponseDto result = new GenericSequenceValueResponseDto();
+//
+//        try {
+//            result = customerSequenceApi.getNextNumber(code);
+//        } catch (Exception e) {
+//            processException(e, result.getActionStatus());
+//        }
+//
+//        return result;
+//    }
 
     @Override
     public GetCountersInstancesResponseDto filterCustomerCountersByPeriod(String customerCode, Date date) {

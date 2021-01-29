@@ -22,8 +22,6 @@ import org.meveo.api.dto.ActionStatus;
 import org.meveo.api.dto.account.CustomerBrandDto;
 import org.meveo.api.dto.account.CustomerCategoryDto;
 import org.meveo.api.dto.account.CustomerDto;
-import org.meveo.api.dto.custom.GenericCodeDto;
-import org.meveo.api.dto.custom.GenericCodeResponseDto;
 import org.meveo.api.dto.response.PagingAndFiltering;
 import org.meveo.api.dto.response.PagingAndFiltering.SortOrder;
 import org.meveo.api.dto.response.account.CustomersResponseDto;
@@ -290,35 +288,35 @@ public interface CustomerRs extends IBaseRs {
     @Path("/customerNumberSequence")
     GenericSequenceValueResponseDto getNextCustomerNumber();
 
-    /**
-     * Creates a new customer sequence.
-     * 
-     * @param postData customer sequence data
-     * @return request status
-     */
-    @POST
-    @Path("/sequence")
-    ActionStatus createCustomerSequence(GenericCodeDto postData);
-
-    /**
-     * Updates a new customer sequence with a given code.
-     * 
-     * @param postData customer sequence data
-     * @return request status
-     */
-    @PUT
-    @Path("/sequence")
-    ActionStatus updateCustomerSequence(GenericCodeDto postData);
-
-    /**
-     * Generates the next customer sequence number.
-     * 
-     * @param code code of the sequence
-     * @return sequence value dto
-     */
-    @POST
-    @Path("/sequence/next")
-    GenericCodeResponseDto getNextCustomerSequenceNumber(GenericCodeDto genericCodeDto);
+//    /**
+//     * Creates a new customer sequence.
+//     *
+//     * @param postData customer sequence data
+//     * @return request status
+//     */
+//    @POST
+//    @Path("/sequence")
+//    ActionStatus createCustomerSequence(GenericCodeDto postData);
+//
+//    /**
+//     * Updates a new customer sequence with a given code.
+//     *
+//     * @param postData customer sequence data
+//     * @return request status
+//     */
+//    @PUT
+//    @Path("/sequence")
+//    ActionStatus updateCustomerSequence(GenericCodeDto postData);
+//
+//    /**
+//     * Generates the next customer sequence number.
+//     *
+//     * @param code code of the sequence
+//     * @return sequence value dto
+//     */
+//    @POST
+//    @Path("/sequence/next")
+//    GenericCodeResponseDto getNextCustomerSequenceNumber(GenericCodeDto genericCodeDto);
 
     /**
      * Filter counters by period date.
