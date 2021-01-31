@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,13 +34,11 @@ import org.jboss.vfs.VirtualFile;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.admin.exception.ConfigurationException;
 import org.meveo.admin.exception.InvoiceJasperNotFoundException;
+import org.meveo.admin.job.PdfGeneratorConstants;
 import org.meveo.api.exception.MeveoApiException;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
-import org.meveo.commons.utils.QueryBuilder;
 import org.meveo.commons.utils.StringUtils;
-import org.meveo.model.billing.Invoice;
-import org.meveo.model.billing.InvoiceType;
 import org.meveo.model.cpq.CpqQuote;
 import org.meveo.model.quote.QuoteStatusEnum;
 import org.meveo.model.quote.QuoteVersion;
@@ -121,6 +117,16 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 
 	        return xmlFilename;
 	    }
+	    
+	    public String generateFileName(CpqQuote quote) {
+	        String quoteDate = new SimpleDateFormat("ddMMyyyy").format(quote.getQuoteDate());
+	        ParamBean paramBean = ParamBean.getInstance();
+	        String prefix = paramBean.getProperty("quote.filename.prefix", "quote");
+	        String identifier = quote.getQuoteNumber() != null ? quote.getQuoteNumber() : quote.getCode();
+	        return String.format("%s_%s-%s", quoteDate, prefix, identifier);
+	    }
+	    
+	    
 	    /**
 	     * Return a pdf filename that was assigned to quote
 	     *
@@ -135,7 +141,7 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 	        String pdfFileName = null;   
 	        if (StringUtils.isBlank(pdfFileName)) { 
 
-	            pdfFileName = formatQuoteDate(quote.getStatusDate()) +(!StringUtils.isBlank(quote.getQuoteNumber()));
+	        	pdfFileName = generateFileName(quote);
 	        }
 
 	        if (pdfFileName != null && !pdfFileName.toLowerCase().endsWith(".pdf")) {
@@ -184,17 +190,17 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 	        if (!quoteXmlFile.exists()) {
 	            //createXmlQuote(quote);
 	        }    
-	        String resDir = quoteDir + "jasper";
+	        String resDir = quoteDir + "quotes"  + File.separator + "jasper";
 	        String pdfFilename = getOrGeneratePdfFilename(quote);
 	        quote.setPdfFilename(pdfFilename);
 	        String pdfFullFilename = getFullPdfFilePath(quote, true);
 	        InputStream reportTemplate = null;
 	        try {
-	            File destDir = new File(resDir + File.separator + "quote" + File.separator + "pdf");
+	            File destDir = new File(resDir);
 
 	            if (!destDir.exists()) {
 
-	                String sourcePath = Thread.currentThread().getContextClassLoader().getResource("./jasper").getPath() + File.separator + "quote" + File.separator + "quote";
+	                String sourcePath = Thread.currentThread().getContextClassLoader().getResource("./jasper").getPath()  + File.separator + paramBean.getProperty("provider.rootDir", "default") + File.separator+ "quote";
 
 	                File sourceFile = new File(sourcePath);
 	                if (!sourceFile.exists()) {
@@ -239,11 +245,14 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 
 	            DefaultJasperReportsContext context = DefaultJasperReportsContext.getInstance();
 	            JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.xpath.executer.factory", "net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory");
+	            
+	            Map<String, Object> parameters = new HashMap<>();
+	            String templateDir = new StringBuilder(resDir).toString();
+	            parameters.put(PdfGeneratorConstants.LOGO_PATH_KEY, templateDir + File.separator);
+	            
+	            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
-	            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, dataSource);
-
-	            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFullFilename); 
-	            quote.setPdfFilename(pdfFilename);
+	            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFullFilename);
 
 	            log.info("PDF file '{}' produced for quote {}", pdfFullFilename, quote.getQuoteNumber());
 
@@ -304,10 +313,11 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 	    }
 	    
 	    
-	    
+	   
 	    /**
 	     * Find by quote number and code. 
 	     */
+	    /*
 	    public CpqQuote findByQuoteNumberAndCode(String quoteNumber, String code) throws BusinessException {
 	        QueryBuilder qb = new QueryBuilder(CpqQuote.class, "c", null);
 	        qb.addCriterion("c.quoteNumber", "=", quoteNumber, true);
@@ -324,4 +334,5 @@ public class CpqQuoteService extends BusinessService<CpqQuote> {
 	            return null;
 	        }
 	    }
+	    */
 }
