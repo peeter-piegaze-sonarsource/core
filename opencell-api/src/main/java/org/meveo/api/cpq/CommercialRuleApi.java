@@ -105,6 +105,8 @@ public class CommercialRuleApi extends BaseCrudApi<CommercialRuleHeader, Commerc
 		if(commercialRuleHeader==null) {
 			throw new EntityDoesNotExistsException(CommercialRuleHeader.class, dto.getCode());
 		} 
+		if(dto.getCommercialRuleItems() != null && !dto.getCommercialRuleItems().isEmpty())
+			commercialRuleHeader.getCommercialRuleItems().clear();
 		populateCommercialRuleHeader(dto, commercialRuleHeader);
 		commercialRuleHeaderService.update(commercialRuleHeader);
 		return commercialRuleHeader;
@@ -154,9 +156,14 @@ public class CommercialRuleApi extends BaseCrudApi<CommercialRuleHeader, Commerc
 	
 	public void populateCommercialRuleHeader(CommercialRuleHeaderDTO dto,CommercialRuleHeader commercialRuleHeader) {
 
-		commercialRuleHeader.setDescription(dto.getDescription()); 
-		commercialRuleHeader.setRuleType(dto.getRuleType());
-		commercialRuleHeader.setRuleEl(dto.getRuleEl()); 
+		if(!Strings.isEmpty(dto.getDescription()))
+			commercialRuleHeader.setDescription(dto.getDescription());
+
+		if(dto.getRuleType() != null)
+			commercialRuleHeader.setRuleType(dto.getRuleType());
+
+		if(!Strings.isEmpty(dto.getRuleEl()))
+			commercialRuleHeader.setRuleEl(dto.getRuleEl()); 
 		dto.setDisabled(commercialRuleHeader.isDisabled());
 
 		if(!StringUtils.isBlank(dto.getOfferCode())) {
