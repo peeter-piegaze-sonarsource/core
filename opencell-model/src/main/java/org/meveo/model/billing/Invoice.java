@@ -466,7 +466,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
 	@Column(name = "payment_status")
 	@Enumerated(EnumType.STRING)
     @AuditTarget(type = AuditChangeTypeEnum.OTHER, history = true, notif = true)
-	private InvoicePaymentStatusEnum paymentStatus;
+	private InvoicePaymentStatusEnum paymentStatus = InvoicePaymentStatusEnum.NONE;
 	
     /**
      * Payment status change date
@@ -494,7 +494,7 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
      *      -With or without tax depending on provider setting (isEnterprise).
      */
     @Column(name = "raw_amount", nullable = false, precision = NB_PRECISION, scale = NB_DECIMALS)
-    private BigDecimal rawAmount;
+    private BigDecimal rawAmount = BigDecimal.ZERO;
     
     /**
      * Discount rate to apply (in %).
