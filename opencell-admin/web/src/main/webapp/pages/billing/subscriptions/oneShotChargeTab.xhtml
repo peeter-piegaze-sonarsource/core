@@ -102,6 +102,7 @@
                 <hftl:formField label="#{messages['oneShotChargeInstance.criteria1']}" field="criteria1" newLine="true" />
                 <hftl:formField label="#{messages['oneShotChargeInstance.criteria2']}" field="criteria2" />
                 <hftl:formField label="#{messages['oneShotChargeInstance.criteria3']}" field="criteria3" />
+                <hftl:customFields entity="#{subscriptionBean.oneShotChargeInstance}" messagesId=":subscriptionTab:subscriptionFormId:messages" edit="false" />
 
                 <p:dataTable id="oneShotWalletOperationTable" value="#{subscriptionBean.oneShotWalletOperations}" var="shotApplication" paginator="false" resizableColumns="true"
                     styleClass="custom-grid" rendered="#{!subscriptionBean.oneShotChargeInstance.transient and not empty(subscriptionBean.oneShotWalletOperations)}">
