@@ -232,7 +232,9 @@ public class MatchingCodeService extends PersistenceService<MatchingCode> {
         create(matchingCode);
         if (!listPaymentScheduleInstanceItem.isEmpty()) {
             for (PaymentScheduleInstanceItem paymentScheduleInstanceItem : listPaymentScheduleInstanceItem) {
-                paymentScheduleInstanceItemService.applyOneShotPS(paymentScheduleInstanceItem);
+            	if(paymentScheduleInstanceItemService.isApplyAdvPaymentCharge(paymentScheduleInstanceItem)) {
+					paymentScheduleInstanceItemService.applyOneShotPS(paymentScheduleInstanceItem);
+				}
             }
         }
 
@@ -311,9 +313,9 @@ public class MatchingCodeService extends PersistenceService<MatchingCode> {
         }
         log.info("remove matching code ....");
         remove(matchingCode);
-        if (paymentScheduleInstanceItem != null) {
-            paymentScheduleInstanceItemService.applyOneShotRejectPS(paymentScheduleInstanceItem);
-        }
+        if (paymentScheduleInstanceItem != null && paymentScheduleInstanceItemService.isApplyAdvPaymentCharge(paymentScheduleInstanceItem)) {
+			paymentScheduleInstanceItemService.applyOneShotRejectPS(paymentScheduleInstanceItem);
+		}
         log.info("successfully end cancelMatching!");
     }
 
