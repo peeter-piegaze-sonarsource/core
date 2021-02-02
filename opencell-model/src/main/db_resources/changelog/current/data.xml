@@ -2096,7 +2096,7 @@ public class ValidateBRScript extends Script {
         </update>
     </changeSet>
 
-    <changeSet id="#FEAT-761-2021-02-02_41" author="ZBariki">
+    <changeSet id="#5592-2021-02-02_41" author="ZBariki">
         <insert tableName="meveo_job_instance">
             <column name="id" valueSequenceNext="meveo_job_instance_seq" />
             <column name="version" valueNumeric="0" />
@@ -2169,7 +2169,8 @@ public class ValidateBRScript extends Script {
             <column name="cf_protectable" value="0"/>
         </insert>
     </changeSet>
-    <changeSet id="#FEAT-897-2021-02-02_42" author="ZBariki">
+
+    <changeSet id="#5890-2021-02-02_42" author="ZBariki">
         <insert tableName="meveo_job_instance">
             <column name="id" valueSequenceNext="meveo_job_instance_seq" />
             <column name="version" valueNumeric="0" />
