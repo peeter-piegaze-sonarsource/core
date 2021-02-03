@@ -42,6 +42,7 @@ import org.meveo.api.dto.response.catalog.GetPricePlanResponseDto;
 import org.meveo.api.dto.response.catalog.GetPricePlanVersionResponseDto;
 import org.meveo.api.dto.response.catalog.PricePlanMatrixLinesDto;
 import org.meveo.api.dto.response.catalog.PricePlanMatrixesResponseDto;
+import org.meveo.api.exception.MeveoApiException;
 import org.meveo.api.rest.IBaseRs;
 import org.meveo.api.rest.PATCH;
 import org.meveo.model.cpq.enums.VersionStatusEnum;
@@ -209,6 +210,7 @@ public interface PricePlanRs extends IBaseRs {
                     @ApiResponse(responseCode="200", description = "the price plan version successfully created or updated",
                             content = @Content(schema = @Schema(implementation = GetPricePlanVersionResponseDto.class))),
                     @ApiResponse(responseCode = "404", description = "Unkonw product to attach to product version"),
+                    @ApiResponse(responseCode = "404", description = "attribute or elValue must be set", content = @Content(schema = @Schema(implementation = MeveoApiException.class))),
                     @ApiResponse(responseCode = "400", description = "the product verion with product code and current version in param does not exist ")
             })
     Response createOrUpdateMatrixPricePlanVersion(PricePlanMatrixVersionDto pricePlanMatrixVersionDto);

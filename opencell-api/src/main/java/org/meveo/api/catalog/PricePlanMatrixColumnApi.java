@@ -1,5 +1,6 @@
 package org.meveo.api.catalog;
 
+import org.elasticsearch.common.Strings;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.BaseCrudApi;
 import org.meveo.api.dto.CustomFieldsDto;
@@ -43,17 +44,22 @@ public class PricePlanMatrixColumnApi extends BaseCrudApi<PricePlanMatrixColumn,
     public PricePlanMatrixColumn create(PricePlanMatrixColumnDto dtoData) throws MeveoApiException, BusinessException {
 
         checkMissingParameters(dtoData);
-
+        
+        if(Strings.isEmpty(dtoData.getAttributeCode())  && Strings.isEmpty(dtoData.getElValue())) {
+        	throw new MeveoApiException("Attribute or ElValue should be set");
+        }
 
         if(pricePlanMatrixColumnService.findByCode(dtoData.getCode()) != null) {
             throw new EntityAlreadyExistsException(PricePlanMatrixColumn.class, dtoData.getCode());
         }
 
         PricePlanMatrixColumn pricePlanMatrixColumn = new PricePlanMatrixColumn();
-        Attribute attribute = loadEntityByCode(attributeService, dtoData.getAttributeCode(), Attribute.class);
-        pricePlanMatrixColumn.setAttribute(attribute);
+        if(!Strings.isEmpty(dtoData.getAttributeCode())){
+        	Attribute attribute = attributeService.findByCode(dtoData.getAttributeCode());
+        	pricePlanMatrixColumn.setAttribute(attribute);
+        }
         pricePlanMatrixColumn.setRange(dtoData.getRange());
-        pricePlanMatrixColumn.setType(attribute.getAttributeType().getColumnType(dtoData.getRange()));
+        pricePlanMatrixColumn.setType(dtoData.getType());
         populatePricePlanMatrixColumn(dtoData, pricePlanMatrixColumn);
 
 
@@ -89,12 +95,6 @@ public class PricePlanMatrixColumnApi extends BaseCrudApi<PricePlanMatrixColumn,
         if (StringUtils.isBlank(dtoData.getPricePlanMatrixVersion())) {
             missingParameters.add("pricePlanMatrixVersion");
         }
-        if (StringUtils.isBlank(dtoData.getElValue())) {
-            missingParameters.add("elValue");
-        }
-        if (StringUtils.isBlank(dtoData.getAttributeCode())) {
-            missingParameters.add("attributeCode");
-        }
         if (StringUtils.isBlank(dtoData.getOfferTemplateCode())) {
             missingParameters.add("offerTemplateCode");
         }
@@ -116,11 +116,17 @@ public class PricePlanMatrixColumnApi extends BaseCrudApi<PricePlanMatrixColumn,
         if(pricePlanMatrixVersion == null){
             throw new EntityDoesNotExistsException(PricePlanMatrixVersion.class, dtoData.getPricePlanMatrixCode(), "pricePlanMatrixCode", ""+dtoData.getPricePlanMatrixVersion(), "pricePlanMatrixVersion");
         }
+
+        if(Strings.isEmpty(dtoData.getAttributeCode())  && Strings.isEmpty(dtoData.getElValue())) {
+        	throw new MeveoApiException("Attribute or ElValue should be set");
+        }
+        
+    	pricePlanMatrixColumn.setAttribute(attributeService.findByCode(dtoData.getAttributeCode()));
+        pricePlanMatrixColumn.setElValue(dtoData.getElValue());
         pricePlanMatrixColumn.setPricePlanMatrixVersion(pricePlanMatrixVersion);
         pricePlanMatrixColumn.setProduct(loadEntityByCode(productService, dtoData.getProductCode(), Product.class));
         pricePlanMatrixColumn.setOfferTemplate(loadEntityByCode(offerTemplateService, dtoData.getOfferTemplateCode(), OfferTemplate.class));
         pricePlanMatrixColumn.setCode(dtoData.getCode());
-        pricePlanMatrixColumn.setElValue(dtoData.getElValue());
         pricePlanMatrixColumn.setPosition(dtoData.getPosition());
     }
 }

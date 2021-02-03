@@ -47,8 +47,7 @@ public class PricePlanMatrixColumn extends BusinessEntity {
     private Integer position;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    @NotNull
+    @Column(name = "type")
     private ColumnTypeEnum type;
 
     @Column(name = "el_value")
