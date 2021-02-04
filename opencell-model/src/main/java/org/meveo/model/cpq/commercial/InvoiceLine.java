@@ -81,7 +81,7 @@ public class InvoiceLine extends BusinessEntity {
     
     @Column(name = "discount_rate", precision = NB_PRECISION, scale = NB_DECIMALS)
     @NotNull
-    private BigDecimal discountRate;
+    private BigDecimal discountRate = BigDecimal.ZERO;
 
     @Column(name = "amount_without_tax", precision = NB_PRECISION, scale = NB_DECIMALS)
     @NotNull
@@ -136,14 +136,14 @@ public class InvoiceLine extends BusinessEntity {
 
 	@Column(name = "discount_amount", precision = NB_PRECISION, scale = NB_DECIMALS)
 	@NotNull
-	private BigDecimal discountAmount;
+	private BigDecimal discountAmount = BigDecimal.ZERO;
 
 	@Column(name = "label")
 	private String label;
 
 	@Column(name = "raw_amount", precision = NB_PRECISION, scale = NB_DECIMALS)
 	@NotNull
-	private BigDecimal rawAmount;
+	private BigDecimal rawAmount = BigDecimal.ZERO;
 
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "service_instance_id")
