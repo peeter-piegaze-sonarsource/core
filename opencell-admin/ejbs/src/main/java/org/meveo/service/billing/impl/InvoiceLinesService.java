@@ -12,8 +12,6 @@ import org.meveo.model.filter.Filter;
 import org.meveo.model.order.Order;
 import org.meveo.service.base.BusinessService;
 import org.meveo.service.filter.FilterService;
-import org.meveo.service.base.BusinessService;
-import org.meveo.service.base.PersistenceService;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
