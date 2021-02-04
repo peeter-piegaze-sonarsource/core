@@ -46,11 +46,7 @@ public class InvoiceLine extends BusinessEntity {
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "invoice_id")
 	private Invoice invoice;
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> 2f7055ff1f... RE #5921 : new billing process V2
 	@Column(name = "prestation")
 	@Size(max = 255)
 	private String prestation;
