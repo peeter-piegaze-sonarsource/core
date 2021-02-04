@@ -113,7 +113,7 @@ public class InvoiceLinesJobBean extends BaseJobBean {
         String query = "SELECT rt.billing_account__id, \n" +
                 "                 rt.article_id, rt.description as label, SUM(rt.quantity) AS quantity, \n" +
                 "                 rt.unit_amount_without_tax, rt.unit_amount_with_tax,\n" +
-                "                 SUM(rt.amount_without_tax) as sumWithoutTax, SUM(rt.amount_with_tax) as sumWithTax, \n" +
+                "                 SUM(rt.amount_without_tax) as sum_without_tax, SUM(rt.amount_with_tax) as sum_with_tax, \n" +
                 "                 rt.offer_id, rt.service_instance_id,\n" +
                 "                 rt.usage_date, rt.start_date, rt.end_date,\n" +
                 "                 rt.order_number, rt.subscription_id, rt.tax_percent, " + 

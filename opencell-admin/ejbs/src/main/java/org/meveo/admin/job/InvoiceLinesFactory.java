@@ -83,10 +83,10 @@ public class InvoiceLinesFactory {
         invoiceLine.setDiscountRate(ZERO);
         BigDecimal taxPercent = (BigDecimal) record.get("tax_percent");
         invoiceLine.setTaxRate(taxPercent);
-        BigDecimal amountWithTax = ofNullable((BigDecimal) record.get("amount_with_tax"))
+        BigDecimal amountWithTax = ofNullable((BigDecimal) record.get("sum_without_tax"))
                 .orElse(ZERO);
         invoiceLine.setAmountWithTax(amountWithTax);
-        invoiceLine.setAmountWithoutTax(ofNullable((BigDecimal) record.get("amount_without_tax"))
+        invoiceLine.setAmountWithoutTax(ofNullable((BigDecimal) record.get("sum_with_tax"))
                 .orElse(ZERO));
         invoiceLine.setAmountTax(taxPercent.divide(new BigDecimal(100)).multiply(amountWithTax));
         return invoiceLine;

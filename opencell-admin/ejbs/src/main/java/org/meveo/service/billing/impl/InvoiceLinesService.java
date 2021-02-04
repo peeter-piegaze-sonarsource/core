@@ -62,7 +62,7 @@ public class InvoiceLinesService extends BusinessService<InvoiceLine> {
     public List<InvoiceLine> loadInvoiceLinesByBRs(List<BillingRun> billingRuns) {
         try {
             return getEntityManager().createNamedQuery("InvoiceLine.InvoiceLinesByBRs", InvoiceLine.class)
-                    .setParameter("billingRus", billingRuns)
+                    .setParameter("BillingRuns", billingRuns)
                     .getResultList();
         } catch (NoResultException e) {
             log.warn("No invoice found for the provided billing runs");
