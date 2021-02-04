@@ -2940,8 +2940,7 @@
 							 constraintName="cpq_invoice_line__product_version__fk"
 							 referencedTableName="cpq_product_version" referencedColumnNames="id"/>
     </changeSet>
-<<<<<<< HEAD
-    
+
     <changeSet id="#5937_20210204" author="TarikFA">
     	<addColumn tableName="cat_charge_template">
             <column name="attribute_id" type="bigint"/>
