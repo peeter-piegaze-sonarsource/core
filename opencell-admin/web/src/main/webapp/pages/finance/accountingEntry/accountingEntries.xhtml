@@ -33,7 +33,7 @@
             <!--  <hftl:searchField label="#{messages['AccountingEntry.status']}" field="status" /> -->
 		</hftl:searchPanel>
 
-		<hftl:dataList backingBean="#{accountingEntryListBean}" sortBy="auditable.created">
+		<hftl:dataList backingBean="#{accountingWritingListBean}" sortBy="auditable.created">
 			<hftl:column label="#{messages['accountingEntry.writingDate']}" field="auditable.created" isDate="true" />
 			<hftl:column label="#{messages['accountingEntry.extraParam2']}" field="extraParam2" />
 			<hftl:column label="#{messages['accountingEntry.eventType']}" field="eventType" />
