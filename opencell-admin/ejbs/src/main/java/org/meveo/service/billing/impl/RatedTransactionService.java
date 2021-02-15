@@ -1615,7 +1615,7 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
     public boolean isServiceMinRTsUsed() {
 
         try {
-            getEntityManager().createNamedQuery("ServiceInstance.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("ServiceInstance.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             return true;
         } catch (NoResultException e) {
             return false;
@@ -1631,7 +1631,7 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
     public boolean isSubscriptionMinRTsUsed() {
 
         try {
-            getEntityManager().createNamedQuery("Subscription.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("Subscription.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             return true;
         } catch (NoResultException e) {
             return false;
@@ -1647,7 +1647,7 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
     public boolean isBAMinRTsUsed() {
 
         try {
-            getEntityManager().createNamedQuery("BillingAccount.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("BillingAccount.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             return true;
         } catch (NoResultException e) {
             return false;
@@ -1671,32 +1671,32 @@ public class RatedTransactionService extends PersistenceService<RatedTransaction
         boolean caMin = false;
         boolean custMin = false;
         try {
-            em.createNamedQuery("BillingAccount.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            em.createNamedQuery("BillingAccount.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             baMin = true;
         } catch (NoResultException e) {
         }
         try {
-            em.createNamedQuery("UserAccount.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            em.createNamedQuery("UserAccount.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             uaMin = true;
         } catch (NoResultException e) {
         }
         try {
-            em.createNamedQuery("Subscription.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            em.createNamedQuery("Subscription.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             subMin = true;
         } catch (NoResultException e) {
         }
         try {
-            getEntityManager().createNamedQuery("ServiceInstance.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("ServiceInstance.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             servMin = true;
         } catch (NoResultException e) {
         }
         try {
-            getEntityManager().createNamedQuery("CustomerAccount.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("CustomerAccount.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             caMin = true;
         } catch (NoResultException e) {
         }
         try {
-            getEntityManager().createNamedQuery("Customer.getMimimumRTUsed").setMaxResults(1).getSingleResult();
+            getEntityManager().createNamedQuery("Customer.getMinimumAmountUsed").setMaxResults(1).getSingleResult();
             custMin = true;
         } catch (NoResultException e) {
         }

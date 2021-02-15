@@ -68,6 +68,7 @@ import org.meveo.model.billing.RatedTransaction;
 import org.meveo.model.billing.UserAccount;
 import org.meveo.model.communication.email.EmailTemplate;
 import org.meveo.model.communication.email.MailingTypeEnum;
+import org.meveo.model.cpq.commercial.InvoiceLine;
 import org.meveo.model.hierarchy.UserHierarchyLevel;
 import org.meveo.model.payments.PaymentMethod;
 import org.meveo.model.quote.Quote;
@@ -298,6 +299,9 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
      */
     @Transient
     private BigDecimal totalInvoicingAmountTax;
+
+    @Transient
+    private List<InvoiceLine> minInvoiceLines;
 
     public String getExternalId() {
         return externalId;
@@ -649,5 +653,15 @@ public class Order extends BusinessCFEntity implements IBillableEntity, IWFEntit
      */
     public void setElectronicBilling(boolean electronicBilling) {
         this.electronicBilling = electronicBilling;
+    }
+
+    @Override
+    public List<InvoiceLine> getMinInvoiceLines() {
+        return minInvoiceLines;
+    }
+
+    @Override
+    public void setMinInvoiceLines(List<InvoiceLine> invoiceLines) {
+        this.minInvoiceLines = invoiceLines;
     }
 }
