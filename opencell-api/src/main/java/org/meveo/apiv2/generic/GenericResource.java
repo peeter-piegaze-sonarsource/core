@@ -123,7 +123,8 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "404", description = "baseEntityObject not found", content = @Content(schema = @Schema(implementation = ApiException.class))),
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
-    Response getEntity(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
+    Response getEntity(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
+                       @Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
                        @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id );
 
     @GET
@@ -153,7 +154,8 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "404", description = "baseEntityObject not found", content = @Content(schema = @Schema(implementation = ApiException.class))),
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
-    Response getAllEntities(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName
+    Response getAllEntities(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
+                            @Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName
 //                            @Parameter(description = "Additional properties such as limit, offset, sort, interval values, etc.",
 //                                    schema = @Schema(implementation = Object.class)) @QueryParam("Additional properties") String additionalProperties,
 //                            @Parameter(description = "Query param offset") @QueryParam("offset") String offset,

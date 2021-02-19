@@ -3,8 +3,6 @@ package org.meveo.apiv2.generic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.parser.ParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.json.simple.parser.ParseException;
 import org.meveo.apiv2.GenericOpencellRestful;
 import org.meveo.apiv2.generic.common.LinkGenerator;
 import org.meveo.apiv2.generic.core.GenericHelper;
@@ -12,7 +10,6 @@ import org.meveo.apiv2.generic.core.GenericRequestMapper;
 import org.meveo.apiv2.generic.services.GenericApiAlteringService;
 import org.meveo.apiv2.generic.services.GenericApiLoadService;
 import org.meveo.apiv2.generic.services.PersistenceServiceHelper;
-import org.meveo.commons.utils.StringUtils;
 import org.meveo.commons.utils.StringUtils;
 
 import javax.ejb.Stateless;
@@ -23,8 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
 
 import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
 
@@ -85,25 +80,25 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
         mapInfoForError.put( URI_INFO, uriInfo );
 
         return loadService.findByClassNameAndId(extractList, entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
-                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName , id)).build())
                 .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
     }
 
     @Override
-    public Response getEntity(String entityName, Long id) {
+    public Response getEntity(Boolean extractList, String entityName, Long id) {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-        return get(entityName, id,
+        return get(extractList, entityName, id,
                 GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
     }
 
     @Override
-    public Response getAllEntities(String entityName )
+    public Response getAllEntities(Boolean extractList, String entityName )
             throws JsonProcessingException, ParseException {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
         MultivaluedMap<String, String> requestHeaders = httpHeaders.getRequestHeaders();
 
-        return getAll(entityName,
+        return getAll(extractList, entityName,
                 GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
     }
 
