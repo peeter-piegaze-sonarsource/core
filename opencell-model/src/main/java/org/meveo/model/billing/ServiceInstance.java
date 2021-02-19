@@ -83,7 +83,6 @@ import java.util.Map;
 @Entity
 @WorkflowedEntity
 @ObservableEntity
-@Cacheable
 @CustomFieldEntity(cftCodePrefix = "ServiceInstance", inheritCFValuesFrom = "serviceTemplate")
 @Table(name = "billing_service_instance")
 @AttributeOverrides({ @AttributeOverride(name = "code", column = @Column(name = "code", unique = false)) })
@@ -155,6 +154,12 @@ public class ServiceInstance extends BusinessCFEntity implements IWFEntity, ICou
      */
     @OneToMany(mappedBy = "serviceInstance", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ChargeInstance> chargeInstances = new ArrayList<>();
+    
+    /**
+     * RT associated with a service instance
+     */
+    @OneToMany(mappedBy = "serviceInstance", fetch = FetchType.LAZY)
+    private List<RatedTransaction> ratedTransactions = new ArrayList<>();
 
     /** Termination reason. */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -1110,6 +1115,20 @@ public class ServiceInstance extends BusinessCFEntity implements IWFEntity, ICou
      */
     public void setChargeInstances(List<ChargeInstance> chargeInstances) {
         this.chargeInstances = chargeInstances;
+    }
+
+    /**
+     * @return the ratedTransactions
+     */
+    public List<RatedTransaction> getRatedTransactions() {
+        return ratedTransactions;
+    }
+
+    /**
+     * @param ratedTransactions the ratedTransactions to set
+     */
+    public void setRatedTransactions(List<RatedTransaction> ratedTransactions) {
+        this.ratedTransactions = ratedTransactions;
     }
 
     /**

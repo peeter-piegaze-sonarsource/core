@@ -161,7 +161,7 @@ public class CustomerApi extends AccountEntityApi {
 
     @Inject
     private TaxCategoryService taxCategoryService;
-    
+
     @Inject
     private CustomFieldTemplateService customFieldTemplateService;
 
@@ -240,7 +240,7 @@ public class CustomerApi extends AccountEntityApi {
 
     /**
      * Populate entity with fields from DTO entity
-     * 
+     *
      * @param billingAccount Entity to populate
      * @param postData DTO entity object to populate from
      * @param checkCustomField Should a check be made if CF field is required
@@ -287,7 +287,7 @@ public class CustomerApi extends AccountEntityApi {
             customer.setInvoicingThreshold(postData.getInvoicingThreshold());
         }
         if (postData.isThresholdPerEntity() != null) {
-        	customer.setThresholdPerEntity(postData.isThresholdPerEntity());
+            customer.setThresholdPerEntity(postData.isThresholdPerEntity());
         }
         if (postData.getCheckThreshold() != null) {
             customer.setCheckThreshold(postData.getCheckThreshold());
@@ -328,11 +328,11 @@ public class CustomerApi extends AccountEntityApi {
 
     @SecuredBusinessEntityMethod(validate = @SecureMethodParameter(entityClass = Customer.class))
     public CustomerDto find(String customerCode) throws MeveoApiException {
-        return find(customerCode, CustomFieldInheritanceEnum.INHERIT_NO_MERGE);
+        return find(customerCode, CustomFieldInheritanceEnum.INHERIT_NO_MERGE, false);
     }
 
     @SecuredBusinessEntityMethod(validate = @SecureMethodParameter(entityClass = Customer.class))
-    public CustomerDto find(String customerCode, CustomFieldInheritanceEnum inheritCF) throws MeveoApiException {
+    public CustomerDto find(String customerCode, CustomFieldInheritanceEnum inheritCF, boolean includeCustomerAccounts) throws MeveoApiException {
         if (StringUtils.isBlank(customerCode)) {
             missingParameters.add("customerCode");
         }
@@ -343,7 +343,7 @@ public class CustomerApi extends AccountEntityApi {
             throw new EntityDoesNotExistsException(Customer.class, customerCode);
         }
 
-        return accountHierarchyApi.customerToDto(customer, inheritCF);
+        return accountHierarchyApi.customerToDto(customer, inheritCF, includeCustomerAccounts, includeCustomerAccounts);
     }
 
     @SecuredBusinessEntityMethod(validate = @SecureMethodParameter(entityClass = Customer.class))
@@ -407,7 +407,7 @@ public class CustomerApi extends AccountEntityApi {
         if (totalCount > 0) {
             List<Customer> customers = customerService.list(paginationConfig);
             for (Customer c : customers) {
-                customerDtos.getCustomer().add(accountHierarchyApi.customerToDto(c, inheritCF));
+                customerDtos.getCustomer().add(accountHierarchyApi.customerToDto(c, inheritCF, false, false));
             }
         }
 
@@ -760,7 +760,6 @@ public class CustomerApi extends AccountEntityApi {
         }
     }
 
-    
     /**
      * Exports an account hierarchy given a specific customer selected in the GUI. It includes Subscription, AccountOperation and Invoice details. It packaged the json output as a
      * zipped file along with the pdf invoices.
@@ -773,10 +772,10 @@ public class CustomerApi extends AccountEntityApi {
         CustomerDto result;
 
         Customer customer = customerService.findByCode(customerCode);
-        if (customer == null){
+        if (customer == null) {
             throw new EntityDoesNotExistsException(Customer.class, customerCode);
         }
-        
+
         List<GDPRInfoDto> customerGdpr = customFieldTemplateService.findCFMarkAsAnonymize(customer);
         result = new CustomerDto(customer, customerGdpr);
         if (customer.getCustomerAccounts() != null && !customer.getCustomerAccounts().isEmpty()) {
@@ -855,7 +854,8 @@ public class CustomerApi extends AccountEntityApi {
         GenericSequence genericSequence = providerService.getNextCustomerNumber();
         String sequenceNumber = StringUtils.getLongAsNChar(genericSequence.getCurrentSequenceNb(), genericSequence.getSequenceSize());
         result.setSequence(GenericSequenceApi.fromGenericSequence(genericSequence));
-        result.setValue(genericSequence.getPrefix() + sequenceNumber);
+        String prefix = genericSequence.getPrefix();
+        result.setValue((prefix == null ? "" : prefix) + sequenceNumber);
         return result;
     }
 

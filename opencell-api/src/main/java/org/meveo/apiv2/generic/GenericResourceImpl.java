@@ -3,6 +3,8 @@ package org.meveo.apiv2.generic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.simple.parser.ParseException;
 import org.meveo.apiv2.GenericOpencellRestful;
 import org.meveo.apiv2.generic.common.LinkGenerator;
 import org.meveo.apiv2.generic.core.GenericHelper;
@@ -10,6 +12,7 @@ import org.meveo.apiv2.generic.core.GenericRequestMapper;
 import org.meveo.apiv2.generic.services.GenericApiAlteringService;
 import org.meveo.apiv2.generic.services.GenericApiLoadService;
 import org.meveo.apiv2.generic.services.PersistenceServiceHelper;
+import org.meveo.commons.utils.StringUtils;
 import org.meveo.commons.utils.StringUtils;
 
 import javax.ejb.Stateless;
@@ -20,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
 
 import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
 
@@ -46,7 +51,7 @@ public class GenericResourceImpl implements GenericResource {
     }
 
     @Override
-    public Response getAll(String entityName, GenericPagingAndFiltering searchConfig) {
+    public Response getAll(Boolean extractList, String entityName, GenericPagingAndFiltering searchConfig) {
 System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig );
         entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
@@ -61,13 +66,12 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
         mapInfoForError.put( URI_INFO, uriInfo );
         mapInfoForError.put( EXCEPTION_MESSAGE, "entities " + entityName + " cannot be retrieved" );
 
-        return Response.ok().entity(loadService.findPaginatedRecords(entityClass, genericRequestMapper.mapTo(searchConfig),
-                genericFields, nestedEntities, searchConfig.getNestedDepth()))
+        return Response.ok().entity(loadService.findPaginatedRecords(extractList, entityClass, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth()))
                 .links(buildPaginatedResourceLink(entityName)).build();
     }
     
     @Override
-    public Response get(String entityName, Long id, GenericPagingAndFiltering searchConfig) {
+    public Response get(Boolean extractList, String entityName, Long id, GenericPagingAndFiltering searchConfig) {
         entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
@@ -80,9 +84,9 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
         String finalEntityName = entityName;
         mapInfoForError.put( URI_INFO, uriInfo );
 
-        return loadService.findByClassNameAndId(entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
-                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName, id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id " + id + " not found"));
+        return loadService.findByClassNameAndId(extractList, entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName, id)).build())
+                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
     }
 
     @Override
@@ -95,26 +99,6 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
     @Override
     public Response getAllEntities(String entityName )
             throws JsonProcessingException, ParseException {
-
-//        System.out.println( "additionalProperties : " + additionalProperties );
-//
-//        MultivaluedMap<String, String> queryParams = new MultivaluedHashMap<>();
-//        System.out.println( "HERE NE getAllEntities 2" );
-//        System.out.println( "HERE NE getAllEntities 3" );
-//
-//        JSONParser parser = new JSONParser();
-//        JSONObject jsonObject = (JSONObject) parser.parse(additionalProperties);
-//        Iterator<String> keys = jsonObject.keySet().iterator();
-//
-//        while(keys.hasNext()) {
-//            String key = keys.next();
-//            if ( key.equals( "offset" ) ) {
-//                queryParams.put( "offset", Collections.singletonList( String.valueOf(jsonObject.get( key ))) );
-//            }
-//            else if ( key.equals( "sort" ) )
-//                queryParams.put( "sort", Collections.singletonList( String.valueOf(jsonObject.get( key ))) );
-//        }
-
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
         MultivaluedMap<String, String> requestHeaders = httpHeaders.getRequestHeaders();
@@ -170,7 +154,7 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
     @Override
     public Response delete(String entityName, Long id) {
         entityName = StringUtils.recoverRealName(entityName);
-        return Response.status(Response.Status.NO_CONTENT).entity(genericApiAlteringService.delete(entityName, id))
+        return Response.ok().entity(genericApiAlteringService.delete(entityName, id))
                         .links(buildSingleResourceLink(entityName, id)).build();
     }
 

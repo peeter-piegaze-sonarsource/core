@@ -30,6 +30,8 @@ import org.meveo.admin.job.logging.JobLoggingInterceptor;
 import org.meveo.interceptor.PerformanceInterceptor;
 import org.meveo.jpa.JpaAmpNewTx;
 import org.meveo.model.billing.Invoice;
+import org.meveo.model.billing.RatedTransaction;
+import org.meveo.model.billing.ServiceInstance;
 import org.meveo.model.billing.Subscription;
 import org.meveo.model.crm.Customer;
 import org.meveo.model.crm.Provider;
@@ -40,9 +42,11 @@ import org.meveo.model.payments.AccountOperation;
 import org.meveo.security.CurrentUser;
 import org.meveo.security.MeveoUser;
 import org.meveo.service.billing.impl.InvoiceService;
+import org.meveo.service.billing.impl.RatedTransactionService;
 import org.meveo.service.billing.impl.SubscriptionService;
 import org.meveo.service.crm.impl.CustomerService;
 import org.meveo.service.crm.impl.ProviderService;
+import org.meveo.service.job.JobExecutionService;
 import org.meveo.service.order.OrderService;
 import org.meveo.service.payments.impl.AccountOperationService;
 import org.meveo.util.ApplicationProvider;
@@ -70,6 +74,9 @@ public class GDPRJobBean extends BaseJobBean {
 
 	@Inject
 	private SubscriptionService subscriptionService;
+	
+	@Inject
+    private RatedTransactionService ratedTransactionService;
 
 	@Inject
 	private OrderService orderService;
@@ -82,6 +89,9 @@ public class GDPRJobBean extends BaseJobBean {
 	
 	@Inject
 	private CustomerService customerService;
+
+	@Inject
+    protected JobExecutionService jobExecutionService;
 
 	@JpaAmpNewTx
 	@Interceptors({ JobLoggingInterceptor.class, PerformanceInterceptor.class })
@@ -136,13 +146,13 @@ public class GDPRJobBean extends BaseJobBean {
 				bulkProspectDelete(oldCustomerProspects, result);
 			}
 			
-			result.registerSucces();
+			jobExecutionService.registerSucces(result);
 			result.setNbItemsToProcess(nbItemsToProcess);
 			
 		} catch (Exception e) {
 			log.error("Failed to run GDPR data erasure job", e);
 			result.addReport(e.getMessage());
-			result.registerError(e.getMessage());
+			jobExecutionService.registerError(result, e.getMessage());
 		}
 	}
 	
@@ -160,7 +170,7 @@ public class GDPRJobBean extends BaseJobBean {
             } catch(Exception e) {
                 result.setNbItemsProcessedWithError(result.getNbItemsProcessedWithError() + 1);
                 result.addReport(e.getMessage());
-                result.registerError(e.getMessage());
+                jobExecutionService.registerError(result, e.getMessage());
             }
         }
     }
@@ -179,7 +189,7 @@ public class GDPRJobBean extends BaseJobBean {
             } catch(Exception e) {
                 result.setNbItemsProcessedWithError(result.getNbItemsProcessedWithError() + 1);
                 result.addReport(e.getMessage());
-                result.registerError(e.getMessage());
+                jobExecutionService.registerError(result, e.getMessage());
             }
         }
     }
@@ -198,7 +208,7 @@ public class GDPRJobBean extends BaseJobBean {
             } catch(Exception e) {
                 result.setNbItemsProcessedWithError(result.getNbItemsProcessedWithError() + 1);
                 result.addReport(e.getMessage());
-                result.registerError(e.getMessage());
+                jobExecutionService.registerError(result, e.getMessage());
             }
         }
     }
@@ -217,7 +227,7 @@ public class GDPRJobBean extends BaseJobBean {
             } catch(Exception e) {
                 result.setNbItemsProcessedWithError(result.getNbItemsProcessedWithError() + 1);
                 result.addReport(e.getMessage());
-                result.registerError(e.getMessage());
+                jobExecutionService.registerError(result, e.getMessage());
             }
         }
     }
@@ -231,12 +241,13 @@ public class GDPRJobBean extends BaseJobBean {
     private void bulkSubscriptionDelete(List<Subscription> inactiveSubscriptions, JobExecutionResultImpl result) {
         for (Subscription inactiveSubscription : inactiveSubscriptions) {
             try {
+                ratedTransactionService.detachRTsFromSubscription(inactiveSubscription);
                 subscriptionService.remove(inactiveSubscription);
                 result.setNbItemsCorrectlyProcessed(result.getNbItemsCorrectlyProcessed() + 1);
             } catch(Exception e) {
                 result.setNbItemsProcessedWithError(result.getNbItemsProcessedWithError() + 1);
                 result.addReport(e.getMessage());
-                result.registerError(e.getMessage());
+                jobExecutionService.registerError(result, e.getMessage());
             }
         }
     }

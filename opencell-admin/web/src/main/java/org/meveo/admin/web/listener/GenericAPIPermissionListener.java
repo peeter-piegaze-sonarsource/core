@@ -15,39 +15,41 @@
  * For more information on the GNU Affero General Public License, please consult
  * <https://www.gnu.org/licenses/agpl-3.0.en.html>.
  */
-package org.meveo.admin.action.medina;
 
-import javax.enterprise.context.ConversationScoped;
+package org.meveo.admin.web.listener;
+
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
-import org.meveo.service.billing.impl.SubscriptionService;
+import org.meveo.api.dto.job.JobInstanceInfoDto;
+import org.meveo.api.job.JobApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Named
-@ConversationScoped
-public class AccessListBean extends AccessBean {
-
-    private static final long serialVersionUID = -3037867704912788038L;
+@WebListener
+public class GenericAPIPermissionListener implements ServletContextListener {
 
     @Inject
-    private SubscriptionService subscriptionService;
+    private JobApi jobApi;
 
-    private Long parentEntityId;
+    private static final String jobInstanceCode = "APIv2PermissionsSyncJob";
+    
+    private static final Logger logger = LoggerFactory.getLogger(GenericAPIPermissionListener.class);
 
-    public void setParentEntityId(Long parentEntityId) {
-        this.parentEntityId = parentEntityId;
-    }
-
-    public Long getParentEntityId() {
-        return parentEntityId;
+    @Override
+    public void contextDestroyed(ServletContextEvent arg0) {
+        // do nothing
     }
 
     @Override
-    public void preRenderView() {
-        super.preRenderView();
-
-        if (parentEntityId != null) {
-            filters.put("subscription", subscriptionService.findById(parentEntityId));
-        }
+    public void contextInitialized(ServletContextEvent contextEvent) {
+        logger.info("Launching APIv2PermissionsSyncJob.");
+        
+        JobInstanceInfoDto jobInstanceInfoDto = new JobInstanceInfoDto();
+        jobInstanceInfoDto.setCode(jobInstanceCode); 
+        jobApi.executeJob(jobInstanceInfoDto);
     }
+
 }

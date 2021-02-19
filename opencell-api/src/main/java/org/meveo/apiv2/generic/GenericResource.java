@@ -21,21 +21,15 @@ public interface GenericResource {
     @Path("/all/{entityName}")
     @Operation(summary = "Generic single endpoint to retrieve paginated records of an entity",
             tags = { "Generic" },
-            description = "You need to specify the entity name which is of the plural form. " +
-                    "Also, the first character of the entity name is lowercase. If the entity name is a " +
-                    "single word, its characters should be written in lowercase, for example *sellers*. " +
-                    "If the entity name is a compound word, only the first character of its first single word is " +
-                    "lowercase, the first character of remaining words should be written in uppercase, " +
-                    "for example *paymentMethods*.\n\n"
-                    + "As body, you can specify the configuration of the research. For example, you can define " +
-                    "the offset and the limit, or you can sort by a field and define the sort type. "
-                    + "For more details, refer to PagingAndFiltering documentation at the following link " +
-                    "[https://opencellsoft.atlassian.net/wiki/spaces/docs/pages/396886017/Generic+API#Paging-and-Filtering](https://opencellsoft.atlassian.net/wiki/spaces/docs/pages/396886017/Generic+API#Paging-and-Filtering).",
+            description ="specify the entity name, and as body, the configuration of the research."
+                    + " also you can define the offset and the limit, you can order by a field and define the sort type"
+                    + " see PagingAndFiltering doc for more details. ",
             responses = {
                     @ApiResponse(responseCode="200", description = "paginated results successfully retrieved with hypermedia links"),
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
     })
-    Response getAll(@Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
+    Response getAll(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
+                    @Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
                     @Parameter(description = "requestDto carries the wanted fields ex: {genericFields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
 
     @POST
@@ -48,7 +42,8 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "404", description = "baseEntityObject not found", content = @Content(schema = @Schema(implementation = ApiException.class))),
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
     })
-    Response get(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName,
+    Response get(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
+                 @Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
                  @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id,
                  @Parameter(description = "requestDto carries the wanted fields ex: {fields = [code, description]}", required = true) GenericPagingAndFiltering searchConfig);
 
@@ -93,7 +88,7 @@ public interface GenericResource {
 
     @Operation(summary = "Get versions information about OpenCell components",
             tags = { "Generic" },
-            description ="Return a list of OpenCell's components version information",
+            description ="return a list of OpenCell's components version information",
             responses = {
                     @ApiResponse(responseCode="200", description = "resource successfully updated but not content exposed except the hypermedia")
             })
@@ -164,7 +159,7 @@ public interface GenericResource {
 //                            @Parameter(description = "Query param offset") @QueryParam("offset") String offset,
 //                            @Parameter(description = "Query param sort") @QueryParam("sort") String sort,
 //                            @Parameter(description = "Query param interval for data fields") @QueryParam("interval") String interval,
-                            )
+    )
             throws JsonProcessingException, ParseException;
 
     @GET
@@ -205,6 +200,6 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
     Response head(@Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName,
-                       @Parameter(description = "The id of the record that you want to check existence", required = true) @PathParam("id") Long id);
+                  @Parameter(description = "The id of the record that you want to check existence", required = true) @PathParam("id") Long id);
 
 }

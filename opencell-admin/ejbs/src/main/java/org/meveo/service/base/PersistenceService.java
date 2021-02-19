@@ -596,21 +596,9 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
         StringBuilder queryString = new StringBuilder( "from CustomFieldTemplate" );
         Query query = getEntityManager().createQuery(queryString.toString());
         List<CustomFieldTemplate> resultsCFTmpl = query.getResultList();
-
-        Map<String, Object> mapAttributeAndType = new HashMap();
-
-//        String[] attributeNames = ((Session) getEntityManager().getDelegate()).getSessionFactory()
-//                .getClassMetadata( getEntityClass() ).getPropertyNames();
-//        org.hibernate.type.Type[] attributeTypes = ((Session) getEntityManager().getDelegate()).getSessionFactory()
-//                .getClassMetadata( getEntityClass() ).getPropertyTypes();
-//
-//        for ( int i = 0; i < attributeNames.length; i++ ) {
-//            mapAttributeAndType.put( attributeNames[i], attributeTypes[i].getName() );
-//        }
-
+        Map<String, Object> mapAttributeAndType = new HashMap<>();
         Set<Attribute<? super E, ?>> setAttributes = ((Session) getEntityManager().getDelegate()).getSessionFactory()
                 .getMetamodel().managedType( getEntityClass() ).getAttributes();
-
         for ( Attribute<? super E, ?> att : setAttributes ) {
             if ( att.getJavaType() != CustomFieldValues.class ) {
                 Map<String,String> mapStringAndType = new HashMap();
@@ -634,7 +622,6 @@ public abstract class PersistenceService<E extends IEntity> extends BaseService 
                 }
             }
         }
-
         return mapAttributeAndType;
     }
 
