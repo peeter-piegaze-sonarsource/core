@@ -3754,7 +3754,13 @@ public class OrderAdvancement extends ModuleScript {
 
 	<changeSet id="#20210222_907" author="ZBariki">
 		<addColumn tableName="billing_invoice">
-			<column name="secondary_status" type="varchar(255)"/>
+			<column name="has_taxes" type="${type.boolean}" defaultValueNumeric="0"/>
+		</addColumn>
+		<addColumn tableName="billing_invoice">
+			<column name="has_discounts" type="${type.boolean}" defaultValueNumeric="0"/>
+		</addColumn>
+		<addColumn tableName="billing_invoice">
+			<column name="has_minimum" type="${type.boolean}" defaultValueNumeric="0"/>
 		</addColumn>
 	</changeSet>
 
