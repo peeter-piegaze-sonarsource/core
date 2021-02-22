@@ -59,7 +59,8 @@ public class GenericOpencellRestful extends Application {
         Set<Class<?>> resources = Stream.of(VersionImpl.class, GenericResourceImpl.class, NotYetImplementedResource.class,
                 NotFoundExceptionMapper.class, BadRequestExceptionMapper.class,
                 MeveoExceptionMapper.class, IllegalArgumentExceptionMapper.class,
-                EJBTransactionRolledbackExceptionMapper.class, OpenApiResource.class,
+                EJBTransactionRolledbackExceptionMapper.class, NotPluralFormMapper.class,
+                OpenApiResource.class,
                 DocumentResourceImpl.class, GenericJacksonProvider.class, ProductResourceImpl.class,
                 OrderItemResourceImpl.class, OrderResourceImpl.class)
                 .collect(Collectors.toSet());

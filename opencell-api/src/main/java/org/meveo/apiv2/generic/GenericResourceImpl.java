@@ -3,22 +3,22 @@ package org.meveo.apiv2.generic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.simple.parser.ParseException;
+import org.meveo.api.exception.NotPluralFormException;
 import org.meveo.apiv2.GenericOpencellRestful;
 import org.meveo.apiv2.generic.common.LinkGenerator;
 import org.meveo.apiv2.generic.core.GenericHelper;
 import org.meveo.apiv2.generic.core.GenericRequestMapper;
+import org.meveo.apiv2.generic.exception.NotPluralFormMapper;
 import org.meveo.apiv2.generic.services.GenericApiAlteringService;
 import org.meveo.apiv2.generic.services.GenericApiLoadService;
 import org.meveo.apiv2.generic.services.PersistenceServiceHelper;
-import org.meveo.commons.utils.StringUtils;
+import org.meveo.util.Inflector;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.*;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import static org.meveo.apiv2.generic.services.PersistenceServiceHelper.getPersistenceService;
@@ -40,15 +40,8 @@ public class GenericResourceImpl implements GenericResource {
     @Context
     private HttpHeaders httpHeaders;
 
-    private static Map mapInfoForError = new HashMap();
-    public static Map getMapInfoForError() {
-        return mapInfoForError;
-    }
-
     @Override
     public Response getAll(Boolean extractList, String entityName, GenericPagingAndFiltering searchConfig) {
-System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig );
-        entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
         if(searchConfig != null){
@@ -57,9 +50,6 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
         }
         Class entityClass = GenericHelper.getEntityClass(entityName);
         GenericRequestMapper genericRequestMapper = new GenericRequestMapper(entityClass, PersistenceServiceHelper.getPersistenceService());
-
-        mapInfoForError.put( URI_INFO, uriInfo );
-        mapInfoForError.put( EXCEPTION_MESSAGE, "entities " + entityName + " cannot be retrieved" );
 
         return Response.ok().entity(loadService.findPaginatedRecords(extractList, entityClass, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth()))
                 .links(buildPaginatedResourceLink(entityName)).build();
@@ -67,7 +57,6 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
     
     @Override
     public Response get(Boolean extractList, String entityName, Long id, GenericPagingAndFiltering searchConfig) {
-        entityName = StringUtils.recoverRealName(entityName);
         Set<String> genericFields = null;
         Set<String> nestedEntities = null;
         if(searchConfig != null){
@@ -76,27 +65,41 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
         }
         Class entityClass = GenericHelper.getEntityClass(entityName);
         GenericRequestMapper genericRequestMapper = new GenericRequestMapper(entityClass, PersistenceServiceHelper.getPersistenceService());
-        String finalEntityName = entityName;
-        mapInfoForError.put( URI_INFO, uriInfo );
 
         return loadService.findByClassNameAndId(extractList, entityClass, id, genericRequestMapper.mapTo(searchConfig), genericFields, nestedEntities, searchConfig.getNestedDepth())
-                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(finalEntityName , id)).build())
-                .orElseThrow(() -> new NotFoundException("entity " + finalEntityName + " with id "+id+ " not found."));
+                .map(fetchedEntity -> Response.ok().entity(fetchedEntity).links(buildSingleResourceLink(entityName , id)).build())
+                .orElseThrow(() -> new NotFoundException("entity " + entityName + " with id "+id+ " not found."));
     }
 
     @Override
     public Response getEntity(Boolean extractList, String entityName, Long id) {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-        return get(extractList, entityName, id,
-                GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+
+        // if entityName is of plural form, process the request
+        if ( Inflector.getInstance().pluralize(entityName).equals(entityName) ) {
+            entityName = Inflector.getInstance().singularize(entityName);
+
+            return get(extractList, entityName, id,
+                    GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+        }
+        // otherwise, entityName is not of plural form, raise an exception
+        else {
+            NotPluralFormException notPluralFormException =
+                    new NotPluralFormException("The entity name " + entityName + " is not of plural form");
+            NotPluralFormMapper notPluralFormMapper = new NotPluralFormMapper();
+            return notPluralFormMapper.toResponse(notPluralFormException);
+        }
     }
 
     @Override
-    public Response getAllEntities(Boolean extractList, String entityName )
+    public Response getAllEntities(Boolean extractList, String entityName)
             throws JsonProcessingException, ParseException {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+System.out.println( "extractList : " + extractList );
+System.out.println( "entityName : " + entityName );
 
         MultivaluedMap<String, String> requestHeaders = httpHeaders.getRequestHeaders();
+        entityName = Inflector.getInstance().singularize(entityName);
 
         return getAll(extractList, entityName,
                 GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
@@ -115,7 +118,7 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
 
     @Override
     public Response head(String entityName, Long id) {
-        entityName = StringUtils.recoverRealName(entityName);
+        entityName = Inflector.getInstance().singularize(entityName);
         Class entityClass = GenericHelper.getEntityClass(entityName);
         String finalEntityName = entityName;
         return loadService.findByClassNameAndId(entityClass, id)
@@ -125,7 +128,7 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
     
     @Override
     public Response update(String entityName, Long id, String dto) {
-        entityName = StringUtils.recoverRealName(entityName);
+        entityName = Inflector.getInstance().singularize(entityName);
         return Response.status(Response.Status.NO_CONTENT).entity(genericApiAlteringService.update(entityName, id, dto))
                 .links(buildSingleResourceLink(entityName, id))
                 .build();
@@ -133,11 +136,8 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
     
     @Override
     public Response create(String entityName, String dto) {
-        entityName = StringUtils.recoverRealName(entityName);
+        entityName = Inflector.getInstance().singularize(entityName);
         String finalEntityName = entityName;
-
-        mapInfoForError.put( URI_INFO, uriInfo );
-        mapInfoForError.put( EXCEPTION_MESSAGE, "entity " + finalEntityName + " cannot be created" );
 
         return  genericApiAlteringService.create(finalEntityName, dto)
                 .map(entityId -> Response.status(Response.Status.CREATED).entity(Collections.singletonMap("id", entityId))
@@ -148,7 +148,7 @@ System.out.println( "searchConfig in getAll HERE THANG NGUYEN : " + searchConfig
 
     @Override
     public Response delete(String entityName, Long id) {
-        entityName = StringUtils.recoverRealName(entityName);
+        entityName = Inflector.getInstance().singularize(entityName);
         return Response.ok().entity(genericApiAlteringService.delete(entityName, id))
                         .links(buildSingleResourceLink(entityName, id)).build();
     }

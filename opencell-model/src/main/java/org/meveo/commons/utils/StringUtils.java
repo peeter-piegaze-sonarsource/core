@@ -63,16 +63,6 @@ public class StringUtils {
     }
 
     /**
-     * Transform a string of plural form (i.e. sellers) to singular form (i.e. seller)
-     *
-     * @param value name to recover (remove 's' at the end)
-     * @return real name of entity
-     */
-    public static String recoverRealName(String value) {
-        return value.substring(0, value.length() - 1);
-    }
-
-    /**
      * Value is null or empty
      *
      * @param value Value to check

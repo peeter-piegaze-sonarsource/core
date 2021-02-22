@@ -35,10 +35,8 @@ public interface ApiException extends Resource{
     @Nullable
     Response.Status getStatus();
     @Nullable
-    String getMessage();
+    String getDetails();
     @Nullable
     List<Cause> getCauses();
-    @Nullable
-    String getInfoURL();
 }
 
