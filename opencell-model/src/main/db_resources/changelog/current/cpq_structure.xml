@@ -3752,4 +3752,10 @@ public class OrderAdvancement extends ModuleScript {
         
     </changeSet>
 
+	<changeSet id="#20210222_907" author="ZBariki">
+		<addColumn tableName="billing_invoice">
+			<column name="secondary_status" type="varchar(255)"/>
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

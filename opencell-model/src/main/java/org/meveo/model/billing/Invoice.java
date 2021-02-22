@@ -570,6 +570,13 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
     private boolean newInvoicingProcess = false;
 
     /**
+     * Invoice secondary status
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "secondary_status", length = 50)
+    private InvoiceSecondaryStatusEnum secondaryStatus;
+
+    /**
      * 3583 : dueDate and invoiceDate should be truncated before persist or update.
      */
     @PrePersist
@@ -1399,4 +1406,11 @@ public class Invoice extends AuditableEntity implements ICustomFieldEntity, ISea
 		this.newInvoicingProcess = newInvoicingProcess;
 	}
 
+    public InvoiceSecondaryStatusEnum getSecondaryStatus() {
+        return secondaryStatus;
+    }
+
+    public void setSecondaryStatus(InvoiceSecondaryStatusEnum secondaryStatus) {
+        this.secondaryStatus = secondaryStatus;
+    }
 }
