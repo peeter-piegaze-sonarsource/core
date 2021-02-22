@@ -1,6 +1,8 @@
 package org.meveo.apiv2.generic;
 
 import org.meveo.api.exception.InvalidParameterException;
+import org.meveo.api.exception.NotCamelCaseException;
+import org.meveo.apiv2.generic.core.GenericHelper;
 import org.meveo.commons.utils.StringUtils;
 
 import javax.ws.rs.NotFoundException;
@@ -18,10 +20,15 @@ public class ValidationUtils {
         return check(entityName, StringUtils::isBlank, () -> new NotFoundException("The entityName should not be null or empty"));
     }
 
-    public static ValidationUtils checkEntityFormat(String entityName) {
-        return check(entityName, StringUtils::isNotWellFormed,
-                () -> new NotFoundException("The entityName " + entityName
-                        + " should be in lowercase, except for compound words"));
+    public static ValidationUtils checkCamelCaseFormat(String entityName) {
+        return check(entityName, GenericHelper.listCamelCaseName, StringUtils::isNotWellFormedCamelCase,
+                () -> new NotCamelCaseException("All the letters of entityName " + entityName
+                        + " should be in lowercase, except for the first letters in each word in a compound word"));
+    }
+
+    public static ValidationUtils checkEntityExistence(String entityName) {
+        return check(entityName, GenericHelper.listCamelCaseName, StringUtils::isNotExistingEntity,
+                () -> new NotFoundException("The entity " + entityName + " does not exist"));
     }
 
     public static ValidationUtils checkISOFormats(Map<String, Object> readValueMap) {

@@ -79,13 +79,16 @@ public class GenericResourceImpl implements GenericResource {
         if ( Inflector.getInstance().pluralize(entityName).equals(entityName) ) {
             entityName = Inflector.getInstance().singularize(entityName);
 
+            ValidationUtils.checkEntityExistence(entityName);
+            ValidationUtils.checkCamelCaseFormat(entityName);
+
             return get(extractList, entityName, id,
                     GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
         }
         // otherwise, entityName is not of plural form, raise an exception
         else {
             NotPluralFormException notPluralFormException =
-                    new NotPluralFormException("The entity name " + entityName + " is not of plural form");
+                    new NotPluralFormException("The entity name " + entityName + " is not a valid plural form");
             NotPluralFormMapper notPluralFormMapper = new NotPluralFormMapper();
             return notPluralFormMapper.toResponse(notPluralFormException);
         }
@@ -95,14 +98,26 @@ public class GenericResourceImpl implements GenericResource {
     public Response getAllEntities(Boolean extractList, String entityName)
             throws JsonProcessingException, ParseException {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-System.out.println( "extractList : " + extractList );
-System.out.println( "entityName : " + entityName );
 
         MultivaluedMap<String, String> requestHeaders = httpHeaders.getRequestHeaders();
-        entityName = Inflector.getInstance().singularize(entityName);
 
-        return getAll(extractList, entityName,
-                GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+        // if entityName is of plural form, process the request
+        if ( Inflector.getInstance().pluralize(entityName).equals(entityName) ) {
+            entityName = Inflector.getInstance().singularize(entityName);
+
+            ValidationUtils.checkEntityExistence(entityName);
+            ValidationUtils.checkCamelCaseFormat(entityName);
+
+            return getAll(extractList, entityName,
+                    GenericPagingAndFilteringUtils.constructImmutableGenericPagingAndFiltering(queryParams));
+        }
+        // otherwise, entityName is not of plural form, raise an exception
+        else {
+            NotPluralFormException notPluralFormException =
+                    new NotPluralFormException("The entity name " + entityName + " is not a valid plural form");
+            NotPluralFormMapper notPluralFormMapper = new NotPluralFormMapper();
+            return notPluralFormMapper.toResponse(notPluralFormException);
+        }
     }
 
     @Override

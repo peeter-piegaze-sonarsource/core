@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,6 @@ import java.util.regex.Pattern;
  * Utils class for working with strings.
  * 
  * @author Ignas Lelys
- * @author Thang Nguyen
  */
 public class StringUtils {
 
@@ -78,10 +78,24 @@ public class StringUtils {
      * @param value Value to check
      * @return True if value is NOT well-formed and false otherwise
      */
-    public static boolean isNotWellFormed(String value) {
-        if ( Character.isUpperCase(value.charAt(0)) )
+    public static boolean isNotWellFormedCamelCase(String value, List<String> listCamelCaseName) {
+        if ( ! listCamelCaseName.contains( value ) )
             return true;
         return false;
+    }
+
+    /**
+     * Check if value is name of an existing entity
+     *
+     * @param value Value to check
+     * @return True if value is NOT a name of an existing entity and false otherwise
+     */
+    public static boolean isNotExistingEntity(String value, List<String> listCamelCaseName) {
+        for ( String aName : listCamelCaseName ) {
+            if ( value.equalsIgnoreCase( aName ) )
+                return false;
+        }
+        return true;
     }
 
     /**
