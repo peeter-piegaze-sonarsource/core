@@ -22,8 +22,12 @@ public class ValidationUtils {
 
     public static ValidationUtils checkCamelCaseFormat(String entityName) {
         return check(entityName, GenericHelper.listCamelCaseName, StringUtils::isNotWellFormedCamelCase,
-                () -> new NotCamelCaseException("All the letters of entityName " + entityName
-                        + " should be in lowercase, except for the first letters in each word in a compound word"));
+                () -> new NotCamelCaseException("All letters of entityName " + entityName
+                        + " must be in lowercase if entityName is composed of only one word." +
+                        " Otherwise, entityName is composed of many words, all letters must be in lowercase," +
+                        " except for the first letters in each word (except the first word). "
+                        + "Example for an entityName composed of only one word : seller, customer. "
+                        + "Example for an entityName composed of many words : customerAccount, billingAccount."));
     }
 
     public static ValidationUtils checkEntityExistence(String entityName) {

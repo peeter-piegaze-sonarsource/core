@@ -20,7 +20,8 @@ class ExceptionSerializer {
         this.status = status;
     }
 
-    public ApiException toApiError(Exception exception) {final List<Cause>  cause = getCause(exception);
+    public ApiException toApiError(Exception exception) {
+        final List<Cause>  cause = getCause(exception);
         return ImmutableApiException.builder()
                 .status(status)
                 .details(exception.getMessage() != null ? exception.getMessage() : getStackTrace(exception.getStackTrace()))
@@ -49,7 +50,7 @@ class ExceptionSerializer {
 
         return causes.stream()
                 .filter(cause -> cause != null && cause.getMessage() != null)
-                .map(cause -> ImmutableCause.builder().causeMessage(String.valueOf(cause)).build())
+                .map(cause -> ImmutableCause.builder().causeMessage(cause.getMessage()).build())
                 .collect(Collectors.toList());
     }
 }
