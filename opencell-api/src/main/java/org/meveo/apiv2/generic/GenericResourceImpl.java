@@ -144,7 +144,7 @@ public class GenericResourceImpl implements GenericResource {
     @Override
     public Response update(String entityName, Long id, String dto) {
         entityName = Inflector.getInstance().singularize(entityName);
-        return Response.status(Response.Status.NO_CONTENT).entity(genericApiAlteringService.update(entityName, id, dto))
+        return Response.ok().entity(genericApiAlteringService.update(entityName, id, dto))
                 .links(buildSingleResourceLink(entityName, id))
                 .build();
     }

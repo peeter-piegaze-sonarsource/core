@@ -155,13 +155,7 @@ public interface GenericResource {
                     @ApiResponse(responseCode = "400", description = "bad request when entityName not well formed or entity unrecognized")
             })
     Response getAllEntities(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
-                            @Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName
-//                            @Parameter(description = "Additional properties such as limit, offset, sort, interval values, etc.",
-//                                    schema = @Schema(implementation = Object.class)) @QueryParam("Additional properties") String additionalProperties,
-//                            @Parameter(description = "Query param offset") @QueryParam("offset") String offset,
-//                            @Parameter(description = "Query param sort") @QueryParam("sort") String sort,
-//                            @Parameter(description = "Query param interval for data fields") @QueryParam("interval") String interval,
-    )
+                            @Parameter(description = "The entity name", required = true) @PathParam("entityName") String entityName)
             throws JsonProcessingException, ParseException;
 
     @GET
