@@ -72,7 +72,7 @@ public class GenericResourceImpl implements GenericResource {
     }
 
     @Override
-    public Response getEntity(Boolean extractList, String entityName, Long id) {
+    public Response getEntity(Boolean extractList, String entityName, Long id) throws JsonProcessingException {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
         // if entityName is of plural form, process the request

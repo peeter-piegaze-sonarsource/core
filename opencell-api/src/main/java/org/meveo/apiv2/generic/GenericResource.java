@@ -125,7 +125,7 @@ public interface GenericResource {
             })
     Response getEntity(@Parameter(description = "extractList flag to return or not nested List") @QueryParam("extractList") Boolean extractList,
                        @Parameter(description = "the entity name", required = true) @PathParam("entityName") String entityName,
-                       @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id );
+                       @Parameter(description = "The id here is the database primary key of the wanted record", required = true) @PathParam("id") Long id ) throws JsonProcessingException;
 
     @GET
     @Path("/{entityName}")
