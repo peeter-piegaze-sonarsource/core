@@ -548,11 +548,15 @@ public interface PaymentRs extends IBaseRs {
      * @param skipAuthentication the skipAuthentication boolean
      * @param gatewayPaymentName the gatewayPayment Name
      * @param variant the variant Look
+     * @param automaticReturnUrl the automatic return URL (currently only for ATOS Wallet)
+     * @param allowedActions the allowed actions (currently only for ATOS Wallet)
+     * @param returnContext the return context (currently only for ATOS Wallet)
+     * @param advancedOptions the advanced options (currently only for ATOS Wallet)
      * @return the PaymentHostedCheckoutResponseDto
      */
     @GET
     @Path("/paymentGateway/getHostedCheckoutUrl")
-    public PaymentHostedCheckoutResponseDto getHostedCheckoutUrl(@QueryParam("ca") String customerAccountCode,
+    PaymentHostedCheckoutResponseDto getHostedCheckoutUrl(@QueryParam("ca") String customerAccountCode,
                                                                  @QueryParam("returnUrl") String returnUrl,
                                                                  @DefaultValue("fr_FR") @QueryParam("locale") String locale,
                                                                  @DefaultValue("100") @QueryParam("amount") String amount,
@@ -562,7 +566,11 @@ public interface PaymentRs extends IBaseRs {
                                                                  @DefaultValue("false") @QueryParam("skipAuthentication") Boolean skipAuthentication,
                                                                  @DefaultValue("INGENICO_GC") @QueryParam("gatewayPaymentName") String gatewayPaymentName,
                                                                  @DefaultValue("101") @QueryParam("variant") String variant,
-                                                                 @QueryParam("seller") String sellerCode
+                                                                 @QueryParam("seller") String sellerCode,
+                                                                 @QueryParam("automaticReturnUrl") String automaticReturnUrl,
+                                                                 @QueryParam("allowedActions") String allowedActions,
+                                                                 @QueryParam("returnContext") String returnContext,
+                                                                 @DefaultValue("") @QueryParam("advancedOptions") String advancedOptions
     );
 
     
