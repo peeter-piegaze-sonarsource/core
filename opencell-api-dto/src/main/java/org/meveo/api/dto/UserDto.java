@@ -23,12 +23,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.admin.SecuredEntity;
 import org.meveo.model.admin.User;
@@ -50,55 +53,68 @@ public class UserDto extends AuditableEntityDto {
     private static final long serialVersionUID = -6633504145323452803L;
 
     /** The username. */
+    @Schema(example= "UA_userName", description = "the username field")
     @XmlElement(required = true)
     private String username;
 
     /**
      * Used when creating keycloak user.
      */
+    @Schema(example= "1234", description = "the user password")
     @XmlElement()
     private String password;
 
     /** The email. */
+    @Schema(example= "user@email.com", description = "the user email")
     @XmlElement(required = true)
     private String email;
 
     /** The first name. */
+    @Schema(example= "firstName", description = "the user first name")
     private String firstName;
 
     /** The last name. */
+    @Schema(example= "lastName", description = "the user last name")
     private String lastName;
 
     /** The roles. */
+    @Schema(example= "['admin', 'superAdmin']", description = "list of roles to assign to the user")
     @XmlElementWrapper(name = "userRoles")
     @XmlElement(name = "userRole")
     private List<String> roles;
 
     /** The external roles. */
+    @Schema(example= "['admin', 'superAdmin']", description = "list of the external roles to assign to the user")
     @XmlElementWrapper(name = "externalRoles")
     @XmlElement(name = "externalRole")
     private List<RoleDto> externalRoles;
 
     /** The secured entities. */
+    @Schema( description = "secured entity to assign to the user")
     @XmlElementWrapper(name = "accessibleEntities")
     @XmlElement(name = "accessibleEntity")
     private List<SecuredEntityDto> securedEntities;
 
     /** The role. */
+    @Schema(example = "admin", description = "role to assign to the user", deprecated = true)
     @Deprecated // use roles field
     private String role;
 
     /** The user level. */
+    @Schema(example = "UA", description = "the user level")
     @XmlElement()
     private String userLevel;
 
+    @Schema(example = "12-12-2012", description = "date of creation of the user")
     /** The created at. */
     private Date createdAt;
 
     /** The last login date. */
+    @Schema(example = "12-12-2012", description = "user last login date")
     private Date lastLoginDate;
 
     /** The roles. */
+    @Schema(example = "['perm1', 'perm2']", description = "list of permissions to assign to the user")
     @XmlElementWrapper(name = "permissions")
     @XmlElement(name = "permission")
     private List<String> permissions;
