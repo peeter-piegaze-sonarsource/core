@@ -28,7 +28,7 @@
         <version.barcode>2.1</version.barcode>
         <version.stripe-sdk>18.4.0</version.stripe-sdk>
         
-        <jackson.version>2.10.2</jackson.version> <!-- wildfly 11 -->
+        <jackson.version>2.12.2</jackson.version> <!-- wildfly 11 -->
         <!-- <jackson.version>2.7.4</jackson.version> --> <!-- wildfly 10 -->
         <dbtype>generic</dbtype>
 
