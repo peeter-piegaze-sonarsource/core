@@ -37,7 +37,7 @@
         <primefaces.version>7.0</primefaces.version>
         
         <sonar.projectKey>opencellsoft_core</sonar.projectKey>
-        <sonar.moduleKey>${artifactId}</sonar.moduleKey>
+        <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <sonar.organization>opencellsoft</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
