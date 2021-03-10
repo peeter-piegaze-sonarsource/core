@@ -36,9 +36,9 @@
         <java.version>11</java.version>
         <primefaces.version>7.0</primefaces.version>
         
-        <sonar.projectKey>opencellsoft_core</sonar.projectKey>
+        <sonar.projectKey>peeter-piegaze-sonarsource_core</sonar.projectKey>
         <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-        <sonar.organization>opencellsoft</sonar.organization>
+        <sonar.organization>peeter-piegaze-sonarsource</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     
